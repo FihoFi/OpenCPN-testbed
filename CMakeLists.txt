@@ -76,8 +76,7 @@ SET(SRC_DR
 	    src/DRgui_impl.h
 	    src/NavFunc.h
 	    src/NavFunc.cpp
-	    src/bitmaps.h
-	    src/bitmaps.cpp
+
 	)
 
 SET(SRC_FROM_OCPN 	
