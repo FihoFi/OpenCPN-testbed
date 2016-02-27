@@ -55,9 +55,13 @@ public:
 class Dlg : public DlgDef
 {
 public:
+#ifdef __WXOSX__
+        Dlg( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("DR Plugin"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxCLOSE_BOX|wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxSTAY_ON_TOP );
+#else
         Dlg( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("DR Plugin"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxCLOSE_BOX|wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
+#endif
 
-        void OnPSGPX( wxCommandEvent& event );		
+        void OnPSGPX( wxCommandEvent& event );
 		bool OpenXML();
 		
 		vector<Position> my_positions;
