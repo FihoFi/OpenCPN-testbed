@@ -48,9 +48,6 @@ ADD_LIBRARY(${PACKAGE_NAME} SHARED ${SRC_DR})
 
 ADD_DEFINITIONS(-DTIXML_USE_STL)
 
-TARGET_LINK_LIBRARIES( ${PACKAGE_NAME} ${wxWidgets_LIBRARIES} )
-
-
 INCLUDE("cmake/PluginInstall.cmake")
 INCLUDE("cmake/PluginLocalization.cmake")
 INCLUDE("cmake/PluginPackage.cmake")
