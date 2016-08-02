@@ -309,10 +309,9 @@ void Dlg::Calculate( wxCommandEvent& event, bool write_file, int Pattern  ){
 
 		latF = latN[0];
 		lonF = lonN[0];
+
 		// Start of new logic
-		//
-		//
-		for (i=0; i<n; i++){			
+		for (i=0; i<n; i++){	// n is number of routepoints		
 
 			// save the routepoint
 			my_point.lat = wxString::Format(wxT("%f"),latN[i]);
@@ -324,19 +323,20 @@ void Dlg::Calculate( wxCommandEvent& event, bool write_file, int Pattern  ){
 			if (i==0){ // First F is a routepoint
 				latF = latN[i];
 				lonF = lonN[i];
-				}
+			}
 
-			distRhumb(latF, lonF, latN[i+1], lonN[i+1], &myDist, &myBrng);						
+			DistanceBearingMercator(latN[i + 1], lonN[i + 1],latF, lonF,  &myDist, &myBrng);
+
 			total_dist = total_dist + myDist;
 
-				if (total_dist > speed){	
+			if (total_dist > speed){	
 						// DR point after route point
 				        //
-						route_dist = total_dist - myDist; //305						
+						route_dist = total_dist - myDist; 			
 						remaining_dist = speed - route_dist;
-												
-						distRhumb(latN[i], lonN[i], latN[i+1], lonN[i+1], &myLast, &myBrng);		
-						destRhumb(latN[i], lonN[i], myBrng,remaining_dist, &lati, &loni);
+
+						DistanceBearingMercator( latN[i + 1], lonN[i + 1], latN[i], lonN[i],&myDist, &myBrng);
+						destLoxodrome(latN[i], lonN[i], myBrng, remaining_dist, &lati, &loni);
 
 						// Put in DR after many route points
 						my_point.lat = wxString::Format(wxT("%f"),lati);
@@ -350,45 +350,43 @@ void Dlg::Calculate( wxCommandEvent& event, bool write_file, int Pattern  ){
 						total_dist = 0;
 			    
 						// 
-				        // End of  speed
-					
-				distRhumb(latF, lonF, latN[i+1], lonN[i+1], &myDistForBrng, &myBrng);	
-				if (myDistForBrng > speed){
+				        // 
+						DistanceBearingMercator(latN[i + 1], lonN[i + 1], latF, lonF, &myDistForBrng, &myBrng);
+				
+				        if (myDistForBrng > speed){
 													
-						// put in the DR positions
-						//
-						count_pts = (int)floor(myDistForBrng/speed);
-						//
-						remaining_dist = myDistForBrng - (count_pts*speed);
-						//
-						distRhumb(latF, lonF, latN[i+1], lonN[i+1], &myDistForBrng, &myBrng);	
-
-						for (c = 1; c <= count_pts ; c++){
-								    					
-							destRhumb(latF, lonF, myBrng,speed*c, &lati, &loni);					
-							// print mid points
-							my_point.lat = wxString::Format(wxT("%f"),lati);
-							my_point.lon = wxString::Format(wxT("%f"),loni);
-							my_point.routepoint = 0;
-							my_points.push_back(my_point);
-							//	End of prints					
-							}													
+							// put in the DR positions
+							//
+							count_pts = (int)floor(myDistForBrng/speed);
+							//
+							remaining_dist = myDistForBrng - (count_pts*speed);
+							DistanceBearingMercator(latN[i + 1], lonN[i + 1], latF, lonF, &myDistForBrng, &myBrng);
+							
+							for (c = 1; c <= count_pts ; c++){							
+								destLoxodrome(latF, lonF, myBrng, speed*c, &lati, &loni);				
+								// print mid points
+								my_point.lat = wxString::Format(wxT("%f"),lati);
+								my_point.lon = wxString::Format(wxT("%f"),loni);
+								my_point.routepoint = 0;
+								my_points.push_back(my_point);
+								//	End of prints					
+								}													
 						
-						latF = lati;
-						lonF = loni;
+							latF = lati;
+							lonF = loni;
 						
-						total_dist = 0; 
-						//
-						//
-						// All the DR positions inserted
+							total_dist = 0; 
+							//
+							//
+							// All the DR positions inserted
 						}
 			
-				if (total_dist == 0){
-					distRhumb(latF, lonF, latN[i+1], lonN[i+1], &myDistForBrng, &myBrng);	
-					total_dist = myDistForBrng;
-					latF = latN[i+1];
-					lonF = lonN[i+1];
-					}
+						if (total_dist == 0){
+							DistanceBearingMercator(latN[i + 1], lonN[i + 1], latF, lonF, &myDistForBrng, &myBrng);
+							total_dist = myDistForBrng;
+							latF = latN[i+1];
+							lonF = lonN[i+1];
+						}
 			
 			}															
 			else{
@@ -401,7 +399,7 @@ void Dlg::Calculate( wxCommandEvent& event, bool write_file, int Pattern  ){
 				//
 			}   //			
 
-	}
+		}
 		// End of new logic
 		// print the last routepoint
 		my_point.lat = wxString::Format(wxT("%f"),latN[i]);
