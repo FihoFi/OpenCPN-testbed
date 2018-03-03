@@ -61,4 +61,4 @@ class DlgDef : public wxDialog
 };
 
 
-#endif __DRGUI_H__
+#endif
