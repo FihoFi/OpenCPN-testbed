@@ -39,10 +39,6 @@ class DR_pi;
 
 #define FAIL(X) do { error = X; goto failed; } while(0)
 
-CfgDlg::CfgDlg( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : CfgDlgDef( parent, id, title, pos, size, style )
-{
-}
-
 Dlg::Dlg( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : DlgDef( parent, id, title, pos, size, style )
 {	
     this->Fit();

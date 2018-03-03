@@ -74,7 +74,6 @@ public:
 
 //    The required override PlugIn Methods
       int GetToolbarToolCount(void);
-      void ShowPreferencesDialog( wxWindow* parent );
       void OnToolbarToolCallback(int id);
      
 

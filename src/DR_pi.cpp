@@ -111,8 +111,6 @@ int DR_pi::Init(void)
 		      WANTS_CURSOR_LATLON      |
               WANTS_TOOLBAR_CALLBACK    |
               INSTALLS_TOOLBAR_TOOL     |
-              WANTS_NMEA_EVENTS         |
-              WANTS_PREFERENCES         |
               WANTS_CONFIG             |
 			  WANTS_PLUGIN_MESSAGING
 
@@ -264,20 +262,6 @@ bool DR_pi::SaveConfig(void)
       }
       else
             return false;
-}
-
-void DR_pi::ShowPreferencesDialog( wxWindow* parent )
-{
-      CfgDlg *dialog = new CfgDlg( parent, wxID_ANY, _("Route Preferences"), wxPoint( m_route_dialog_x, m_route_dialog_y), wxDefaultSize, wxDEFAULT_DIALOG_STYLE );
-      dialog->Fit();
-      wxColour cl;
-      DimeWindow(dialog);
-      
-      if(dialog->ShowModal() == wxID_OK)
-      {           
-            SaveConfig();
-      }
-      delete dialog;
 }
 
 void DR_pi::OnDRDialogClose()

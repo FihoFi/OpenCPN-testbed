@@ -122,7 +122,7 @@ double fromDMStodouble(char *dms)
 
     sscanf(dms, "%d%[ ]%d%[ ']%lf%[ \"NSWEnswe]", &d, buf, &m, buf, &s, buf);
 
-    s = (double) (fabs(d)) + ((double) m + s / 60.0) / 60.0;
+    s = (double) (abs(d)) + ((double) m + s / 60.0) / 60.0;
 
     if (d >= 0 && strpbrk(buf, "SWsw") == NULL)
       return s;

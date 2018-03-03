@@ -46,12 +46,6 @@ class DR_pi;
 
 class Position;
 
-class CfgDlg : public CfgDlgDef
-{
-public:
-      CfgDlg( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("DR preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE );
-};
-
 class Dlg : public DlgDef
 {
 public:

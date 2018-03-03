@@ -60,24 +60,5 @@ class DlgDef : public wxDialog
 	
 };
 
-///////////////////////////////////////////////////////////////////////////////
-/// Class CfgDlgDef
-///////////////////////////////////////////////////////////////////////////////
-class CfgDlgDef : public wxDialog 
-{
-	private:
-	
-	protected:
-		wxStaticText* m_staticText17;
-		wxStdDialogButtonSizer* m_sdbSizer1;
-		wxButton* m_sdbSizer1OK;
-		wxButton* m_sdbSizer1Cancel;
-	
-	public:
-		
-		CfgDlgDef( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("DR preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE ); 
-		~CfgDlgDef();
-	
-};
 
-#endif //__DRGUI_H__
+#endif __DRGUI_H__
