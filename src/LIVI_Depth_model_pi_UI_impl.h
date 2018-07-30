@@ -1,8 +1,8 @@
 /******************************************************************************
  *
  * Project:  OpenCPN
- * Purpose:  DR Plugin
- * Author:   Mike Rossiter
+ * Purpose:  LIVI_Depth_model Plugin
+ * Author:   Marjukka Kokkonen @ Sitowise
  *
  ***************************************************************************
  *   Copyright (C) 2013 by Mike Rossiter                                   *
@@ -25,16 +25,16 @@
  ***************************************************************************
  */
 
-#ifndef _CALCULATORGUI_IMPL_H_
-#define _CALCULATORGUI_IMPL_H_
+#ifndef _LIVI_DEPTH_MODEL_PI_UI_IMPL_H_
+#define _LIVI_DEPTH_MODEL_PI_UI_IMPL_H_
 
 #ifdef WX_PRECOMP
 #include "wx/wx.h"
 #endif
 
-#include "DRgui.h"
-#include "DR_pi.h"
-#include "NavFunc.h"
+#include "LIVI_Depth_model_pi_UI.h"
+#include "LIVI_Depth_model_pi.h"
+//#include "NavFunc.h"  // from original DR_pi plugin
 #include "tinyxml.h"
 
 #include <list>
@@ -42,40 +42,48 @@
 
 using namespace std;
 
-class DR_pi;
+class LIVI_Depth_model_pi;
 
 class Position;
 
-class Dlg : public DlgDef
+class Dlg : public LIVIDMUI_DLG
 {
 public:
-        Dlg( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("DR Plugin"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxCLOSE_BOX|wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
+        Dlg( wxWindow* parent, wxWindowID id = wxID_ANY,
+            const wxString& title = _("LIVI Depth model Plugin"),
+            const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ),
+            long style = wxCLOSE_BOX|wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
 
-        void OnPSGPX( wxCommandEvent& event );		
+  //      void OnPSGPX( wxCommandEvent& event );		
 		bool OpenXML();
 		
-		vector<Position> my_positions;
-		vector<Position> my_points;
+//		vector<Position> my_positions;
+//		vector<Position> my_points;
 
-        void Calculate( wxCommandEvent& event, bool Export, int Pattern );
-        void Addpoint(TiXmlElement* Route, wxString ptlat, wxString ptlon, wxString ptname, wxString ptsym, wxString pttype);
+//        void Calculate( wxCommandEvent& event, bool Export, int Pattern );
+//        void Addpoint(TiXmlElement* Route, wxString ptlat, wxString ptlon, wxString ptname, wxString ptsym, wxString pttype);
 
-        
-		
-		
-		
-		DR_pi *plugin; 
+        void        SetCustomColor(int num, wxColour& col);
+        wxColour    GetCustomColor(int num);
+        void        SetCustomLevel(int num, int level);
+        double      GetCustomLevel(int num);
 
-		wxString rte_start;
-	    wxString rte_end;
+		LIVI_Depth_model_pi *plugin;
+
+//		wxString rte_start;
+//	    wxString rte_end;
 
 private:
-	    void OnClose( wxCloseEvent& event );
-        double lat1, lon1, lat2, lon2;
-        bool error_found;
+	    void         OnClose                       ( wxCloseEvent&   WXUNUSED(event) );
+        virtual void OnColorOptionsApplyButtonClick( wxCommandEvent& WXUNUSED(event) );
+        virtual void OnAboutLIVIDepthModel         ( wxCommandEvent& WXUNUSED(event) );
+        virtual void OnAboutWxWidgets              ( wxCommandEvent& WXUNUSED(event) );
+
         bool dbg;
 
-		wxString     m_gpx_path;		
+ //     double lat1, lon1, lat2, lon2;
+ //     bool error_found;
+ //		wxString     m_gpx_path;		
 };
 
 

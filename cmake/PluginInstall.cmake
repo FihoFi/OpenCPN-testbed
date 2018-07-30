@@ -13,8 +13,8 @@ IF(WIN32)
 
   IF(MSVC)
 #    TARGET_LINK_LIBRARIES(${PACKAGE_NAME}
-#	gdiplus.lib
-#	glu32.lib)
+#    gdiplus.lib
+#    glu32.lib)
     TARGET_LINK_LIBRARIES(${PACKAGE_NAME} ${OPENGL_LIBRARIES})
 
     SET(OPENCPN_IMPORT_LIB "${PARENT}.lib")

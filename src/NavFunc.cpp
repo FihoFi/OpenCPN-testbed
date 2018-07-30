@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Project:  OpenCPN
- * Purpose:  DR Plugin
+ * Purpose:  LIVI_Depth_model Plugin
  * Author:   SaltyPaws/Mike Rossiter
  *
  ***************************************************************************

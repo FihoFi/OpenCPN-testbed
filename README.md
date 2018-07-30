@@ -1,14 +1,16 @@
 
-
 Description of Operations
 ---------------------------
-The DR plugin is for editing gpx files that have been saved on your pc. 
-The route name is the name of the route within the GPX file.
+The LIVI_Depth_model plugin is for viewing additional depth information retrieved from depth model files.
 
-1. Use Route Manager to export the route GPX.
-2. Open DR and set the parameters.
-3. Using DR_pi (Generate) select the GPX you exported.
-4. With the second file dialogue save the GPX+DR as a different GPX file.
-5. Use Route Manager to import the route + DR positions.
+Usage instructions
+------------------
+Usage instructions are still TODO.
 
-Mike 
+Compilation instructions
+------------------------
+Compilation instructions are still TODO.
+
+
+
+2018-07-10 Marjukka Kokkonen, Sitowise

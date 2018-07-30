@@ -1,0 +1,170 @@
+/******************************************************************************
+ *
+ * Project:  OpenCPN
+ * Purpose:  LIVI Depth model Plugin
+ * Author:   Marjukka Kokkonen, Sitowise Oy
+ *
+ ***************************************************************************
+ *   Copyright (C) 2018 by Liikennevirasto & Sitowise                      *
+ *   $EMAIL$                                                               *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************
+ */
+
+#ifndef _LIVI_DEPTH_MODEL_PI_H_
+#define _LIVI_DEPTH_MODEL_PI_H_
+
+#include "wx/wxprec.h"
+
+#ifndef  WX_PRECOMP
+  #include "wx/wx.h"
+  #include <wx/glcanvas.h>
+#endif //precompiled headers
+
+#include <wx/fileconf.h>
+
+#include "ocpn_plugin.h" //Required for OCPN plugin functions
+#include "LIVI_Depth_model_pi_UI_impl.h"
+
+#include "version.h"
+
+#define     MY_API_VERSION_MAJOR    1
+ /* Minor version upto 15 at time of writing. Use the oldest one possible,
+ to ensure compatibility to as many old users as possible. */
+#define     MY_API_VERSION_MINOR    15
+
+#define DM_NUM_CUSTOM_COL 5 // Number of custom colors
+#define DM_NUM_CUSTOM_DEP 4 // Number of custom border depths. Must be DM_NUM_CUSTOM_COL-1.
+
+class DMColorOptionConfig {
+public:
+    wxColor m_customColours[DM_NUM_CUSTOM_COL]; // 0: col. for always too shallow, 4: col. for always deep enough
+    double  m_customDepths[DM_NUM_CUSTOM_DEP]; // 0: level of too shallow, 3: level of always deep enough
+/*
+    wxColor m_SlidingColours[2];    // 0:colour for too shallows, 1: colour for deep enoughs
+    int     m_SlidingDepths[2];     // 0:depth of always too shallow, 1: depth of always deep enough
+    int     m_SlidingSteps;         // Number of colour steps from deepest to shallowest
+*/
+};
+
+class Dlg;
+
+//----------------------------------------------------------------------------------------------------------
+//    The PlugIn Class Definition
+//----------------------------------------------------------------------------------------------------------
+
+#define LIVI_DEPTH_MODEL_TOOL_POSITION    -1          // Request default positioning of toolbar tool
+
+/**
+* Plugin for taking depth data into account for route planning
+*/
+class LIVI_Depth_model_pi : public opencpn_plugin_115 // upto 115
+{
+public:
+    LIVI_Depth_model_pi(void *ppimgr);
+    ~LIVI_Depth_model_pi(void);
+
+    wxIcon GetIcon();
+
+////  The required PlugIn Methods ////
+    int Init(void);
+    bool DeInit(void);
+
+    virtual int GetAPIVersionMajor();       // impl. OK
+    virtual int GetAPIVersionMinor();       // impl. OK
+    virtual int GetPlugInVersionMajor();    // impl. OK
+    virtual int GetPlugInVersionMinor();    // impl. OK
+    virtual wxBitmap *GetPlugInBitmap();    // impl. OK
+
+    virtual wxString GetCommonName();       // impl. OK
+    virtual wxString GetShortDescription(); // impl. OK
+    virtual wxString GetLongDescription();  // impl. OK
+
+////  The optional overridable PlugIn Methods ////
+
+    virtual void SetDefaults(void);
+//  int GetToolbarToolCount(void);  // Used nowhere by OpenCPN, so not reqired?
+    virtual void ShowPreferencesDialog(wxWindow* parent); // Preferences dialog not implemented (yet?)
+//  virtual bool RenderOverlay(wxMemoryDC *pmdc, PlugIn_ViewPort *vp); // OpenGL overlay function, OpenGL not implemented (yet?)
+    virtual void SetCursorLatLon(double lat, double lon);
+    virtual void SetCurrentViewPort(PlugIn_ViewPort &vp);
+    virtual void ProcessParentResize(int x, int y);
+    virtual void SetColorScheme(PI_ColorScheme cs);
+    virtual void OnToolbarToolCallback(int id);
+    virtual void OnContextMenuItemCallback(int id);
+    virtual wxArrayString GetDynamicChartClassNameArray(void);
+    virtual bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp); // plugin_17
+    virtual void SetPluginMessage(wxString &message_id,
+        wxString &message_body);        // plugin_17
+    virtual void OnSetupOptions(void);  // plugin_19
+    virtual void LateInit(void);        // plugin_110
+
+//  virtual bool RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp);
+
+//  Other public methods
+    void SetLIVIDepthModelDialogX         (int x){ m_dialog_x = x;};
+    void SetLIVIDepthModelDialogY         (int x){ m_dialog_y = x;};
+    void SetLIVIDepthModelDialogWidth     (int x){ m_dialog_width = x;};
+    void SetLIVIDepthModelDialogHeight    (int x){ m_dialog_height = x;};
+    void OnLIVI_Depth_modelDialogClose();
+
+// LIVI additions
+// Additional functions for About dialog
+    virtual wxString GetLongPluginVersionString();
+    virtual wxString GetCopyright();
+
+    wxString &GetLIVIDmConfigFileName();
+
+    void OnColorOptionsApply();
+
+private:
+
+    void OnClose( wxCloseEvent& event );
+
+
+    LIVI_Depth_model_pi *plugin;
+    wxFileConfig      *m_pconfig;
+    wxWindow          *m_parent_window;
+    bool              LoadConfig(void);
+    bool              SaveConfig(void);
+    void              PushConfigToUI(void);
+    void              PullConfigFromUI(void);
+
+    Dlg               *m_pDialog;
+    int               m_dialog_x, m_dialog_y,
+                      m_dialog_width, m_dialog_height;
+    int               m_display_width, m_display_height;
+    int               m_leftclick_tool_id;
+    bool              m_ShowHelp,m_bCaptureCursor,m_bCaptureShip;
+    double            m_ship_lon,m_ship_lat,
+                      m_cursor_lon,m_cursor_lat;
+
+    bool              m_bLIVI_Depth_modelShowIcon;
+    bool              m_bShowLIVI_Depth_model;
+
+    wxIcon*           m_icon;
+
+// LIVI additions
+      wxFileName        m_config_file_full_path;
+
+      DMColorOptionConfig m_conf;
+
+      PlugInChartBase   *m_chartBase;
+};
+
+
+#endif
