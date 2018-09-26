@@ -11,12 +11,13 @@ PROJECT(LIVI_Depth_model_pi)
 
 SET(PACKAGE_NAME LIVI_Depth_model_pi)
 SET(VERBOSE_NAME LIVI_Depth_model)
-SET(TITLE_NAME LIVI_Depth_model)
+SET(TITLE_NAME Depth_model)
 SET(CPACK_PACKAGE_CONTACT "LIVI - Liikennevirasto")
 
 SET(VERSION_MAJOR "0")
 SET(VERSION_MINOR "01")
-SET(VERSION_DATE "2018-07-10")
+SET(VERSION_PATCH "01")
+SET(VERSION_DATE "2018-09-19")
 
 #SET(CMAKE_BUILD_TYPE Debug)
 SET( wxWidgets_USE_DEBUG OFF)
@@ -35,6 +36,7 @@ SET(SRC_LIVI_Depth_model
         src/LIVI_Depth_model_pi_UI.cpp
         src/LIVI_Depth_model_pi_UI_impl.cpp
         src/LIVI_Depth_model_pi_UI_impl.h
+		src/dm_API.h
         src/NavFunc.h
         src/NavFunc.cpp
         src/ocpn_plugin.h
@@ -47,6 +49,7 @@ SET(SRC_LIVI_Depth_model
 
 ADD_LIBRARY(${PACKAGE_NAME} SHARED ${SRC_LIVI_Depth_model})
 
+target_link_libraries(${PACKAGE_NAME} C:/gdal-2.3.1/gdal_i.lib)
 ADD_DEFINITIONS(-DTIXML_USE_STL)
 
 INCLUDE("cmake/PluginInstall.cmake")
