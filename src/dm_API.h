@@ -3,15 +3,19 @@
 #ifndef _DM_API_
 #define _DM_API_
 
+struct coord {
+    /*float*/double lon; // mathematical, not geodetic x
+    /*float*/double lat; // mathematical, not geodetic y
+};
+
 class /*DECL_EXP*/ dm_API
 {
-    //dm_API();
-
+public:
+    //inline dm_API();
     /** Destructor making this class abstract. */
     virtual ~dm_API() = 0;
 
-
-    virtual bool openDataSet(const char* filename);
+    virtual bool openDataSet(const char* filename) = 0;
     //MRJ: is the same as bool setFileName(const char* filename);
     
      /**
@@ -22,7 +26,7 @@ class /*DECL_EXP*/ dm_API
     * @param[out] botRightOut
     */
     virtual unsigned char * getRasterData(
-        coord &topLeftOut, coord &botRightOut) const;
+        coord &topLeftOut, coord &botRightOut) const = 0;
 
     /**
     * Returns a square part of the Dataset spanned by the two given (In)
@@ -37,12 +41,9 @@ class /*DECL_EXP*/ dm_API
     */
     virtual unsigned char * getRasterData(
         const coord topLeftIn, const coord botRightIn,
-        coord &topLeftOut, coord &botRightOut) const;
+        coord &topLeftOut, coord &botRightOut) const = 0;
 };
 
-struct coord {
-    /*float*/double lon; // mathematical, not geodetic x
-    /*float*/double lat; // mathematical, not geodetic y
-};
+dm_API::~dm_API() { }
 
 #endif _DM_API_
