@@ -36,7 +36,9 @@ SET(SRC_LIVI_Depth_model
         src/LIVI_Depth_model_pi_UI.cpp
         src/LIVI_Depth_model_pi_UI_impl.cpp
         src/LIVI_Depth_model_pi_UI_impl.h
-		src/dm_API.h
+        src/dm_API.h
+        src/dmDataset.h
+        src/dmDataset.cpp
         src/NavFunc.h
         src/NavFunc.cpp
         src/ocpn_plugin.h
@@ -49,6 +51,7 @@ SET(SRC_LIVI_Depth_model
 
 ADD_LIBRARY(${PACKAGE_NAME} SHARED ${SRC_LIVI_Depth_model})
 
+target_include_directories(${PACKAGE_NAME} PRIVATE C:/warmerda/bld/include/)
 target_link_libraries(${PACKAGE_NAME} C:/gdal-2.3.1/gdal_i.lib)
 ADD_DEFINITIONS(-DTIXML_USE_STL)
 
