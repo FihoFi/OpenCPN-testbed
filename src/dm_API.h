@@ -21,6 +21,7 @@ public:
      /**
     * Returns the whole raster data in the Dataset.
     * The coordinate span of the dataset is returned in the parameters.
+    * The ownership of the returned pointer is handed to the caller.
     *
     * @param[out] topLeftOut
     * @param[out] botRightOut
@@ -33,6 +34,7 @@ public:
     * coordinate pairs.
     * The coordinate span of the returned Dataset part  is returned
     * in the (Out) parameters.
+    * The ownership of the returned pointer is handed to the caller.
     *
     * @param[in] topLeftIn  
     * @param[in] botRightIn
