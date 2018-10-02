@@ -37,10 +37,13 @@ SET(SRC_LIVI_Depth_model
         src/LIVI_Depth_model_pi_UI_impl.cpp
         src/LIVI_Depth_model_pi_UI_impl.h
         src/dm_API.h
+        src/dm_API.cpp
         src/dmDataset.h
         src/dmDataset.cpp
         src/NavFunc.h
         src/NavFunc.cpp
+        src/dmDepthModelDrawer.h
+        src/dmDepthModelDrawer.cpp
         src/ocpn_plugin.h
         src/tinyxml.cpp
         src/tinyxmlerror.cpp

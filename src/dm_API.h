@@ -3,7 +3,17 @@
 #ifndef _DM_API_
 #define _DM_API_
 
+
 struct coord {
+    coord()
+        : lat(0), lon(0)
+    {    }
+
+    coord(double lat, double lon)
+    {
+        this->lat = lat;
+        this->lon = lon;
+    }
     /*float*/double lon; // mathematical, not geodetic x
     /*float*/double lat; // mathematical, not geodetic y
 };
@@ -45,7 +55,4 @@ public:
         const coord topLeftIn, const coord botRightIn,
         coord &topLeftOut, coord &botRightOut) const = 0;
 };
-
-dm_API::~dm_API() { }
-
 #endif _DM_API_
