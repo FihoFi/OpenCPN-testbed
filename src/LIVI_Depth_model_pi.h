@@ -129,6 +129,7 @@ public:
     wxString &GetLIVIDmConfigFileName();
 
     void OnColorOptionsApply();
+    void OnFileImportFileChange(wxFileName fullFileName);
 
 private:
 
@@ -156,6 +157,8 @@ private:
     bool              m_bShowLIVI_Depth_model;
 
     wxIcon*           m_icon;
+    dmDepthModelDrawer  *dmDrawer;
+    void                GetDepthModelPicture();
 
 // LIVI additions
       wxFileName        m_config_file_full_path;
