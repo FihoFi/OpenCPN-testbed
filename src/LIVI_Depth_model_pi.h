@@ -81,38 +81,37 @@ public:
     wxIcon GetIcon();
 
 ////  The required PlugIn Methods ////
-    int Init(void);
-    bool DeInit(void);
+    virtual int  Init(void)             override;
+    virtual bool DeInit(void)           override;
 
-    virtual int GetAPIVersionMajor();       // impl. OK
-    virtual int GetAPIVersionMinor();       // impl. OK
-    virtual int GetPlugInVersionMajor();    // impl. OK
-    virtual int GetPlugInVersionMinor();    // impl. OK
-    virtual wxBitmap *GetPlugInBitmap();    // impl. OK
+    virtual int GetAPIVersionMajor()    override;    // impl. OK
+    virtual int GetAPIVersionMinor()    override;    // impl. OK
+    virtual int GetPlugInVersionMajor() override;    // impl. OK
+    virtual int GetPlugInVersionMinor() override;    // impl. OK
+    virtual wxBitmap *GetPlugInBitmap() override;    // impl. OK
 
-    virtual wxString GetCommonName();       // impl. OK
-    virtual wxString GetShortDescription(); // impl. OK
-    virtual wxString GetLongDescription();  // impl. OK
+    virtual wxString GetCommonName()        override;   // impl. OK
+    virtual wxString GetShortDescription()  override;   // impl. OK
+    virtual wxString GetLongDescription()   override;   // impl. OK
 
 ////  The optional overridable PlugIn Methods ////
 
-    virtual void SetDefaults(void);
-//  int GetToolbarToolCount(void);  // Used nowhere by OpenCPN, so not reqired?
+    virtual void SetDefaults(void)          override;
+//  int GetToolbarToolCount(void)           override;  // Used nowhere by OpenCPN, so not reqired?
     virtual void ShowPreferencesDialog(wxWindow* parent); // Preferences dialog not implemented (yet?)
-//  virtual bool RenderOverlay(wxMemoryDC *pmdc, PlugIn_ViewPort *vp); // OpenGL overlay function, OpenGL not implemented (yet?)
-    virtual void SetCursorLatLon(double lat, double lon);
-    virtual void SetCurrentViewPort(PlugIn_ViewPort &vp);
-    virtual void ProcessParentResize(int x, int y);
-    virtual void SetColorScheme(PI_ColorScheme cs);
-    virtual void OnToolbarToolCallback(int id);
-    virtual void OnContextMenuItemCallback(int id);
-    virtual wxArrayString GetDynamicChartClassNameArray(void);
-    virtual bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp); // plugin_17
+//  virtual bool RenderOverlay(wxMemoryDC *pmdc, PlugIn_ViewPort *vp) override; // OpenGL overlay function, OpenGL not implemented (yet?)
+    virtual void SetCursorLatLon        (double lat, double lon) override;
+    virtual void SetCurrentViewPort     (PlugIn_ViewPort &vp)   override;
+    virtual void ProcessParentResize    (int x, int y)          override;
+    virtual void SetColorScheme         (PI_ColorScheme cs)     override;
+    virtual void OnToolbarToolCallback      (int id)            override;
+    virtual void OnContextMenuItemCallback  (int id)            override;
+    virtual wxArrayString GetDynamicChartClassNameArray(void)   override;
+    virtual bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp)   override; // opencpn_plugin_17
     virtual void SetPluginMessage(wxString &message_id,
-        wxString &message_body);        // plugin_17
-    virtual void OnSetupOptions(void);  // plugin_19
-    virtual void LateInit(void);        // plugin_110
-
+        wxString &message_body)                     override;   // opencpn_plugin_17
+    virtual void OnSetupOptions(void)               override;   // opencpn_plugin_19
+    virtual void LateInit(void)                     override;   // opencpn_plugin_110
 //  virtual bool RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp);
 
 //  Other public methods
