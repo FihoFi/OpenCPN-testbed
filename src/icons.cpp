@@ -21,3 +21,9 @@ void initialize_images(void)
 	}
 	return;
 }
+
+void deinitialize_images(void)
+{
+    delete _img_LIVI_Depth_model_pi;
+    delete _img_LIVI_Depth_model;
+}
