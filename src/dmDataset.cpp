@@ -1,4 +1,4 @@
-#include "dmDataSet.h"
+#include "dmDataset.h"
 
 #include <stdio.h>
 #include "gdal_utils.h"

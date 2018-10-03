@@ -1,14 +1,14 @@
 #pragma once
 
-#ifndef _DMDATASET_
-#define _DMDATASET_
+#ifndef _DM_DATASET_
+#define _DM_DATASET_
 
 #include "dm_API.h"
 
 #include "gdal_priv.h"
 #include "cpl_conv.h"
 
-class dmDataset : dm_API
+class dmDataset : public dm_API
 {
 
 public:
@@ -40,4 +40,4 @@ private:
 
 };
 
-#endif _DMDATASET_
+#endif _DM_DATASET_
