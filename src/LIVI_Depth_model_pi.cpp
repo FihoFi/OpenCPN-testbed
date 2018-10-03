@@ -383,7 +383,7 @@ void LIVI_Depth_model_pi::SetPluginMessage(wxString &message_id, wxString &messa
 /**
 * @since ocpn_plugin_19
 * Called by pluginManager in NotifySetupOptionsPlugin,
-* This is called, if this plugin has stated itINSTALLS_TOOLBOX_PAGE
+* This is called, if this plugin has stated it INSTALLS_TOOLBOX_PAGE
 * in its capabilities return value.
 */
 void LIVI_Depth_model_pi::OnSetupOptions(void)
@@ -431,12 +431,10 @@ void LIVI_Depth_model_pi::PushConfigToUI(void)
 void LIVI_Depth_model_pi::PullConfigFromUI(void)
 {
     for (int i = 0; i < DM_NUM_CUSTOM_COL; i++) {
-    //    wxColour* col = m_pDialog->GetCustomColor(i);
-        m_conf.m_customColours[i] = wxColour(m_pDialog->GetCustomColor(i));// *col;
-    //    delete col;
+        m_pconf->colour.setColour(i, wxColour(m_pDialog->GetCustomColor(i)));
     }
     for (int i = 0; i < DM_NUM_CUSTOM_DEP; i++) {
-        m_conf.m_customDepths[i] = m_pDialog->GetCustomLevel(i);
+        m_pconf->colour.setDepth(i, m_pDialog->GetCustomLevel(i));
     }
 }
 /* Loads config (ini) file entries of the Depth model. */
@@ -458,22 +456,6 @@ bool LIVI_Depth_model_pi::LoadConfig(void)
             m_dialog_y = 5;
 
 // LIVI additions
-        for (int i = 0; i < DM_NUM_CUSTOM_COL; i++) {
-            std::string colour = pConf->Read(wxT("CustomColour") + std::to_string(i));
-            if (sizeof(colour) == 0)
-                colour = "#f0f0f0"; // grey as default, if no color found
-                // #ff0000, #ffc4e4, #ffffff, #80c4ff, #0000ff
-
-            unsigned char* valChar = (unsigned char*)colour.c_str();
-            m_conf.m_customColours[i] = wxColour(valChar);
-        }
-      
-        for (int i = 0; i < DM_NUM_CUSTOM_DEP; i++) {
-            std::string str = pConf->Read(wxT("CustomDepth" + std::to_string(i)));
-            if (str.length() == 0)
-                str = std::to_string(DM_NUM_CUSTOM_DEP*5); // grey as default, if no color found
-            m_conf.m_customDepths[i] = std::stoi(str);
-        }
 
         pConf->Read(wxT("ConfigFilePath"), &m_config_file_full_path.GetFullPath());
 
@@ -499,13 +481,6 @@ bool LIVI_Depth_model_pi::SaveConfig(void)
         pConf->Write(wxT("DialogPosY"), m_dialog_y);
 
 // LIVI additions
-        for (int i = 0; i < DM_NUM_CUSTOM_COL; i++) {
-            pConf->Write(wxT("CustomColour") + std::to_string(i),
-                m_conf.m_customColours[i].GetAsString(wxC2S_HTML_SYNTAX));
-        }
-        for (int i = 0; i < DM_NUM_CUSTOM_DEP; i++) {
-            pConf->Write(wxT("CustomDepth" + std::to_string(i)), m_conf.m_customDepths[i]);
-        }
 
         pConf->Write(wxT("ConfigFilePath"), m_config_file_full_path.GetFullPath());
 
