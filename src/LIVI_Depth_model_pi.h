@@ -102,10 +102,6 @@ public:
 //  virtual bool RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp);
 
 //  Other public methods
-    void SetLIVIDepthModelDialogX         (int x){ m_dialog_x = x;};
-    void SetLIVIDepthModelDialogY         (int x){ m_dialog_y = x;};
-    void SetLIVIDepthModelDialogWidth     (int x){ m_dialog_width = x;};
-    void SetLIVIDepthModelDialogHeight    (int x){ m_dialog_height = x;};
     void OnLIVI_Depth_modelDialogClose();
 
 // LIVI additions
@@ -113,7 +109,6 @@ public:
     virtual wxString GetLongPluginVersionString();
     virtual wxString GetCopyright();
 
-    wxString &GetLIVIDmConfigFileName();
 
     void OnColorOptionsApply();
     void OnFileImportFileChange(wxFileName fullFileName);
@@ -122,38 +117,34 @@ private:
 
     void OnClose( wxCloseEvent& event );
 
-
     LIVI_Depth_model_pi *plugin;
-    wxFileConfig      *m_pconfig;
-    wxWindow          *m_parent_window;
-    bool              LoadConfig(void);
-    bool              SaveConfig(void);
-    void              PushConfigToUI(void);
-    void              PullConfigFromUI(void);
+    int                 pluginToolId;
 
-    Dlg               *m_pDialog;
-    int               m_dialog_x, m_dialog_y,
-                      m_dialog_width, m_dialog_height;
-    int               m_display_width, m_display_height;
-    int               m_leftclick_tool_id;
-    bool              m_ShowHelp,m_bCaptureCursor,m_bCaptureShip;
-    double            m_ship_lon,m_ship_lat,
-                      m_cursor_lon,m_cursor_lat;
+    wxWindow            *m_parent_window;
 
-    bool              m_bLIVI_Depth_modelShowIcon;
-    bool              m_bShowLIVI_Depth_model;
-
-    wxIcon*           m_icon;
     dmConfigHandler     *m_pconf;
+    Dlg                 *dialog;
+    /** Icon bitmap of this plugin as icon.Needed by about dialog. */
+    wxIcon              *m_icon;
+
     dmDepthModelDrawer  *dmDrawer;
+  //wxFileName          pluginConfigPath;
+
+    bool                LoadConfig(void);
+  //bool                SaveConfig(void);
+    void                PushConfigToUI(void);
+    void                PullConfigFromUI(void);
+    wxString            GetDepthColourWksForGDAL();
     void                GetDepthModelPicture();
 
+
+    bool                m_ShowHelp,m_bCaptureCursor,m_bCaptureShip;
+  //double              m_cursor_lon, m_cursor_lat;
+
+
 // LIVI additions
-      wxFileName        m_config_file_full_path;
 
-      DMColorOptionConfig m_conf;
 
-      PlugInChartBase   *m_chartBase;
 };
 
 
