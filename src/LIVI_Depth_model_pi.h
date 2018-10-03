@@ -62,6 +62,7 @@ public:
 };
 
 class Dlg;
+class dmConfigHandler;
 
 //----------------------------------------------------------------------------------------------------------
 //    The PlugIn Class Definition
@@ -157,6 +158,7 @@ private:
     bool              m_bShowLIVI_Depth_model;
 
     wxIcon*           m_icon;
+    dmConfigHandler     *m_pconf;
     dmDepthModelDrawer  *dmDrawer;
     void                GetDepthModelPicture();
 
@@ -169,4 +171,4 @@ private:
 };
 
 
-#endif
+#endif _LIVI_DEPTH_MODEL_PI_H_

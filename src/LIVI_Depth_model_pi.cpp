@@ -38,6 +38,7 @@
 #include "LIVI_Depth_model_pi_UI_impl.h"
 #include "LIVI_Depth_model_pi_UI.h"
 
+#include "dmConfigHandler.h"    // For handling config options
 #include "dmDepthModelDrawer.h"
 
 class LIVI_Depth_model_pi;
@@ -71,6 +72,7 @@ extern "C" DECL_EXP void destroy_pi(opencpn_plugin* p)
 LIVI_Depth_model_pi::LIVI_Depth_model_pi(void *ppimgr)
       :opencpn_plugin_115 (ppimgr)
     , m_parent_window(NULL)
+    , m_pconf(NULL)
     , dmDrawer(NULL)
 {
 	  m_bShowLIVI_Depth_model = false;
