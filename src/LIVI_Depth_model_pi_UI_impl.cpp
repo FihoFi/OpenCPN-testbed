@@ -2,7 +2,7 @@
  *
  * Project:  OpenCPN
  * Purpose:  LIVI_Depth_model Plugin
- * Author:   Mike Rossiter
+ * Author:   Marjukka Kokkonen
  *
  ***************************************************************************
  *   Copyright (C) 2013 by Mike Rossiter                                   *
@@ -55,6 +55,11 @@ Dlg::Dlg( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint&
 void Dlg::OnClose(wxCloseEvent& event)
 {   plugin->OnLIVI_Depth_modelDialogClose();   }
 
+void Dlg::OnFileImportFileChange(wxFileDirPickerEvent& WXUNUSED(event))
+{
+    wxFileName fname = this->dmPictureImport_filePicker->GetFileName();
+    plugin->OnFileImportFileChange(fname);
+}
 
 void Dlg::OnColorOptionsApplyButtonClick(wxCommandEvent& event)
 {
@@ -138,6 +143,12 @@ double Dlg::GetCustomLevel(int num) {
     }
     return spinCtrl->GetValue();
 }
+
+wxFileName    Dlg::GetDepthChartFileName()
+{    return this->dmPictureImport_filePicker->GetFileName();    }
+
+void    Dlg::SetDepthChartFileName(wxFileName &fileName)
+{    this->dmPictureImport_filePicker->SetFileName(fileName);   }
 
 
 //void Dlg::Addpoint(TiXmlElement* Route, wxString ptlat, wxString ptlon, wxString ptname, wxString ptsym, wxString pttype){

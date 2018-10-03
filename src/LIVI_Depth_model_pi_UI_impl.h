@@ -68,7 +68,10 @@ public:
         void        SetCustomLevel(int num, int level);
         double      GetCustomLevel(int num);
 
-		LIVI_Depth_model_pi *plugin;
+        void        SetDepthChartFileName(wxFileName &fileName);
+        wxFileName  GetDepthChartFileName();
+
+        LIVI_Depth_model_pi *plugin; // for callbacks at UI events
 
 //		wxString rte_start;
 //	    wxString rte_end;
@@ -78,6 +81,7 @@ private:
         virtual void OnColorOptionsApplyButtonClick( wxCommandEvent& WXUNUSED(event) );
         virtual void OnAboutLIVIDepthModel         ( wxCommandEvent& WXUNUSED(event) );
         virtual void OnAboutWxWidgets              ( wxCommandEvent& WXUNUSED(event) );
+        virtual void OnFileImportFileChange  ( wxFileDirPickerEvent& WXUNUSED(event) );
 
         bool dbg;
 

@@ -38,6 +38,7 @@
 #include "LIVI_Depth_model_pi_UI_impl.h"
 #include "LIVI_Depth_model_pi_UI.h"
 
+#include "dmDepthModelDrawer.h"
 
 class LIVI_Depth_model_pi;
 
@@ -69,10 +70,12 @@ extern "C" DECL_EXP void destroy_pi(opencpn_plugin* p)
 
 LIVI_Depth_model_pi::LIVI_Depth_model_pi(void *ppimgr)
       :opencpn_plugin_115 (ppimgr)
+    , m_parent_window(NULL)
+    , dmDrawer(NULL)
 {
-      // Create the PlugIn icons
-      initialize_images();
 	  m_bShowLIVI_Depth_model = false;
+    // Create the PlugIn icons
+    initialize_images();
 }
 
 LIVI_Depth_model_pi::~LIVI_Depth_model_pi(void)
@@ -93,6 +96,7 @@ int LIVI_Depth_model_pi::Init(void)
 
     m_icon = new wxIcon();
     m_icon->CopyFromBitmap(*_img_LIVI_Depth_model);
+    dmDrawer = new dmDepthModelDrawer();
 
     // Set some default private member parameters
     m_dialog_x = 0;
@@ -163,6 +167,7 @@ bool LIVI_Depth_model_pi::DeInit(void)
     SaveConfig();
 
     RequestRefresh(m_parent_window); // refresh mainn window
+    delete dmDrawer;
 
     return true;
 }
@@ -241,7 +246,10 @@ void LIVI_Depth_model_pi::SetCursorLatLon(double lat, double lon)
 */
 void LIVI_Depth_model_pi::SetCurrentViewPort(PlugIn_ViewPort &vp)
 {
-    //TODO
+    coord topLeft (vp.lat_max, vp.lon_min);
+    coord botRight(vp.lat_min, vp.lon_max);
+ 
+    bool success = dmDrawer->applyChartAreaData(topLeft, botRight);
 }
 
 /**
@@ -321,86 +329,17 @@ wxArrayString LIVI_Depth_model_pi::GetDynamicChartClassNameArray(void)
 }
 
 /**
-* @since ocpn_plugin_17
-* Called by pluginManager in RenderAllCanvasOverlayPlugIns,
+* RenderOverlay @since ocpn_plugin_17
+* Called by pluginManager in RenderAllCanvasOverlayPlugIns.
 * This is called, if this plugin has stated it WANTS_OVERLAY_CALLBACK
 * in its capabilities return value.
 */
 bool LIVI_Depth_model_pi::RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp)
 {
-    wxColour color = wxColour(255,0,0,0);
-    dc.SetPen(wxPen(color, 3));
-    dc.SetTextForeground(color);
-    wxFont font(15, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_ITALIC, wxFONTWEIGHT_NORMAL);
-    dc.SetFont(font);
+    bool success = dmDrawer->calculateDepthModelBitmap(*vp);
+    success &= dmDrawer->drawDepthChart(dc/*, *vp*/);
+    return success;
 
-    wxString msg;
-    double doublevalue = 1.23;
-    msg.Printf(_T("%.2f"), doublevalue);
-
-    wxPoint r;
-    PlugIn_ViewPort vp1 = *vp;
-    int lat1 = floor((vp->lat_min + vp->lat_max) / 2);
-    int lon1 = floor((vp->lon_min + vp->lon_max) / 2);
-    GetCanvasPixLL(&vp1, &r, lat1, lon1);
-    int w, h;
-    dc.GetTextExtent(msg, &w, &h);
-    dc.DrawText(msg, r.x - w / 2, r.y - h / 2);
-
-    // see DrawLineSeg of wmm_pi (MagneticPlotMap.cpp)
-    int lat2 = floor((vp->lat_min + vp->lat_max) / 4);
-    int lon2 = floor((vp->lon_min + vp->lon_max) / 4);
-
-    wxCoord width = 15, height = 20;
-    wxPoint r1, r2, rc;
-    GetCanvasPixLL(&vp1, &r1, lat1, lon1);
-    GetCanvasPixLL(&vp1, &r2, lat1, lon2);
-    rc = wxPoint((r1.x + r2.x) / 2, (r1.y + r2.y) / 2);
-
-    dc.SetPen(wxPen(wxColour(255, 255, 0, 0), 3));
-    dc.DrawLine(r1.x, r1.y, r2.x, r2.y);
-
-    dc.SetPen(wxPen(wxColour(0, 255, 0, 0), 3));
-    dc.CrossHair(r1.x+20, r1.y);
-
-    dc.SetPen(wxPen(wxColour(0, 255, 255, 0), 3));
-    dc.DrawArc(r1.x+40, r1.y + 40, r2.x+40, r2.y+40, rc.x+40, rc.y+40);
-
-    dc.SetPen(wxPen(wxColour(0, 0, 255, 0), 3));
-    dc.DrawCheckMark(r2.x+60, r2.y, width, height);
-
-    dc.SetPen(wxPen(wxColour(128, 0, 255, 0), 3));
-    double sa = 20.0, ea = 310.0; // magic number angles pulled from the hat
-    dc.DrawEllipticArc(rc.x+80, rc.y, width, height, sa, ea);
-
-    dc.SetPen(wxPen(wxColour(128, 0, 0, 0), 3));
-    dc.DrawPoint(r1.x+100, r1.y);
-
-    const int n = 7;
-    wxPoint points[n];  // "LIVI"
-    points[0] = wxPoint( 0,  0);
-    points[1] = wxPoint( 0, 50);
-    points[2] = wxPoint(25, 50);
-    points[3] = wxPoint(25,  0);
-    points[4] = wxPoint(50, 50);
-    points[5] = wxPoint(75,  0);
-    points[6] = wxPoint(75, 50);
-    dc.SetPen(wxPen(wxColour(128, 128, 0, 0), 3));
-    dc.DrawLines(n, points, r1.x+120, r1.y);
-
-    dc.SetPen(wxPen(wxColour(0, 128, 0, 0), 3));
-    dc.DrawPolygon(n, points, r1.x+220, r1.y);
-
-    dc.SetPen(wxPen(wxColour(0, 128, 128, 0), 3));
-    dc.DrawRectangle(rc.x+340, rc.y, width, height);
-
-    dc.SetPen(wxPen(wxColour(0, 128, 128, 0), 3));
-    int radius = 50;
-    dc.DrawRoundedRectangle(rc.x+360, rc.y, width, height, radius);
-
-    dc.SetPen(wxPen(wxColour(0, 0, 128, 0), 3));
-
-    return true;
 }
 
 /**

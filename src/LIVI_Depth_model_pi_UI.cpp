@@ -18,9 +18,22 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	
 	dmTabChooser = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
 	dmFileImport_Panel = new wxPanel( dmTabChooser, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, wxT("FIle input") );
-	dmFileImport_Panel->Enable( false );
-	dmFileImport_Panel->Hide();
+	wxBoxSizer* dmFileImport_bSizer;
+	dmFileImport_bSizer = new wxBoxSizer( wxVERTICAL );
 	
+	dmDepthModelFile_staticText = new wxStaticText( dmFileImport_Panel, wxID_ANY, wxT("Depth model file"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmDepthModelFile_staticText->Wrap( -1 );
+	dmFileImport_bSizer->Add( dmDepthModelFile_staticText, 0, wxALL, 5 );
+	
+	dmPictureImport_filePicker = new wxFilePickerCtrl( dmFileImport_Panel, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxSize( 380,-1 ), wxFLP_DEFAULT_STYLE );
+	dmFileImport_bSizer->Add( dmPictureImport_filePicker, 0, wxALL, 5 );
+	
+	dmFileImport_bSizer->Add( fgSizer6, 1, wxEXPAND, 5 );
+	
+	
+	dmFileImport_Panel->SetSizer( dmFileImport_bSizer );
+	dmFileImport_Panel->Layout();
+	dmFileImport_bSizer->Fit( dmFileImport_Panel );
 	dmTabChooser->AddPage( dmFileImport_Panel, wxT("File import"), false );
 	dmColorOptions_Panel = new wxPanel( dmTabChooser, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	dmColorOptions_Panel->SetToolTip( wxT("Pick how you want the depth model colors to be") );
@@ -295,6 +308,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	this->Centre( wxBOTH );
 	
 	// Connect Events
+	dmPictureImport_filePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( LIVIDMUI_DLG::OnFileImportFileChange ), NULL, this );
 	dmColorOptions_Apply_Button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnColorOptionsApplyButtonClick ), NULL, this );
 	dmAbout_LIVIDMPlugin_Button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnAboutLIVIDepthModel ), NULL, this );
 	dm_AboutWxWidgets_Button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnAboutWxWidgets ), NULL, this );
@@ -303,6 +317,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 LIVIDMUI_DLG::~LIVIDMUI_DLG()
 {
 	// Disconnect Events
+	dmPictureImport_filePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( LIVIDMUI_DLG::OnFileImportFileChange ), NULL, this );
 	dmColorOptions_Apply_Button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnColorOptionsApplyButtonClick ), NULL, this );
 	dmAbout_LIVIDMPlugin_Button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnAboutLIVIDepthModel ), NULL, this );
 	dm_AboutWxWidgets_Button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnAboutWxWidgets ), NULL, this );
