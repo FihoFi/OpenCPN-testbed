@@ -47,20 +47,6 @@
  to ensure compatibility to as many old users as possible. */
 #define     MY_API_VERSION_MINOR    15
 
-#define DM_NUM_CUSTOM_COL 5 // Number of custom colors
-#define DM_NUM_CUSTOM_DEP 4 // Number of custom border depths. Must be DM_NUM_CUSTOM_COL-1.
-
-class DMColorOptionConfig {
-public:
-    wxColor m_customColours[DM_NUM_CUSTOM_COL]; // 0: col. for always too shallow, 4: col. for always deep enough
-    double  m_customDepths[DM_NUM_CUSTOM_DEP]; // 0: level of too shallow, 3: level of always deep enough
-/*
-    wxColor m_SlidingColours[2];    // 0:colour for too shallows, 1: colour for deep enoughs
-    int     m_SlidingDepths[2];     // 0:depth of always too shallow, 1: depth of always deep enough
-    int     m_SlidingSteps;         // Number of colour steps from deepest to shallowest
-*/
-};
-
 class Dlg;
 class dmConfigHandler;
 
