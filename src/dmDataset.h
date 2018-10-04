@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef _DMDATASET_
+#define _DMDATASET_
+
 #include "dm_API.h"
 
 #include "gdal_priv.h"
@@ -22,13 +25,19 @@ public:
     void setSrcWkt(const char * wkt);
     void setDstWkt(const char * wkt);
 
+
 private:
+    static bool driversRegistered;
+    static void registerGDALDrivers();
+
     const char * _srcWkt;
     const char * _dstWkt;
     GDALDataset * _srcDataset;
     GDALDataset * _dstDataset;
 
+
     void reprojectDataset();
 
 };
 
+#endif _DMDATASET_
