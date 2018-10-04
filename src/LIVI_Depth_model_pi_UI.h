@@ -85,6 +85,10 @@ class LIVIDMUI_DLG : public wxDialog
 		wxColourPickerCtrl* dmColorOptionsConstant_ColorAtDeepestLevelOfInterest_ColourPicker;
 		wxStaticText* dmColorOptionsConstant_ColorAtShallowestLevelOfInterest_Label1;
 		wxColourPickerCtrl* dmColorOptionsConstant_ShallowestLevelOfInterest_ColourPicker;
+		wxPanel* dmColorOptionsUserFile_Panel;
+		wxStaticText* dmColorOptionsUserFile_giveFile_staticText;
+		wxFilePickerCtrl* dmColorOptionsUserFile_filePicker;
+		wxStaticText* dmColorOptionsUserFile_help_staticText;
 		wxButton* dmColorOptions_Apply_Button;
 		wxPanel* dmWaterLevel_Panel;
 		wxStaticText* dmEmpty;

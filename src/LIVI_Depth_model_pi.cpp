@@ -38,6 +38,7 @@
 #include "LIVI_Depth_model_pi_UI_impl.h"
 #include "LIVI_Depth_model_pi_UI.h"
 
+#include "dmConfigHandler.h"    // For handling config options
 #include "dmDepthModelDrawer.h"
 
 class LIVI_Depth_model_pi;
@@ -69,20 +70,23 @@ extern "C" DECL_EXP void destroy_pi(opencpn_plugin* p)
 //---------------------------------------------------------------------------------------------------------
 
 LIVI_Depth_model_pi::LIVI_Depth_model_pi(void *ppimgr)
-      :opencpn_plugin_115 (ppimgr)
+    : opencpn_plugin_115 (ppimgr)
+    , plugin(NULL)
     , m_parent_window(NULL)
+    , m_pconf(NULL)
+    , dialog(NULL)
+    , m_icon(NULL)
     , dmDrawer(NULL)
 {
-	  m_bShowLIVI_Depth_model = false;
     // Create the PlugIn icons
     initialize_images();
+    plugin = this;
 }
 
 LIVI_Depth_model_pi::~LIVI_Depth_model_pi(void)
 {
-     delete _img_LIVI_Depth_model_pi;
-     delete _img_LIVI_Depth_model;
-     
+    plugin = NULL; // To make sure we do not get a recursive destruction call
+    deinitialize_images();
 }
 
 wxIcon LIVI_Depth_model_pi::GetIcon()
@@ -92,34 +96,34 @@ wxIcon LIVI_Depth_model_pi::GetIcon()
 
 int LIVI_Depth_model_pi::Init(void)
 {
-    AddLocaleCatalog( wxT("LIVI_Depth_model_pi") );
+    AddLocaleCatalog( _T("LIVI_Depth_model_pi") ); // ocpn_plugin.h
 
-    m_icon = new wxIcon();
-    m_icon->CopyFromBitmap(*_img_LIVI_Depth_model);
     dmDrawer = new dmDepthModelDrawer();
 
-    // Set some default private member parameters
-    m_dialog_x = 0;
-    m_dialog_y = 0;
-    ::wxDisplaySize(&m_display_width, &m_display_height);
+    wxFileConfig* pFileConf = GetOCPNConfigObject(); // ocpn_plugin.h, configuration file
+    // opencpn canvas pointer, to be the parent for UI dialog, ...
+    m_parent_window = GetOCPNCanvasWindow(); // ocpn_plugin.h
 
-    //    Get a pointer to the opencpn display canvas, ...
-    // ... to use as a parent for the POI Manager dialog
-    m_parent_window = GetOCPNCanvasWindow();
+    dialog = new Dlg(m_parent_window);
+    dialog->plugin = this;
 
-    m_pconfig = GetOCPNConfigObject(); // configuration file
-    LoadConfig();
+    m_pconf = new dmConfigHandler(pFileConf, dialog);
+
+    bool success = m_pconf->LoadConfig(); // config related to this plugin.
 
     //    This PlugIn needs a toolbar icon, so request its insertion
-	if(m_bLIVI_Depth_modelShowIcon)
-        m_leftclick_tool_id  = InsertPlugInTool(wxT(""),
+    if (m_pconf->general.m_bLIVI_Depth_modelShowIcon)
+    {
+        pluginToolId = InsertPlugInTool(_T(""),
             _img_LIVI_Depth_model, _img_LIVI_Depth_model, wxITEM_CHECK,
-            _("LIVI_Depth_model"), wxT(""), NULL,
+            _("Depth model"), _(""), NULL,
             LIVI_DEPTH_MODEL_TOOL_POSITION, 0, this);
+    }
 
-    m_pDialog = NULL;
-
-    m_chartBase = new PlugInChartBase();
+    // Display size info is used to position the
+    int display_w, display_h;
+    ::wxDisplaySize(&display_w, &display_h);
+    m_pconf->general.SaveDispaySize(display_w, display_h);
 
     return (
         WANTS_OVERLAY_CALLBACK | // pluginManager calls this->RenderOverlay(wxDC ...).
@@ -149,24 +153,17 @@ int LIVI_Depth_model_pi::Init(void)
 
 bool LIVI_Depth_model_pi::DeInit(void)
 {
-      //    Record the dialog position
-      if (NULL != m_pDialog)
-      {
-            //Capture dialog position
-            wxPoint p = m_pDialog->GetPosition();
-            SetLIVIDepthModelDialogX(p.x);
-            SetLIVIDepthModelDialogY(p.y);
-            m_pDialog->Close();
-            delete m_pDialog;
-            m_pDialog = NULL;
+    bool success = m_pconf->closeNDestroyDialog();
+    if (success) { dialog = NULL; }
 
-			m_bShowLIVI_Depth_model = false;
-			SetToolbarItemState( m_leftclick_tool_id, m_bShowLIVI_Depth_model );
-      }	
+    bool newPluginState = false;
+    m_pconf->SetPluginToolState(newPluginState);
+    SetToolbarItemState(pluginToolId, newPluginState);
     
-    SaveConfig();
+    m_pconf->SaveConfig();
 
-    RequestRefresh(m_parent_window); // refresh mainn window
+    RequestRefresh(m_parent_window); // refresh main window, to hide the dataset pic
+
     delete dmDrawer;
 
     return true;
@@ -274,10 +271,10 @@ void LIVI_Depth_model_pi::ProcessParentResize(int x, int y)
 */
 void LIVI_Depth_model_pi::SetColorScheme(PI_ColorScheme cs)
 {
-    if (NULL == m_pDialog)
+    if (NULL == dialog)
         return;
 
-    DimeWindow(m_pDialog);
+    DimeWindow(dialog);
 }
 
 /**
@@ -286,26 +283,44 @@ void LIVI_Depth_model_pi::SetColorScheme(PI_ColorScheme cs)
 */
 void LIVI_Depth_model_pi::OnToolbarToolCallback(int id)
 {
-    if (m_pDialog == NULL)
+    if(!m_icon)
     {
-        m_pDialog = new Dlg(m_parent_window);
-        m_pDialog->plugin = this;
-        m_pDialog->Move(wxPoint(m_dialog_x, m_dialog_y));
+        // Save the icon bitmap of this plugin as icon. About dialog needs this.
+        m_icon = new wxIcon();
+        m_icon->CopyFromBitmap(*_img_LIVI_Depth_model);
+    }
+    if (m_pconf == NULL) 
+    {
+        wxFileConfig* confFile = GetOCPNConfigObject(); // Get the configuration file contents;
+
+        dialog = new Dlg(m_parent_window);
+        dialog->plugin = this;
+
+        m_pconf = new dmConfigHandler(confFile, dialog);
+    }
+    else if(m_pconf->getDialog()==NULL)
+    {
+        dialog = new Dlg(m_parent_window);
+        dialog->plugin = this;
+        m_pconf->setDialog(dialog);
     }
 
-    m_pDialog->Fit();
-
     // Toggle : update toggle state, and window show status
-    m_bShowLIVI_Depth_model = !m_bShowLIVI_Depth_model;
-    if(m_bShowLIVI_Depth_model) {   m_pDialog->Show();  }
-    else                        {   m_pDialog->Hide();  }
+    bool pluginShown = m_pconf->TogglePluginToolState();
+    if(pluginShown)
+    {
+        dialog->Move(m_pconf->general.dialogXY);
+        dialog->Fit(); 
+        dialog->Show();
+    }
+    else
+    {   dialog->Hide();  }
 
     // Toggle is handled by the toolbar but we must keep plugin manager
-    // b_toggle updated
-    // to actual status to ensure correct status upon toolbar rebuild
-    SetToolbarItemState(m_leftclick_tool_id, m_bShowLIVI_Depth_model);
+    // b_toggle updated to ensure correct status upon toolbar rebuild
+    SetToolbarItemState(pluginToolId, pluginShown);
 
-    RequestRefresh(m_parent_window); // refresh main window
+    //RequestRefresh(m_parent_window); // refresh main window
 }
 
 /**
@@ -381,7 +396,7 @@ void LIVI_Depth_model_pi::SetPluginMessage(wxString &message_id, wxString &messa
 /**
 * @since ocpn_plugin_19
 * Called by pluginManager in NotifySetupOptionsPlugin,
-* This is called, if this plugin has stated itINSTALLS_TOOLBOX_PAGE
+* This is called, if this plugin has stated it INSTALLS_TOOLBOX_PAGE
 * in its capabilities return value.
 */
 void LIVI_Depth_model_pi::OnSetupOptions(void)
@@ -419,117 +434,53 @@ wxString LIVI_Depth_model_pi::GetCopyright() {
 void LIVI_Depth_model_pi::PushConfigToUI(void)
 {
     for (int i = 0; i < DM_NUM_CUSTOM_COL; i++) {
-        m_pDialog->SetCustomColor(i, m_conf.m_customColours[i]);
+        dialog->SetCustomColor(i, m_pconf->colour.getColour(i));
     }
     for (int i = 0; i < DM_NUM_CUSTOM_DEP; i++) {
-        m_pDialog->SetCustomLevel(i, m_conf.m_customDepths[i]);
+        dialog->SetCustomLevel(i, m_pconf->colour.getDepth(i));
     }
+    dialog->SetDepthChartFileName(m_pconf->fileImport.filePath);
 }
 
 void LIVI_Depth_model_pi::PullConfigFromUI(void)
 {
     for (int i = 0; i < DM_NUM_CUSTOM_COL; i++) {
-    //    wxColour* col = m_pDialog->GetCustomColor(i);
-        m_conf.m_customColours[i] = wxColour(m_pDialog->GetCustomColor(i));// *col;
-    //    delete col;
+        m_pconf->colour.setColour(i, dialog->GetCustomColor(i));
     }
     for (int i = 0; i < DM_NUM_CUSTOM_DEP; i++) {
-        m_conf.m_customDepths[i] = m_pDialog->GetCustomLevel(i);
+        m_pconf->colour.setDepth(i, dialog->GetCustomLevel(i));
     }
-}
-/* Loads config (ini) file entries of the Depth model. */
-bool LIVI_Depth_model_pi::LoadConfig(void)
-{
-    wxFileConfig *pConf = (wxFileConfig *)m_pconfig;
+    m_pconf->fileImport.filePath = dialog->GetDepthChartFileName();
 
-    if(pConf)
-    {
-        pConf->SetPath ( wxT( "/Settings/LIVI_Depth_model_pi" ) );
-        pConf->Read ( wxT( "ShowLIVI_Depth_modelIcon" ), &m_bLIVI_Depth_modelShowIcon, 1 );
-
-        m_dialog_x =  pConf->Read ( wxT ( "DialogPosX" ), 20L );
-        m_dialog_y =  pConf->Read ( wxT ( "DialogPosY" ), 20L );
-
-        if((m_dialog_x < 0) || (m_dialog_x > m_display_width))
-            m_dialog_x = 5;
-        if((m_dialog_y < 0) || (m_dialog_y > m_display_height))
-            m_dialog_y = 5;
-
-// LIVI additions
-        for (int i = 0; i < DM_NUM_CUSTOM_COL; i++) {
-            std::string colour = pConf->Read(wxT("CustomColour") + std::to_string(i));
-            if (sizeof(colour) == 0)
-                colour = "#f0f0f0"; // grey as default, if no color found
-                // #ff0000, #ffc4e4, #ffffff, #80c4ff, #0000ff
-
-            unsigned char* valChar = (unsigned char*)colour.c_str();
-            m_conf.m_customColours[i] = wxColour(valChar);
-        }
-      
-        for (int i = 0; i < DM_NUM_CUSTOM_DEP; i++) {
-            std::string str = pConf->Read(wxT("CustomDepth" + std::to_string(i)));
-            if (str.length() == 0)
-                str = std::to_string(DM_NUM_CUSTOM_DEP*5); // grey as default, if no color found
-            m_conf.m_customDepths[i] = std::stoi(str);
-        }
-
-        pConf->Read(wxT("ConfigFilePath"), &m_config_file_full_path.GetFullPath());
-
-// end of LIVI additions
-        return true;
-     }
-     else
-         return false;
-}
-
-/*  Saves data entries of the Depth model to the config settings.
-    These are updated to the ini file at OpenCPN close. */
-bool LIVI_Depth_model_pi::SaveConfig(void)
-{
-    wxFileConfig *pConf = (wxFileConfig *)m_pconfig;
-
-    if (pConf)
-    {
-        pConf->SetPath(wxT("/Settings/LIVI_Depth_model_pi"));
-        pConf->Write(wxT("ShowLIVI_Depth_modelIcon"), m_bLIVI_Depth_modelShowIcon);
-
-        pConf->Write(wxT("DialogPosX"), m_dialog_x);
-        pConf->Write(wxT("DialogPosY"), m_dialog_y);
-
-// LIVI additions
-        for (int i = 0; i < DM_NUM_CUSTOM_COL; i++) {
-            pConf->Write(wxT("CustomColour") + std::to_string(i),
-                m_conf.m_customColours[i].GetAsString(wxC2S_HTML_SYNTAX));
-        }
-        for (int i = 0; i < DM_NUM_CUSTOM_DEP; i++) {
-            pConf->Write(wxT("CustomDepth" + std::to_string(i)), m_conf.m_customDepths[i]);
-        }
-
-        pConf->Write(wxT("ConfigFilePath"), m_config_file_full_path.GetFullPath());
-
-// end of LIVI additions
-        return true;
-     }
-     else
-         return false;
 }
 
 void LIVI_Depth_model_pi::OnLIVI_Depth_modelDialogClose()
 {
-    m_bShowLIVI_Depth_model = false;
-    SetToolbarItemState( m_leftclick_tool_id, m_bShowLIVI_Depth_model );
-    m_pDialog->Hide();
-    SaveConfig();
+    const bool state = false;
+    m_pconf->SetPluginToolState(state);
+    SetToolbarItemState(pluginToolId, state);
+    dialog->Hide();
 
     RequestRefresh(m_parent_window); // refresh main window
 
+    m_pconf->SaveConfig();
 }
 
 // LIVI additions
 void LIVI_Depth_model_pi::OnColorOptionsApply()
 {
     PullConfigFromUI();
-    SaveConfig();
+    m_pconf->SaveConfig();
+}
+
+void LIVI_Depth_model_pi::OnFileImportFileChange(wxFileName fullFileName)
+{
+    bool success = dmDrawer->setDepthModelDataset(fullFileName);
+    m_pconf->fileImport.filePath = fullFileName;
+    m_pconf->SaveConfig();
+
+    //drawtest.ChangeDepthPicture(fullFileName);
+    RequestRefresh(m_parent_window); // refresh main window
 }
 
 

@@ -36,7 +36,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmFileImport_bSizer->Fit( dmFileImport_Panel );
 	dmTabChooser->AddPage( dmFileImport_Panel, wxT("File import"), false );
 	dmColorOptions_Panel = new wxPanel( dmTabChooser, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	dmColorOptions_Panel->SetToolTip( wxT("Pick how you want the depth model colors to be") );
+	dmColorOptions_Panel->SetToolTip( wxT("Pick how you want the depth modol colors to be rendered") );
 	
 	wxBoxSizer* dmColorOptions_Sizer;
 	dmColorOptions_Sizer = new wxBoxSizer( wxVERTICAL );
@@ -72,7 +72,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmEmpty_Label1->Wrap( -1 );
 	dmColorOptionsCustom_GridSizer->Add( dmEmpty_Label1, 0, wxALL, 5 );
 	
-	dmColorOptionsCustom_SpinCtrlDouble1 = new wxSpinCtrlDouble( dmColorOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 1, 1 );
+	dmColorOptionsCustom_SpinCtrlDouble1 = new wxSpinCtrlDouble( dmColorOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -10000, 0, -17.500000, 1 );
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_SpinCtrlDouble1, 0, wxALL, 5 );
 	
 	dmColorOptionsCustom_ABitRisky_Label = new wxStaticText( dmColorOptionsCustom_Panel, wxID_ANY, wxT("At high water only"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -88,7 +88,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmEmpty_Label2->Wrap( -1 );
 	dmColorOptionsCustom_GridSizer->Add( dmEmpty_Label2, 0, wxALL, 5 );
 	
-	dmColorOptionsCustom_SpinCtrlDouble2 = new wxSpinCtrlDouble( dmColorOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 2.5, 1 );
+	dmColorOptionsCustom_SpinCtrlDouble2 = new wxSpinCtrlDouble( dmColorOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -10000, 0, -20.000000, 1 );
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_SpinCtrlDouble2, 0, wxALL, 5 );
 	
 	dmColorOptionsCustom_OK_Label = new wxStaticText( dmColorOptionsCustom_Panel, wxID_ANY, wxT("OK"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -104,7 +104,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmEmpty_Label3->Wrap( -1 );
 	dmColorOptionsCustom_GridSizer->Add( dmEmpty_Label3, 0, wxALL, 5 );
 	
-	dmColorOptionsCustom_SpinCtrlDouble3 = new wxSpinCtrlDouble( dmColorOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 3.5, 1 );
+	dmColorOptionsCustom_SpinCtrlDouble3 = new wxSpinCtrlDouble( dmColorOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -10000, 0, -22.500000, 1 );
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_SpinCtrlDouble3, 0, wxALL, 5 );
 	
 	dmColorOptionsCustom_OKOnLowWater_Label = new wxStaticText( dmColorOptionsCustom_Panel, wxID_ANY, wxT("OK at low water"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -120,7 +120,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmEmpty_Label4->Wrap( -1 );
 	dmColorOptionsCustom_GridSizer->Add( dmEmpty_Label4, 0, wxALL, 5 );
 	
-	dmColorOptionsCustom_SpinCtrlDouble4 = new wxSpinCtrlDouble( dmColorOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 5, 1 );
+	dmColorOptionsCustom_SpinCtrlDouble4 = new wxSpinCtrlDouble( dmColorOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -10000, 0, -25.000000, 1 );
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_SpinCtrlDouble4, 0, wxALL, 5 );
 	
 	dmColorOptionsCustom_Deep_Label = new wxStaticText( dmColorOptionsCustom_Panel, wxID_ANY, wxT("Deep, good to go"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -221,6 +221,26 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColorOptionsConstant_Panel->Layout();
 	dmColorOptionsConstant_GridSizer->Fit( dmColorOptionsConstant_Panel );
 	dmColorOptions_Choisebook->AddPage( dmColorOptionsConstant_Panel, wxT("Color changes at constant level steps"), false );
+	dmColorOptionsUserFile_Panel = new wxPanel( dmColorOptions_Choisebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* dmColorOptionsUserFile_bSizer;
+	dmColorOptionsUserFile_bSizer = new wxBoxSizer( wxVERTICAL );
+	
+	dmColorOptionsUserFile_giveFile_staticText = new wxStaticText( dmColorOptionsUserFile_Panel, wxID_ANY, wxT("Define your colour definition file to be used for the depth charts"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmColorOptionsUserFile_giveFile_staticText->Wrap( -1 );
+	dmColorOptionsUserFile_bSizer->Add( dmColorOptionsUserFile_giveFile_staticText, 0, wxALL, 5 );
+	
+	dmColorOptionsUserFile_filePicker = new wxFilePickerCtrl( dmColorOptionsUserFile_Panel, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxSize( 380,-1 ), wxFLP_DEFAULT_STYLE );
+	dmColorOptionsUserFile_bSizer->Add( dmColorOptionsUserFile_filePicker, 0, wxALL, 5 );
+	
+	dmColorOptionsUserFile_help_staticText = new wxStaticText( dmColorOptionsUserFile_Panel, wxID_ANY, wxT("Coloring is made by GDAL/gdaldem.\nThe file must be a text file, containing following data at each row:\n\n<depth/percentage value> <r> <g> <b> <alpha>\n\nExample (depth values)         Example (percentage values)\n\n-10  255   0     0   128             10% 255   0      0  128    \n-15   0      0   255 128             21%   0     0   255 128    \n-20   0   255    0   128             75%   0   255   0   128    \nnv    0      0     0      0              nv      0     0     0     0     \n\nThe alpha value tells the amount of opaqueness (inverse of \ntransparency) for the colour.\n\"nv\" stands for \"no value\".\nAll of the values r,g,b, and alpha must be between 0...255."), wxDefaultPosition, wxDefaultSize, 0 );
+	dmColorOptionsUserFile_help_staticText->Wrap( -1 );
+	dmColorOptionsUserFile_bSizer->Add( dmColorOptionsUserFile_help_staticText, 0, wxALL, 5 );
+	
+	
+	dmColorOptionsUserFile_Panel->SetSizer( dmColorOptionsUserFile_bSizer );
+	dmColorOptionsUserFile_Panel->Layout();
+	dmColorOptionsUserFile_bSizer->Fit( dmColorOptionsUserFile_Panel );
+	dmColorOptions_Choisebook->AddPage( dmColorOptionsUserFile_Panel, wxT("User given coloring file"), false );
 	dmColorOptions_Sizer->Add( dmColorOptions_Choisebook, 1, wxEXPAND | wxALL, 5 );
 	
 	dmColorOptions_Apply_Button = new wxButton( dmColorOptions_Panel, wxID_ANY, wxT("Apply color settings"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -230,7 +250,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColorOptions_Panel->SetSizer( dmColorOptions_Sizer );
 	dmColorOptions_Panel->Layout();
 	dmColorOptions_Sizer->Fit( dmColorOptions_Panel );
-	dmTabChooser->AddPage( dmColorOptions_Panel, wxT("Depth color shemas"), false );
+	dmTabChooser->AddPage( dmColorOptions_Panel, wxT("Depth color schemas"), true );
 	dmWaterLevel_Panel = new wxPanel( dmTabChooser, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	dmWaterLevel_Panel->Enable( false );
 	dmWaterLevel_Panel->Hide();
@@ -296,7 +316,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmAbout_Panel->SetSizer( dmAbout_Sizer );
 	dmAbout_Panel->Layout();
 	dmAbout_Sizer->Fit( dmAbout_Panel );
-	dmTabChooser->AddPage( dmAbout_Panel, wxT("About"), true );
+	dmTabChooser->AddPage( dmAbout_Panel, wxT("About"), false );
 	
 	LIVIDMUISizer->Add( dmTabChooser, 1, wxEXPAND | wxALL, 5 );
 	

@@ -51,7 +51,8 @@ class Dlg : public LIVIDMUI_DLG
 public:
         Dlg( wxWindow* parent, wxWindowID id = wxID_ANY,
             const wxString& title = _("LIVI Depth model Plugin"),
-            const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ),
+            const wxPoint& pos = wxDefaultPosition,
+            const wxSize& size = wxSize( -1,-1 ),
             long style = wxCLOSE_BOX|wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
 
   //      void OnPSGPX( wxCommandEvent& event );		
@@ -62,6 +63,9 @@ public:
 
 //        void Calculate( wxCommandEvent& event, bool Export, int Pattern );
 //        void Addpoint(TiXmlElement* Route, wxString ptlat, wxString ptlon, wxString ptname, wxString ptsym, wxString pttype);
+
+        wxFileName  GetColorConfigurationFileName();
+        void        SetColorConfigurationFileName(wxFileName &fileName);
 
         void        SetCustomColor(int num, wxColour& col);
         wxColour    GetCustomColor(int num);
