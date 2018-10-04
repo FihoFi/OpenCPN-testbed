@@ -1,15 +1,16 @@
-#include "dmDataSet.h"
+#include "dmDataset.h"
 
 #include <stdio.h>
 #include "gdal_utils.h"
 //#include "gdalwarper.h"
 
+bool dmDataset::driversRegistered = false;
 
 dmDataset::dmDataset() :
     _srcDataset(NULL),
     _dstDataset(NULL)
 {
-    // GDALAllRegister(); // where to do this?
+    dmDataset::registerGDALDrivers();
 }
 
 
@@ -69,9 +70,18 @@ bool dmDataset::openDataSet(const char * filename)
     return false;
 }
 
+void dmDataset::registerGDALDrivers()
+{
+    if (!driversRegistered)
+    {
+        GDALAllRegister();
+        driversRegistered = true;
+    }
+}
+
 void dmDataset::reprojectDataset()
 {
-    // TODO: add GDALWarpOptions if needed (last argument of GDALAutoCreateWarpedVRT
+    // TODO: add GDALWarpOptions if needed (last argument of GDALAutoCreateWarpedVRT)
     if (_srcDataset)
     {
         if (_dstDataset)
