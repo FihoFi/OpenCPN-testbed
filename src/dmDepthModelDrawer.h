@@ -32,7 +32,6 @@ private:
     wxImage         original;
     wxBitmap        bmp;
     wxPoint         bitmapTopLeftPositioningPoint;
-    double          coords[4]; // [xMin,yMin, xMax,yMax]; x grows east, y grows north
 
     dmDataset   dataset;
 

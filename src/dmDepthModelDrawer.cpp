@@ -15,8 +15,8 @@ dmDepthModelDrawer::~dmDepthModelDrawer()
 
 bool dmDepthModelDrawer::setDepthModelDataset(wxFileName &fileName)
 {
-    wxString fileNameWxStr = fileName.GetFullPath();
-    std::string fileNameStr = fileNameWxStr.ToStdString();
+    wxString    fileNameWxStr   = fileName.GetFullPath();
+    std::string fileNameStr     = fileNameWxStr.ToStdString();
     const char* fileNameCharPtr = fileNameStr.c_str();
 
     bool success = dataset.openDataSet(fileNameCharPtr);
@@ -81,7 +81,7 @@ bool dmDepthModelDrawer::calculateDepthModelBitmap(PlugIn_ViewPort &vp)
     int w = r2.x - r1.x; // max-min
     int h = r2.y - r1.y; // max-min
 
-   if ((w > 10 && h > 10) && (w < 10000 && h < 10000))
+    if ((w > 10 && h > 10) && (w < 10000 && h < 10000))
     {
         wxImage imgScaled = original.Scale(w, h, /*wxImageResizeQuality*/ wxIMAGE_QUALITY_NORMAL);
         if (!imgScaled.IsOk())
@@ -113,7 +113,7 @@ bool dmDepthModelDrawer::drawDepthChart(wxDC &dc/*, PlugIn_ViewPort &vp*/)
     if (modelState < BITMAP_AVAILABLE) { return false; }
 
     //wxString  fname = "C:\\OPENCPN_DATA\\UkiImg_wm.png";
-    
+
     dc.DrawBitmap(bmp, bitmapTopLeftPositioningPoint, true);
 
     return true;

@@ -56,6 +56,7 @@ struct DMGeneralConfig : dm_configAPI {
 
 #define DM_NUM_CUSTOM_COL 5 // Number of custom colors
 #define DM_NUM_CUSTOM_DEP 4 // Number of custom border depths. Must be equal to DM_NUM_CUSTOM_COL-1.
+
 struct DMColorOptionConfig : dm_configAPI {
 
     DMColorOptionConfig(wxFileConfig* confFile)
