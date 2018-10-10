@@ -16,9 +16,11 @@ public:
     ~dmDataset();
 
 
+    virtual bool setColourConfigurationFile(const char* filename, bool giveOwnership);
+    virtual bool setColourConfiguration(const char* fileContents, bool giveOwnership);
     unsigned char * getRasterData(
         coord &topLeftOut, coord &botRightOut) override;
-    unsigned char * getRasterData(
+    unsigned char * getRasterData(int imgWidth, int imgHeight,
         const coord topLeftIn, const coord botRightIn,
         coord &topLeftOut, coord &botRightOut) override;
     bool openDataSet(const char* filename) override;
