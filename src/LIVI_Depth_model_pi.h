@@ -99,6 +99,7 @@ public:
         wxString &message_body)                     override;   // opencpn_plugin_17
     virtual void OnSetupOptions(void)               override;   // opencpn_plugin_19
     virtual void LateInit(void)                     override;   // opencpn_plugin_110
+    virtual bool MouseEventHook(wxMouseEvent &event) override; // opencpn_plugin_112
 //  virtual bool RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp);
 
 //  Other public methods
