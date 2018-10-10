@@ -49,6 +49,7 @@
 
 class Dlg;
 class dmConfigHandler;
+class dmDepthModelDrawer;
 
 //----------------------------------------------------------------------------------------------------------
 //    The PlugIn Class Definition
@@ -147,6 +148,5 @@ private:
 
 
 };
-
 
 #endif _LIVI_DEPTH_MODEL_PI_H_

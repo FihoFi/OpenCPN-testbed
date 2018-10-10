@@ -119,6 +119,12 @@ wxColour Dlg::GetCustomColor(int num) {
     return picker->GetColour();
 }
 
+wxFileName    Dlg::GetColorConfigurationFileName()
+{    return this->dmColorOptionsUserFile_filePicker->GetFileName();     }
+
+void    Dlg::SetColorConfigurationFileName(wxFileName &fileName)
+{    this->dmColorOptionsUserFile_filePicker->SetFileName(fileName);    }
+
 void Dlg::SetCustomLevel(int num, int level)
 {
     switch (num) {
@@ -152,6 +158,10 @@ wxFileName    Dlg::GetDepthChartFileName()
 void    Dlg::SetDepthChartFileName(wxFileName &fileName)
 {    this->dmPictureImport_filePicker->SetFileName(fileName);   }
 
+void Dlg::SetPictureImportErrorText(std::string errStr)
+{
+    this->dmPictureImportError_staticText->SetLabel(errStr);
+}
 
 //void Dlg::Addpoint(TiXmlElement* Route, wxString ptlat, wxString ptlon, wxString ptname, wxString ptsym, wxString pttype){
 /*
