@@ -124,8 +124,6 @@ bool dmDataset::dstSrsToLatLon(double e, double n, coord &latLons)
 
 bool dmDataset::getDatasetExtents(GDALDataset *ds, coord &topLeft, coord &botRight)
 {
-    double topLeftE, topLeftN;
-    double botRightE, botRightN;
     double geoTransform[6];
 
     if (GDALGetGeoTransform(_dstDataset, geoTransform) != CPLErr::CE_None)
@@ -134,13 +132,10 @@ bool dmDataset::getDatasetExtents(GDALDataset *ds, coord &topLeft, coord &botRig
     double xSize = _dstDataset->GetRasterXSize();
     double ySize = _dstDataset->GetRasterYSize();
 
-    topLeftE = geoTransform[0];
-    topLeftN = geoTransform[3];
-    botRightE = geoTransform[0] + xSize * geoTransform[1] + ySize * geoTransform[2];
-    botRightN = geoTransform[3] + xSize * geoTransform[4] + ySize * geoTransform[5];
-
-    dstSrsToLatLon(topLeftE, topLeftN, topLeft);
-    dstSrsToLatLon(botRightE, botRightN, botRight);
+    topLeft.lon = geoTransform[0];
+    topLeft.lat = geoTransform[3];
+    botRight.lon = geoTransform[0] + xSize * geoTransform[1] + ySize * geoTransform[2];
+    botRight.lat = geoTransform[3] + xSize * geoTransform[4] + ySize * geoTransform[5];
 
     return true;
 }
