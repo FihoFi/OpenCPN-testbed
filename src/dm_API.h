@@ -3,9 +3,19 @@
 #ifndef _DM_API_
 #define _DM_API_
 
+
 struct coord {
-    /*float*/double lon; // mathematical, not geodetic x
-    /*float*/double lat; // mathematical, not geodetic y
+    coord()
+        : north(0), east(0)
+    {    }
+
+    coord(double north, double east)
+    {
+        this->north = north;
+        this->east = east;
+    }
+    /*float*/double east; // mathematical x, longitude etc.
+    /*float*/double north; // mathematical y, latitude
 };
 
 class /*DECL_EXP*/ dm_API
@@ -45,13 +55,14 @@ public:
      /**
     * Returns the whole raster data in the Dataset.
     * The coordinate span of the dataset is returned in the parameters.
+    * The ownership of the returned pointer is handed to the caller.
     *
     * @param[out] imgWidth desired width of the resulting image
     * @param[out] imgHeight desired height of the resulting image
     * @param[out] topLeftOut 
     * @param[out] botRightOut
     */
-    virtual unsigned char * getRasterData(int imgWidth, int imgHeight,
+    virtual unsigned char * getRasterData(
         coord &topLeftOut, coord &botRightOut) const = 0;
 
     /**
@@ -59,6 +70,7 @@ public:
     * coordinate pairs.
     * The coordinate span of the returned Dataset part  is returned
     * in the (Out) parameters.
+    * The ownership of the returned pointer is handed to the caller.
     *
     * @param[out] imgWidth desired width of the resulting image
     * @param[out] imgHeight desired height of the resulting image
@@ -71,7 +83,5 @@ public:
         const coord topLeftIn, const coord botRightIn,
         coord &topLeftOut, coord &botRightOut) const = 0;
 };
-
-dm_API::~dm_API() { }
 
 #endif _DM_API_
