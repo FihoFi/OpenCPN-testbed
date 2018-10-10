@@ -6,16 +6,16 @@
 
 struct coord {
     coord()
-        : lat(0), lon(0)
+        : north(0), east(0)
     {    }
 
-    coord(double lat, double lon)
+    coord(double north, double east)
     {
-        this->lat = lat;
-        this->lon = lon;
+        this->north = north;
+        this->east = east;
     }
-    /*float*/double lon; // mathematical, not geodetic x
-    /*float*/double lat; // mathematical, not geodetic y
+    /*float*/double east; // mathematical x, longitude etc.
+    /*float*/double north; // mathematical y, latitude
 };
 
 class /*DECL_EXP*/ dm_API
@@ -27,7 +27,8 @@ public:
 
     virtual bool openDataSet(const char* filename) = 0;
     //MRJ: is the same as bool setFileName(const char* filename);
-    
+
+
      /**
     * Returns the whole raster data in the Dataset.
     * The coordinate span of the dataset is returned in the parameters.
