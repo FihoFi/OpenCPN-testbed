@@ -61,7 +61,7 @@ public:
     * @param[out] botRightOut
     */
     virtual unsigned char * getRasterData(
-        coord &topLeftOut, coord &botRightOut) const = 0;
+        coord &topLeftOut, coord &botRightOut) = 0;
 
     /**
     * Returns a square part of the Dataset spanned by the two given (In)
@@ -79,6 +79,6 @@ public:
     */
     virtual unsigned char * getRasterData(int imgWidth, int imgHeight,
         const coord topLeftIn, const coord botRightIn,
-        coord &topLeftOut, coord &botRightOut) const = 0;
+        coord &topLeftOut, coord &botRightOut) = 0;
 };
 #endif _DM_API_
