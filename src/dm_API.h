@@ -57,8 +57,6 @@ public:
     * The coordinate span of the dataset is returned in the parameters.
     * The ownership of the returned pointer is handed to the caller.
     *
-    * @param[out] imgWidth desired width of the resulting image
-    * @param[out] imgHeight desired height of the resulting image
     * @param[out] topLeftOut 
     * @param[out] botRightOut
     */
