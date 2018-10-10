@@ -6,17 +6,24 @@
 
 struct coord {
     coord()
-        : lat(0), lon(0)
+        : north(0), east(0)
     {    }
 
-    coord(double lat, double lon)
+    coord(double north, double east)
     {
-        this->lat = lat;
-        this->lon = lon;
+        this->north = north;
+        this->east = east;
     }
-    /*float*/double lon; // mathematical, not geodetic x
-    /*float*/double lat; // mathematical, not geodetic y
+    /*float*/double north; // mathematical y, latitude  etc.
+    /*float*/double east;  // mathematical x, longitude etc.
 };
+
+typedef enum dmAPIError {
+    FILENOTFOUND,
+    FILE_SET,
+    CHART_AREA_OK,
+    BITMAP_AVAILABLE
+} dmAPIError;
 
 class /*DECL_EXP*/ dm_API
 {
@@ -27,7 +34,31 @@ public:
 
     virtual bool openDataSet(const char* filename) = 0;
     //MRJ: is the same as bool setFileName(const char* filename);
-    
+
+    /**
+    * Passes a full file path&name for a file where the colour configuration
+    * information for a depth model chart can be found.
+    *
+    * @param[in] filename   Filepath of a file containing the colour configuration.
+    * @param[in] giveOwnership  Tells, if the pointer deletion responsibility
+    *                           is handled to the respondent.
+    * @return true, if the file exists (TODO ?and is a valid colour configuration file? TODO)
+    */
+//    virtual bool setColourConfigurationFile(const char* filename, bool giveOwnership) = 0;
+
+    /**
+    * Passes the colour configuration information directly in the
+    * for a depth model chart can be found.
+    *
+    * @param[in] fileContents   Char array describing the colouring for any
+    *                           generated depth model chart.
+    * @param[in] giveOwnership  Tells, if the pointer deletion responsibility
+    *                           is handled to the respondent.
+    * @return true, if (TODO ?the fileContents is a valid colour configuration? 
+    *                        or ?the pointer is not null?
+    */
+//    virtual bool setColourConfiguration(const char* fileContents, bool giveOwnership) = 0;
+
      /**
     * Returns the whole raster data in the Dataset.
     * The coordinate span of the dataset is returned in the parameters.
