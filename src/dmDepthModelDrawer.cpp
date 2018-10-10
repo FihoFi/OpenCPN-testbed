@@ -21,7 +21,9 @@ bool dmDepthModelDrawer::setDepthModelDataset(wxFileName &fileName)
 
     bool success = dataset.openDataSet(fileNameCharPtr);
     if (success)
-    { modelState = FILE_SET; }
+    {
+        depthModelFileName = fileNameCharPtr;
+        modelState = PROJECTION_OK; }
     else
     {
         wxLogMessage(_T("dmDepthModelDrawer::setDepthModelDataset openDataSet failed: ")+ fileNameStr);
@@ -31,12 +33,9 @@ bool dmDepthModelDrawer::setDepthModelDataset(wxFileName &fileName)
 
 bool dmDepthModelDrawer::applyChartAreaData(coord chartTopLeft, coord chartBotRight)
 {
-    if (modelState < FILE_SET) { return false; }
+    if (modelState < FILE_SET/*PROJECTION_OK*/) { return false; }
 
     // TODO do the calculations for new wantedTopLeft, and wantedBotRight
-    wantedTopLeft = chartTopLeft   /* + some offset to out of the window */;
-    wantedBotRight = chartBotRight /* + some offset to out of the window */;
-
     ////TODO CHANGE THESE DUMMY COORDINATES
     ////transformation  transf_f = PROJ;
     //gimmeLatLons(/*transf_f,*/ // From World Mercator to LatLon
@@ -46,12 +45,52 @@ bool dmDepthModelDrawer::applyChartAreaData(coord chartTopLeft, coord chartBotRi
     // TODO THIS MUST BE CROPPED SOMEHOW WITH CURRENT WINDOW RELATED VALUES
     //unsigned char*  oldRaster = rasterToDraw;   // save the old pointer for deletion
     if(!rasterToDraw)
+    this->chartTopLeft  = chartTopLeft   /* + some offset to out of the window */;
+    this->chartBotRight = chartBotRight /* + some offset to out of the window */;
+
+    if(true)
     {
-    rasterToDraw = dataset.getRasterData(//wantedTopLeft, wantedBotRight,
-            lastTopLeft, lastBotRight);  // probably in latlons
+        try
+        {
+            rasterToDraw = dataset.getRasterData(//wantedTopLeft, wantedBotRight,
+                imageTopLeft, imageBotRight);  // probably in latlons
+        }
+        catch (const std::exception& const ex) {
+            throw std::string(ex.what());
+        }
+        catch (const std::string& const ex) {
+            throw ex;
+        }
+        catch (...)
+        {
+            std::exception_ptr currExc = std::current_exception();
+            try {
+                if (currExc) {
+                    std::rethrow_exception(currExc);
+                }
+            }
+            catch (const std::exception& e) {
+                throw e.what();
+            }
+        }
+
+        double crds[4];
+        crds[0] = imageTopLeft.lon;  // lon (World mercator)
+        crds[1] = imageBotRight.lat; // lat
+        crds[2] = imageBotRight.lon; // lon
+        crds[3] = imageTopLeft.lat;  // lat
+        gimmeLatLons(WORLD_MERCATOR, crds[0], crds[3], crds[2], crds[1],
+            imageTopLeft.lat, imageTopLeft.lon, imageBotRight.lat, imageBotRight.lon);
     }
 
-    if (1==1)   // TODO does the getRasterData fail? how?
+    // TODO must make nicer; now crops just to minimum areas
+    wantedTopLeft.lat  = (imageTopLeft.lat  < chartTopLeft.lat)  ? imageTopLeft.lat  : chartTopLeft.lat;
+    wantedTopLeft.lon =  (imageTopLeft.lon  > chartTopLeft.lon)  ? imageTopLeft.lon  : chartTopLeft.lon;
+    wantedBotRight.lat = (imageBotRight.lat > chartBotRight.lat) ? imageBotRight.lat : chartBotRight.lat;
+    wantedBotRight.lon = (imageBotRight.lon < chartBotRight.lon) ? imageBotRight.lon : chartBotRight.lon;
+
+
+    if (rasterToDraw)   // TODO does the getRasterData fail? how?
     {
         modelState = CHART_AREA_OK;
     }
@@ -62,10 +101,6 @@ bool dmDepthModelDrawer::calculateDepthModelBitmap(PlugIn_ViewPort &vp)
 {
     if (modelState < CHART_AREA_OK) { return false; }
 
-    //  original.InitAlpha();
-    bool loadSuccess = original.LoadFile(depthModelFileName.GetName());
-    //unsigned char *alpha = original.GetAlpha();
-    if (!loadSuccess)
     {
         wxLogMessage(_T("dmDepthModelDrawer::calculateDepthModelBitmap - LoadFile failed: ") +
             depthModelFileName.GetName().ToStdString());
@@ -83,17 +118,15 @@ bool dmDepthModelDrawer::calculateDepthModelBitmap(PlugIn_ViewPort &vp)
 
     if ((w > 10 && h > 10) && (w < 10000 && h < 10000))
     {
-        wxImage imgScaled = original.Scale(w, h, /*wxImageResizeQuality*/ wxIMAGE_QUALITY_NORMAL);
-        if (!imgScaled.IsOk())
-        {
-            wxLogMessage(_T("dmDepthModelDrawer::calculateDepthModelBitmap - Scale failed: ") +
-                depthModelFileName.GetName().ToStdString()); 
-            return false;
-        }
+        // Generate the image with Dataset/GDAL
+        wxImage* originalFromGDAL = new wxImage(w, h, rasterToDraw, false);
+        rasterToDraw = NULL; // was freed by wxImage constructor
 
         bitmapTopLeftPositioningPoint = r1;
-        bmp = wxBitmap(imgScaled);
+        bmp = wxBitmap(*originalFromGDAL);
         //bmp.SetMask(new wxMask(bmp, wxColour(255, 255, 255)));
+        delete originalFromGDAL;
+
     }
    else
    {
@@ -110,7 +143,7 @@ bool dmDepthModelDrawer::calculateDepthModelBitmap(PlugIn_ViewPort &vp)
 
 bool dmDepthModelDrawer::drawDepthChart(wxDC &dc/*, PlugIn_ViewPort &vp*/)
 {
-    if (modelState < BITMAP_AVAILABLE) { return false; }
+    if (modelState < CHART_AREA_OK/*BITMAP_AVAILABLE*/) { return false; }
 
     //wxString  fname = "C:\\OPENCPN_DATA\\UkiImg_wm.png";
 
@@ -125,7 +158,7 @@ bool dmDepthModelDrawer::drawDepthChart(wxDC &dc/*, PlugIn_ViewPort &vp*/)
 * <!--openCPN transformstion functions from_XX_Plugin,-->
 * according to given tr.
 */
-bool dmDepthModelDrawer::gimmeLatLons(/*transformation tr,*/
+bool dmDepthModelDrawer::gimmeLatLons(crdSystem crdSys, /*transformation tr,*/
     double x1, double y1, double x2, double y2,
     double& lat1Out, double& lon1Out, double& lat2Out, double& lon2Out)
 {
@@ -138,10 +171,16 @@ bool dmDepthModelDrawer::gimmeLatLons(/*transformation tr,*/
     //double y2_o = y2 - offsets[tr][1]; //
 
     //if (tr == PROJ) {
-        char *EPSG3395_WorldMercator = "+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs";
-        char *EPSG4326_WGS84 = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs";
+        static char *EPSG32635_UTMzone35N = "+proj=utm +zone=35 +datum=WGS84 +units=m +no_defs";
+        static char *EPSG3395_WorldMercator = "+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs";
 
-        projPJ source = pj_init_plus(EPSG3395_WorldMercator);
+        projPJ source;
+        if(crdSys==UTM35N)
+            source = pj_init_plus(EPSG32635_UTMzone35N);
+        else //if (World Mercator)
+            source = pj_init_plus(EPSG3395_WorldMercator);
+
+        char *EPSG4326_WGS84 = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs";
         projPJ target = pj_init_plus(EPSG4326_WGS84);
 
         if (source == NULL || target == NULL)

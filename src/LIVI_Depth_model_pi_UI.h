@@ -21,7 +21,6 @@
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
-#include <wx/stattext.h>
 #include <wx/clrpicker.h>
 #include <wx/spinctrl.h>
 #include <wx/sizer.h>
@@ -46,6 +45,7 @@ class LIVIDMUI_DLG : public wxDialog
 		wxPanel* dmFileImport_Panel;
 		wxStaticText* dmDepthModelFile_staticText;
 		wxFilePickerCtrl* dmPictureImport_filePicker;
+		wxStaticText* dmPictureImportError_staticText;
 		wxPanel* dmColorOptions_Panel;
 		wxStaticText* dmColorOptions_SelectShema_Label;
 		wxChoicebook* dmColorOptions_Choisebook;

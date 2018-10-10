@@ -165,7 +165,7 @@ bool LIVI_Depth_model_pi::DeInit(void)
     bool newPluginState = false;
     m_pconf->SetPluginToolState(newPluginState);
     SetToolbarItemState(pluginToolId, newPluginState);
-    
+ 
     m_pconf->SaveConfig();
 
     RequestRefresh(m_parent_window); // refresh main window, to hide the dataset pic
@@ -253,7 +253,13 @@ void LIVI_Depth_model_pi::SetCurrentViewPort(PlugIn_ViewPort &vp)
     coord topLeft (vp.lat_max, vp.lon_min);
     coord botRight(vp.lat_min, vp.lon_max);
  
-    bool success = dmDrawer->applyChartAreaData(topLeft, botRight);
+    try{
+        bool success = dmDrawer->applyChartAreaData(topLeft, botRight);
+    }
+    catch (std::string exStr)
+    {
+        dialog->SetPictureImportErrorText(exStr);
+    }
 }
 
 /**
@@ -359,9 +365,16 @@ wxArrayString LIVI_Depth_model_pi::GetDynamicChartClassNameArray(void)
 bool LIVI_Depth_model_pi::RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp)
 {
     bool success = dmDrawer->calculateDepthModelBitmap(*vp);
-    success &= dmDrawer->drawDepthChart(dc/*, *vp*/);
+
+    bool exception = false;
+    try                     {    success &= dmDrawer->drawDepthChart(dc);   }
+    catch (std::string ex)  {    exception = true;                          }
+    if (!exception)
+        dialog->SetPictureImportErrorText("Problem in drawing the picture.");
+
     return success;
 
+    RequestRefresh(m_parent_window); // refresh main window
 }
 
 /**
@@ -529,7 +542,16 @@ void LIVI_Depth_model_pi::OnColorOptionsApply()
 
 void LIVI_Depth_model_pi::OnFileImportFileChange(wxFileName fullFileName)
 {
-    bool success = dmDrawer->setDepthModelDataset(fullFileName);
+    bool exception = false;
+    try {
+        bool success = dmDrawer->setDepthModelDataset(fullFileName);
+    }
+    catch (std::string exStr)
+    {
+        dialog->SetPictureImportErrorText(exStr);
+        exception = true;
+    }
+
     m_pconf->fileImport.filePath = fullFileName;
     m_pconf->SaveConfig();
 
