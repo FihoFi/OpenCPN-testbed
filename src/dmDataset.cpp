@@ -27,6 +27,18 @@ dmDataset::~dmDataset()
 }
 
 
+bool dmDataset::setColourConfigurationFile(const char* filename, bool giveOwnership)
+{
+    // TODO: implement
+    return false;
+}
+
+bool dmDataset::setColourConfiguration(const char* fileContents, bool giveOwnership)
+{
+    // TODO: implement
+    return false;
+}
+
 unsigned char * dmDataset::getRasterData(
     coord &topLeftOut, coord &botRightOut)
 {
@@ -61,7 +73,7 @@ unsigned char * dmDataset::getRasterData(
      return imgData;
 }
 
-unsigned char * dmDataset::getRasterData(
+unsigned char * dmDataset::getRasterData(int imgWidth, int imgHeight,
     const coord topLeftIn, const coord botRightIn,
     coord &topLeftOut, coord &botRightOut)
 {
@@ -95,7 +107,7 @@ void dmDataset::registerGDALDrivers()
     }
 }
 
-bool dmDataset::dstSrsToLatLon(double e, double n, coord &latLons)
+bool dmDataset::dstSrsToLatLon(double n, double e, coord &latLons)
 {
     PJ *projection;
     PJ_COORD from, to;
@@ -109,12 +121,12 @@ bool dmDataset::dstSrsToLatLon(double e, double n, coord &latLons)
     if (!projection)
         return false;
 
-    from = proj_coord(e, n, 0, 0);
+    from = proj_coord(n, e, 0, 0);
     
     to = proj_trans(projection, PJ_INV, from);
 
-    latLons.lat = proj_todeg(to.enu.n);
-    latLons.lon = proj_todeg(to.enu.e);
+    latLons.north = proj_todeg(to.enu.n);
+    latLons.east = proj_todeg(to.enu.e);
 
     /* Clean up */
     proj_destroy(projection);
@@ -132,10 +144,10 @@ bool dmDataset::getDatasetExtents(GDALDataset *ds, coord &topLeft, coord &botRig
     double xSize = _dstDataset->GetRasterXSize();
     double ySize = _dstDataset->GetRasterYSize();
 
-    topLeft.lon = geoTransform[0];
-    topLeft.lat = geoTransform[3];
-    botRight.lon = geoTransform[0] + xSize * geoTransform[1] + ySize * geoTransform[2];
-    botRight.lat = geoTransform[3] + xSize * geoTransform[4] + ySize * geoTransform[5];
+    topLeft.east = geoTransform[0];
+    topLeft.north = geoTransform[3];
+    botRight.east = geoTransform[0] + xSize * geoTransform[1] + ySize * geoTransform[2];
+    botRight.north = geoTransform[3] + xSize * geoTransform[4] + ySize * geoTransform[5];
 
     return true;
 }
