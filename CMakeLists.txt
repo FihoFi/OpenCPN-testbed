@@ -61,6 +61,9 @@ ADD_LIBRARY(${PACKAGE_NAME} SHARED ${SRC_LIVI_Depth_model})
 
 # GDAL related headers and libraries
 target_include_directories(${PACKAGE_NAME} PRIVATE C:/warmerda/bld/include/)
+target_link_libraries(${PACKAGE_NAME} 
+        debug       C:/proj-5.1.0/build/lib/Debug/proj_5_0_d.lib
+        optimized   C:/proj-5.1.0/build/lib/Release/proj_5_0.lib)
 target_link_libraries(${PACKAGE_NAME} C:/gdal-2.3.1/gdal_i.lib)
 ADD_DEFINITIONS(-DTIXML_USE_STL)
 
