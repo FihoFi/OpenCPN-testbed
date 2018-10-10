@@ -423,6 +423,17 @@ void LIVI_Depth_model_pi::LateInit(void)
     // TODO
 }
 
+/**
+* @since opencpn_plugin_112
+* Implement if want to get e.g. mouse clicks, to see at what position
+* did the user click.
+*/
+bool LIVI_Depth_model_pi::MouseEventHook(wxMouseEvent &event)
+{
+    // TODO
+    return false; // not handled; event handling is continued after this function
+}
+
 wxString LIVI_Depth_model_pi::GetLongPluginVersionString() {
     std::string versionStr =
         PLUGIN_VERSION_MAJOR + '.' + PLUGIN_VERSION_MINOR +
