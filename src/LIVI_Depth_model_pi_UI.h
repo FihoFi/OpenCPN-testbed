@@ -11,11 +11,13 @@
 #include <wx/artprov.h>
 #include <wx/xrc/xmlres.h>
 #include <wx/panel.h>
+#include <wx/stattext.h>
 #include <wx/gdicmn.h>
 #include <wx/font.h>
 #include <wx/colour.h>
 #include <wx/settings.h>
 #include <wx/string.h>
+#include <wx/filepicker.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
@@ -42,6 +44,8 @@ class LIVIDMUI_DLG : public wxDialog
 	protected:
 		wxNotebook* dmTabChooser;
 		wxPanel* dmFileImport_Panel;
+		wxStaticText* dmDepthModelFile_staticText;
+		wxFilePickerCtrl* dmPictureImport_filePicker;
 		wxPanel* dmColorOptions_Panel;
 		wxStaticText* dmColorOptions_SelectShema_Label;
 		wxChoicebook* dmColorOptions_Choisebook;
@@ -81,6 +85,10 @@ class LIVIDMUI_DLG : public wxDialog
 		wxColourPickerCtrl* dmColorOptionsConstant_ColorAtDeepestLevelOfInterest_ColourPicker;
 		wxStaticText* dmColorOptionsConstant_ColorAtShallowestLevelOfInterest_Label1;
 		wxColourPickerCtrl* dmColorOptionsConstant_ShallowestLevelOfInterest_ColourPicker;
+		wxPanel* dmColorOptionsUserFile_Panel;
+		wxStaticText* dmColorOptionsUserFile_giveFile_staticText;
+		wxFilePickerCtrl* dmColorOptionsUserFile_filePicker;
+		wxStaticText* dmColorOptionsUserFile_help_staticText;
 		wxButton* dmColorOptions_Apply_Button;
 		wxPanel* dmWaterLevel_Panel;
 		wxStaticText* dmEmpty;
@@ -94,6 +102,7 @@ class LIVIDMUI_DLG : public wxDialog
 		wxButton* dm_AboutWxWidgets_Button;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void OnFileImportFileChange( wxFileDirPickerEvent& event ) { event.Skip(); }
 		virtual void OnColorOptionsApplyButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnAboutLIVIDepthModel( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnAboutWxWidgets( wxCommandEvent& event ) { event.Skip(); }

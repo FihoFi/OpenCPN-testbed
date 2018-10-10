@@ -2,7 +2,7 @@
  *
  * Project:  OpenCPN
  * Purpose:  LIVI_Depth_model Plugin
- * Author:   Mike Rossiter
+ * Author:   Marjukka Kokkonen
  *
  ***************************************************************************
  *   Copyright (C) 2013 by Mike Rossiter                                   *
@@ -46,15 +46,21 @@ Dlg::Dlg( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint&
     dbg=false; //for debug output set to true
 //    this->dmAbout_LIVIDMIcon_bitmap->SetIcon(plugin->GetIcon());
 //    wxGDIImage* icon = plugin->GetIcon();
-//    wxStaticBitmap* aboutIcon = new wxStaticBitmap(this->dmAbout_Panel, wxID_ANY,, wxDefaultPosition, wxSize(-1, -1), 0);
+//    wxStaticBitmap* aboutIcon = new wxStaticBitmap(
+//          this->dmAbout_Panel, wxID_ANY,, wxDefaultPosition, wxSize(-1, -1), 0);
 //    this->dmAbout_Icon_Panel->AddIcon(plugin->GetIcon());
 }
 
 
 
 void Dlg::OnClose(wxCloseEvent& event)
-{   plugin->OnLIVI_Depth_modelDialogClose();   }
+{   plugin->OnDepthModelDialogClose();   }
 
+void Dlg::OnFileImportFileChange(wxFileDirPickerEvent& WXUNUSED(event))
+{
+    wxFileName fname = this->dmPictureImport_filePicker->GetFileName();
+    plugin->OnFileImportFileChange(fname);
+}
 
 void Dlg::OnColorOptionsApplyButtonClick(wxCommandEvent& event)
 {
@@ -74,6 +80,7 @@ void Dlg::OnAboutLIVIDepthModel(wxCommandEvent& WXUNUSED(event))
     aboutInfo.SetCopyright  (plugin->GetCopyright()             );
     // aboutInfo.SetWebSite("http://notavailable.yet");
     aboutInfo.AddDeveloper("Marjukka Kokkonen, Sitowise");
+    aboutInfo.AddDeveloper("Tommi Larjomaa, Sitowise");
     wxAboutBox(aboutInfo);
 }
 
@@ -138,6 +145,12 @@ double Dlg::GetCustomLevel(int num) {
     }
     return spinCtrl->GetValue();
 }
+
+wxFileName    Dlg::GetDepthChartFileName()
+{    return this->dmPictureImport_filePicker->GetFileName();    }
+
+void    Dlg::SetDepthChartFileName(wxFileName &fileName)
+{    this->dmPictureImport_filePicker->SetFileName(fileName);   }
 
 
 //void Dlg::Addpoint(TiXmlElement* Route, wxString ptlat, wxString ptlon, wxString ptname, wxString ptsym, wxString pttype){

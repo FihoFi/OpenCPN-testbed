@@ -47,21 +47,8 @@
  to ensure compatibility to as many old users as possible. */
 #define     MY_API_VERSION_MINOR    15
 
-#define DM_NUM_CUSTOM_COL 5 // Number of custom colors
-#define DM_NUM_CUSTOM_DEP 4 // Number of custom border depths. Must be DM_NUM_CUSTOM_COL-1.
-
-class DMColorOptionConfig {
-public:
-    wxColor m_customColours[DM_NUM_CUSTOM_COL]; // 0: col. for always too shallow, 4: col. for always deep enough
-    double  m_customDepths[DM_NUM_CUSTOM_DEP]; // 0: level of too shallow, 3: level of always deep enough
-/*
-    wxColor m_SlidingColours[2];    // 0:colour for too shallows, 1: colour for deep enoughs
-    int     m_SlidingDepths[2];     // 0:depth of always too shallow, 1: depth of always deep enough
-    int     m_SlidingSteps;         // Number of colour steps from deepest to shallowest
-*/
-};
-
 class Dlg;
+class dmConfigHandler;
 
 //----------------------------------------------------------------------------------------------------------
 //    The PlugIn Class Definition
@@ -81,90 +68,85 @@ public:
     wxIcon GetIcon();
 
 ////  The required PlugIn Methods ////
-    int Init(void);
-    bool DeInit(void);
+    virtual int  Init(void)             override;
+    virtual bool DeInit(void)           override;
 
-    virtual int GetAPIVersionMajor();       // impl. OK
-    virtual int GetAPIVersionMinor();       // impl. OK
-    virtual int GetPlugInVersionMajor();    // impl. OK
-    virtual int GetPlugInVersionMinor();    // impl. OK
-    virtual wxBitmap *GetPlugInBitmap();    // impl. OK
+    virtual int GetAPIVersionMajor()    override;    // impl. OK
+    virtual int GetAPIVersionMinor()    override;    // impl. OK
+    virtual int GetPlugInVersionMajor() override;    // impl. OK
+    virtual int GetPlugInVersionMinor() override;    // impl. OK
+    virtual wxBitmap *GetPlugInBitmap() override;    // impl. OK
 
-    virtual wxString GetCommonName();       // impl. OK
-    virtual wxString GetShortDescription(); // impl. OK
-    virtual wxString GetLongDescription();  // impl. OK
+    virtual wxString GetCommonName()        override;   // impl. OK
+    virtual wxString GetShortDescription()  override;   // impl. OK
+    virtual wxString GetLongDescription()   override;   // impl. OK
 
 ////  The optional overridable PlugIn Methods ////
 
-    virtual void SetDefaults(void);
-//  int GetToolbarToolCount(void);  // Used nowhere by OpenCPN, so not reqired?
+    virtual void SetDefaults(void)          override;
+//  int GetToolbarToolCount(void)           override;  // Used nowhere by OpenCPN, so not reqired?
     virtual void ShowPreferencesDialog(wxWindow* parent); // Preferences dialog not implemented (yet?)
-//  virtual bool RenderOverlay(wxMemoryDC *pmdc, PlugIn_ViewPort *vp); // OpenGL overlay function, OpenGL not implemented (yet?)
-    virtual void SetCursorLatLon(double lat, double lon);
-    virtual void SetCurrentViewPort(PlugIn_ViewPort &vp);
-    virtual void ProcessParentResize(int x, int y);
-    virtual void SetColorScheme(PI_ColorScheme cs);
-    virtual void OnToolbarToolCallback(int id);
-    virtual void OnContextMenuItemCallback(int id);
-    virtual wxArrayString GetDynamicChartClassNameArray(void);
-    virtual bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp); // plugin_17
+//  virtual bool RenderOverlay(wxMemoryDC *pmdc, PlugIn_ViewPort *vp) override; // OpenGL overlay function, OpenGL not implemented (yet?)
+    virtual void SetCursorLatLon        (double lat, double lon) override;
+    virtual void SetCurrentViewPort     (PlugIn_ViewPort &vp)   override;
+    virtual void ProcessParentResize    (int x, int y)          override;
+    virtual void SetColorScheme         (PI_ColorScheme cs)     override;
+    virtual void OnToolbarToolCallback      (int id)            override;
+    virtual void OnContextMenuItemCallback  (int id)            override;
+    virtual wxArrayString GetDynamicChartClassNameArray(void)   override;
+    virtual bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp)   override; // opencpn_plugin_17
     virtual void SetPluginMessage(wxString &message_id,
-        wxString &message_body);        // plugin_17
-    virtual void OnSetupOptions(void);  // plugin_19
-    virtual void LateInit(void);        // plugin_110
-
+        wxString &message_body)                     override;   // opencpn_plugin_17
+    virtual void OnSetupOptions(void)               override;   // opencpn_plugin_19
+    virtual void LateInit(void)                     override;   // opencpn_plugin_110
+    virtual bool MouseEventHook(wxMouseEvent &event) override; // opencpn_plugin_112
 //  virtual bool RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp);
 
 //  Other public methods
-    void SetLIVIDepthModelDialogX         (int x){ m_dialog_x = x;};
-    void SetLIVIDepthModelDialogY         (int x){ m_dialog_y = x;};
-    void SetLIVIDepthModelDialogWidth     (int x){ m_dialog_width = x;};
-    void SetLIVIDepthModelDialogHeight    (int x){ m_dialog_height = x;};
-    void OnLIVI_Depth_modelDialogClose();
+    void OnDepthModelDialogClose();
 
 // LIVI additions
 // Additional functions for About dialog
     virtual wxString GetLongPluginVersionString();
     virtual wxString GetCopyright();
 
-    wxString &GetLIVIDmConfigFileName();
 
     void OnColorOptionsApply();
+    void OnFileImportFileChange(wxFileName fullFileName);
 
 private:
 
     void OnClose( wxCloseEvent& event );
 
-
     LIVI_Depth_model_pi *plugin;
-    wxFileConfig      *m_pconfig;
-    wxWindow          *m_parent_window;
-    bool              LoadConfig(void);
-    bool              SaveConfig(void);
-    void              PushConfigToUI(void);
-    void              PullConfigFromUI(void);
+    int                 pluginToolId;
 
-    Dlg               *m_pDialog;
-    int               m_dialog_x, m_dialog_y,
-                      m_dialog_width, m_dialog_height;
-    int               m_display_width, m_display_height;
-    int               m_leftclick_tool_id;
-    bool              m_ShowHelp,m_bCaptureCursor,m_bCaptureShip;
-    double            m_ship_lon,m_ship_lat,
-                      m_cursor_lon,m_cursor_lat;
+    wxWindow            *m_parent_window;
 
-    bool              m_bLIVI_Depth_modelShowIcon;
-    bool              m_bShowLIVI_Depth_model;
+    dmConfigHandler     *m_pconf;
+    Dlg                 *dialog;
+    /** Icon bitmap of this plugin as icon.Needed by about dialog. */
+    wxIcon              *m_icon;
 
-    wxIcon*           m_icon;
+    dmDepthModelDrawer  *dmDrawer;
+  //wxFileName          pluginConfigPath;
+
+    bool                LoadConfig(void);
+  //bool                SaveConfig(void);
+    void                PushConfigToUI(void);
+    void                PullConfigFromUI(void);
+    wxString            GetDepthColourWksForGDAL();
+    void                GetDepthModelPicture();
+
+
+    bool                m_ShowHelp,m_bCaptureCursor,m_bCaptureShip;
+  //double              m_cursor_lon, m_cursor_lat;
+
 
 // LIVI additions
-      wxFileName        m_config_file_full_path;
 
-      DMColorOptionConfig m_conf;
 
-      PlugInChartBase   *m_chartBase;
 };
 
 
-#endif
+#endif _LIVI_DEPTH_MODEL_PI_H_

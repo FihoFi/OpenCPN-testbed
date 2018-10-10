@@ -18,6 +18,9 @@ SET(VERSION_MAJOR "0")
 SET(VERSION_MINOR "01")
 SET(VERSION_PATCH "01")
 SET(VERSION_DATE "2018-09-19")
+SET(GDAL_VERSION "2.3.1") # Just telling aloud the used GDAL version. No package-retrieval system here for now.
+SET(PROJ_VERSION "5.1.0") # Just telling aloud the used PROJ version. No package-retrieval system here for now.
+SET(HDF5_VERSION "1.10.3") # Just telling aloud the used HDF5 version. No package-retrieval system here for now.
 
 #SET(CMAKE_BUILD_TYPE Debug)
 SET( wxWidgets_USE_DEBUG OFF)
@@ -34,11 +37,18 @@ SET(SRC_LIVI_Depth_model
         src/icons.cpp
         src/LIVI_Depth_model_pi_UI.h
         src/LIVI_Depth_model_pi_UI.cpp
-        src/LIVI_Depth_model_pi_UI_impl.cpp
         src/LIVI_Depth_model_pi_UI_impl.h
-		src/dm_API.h
+        src/LIVI_Depth_model_pi_UI_impl.cpp
+        src/dm_API.h
+        src/dm_API.cpp
+        src/dmConfigHandler.h
+        src/dmConfigHandler.cpp
+        src/dmDataset.h
+        src/dmDataset.cpp
         src/NavFunc.h
         src/NavFunc.cpp
+        src/dmDepthModelDrawer.h
+        src/dmDepthModelDrawer.cpp
         src/ocpn_plugin.h
         src/tinyxml.cpp
         src/tinyxmlerror.cpp
@@ -49,6 +59,8 @@ SET(SRC_LIVI_Depth_model
 
 ADD_LIBRARY(${PACKAGE_NAME} SHARED ${SRC_LIVI_Depth_model})
 
+# GDAL related headers and libraries
+target_include_directories(${PACKAGE_NAME} PRIVATE C:/warmerda/bld/include/)
 target_link_libraries(${PACKAGE_NAME} C:/gdal-2.3.1/gdal_i.lib)
 ADD_DEFINITIONS(-DTIXML_USE_STL)
 

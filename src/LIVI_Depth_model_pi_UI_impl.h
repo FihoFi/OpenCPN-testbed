@@ -51,7 +51,8 @@ class Dlg : public LIVIDMUI_DLG
 public:
         Dlg( wxWindow* parent, wxWindowID id = wxID_ANY,
             const wxString& title = _("LIVI Depth model Plugin"),
-            const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ),
+            const wxPoint& pos = wxDefaultPosition,
+            const wxSize& size = wxSize( -1,-1 ),
             long style = wxCLOSE_BOX|wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
 
   //      void OnPSGPX( wxCommandEvent& event );		
@@ -63,12 +64,18 @@ public:
 //        void Calculate( wxCommandEvent& event, bool Export, int Pattern );
 //        void Addpoint(TiXmlElement* Route, wxString ptlat, wxString ptlon, wxString ptname, wxString ptsym, wxString pttype);
 
+        wxFileName  GetColorConfigurationFileName();
+        void        SetColorConfigurationFileName(wxFileName &fileName);
+
         void        SetCustomColor(int num, wxColour& col);
         wxColour    GetCustomColor(int num);
         void        SetCustomLevel(int num, int level);
         double      GetCustomLevel(int num);
 
-		LIVI_Depth_model_pi *plugin;
+        void        SetDepthChartFileName(wxFileName &fileName);
+        wxFileName  GetDepthChartFileName();
+
+        LIVI_Depth_model_pi *plugin; // for callbacks at UI events
 
 //		wxString rte_start;
 //	    wxString rte_end;
@@ -78,6 +85,7 @@ private:
         virtual void OnColorOptionsApplyButtonClick( wxCommandEvent& WXUNUSED(event) );
         virtual void OnAboutLIVIDepthModel         ( wxCommandEvent& WXUNUSED(event) );
         virtual void OnAboutWxWidgets              ( wxCommandEvent& WXUNUSED(event) );
+        virtual void OnFileImportFileChange  ( wxFileDirPickerEvent& WXUNUSED(event) );
 
         bool dbg;
 

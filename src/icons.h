@@ -8,6 +8,7 @@
 #endif
 
 extern void initialize_images(void);
+extern void deinitialize_images(void);
 
 extern wxBitmap *_img_LIVI_Depth_model;
 extern wxBitmap *_img_LIVI_Depth_model_pi;
