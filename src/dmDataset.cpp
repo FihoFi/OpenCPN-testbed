@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 #include "gdal_utils.h"
-//#include "gdalwarper.h"
+#include "proj.h"
 
 bool dmDataset::driversRegistered = false;
 
@@ -28,19 +28,27 @@ dmDataset::~dmDataset()
 
 
 unsigned char * dmDataset::getRasterData(
-    coord &topLeftOut, coord &botRightOut) const
+    coord &topLeftOut, coord &botRightOut)
 {
-    GDALRasterBand *band = _dstDataset->GetRasterBand(1);
+    GDALRasterBand *band;
+    if (_dstDataset->GetRasterCount() > 0)
+        band = _dstDataset->GetRasterBand(1);
+    else
+        return NULL;
 
     int xSize, ySize;
-    int *bandData;
+    float *bandData;
     unsigned char *imgData;
+
+    if (!getDatasetExtents(_dstDataset, topLeftOut, botRightOut))
+        return NULL;
 
     xSize = band->GetXSize();
     ySize = band->GetYSize();
+
     imgData = (unsigned char*)malloc(sizeof(unsigned char) * 3 * xSize*ySize);
-    bandData = (int*)CPLMalloc(sizeof(int)*xSize*ySize);
-    band->RasterIO(GF_Read, 0, 0, xSize, ySize, bandData, xSize, ySize, GDT_Byte, 0, 0);
+    bandData = (float*)CPLMalloc(sizeof(float)*xSize*ySize);
+    band->RasterIO(GF_Read, 0, 0, xSize, ySize, bandData, xSize, ySize, GDT_Float32, 0, 0);
 
     for (int i = 0; i < xSize*ySize; i++)
     {
@@ -50,12 +58,12 @@ unsigned char * dmDataset::getRasterData(
     }
     CPLFree(bandData);
 
-    return imgData;
+     return imgData;
 }
 
 unsigned char * dmDataset::getRasterData(
     const coord topLeftIn, const coord botRightIn,
-    coord &topLeftOut, coord &botRightOut) const
+    coord &topLeftOut, coord &botRightOut)
 {
     // TODO: implement
     return NULL;
@@ -69,7 +77,11 @@ bool dmDataset::openDataSet(const char * filename)
     _srcDataset = (GDALDataset *)GDALOpen(filename, GA_ReadOnly);
 
     if (_srcDataset)
+    {
         _srcWkt = GDALGetProjectionRef(_srcDataset);
+        reprojectDataset();
+        _dstWkt = GDALGetProjectionRef(_dstDataset);
+    }
 
     return false;
 }
@@ -81,6 +93,56 @@ void dmDataset::registerGDALDrivers()
         GDALAllRegister();
         driversRegistered = true;
     }
+}
+
+bool dmDataset::dstSrsToLatLon(double e, double n, coord &latLons)
+{
+    PJ *projection;
+    PJ_COORD from, to;
+    OGRSpatialReference osr(GDALGetProjectionRef(_dstDataset));
+    char *projStr;
+    osr.exportToProj4(&projStr);
+    projection = proj_create(PJ_DEFAULT_CTX, projStr);
+
+    CPLFree(projStr);
+    
+    if (!projection)
+        return false;
+
+    from = proj_coord(e, n, 0, 0);
+    
+    to = proj_trans(projection, PJ_INV, from);
+
+    latLons.lat = proj_todeg(to.enu.n);
+    latLons.lon = proj_todeg(to.enu.e);
+
+    /* Clean up */
+    proj_destroy(projection);
+
+    return true;
+}
+
+bool dmDataset::getDatasetExtents(GDALDataset *ds, coord &topLeft, coord &botRight)
+{
+    double topLeftE, topLeftN;
+    double botRightE, botRightN;
+    double geoTransform[6];
+
+    if (GDALGetGeoTransform(_dstDataset, geoTransform) != CPLErr::CE_None)
+        return false;
+    
+    double xSize = _dstDataset->GetRasterXSize();
+    double ySize = _dstDataset->GetRasterYSize();
+
+    topLeftE = geoTransform[0];
+    topLeftN = geoTransform[3];
+    botRightE = geoTransform[0] + xSize * geoTransform[1] + ySize * geoTransform[2];
+    botRightN = geoTransform[3] + xSize * geoTransform[4] + ySize * geoTransform[5];
+
+    dstSrsToLatLon(topLeftE, topLeftN, topLeft);
+    dstSrsToLatLon(botRightE, botRightN, botRight);
+
+    return true;
 }
 
 void dmDataset::reprojectDataset()

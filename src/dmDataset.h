@@ -17,10 +17,10 @@ public:
 
 
     unsigned char * getRasterData(
-        coord &topLeftOut, coord &botRightOut) const override;
+        coord &topLeftOut, coord &botRightOut) override;
     unsigned char * getRasterData(
         const coord topLeftIn, const coord botRightIn,
-        coord &topLeftOut, coord &botRightOut) const override;
+        coord &topLeftOut, coord &botRightOut) override;
     bool openDataSet(const char* filename) override;
     void setSrcWkt(const char * wkt);
     void setDstWkt(const char * wkt);
@@ -30,12 +30,15 @@ private:
     static bool driversRegistered;
     static void registerGDALDrivers();
 
+
     const char * _srcWkt;
     const char * _dstWkt;
     GDALDataset * _srcDataset;
     GDALDataset * _dstDataset;
 
-
+    
+    bool dstSrsToLatLon(double e, double n, coord &latLons);
+    bool getDatasetExtents(GDALDataset *ds, coord &topLeft, coord &botRight);
     void reprojectDataset();
 
 };
