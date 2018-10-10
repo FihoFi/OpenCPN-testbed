@@ -435,8 +435,44 @@ wxString LIVI_Depth_model_pi::GetCopyright() {
 }
 
 
+/**
+* Generates a well known string (wks) about colour settings, telling
+* the colouring options for GDAL colour_relief.
+* Wks format is, for every row, like this:
+* <depth_value> <Red> <Green> <Blue> <Alpha>
+* We are going to use the nearest matching colour colouring option,
+* so we insert two colour definitions near each depth value, small depth
+* amount to each "side", so the nearest colour will be the wanted one
+* at any depth level.
+*/
+wxString LIVI_Depth_model_pi::GetDepthColourWksForGDAL()
+{
+    static double nci = 0.0001; // Nearest colour tweak. Number in meters.
+    static int opaque_level = 128;  // amount of opaqueness, value in [0...255]
 
 
+    wxString wks_ColourSettings;
+    for (int i = 0; i < DM_NUM_CUSTOM_DEP; i++) {
+        wks_ColourSettings.append(
+            wxString::Format(_T("%d %i %i %i %i\n"), 
+            m_pconf->colour.m_customDepths[i]+nci,
+            m_pconf->colour.m_customColours[i].Red(),
+            m_pconf->colour.m_customColours[i].Green(),
+            m_pconf->colour.m_customColours[i].Blue(),
+            m_pconf->colour.m_customColours[i].Alpha())
+        );
+        wks_ColourSettings.append(
+            wxString::Format(_T("%d %i %i %i %i\n"), 
+                m_pconf->colour.m_customDepths[i],
+                m_pconf->colour.m_customColours[i+1].Red(),
+                m_pconf->colour.m_customColours[i+1].Green(),
+                m_pconf->colour.m_customColours[i+1].Blue(),
+                opaque_level)
+        //      m_conf.m_customColours[i+1].Alpha())
+        );
+    }
+    return wks_ColourSettings;
+}
 
 void LIVI_Depth_model_pi::PushConfigToUI(void)
 {
