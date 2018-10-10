@@ -46,14 +46,15 @@ Dlg::Dlg( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint&
     dbg=false; //for debug output set to true
 //    this->dmAbout_LIVIDMIcon_bitmap->SetIcon(plugin->GetIcon());
 //    wxGDIImage* icon = plugin->GetIcon();
-//    wxStaticBitmap* aboutIcon = new wxStaticBitmap(this->dmAbout_Panel, wxID_ANY,, wxDefaultPosition, wxSize(-1, -1), 0);
+//    wxStaticBitmap* aboutIcon = new wxStaticBitmap(
+//          this->dmAbout_Panel, wxID_ANY,, wxDefaultPosition, wxSize(-1, -1), 0);
 //    this->dmAbout_Icon_Panel->AddIcon(plugin->GetIcon());
 }
 
 
 
 void Dlg::OnClose(wxCloseEvent& event)
-{   plugin->OnLIVI_Depth_modelDialogClose();   }
+{   plugin->OnDepthModelDialogClose();   }
 
 void Dlg::OnFileImportFileChange(wxFileDirPickerEvent& WXUNUSED(event))
 {
@@ -79,6 +80,7 @@ void Dlg::OnAboutLIVIDepthModel(wxCommandEvent& WXUNUSED(event))
     aboutInfo.SetCopyright  (plugin->GetCopyright()             );
     // aboutInfo.SetWebSite("http://notavailable.yet");
     aboutInfo.AddDeveloper("Marjukka Kokkonen, Sitowise");
+    aboutInfo.AddDeveloper("Tommi Larjomaa, Sitowise");
     wxAboutBox(aboutInfo);
 }
 

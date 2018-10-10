@@ -24,6 +24,8 @@ bool dmConfigHandler::LoadConfig(void)
     return success;
 }
 
+/*  Saves data entries of the Depth model configurations to the
+config settings. These are updated to the ini file at OpenCPN close. */
 bool dmConfigHandler::SaveConfig(void)
 {
     bool success = true;

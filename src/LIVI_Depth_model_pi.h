@@ -102,7 +102,7 @@ public:
 //  virtual bool RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp);
 
 //  Other public methods
-    void OnLIVI_Depth_modelDialogClose();
+    void OnDepthModelDialogClose();
 
 // LIVI additions
 // Additional functions for About dialog

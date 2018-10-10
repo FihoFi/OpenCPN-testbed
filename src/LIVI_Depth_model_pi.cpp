@@ -94,6 +94,12 @@ wxIcon LIVI_Depth_model_pi::GetIcon()
     return *m_icon;
 }
 
+
+
+/** Initiates anything that is to be kept alive anyway, whether
+*  the plugin is "active" or not.
+*  Thought to have here everything but picture data - the configuration
+*  stuff does not take so much space. */
 int LIVI_Depth_model_pi::Init(void)
 {
     AddLocaleCatalog( _T("LIVI_Depth_model_pi") ); // ocpn_plugin.h
@@ -175,7 +181,7 @@ int LIVI_Depth_model_pi::GetAPIVersionMinor()    {  return MY_API_VERSION_MINOR;
 int LIVI_Depth_model_pi::GetPlugInVersionMajor() {  return PLUGIN_VERSION_MAJOR;     }
 int LIVI_Depth_model_pi::GetPlugInVersionMinor() {  return PLUGIN_VERSION_MINOR;     }
 
-wxBitmap *LIVI_Depth_model_pi::GetPlugInBitmap() {  return _img_LIVI_Depth_model_pi; }
+wxBitmap* LIVI_Depth_model_pi::GetPlugInBitmap() {  return _img_LIVI_Depth_model_pi; }
 
 wxString LIVI_Depth_model_pi::GetCommonName()    {  return _("LIVI Depth model");    }
 
@@ -195,7 +201,7 @@ wxString LIVI_Depth_model_pi::GetLongDescription()
 
 /**
 * @TODO NOT IMPLEMENTED yet.
-* This will be called upon enabling a PlugIn via the user Dialog
+* This will be called upon enabling a PlugIn via the user Dialog.
 * Chance to setup any default options and behavior.
 * Set any variable loadable from (possible Preferences window, and)
 * config file(s).
@@ -205,6 +211,7 @@ void LIVI_Depth_model_pi::SetDefaults(void)
     // TODO
 }
 
+// OpenCPN implementation seems to be incomplete or missing (2018-10-02, MKo)
 //int LIVI_Depth_model_pi::GetToolbarToolCount(void)
 //{    return 1;        /* 1 - The options dialog, 2 -The draw-a-dot test */}
 
@@ -225,8 +232,8 @@ void LIVI_Depth_model_pi::ShowPreferencesDialog(wxWindow* parent)
 /**
 * @TODO NOT IMPLEMENTED yet.
 * Usable, if WANTS_CURSOR_LATLON-able.
-* Implement this when depths can be drawn, and want e.g. to pass
-* the user the depth value in a single point at cursor.
+* ?Implement this when depths can be drawn, and want e.g. to pass
+* the user the depth value in a single point at cursor.?
 */
 void LIVI_Depth_model_pi::SetCursorLatLon(double lat, double lon)
 {
@@ -235,7 +242,7 @@ void LIVI_Depth_model_pi::SetCursorLatLon(double lat, double lon)
 
 /**
 * @TODO NOT IMPLEMENTED yet.
-* Passes the current viewport of the main program th this plugin.
+* Passes the current viewport of the main program to this plugin.
 * Save it to be able to use it, e.g. to refresh/ load again the maps
 * that should be currently visible, or something.
 * NOTE that RenderOverlay also passes the viewPort. So, this might not be
@@ -454,7 +461,7 @@ void LIVI_Depth_model_pi::PullConfigFromUI(void)
 
 }
 
-void LIVI_Depth_model_pi::OnLIVI_Depth_modelDialogClose()
+void LIVI_Depth_model_pi::OnDepthModelDialogClose()
 {
     const bool state = false;
     m_pconf->SetPluginToolState(state);
@@ -479,10 +486,8 @@ void LIVI_Depth_model_pi::OnFileImportFileChange(wxFileName fullFileName)
     m_pconf->fileImport.filePath = fullFileName;
     m_pconf->SaveConfig();
 
-    //drawtest.ChangeDepthPicture(fullFileName);
     RequestRefresh(m_parent_window); // refresh main window
 }
-
 
 /*
 wxString &LIVI_Depth_model_pi::GetConfigFileName()
