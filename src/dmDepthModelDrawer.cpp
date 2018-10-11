@@ -75,19 +75,19 @@ bool dmDepthModelDrawer::applyChartAreaData(coord chartTopLeft, coord chartBotRi
         }
 
         double crds[4];
-        crds[0] = imageTopLeft.lon;  // lon (World mercator)
-        crds[1] = imageBotRight.lat; // lat
-        crds[2] = imageBotRight.lon; // lon
-        crds[3] = imageTopLeft.lat;  // lat
+        crds[0] = imageTopLeft.east;   // lon (World mercator)
+        crds[1] = imageBotRight.north; // lat
+        crds[2] = imageBotRight.east;  // lon
+        crds[3] = imageTopLeft.north;  // lat
         gimmeLatLons(WORLD_MERCATOR, crds[0], crds[3], crds[2], crds[1],
-            imageTopLeft.lat, imageTopLeft.lon, imageBotRight.lat, imageBotRight.lon);
+            imageTopLeft.north, imageTopLeft.east, imageBotRight.north, imageBotRight.east);
     }
 
     // TODO must make nicer; now crops just to minimum areas
-    wantedTopLeft.lat  = (imageTopLeft.lat  < chartTopLeft.lat)  ? imageTopLeft.lat  : chartTopLeft.lat;
-    wantedTopLeft.lon =  (imageTopLeft.lon  > chartTopLeft.lon)  ? imageTopLeft.lon  : chartTopLeft.lon;
-    wantedBotRight.lat = (imageBotRight.lat > chartBotRight.lat) ? imageBotRight.lat : chartBotRight.lat;
-    wantedBotRight.lon = (imageBotRight.lon < chartBotRight.lon) ? imageBotRight.lon : chartBotRight.lon;
+    wantedTopLeft.north  = (imageTopLeft.north  < chartTopLeft.north)  ? imageTopLeft.north  : chartTopLeft.north;
+    wantedTopLeft.east   = (imageTopLeft.east   > chartTopLeft.east )  ? imageTopLeft.east   : chartTopLeft.east;
+    wantedBotRight.north = (imageBotRight.north > chartBotRight.north) ? imageBotRight.north : chartBotRight.north;
+    wantedBotRight.east  = (imageBotRight.east  < chartBotRight.east ) ? imageBotRight.east  : chartBotRight.east;
 
 
     if (rasterToDraw)   // TODO does the getRasterData fail? how?
@@ -109,8 +109,8 @@ bool dmDepthModelDrawer::calculateDepthModelBitmap(PlugIn_ViewPort &vp)
 
     // Get min, and max coordinates where the bitmap is to be drawn
     wxPoint r1, r2;
-    GetCanvasPixLL(&vp, &r1, wantedTopLeft.lat,  wantedTopLeft.lon);   // up-left
-    GetCanvasPixLL(&vp, &r2, wantedBotRight.lat, wantedBotRight.lon);  // low-right
+    GetCanvasPixLL(&vp, &r1, wantedTopLeft.north,  wantedTopLeft.east);   // up-left
+    GetCanvasPixLL(&vp, &r2, wantedBotRight.north, wantedBotRight.east);  // low-right
 
     // Calculate dimensions of the picture
     int w = r2.x - r1.x; // max-min
