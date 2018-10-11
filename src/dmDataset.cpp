@@ -42,6 +42,9 @@ bool dmDataset::setColourConfiguration(const char* fileContents, bool giveOwners
 unsigned char * dmDataset::getRasterData(
     coord &topLeftOut, coord &botRightOut)
 {
+    if (!_dstDataset)
+        return NULL;
+
     GDALRasterBand *band;
     if (_dstDataset->GetRasterCount() > 0)
         band = _dstDataset->GetRasterBand(1);
