@@ -91,8 +91,15 @@ bool dmDataset::openDataSet(const char * filename)
     if (_srcDataset)
     {
         _srcWkt = GDALGetProjectionRef(_srcDataset);
+
         reprojectDataset();
+
+        if (!_dstDataset)
+            return false;
+        
         _dstWkt = GDALGetProjectionRef(_dstDataset);
+
+        return true;
     }
 
     return false;
