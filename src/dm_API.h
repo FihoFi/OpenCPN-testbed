@@ -37,7 +37,7 @@ public:
 
     * @return True, if the extents could be retrieved, false else.
     */
-    bool dmDataset::getDatasetExtents(coord &topLeft, coord &botRight) = 0;
+    bool getDatasetExtents(coord &topLeft, coord &botRight) = 0;
 
     /**
     * Passes a full file path&name for a file where the colour configuration
