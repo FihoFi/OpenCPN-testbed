@@ -32,6 +32,11 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmPictureImportError_staticText->Wrap( -1 );
 	dmFileImport_bSizer->Add( dmPictureImportError_staticText, 0, wxALL, 5 );
 	
+	wxFlexGridSizer* fgSizer6;
+	fgSizer6 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer6->SetFlexibleDirection( wxBOTH );
+	fgSizer6->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
 	dmFileImport_bSizer->Add( fgSizer6, 1, wxEXPAND, 5 );
 	
 	
