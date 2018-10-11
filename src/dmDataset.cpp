@@ -93,6 +93,9 @@ bool dmDataset::openDataSet(const char * filename)
         _srcWkt = GDALGetProjectionRef(_srcDataset);
         reprojectDataset();
         _dstWkt = GDALGetProjectionRef(_dstDataset);
+
+        // TODO should return false if reprojectin Dataset fails?
+        return true;
     }
 
     return false;
