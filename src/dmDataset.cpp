@@ -26,6 +26,24 @@ dmDataset::~dmDataset()
     remove(".\\temp_ds.tif");
 }
 
+bool dmDataset::getDatasetExtents(coord &topLeft, coord &botRight)
+{
+    double geoTransform[6];
+
+    if (GDALGetGeoTransform(_dstDataset, geoTransform) != CPLErr::CE_None)
+        return false;
+
+    double xSize = _dstDataset->GetRasterXSize();
+    double ySize = _dstDataset->GetRasterYSize();
+
+    topLeft.east = geoTransform[0];
+    topLeft.north = geoTransform[3];
+    botRight.east = geoTransform[0] + xSize * geoTransform[1] + ySize * geoTransform[2];
+    botRight.north = geoTransform[3] + xSize * geoTransform[4] + ySize * geoTransform[5];
+
+    return true;
+
+}
 
 bool dmDataset::setColourConfigurationFile(const char* filename, bool giveOwnership)
 {
@@ -52,7 +70,7 @@ unsigned char * dmDataset::getRasterData(
     float *bandData;
     unsigned char *imgData;
 
-    if (!getDatasetExtents(_dstDataset, topLeftOut, botRightOut))
+    if (!getDatasetExtents(topLeftOut, botRightOut))
         return NULL;
 
     xSize = band->GetXSize();
@@ -137,24 +155,6 @@ bool dmDataset::dstSrsToLatLon(double n, double e, coord &latLons)
 
     /* Clean up */
     proj_destroy(projection);
-
-    return true;
-}
-
-bool dmDataset::getDatasetExtents(GDALDataset *ds, coord &topLeft, coord &botRight)
-{
-    double geoTransform[6];
-
-    if (GDALGetGeoTransform(_dstDataset, geoTransform) != CPLErr::CE_None)
-        return false;
-    
-    double xSize = _dstDataset->GetRasterXSize();
-    double ySize = _dstDataset->GetRasterYSize();
-
-    topLeft.east = geoTransform[0];
-    topLeft.north = geoTransform[3];
-    botRight.east = geoTransform[0] + xSize * geoTransform[1] + ySize * geoTransform[2];
-    botRight.north = geoTransform[3] + xSize * geoTransform[4] + ySize * geoTransform[5];
 
     return true;
 }

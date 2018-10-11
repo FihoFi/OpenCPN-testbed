@@ -16,8 +16,9 @@ public:
     ~dmDataset();
 
 
-    virtual bool setColourConfigurationFile(const char* filename, bool giveOwnership);
-    virtual bool setColourConfiguration(const char* fileContents, bool giveOwnership);
+    bool getDatasetExtents(coord &topLeft, coord &botRight) override;
+    bool setColourConfigurationFile(const char* filename, bool giveOwnership) override;
+    bool setColourConfiguration(const char* fileContents, bool giveOwnership) override;
     unsigned char * getRasterData(
         coord &topLeftOut, coord &botRightOut) override;
     unsigned char * getRasterData(int imgWidth, int imgHeight,
@@ -40,7 +41,6 @@ private:
 
     
     bool dstSrsToLatLon(double e, double n, coord &latLons);
-    bool getDatasetExtents(GDALDataset *ds, coord &topLeft, coord &botRight);
     void reprojectDataset();
 
 };
