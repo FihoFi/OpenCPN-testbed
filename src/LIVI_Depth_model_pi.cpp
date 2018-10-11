@@ -94,8 +94,6 @@ wxIcon LIVI_Depth_model_pi::GetIcon()
     return *m_icon;
 }
 
-
-
 /** Initiates anything that is to be kept alive anyway, whether
 *  the plugin is "active" or not.
 *  Thought to have here everything but picture data - the configuration
@@ -165,7 +163,7 @@ bool LIVI_Depth_model_pi::DeInit(void)
     bool newPluginState = false;
     m_pconf->SetPluginToolState(newPluginState);
     SetToolbarItemState(pluginToolId, newPluginState);
- 
+
     m_pconf->SaveConfig();
 
     RequestRefresh(m_parent_window); // refresh main window, to hide the dataset pic
@@ -266,6 +264,8 @@ void LIVI_Depth_model_pi::SetCurrentViewPort(PlugIn_ViewPort &vp)
 * @TODO NOT IMPLEMENTED yet.
 * React to OCPN window resize. The other plugins I have watched onto,
 * do not use this, so you may probably go well without.
+* This could / must be implemented to keep the drawn dataset picture
+* as optimal size, so the memory usage is minimal, but the pic large enough.
 */
 void LIVI_Depth_model_pi::ProcessParentResize(int x, int y)
 {
@@ -498,6 +498,10 @@ wxString LIVI_Depth_model_pi::GetDepthColourWksForGDAL()
     return wks_ColourSettings;
 }
 
+/**
+* Sets the colouring information, as well as the limiting depths,
+* from the m_customColours of the m_conf to the UI.
+*/
 void LIVI_Depth_model_pi::PushConfigToUI(void)
 {
     for (int i = 0; i < DM_NUM_CUSTOM_COL; i++) {
@@ -509,6 +513,10 @@ void LIVI_Depth_model_pi::PushConfigToUI(void)
     dialog->SetDepthChartFileName(m_pconf->fileImport.filePath);
 }
 
+/**
+* Retrieves the colouring information, as well as the limiting depths,
+* from the UI to the m_customColours of the m_conf.
+*/
 void LIVI_Depth_model_pi::PullConfigFromUI(void)
 {
     for (int i = 0; i < DM_NUM_CUSTOM_COL; i++) {
