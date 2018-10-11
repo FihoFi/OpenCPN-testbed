@@ -16,6 +16,7 @@ public:
     ~dmDataset();
 
 
+    bool getDatasetPixelDimensions(int &width, int &height) override;
     bool getDatasetExtents(coord &topLeft, coord &botRight) override;
     bool setColourConfigurationFile(const char* filename, bool giveOwnership) override;
     bool setColourConfiguration(const char* fileContents, bool giveOwnership) override;

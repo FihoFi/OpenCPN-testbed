@@ -26,6 +26,19 @@ dmDataset::~dmDataset()
     remove(".\\temp_ds.tif");
 }
 
+bool dmDataset::getDatasetPixelDimensions(int &width, int &height)
+{
+    if (_dstDataset)
+    {
+        width = _dstDataset->GetRasterXSize();
+        height = _dstDataset->GetRasterYSize();
+
+        return true;
+    }
+
+    return false;
+}
+
 bool dmDataset::getDatasetExtents(coord &topLeft, coord &botRight)
 {
     double geoTransform[6];

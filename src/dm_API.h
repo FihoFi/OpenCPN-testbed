@@ -29,6 +29,16 @@ public:
     //MRJ: is the same as bool setFileName(const char* filename);
 
     /**
+    * Returns width and height of the dataset in pixels.
+    *
+    * @param[out] width Width of the dataset in pixels
+    * @param[out] height Height of the dataset in pixels
+    *
+    * @return true, if the dimensions were retrieved successfully, false otherwise
+    */
+    virtual bool getDatasetPixelDimensions(int &width, int &height) = 0;
+
+    /**
     * Returns the extents of the World Mercator projected dataset as spanning
     * top-left, and bottom-right corners, in World Mercator coordinates.
     *
