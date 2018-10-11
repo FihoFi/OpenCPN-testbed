@@ -29,6 +29,17 @@ public:
     //MRJ: is the same as bool setFileName(const char* filename);
 
     /**
+    * Returns the extents of the World Mercator projected dataset as spanning
+    * top-left, and bottom-right corners, in World Mercator coordinates.
+    *
+    * @param topLeft The top-left coordinate point of the WM projected chart
+    * @param topLeft The bottom-right coordinate point of the WM projected chart
+
+    * @return True, if the extents could be retrieved, false else.
+    */
+    bool dmDataset::getDatasetExtents(coord &topLeft, coord &botRight) = 0;
+
+    /**
     * Passes a full file path&name for a file where the colour configuration
     * information for a depth model chart can be found.
     *
