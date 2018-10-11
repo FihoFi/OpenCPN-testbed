@@ -21,7 +21,13 @@ SET(PACKAGE_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}" )
 #SET(CMAKE_BUILD_TYPE Debug)
 #SET(CMAKE_VERBOSE_MAKEFILE ON)
 
-INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/src)
+INCLUDE_DIRECTORIES(
+		${PROJECT_SOURCE_DIR}/include						# symlinks to gdal root dir include files
+		${PROJECT_SOURCE_DIR}/src							# plugin source .h files
+		${PROJECT_SOURCE_DIR}/include/proj_510_include		# proj include dir (symlink)
+		${PROJECT_SOURCE_DIR}/include/gdal_ogr_directory	# gdal ogr directory (symlink)
+		${PROJECT_SOURCE_DIR}/include/gdal_port_directory	# gdal ogr directory (symlink)
+		)
 
 # SET(PROFILING 1)
 
