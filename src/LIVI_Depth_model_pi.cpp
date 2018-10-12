@@ -252,7 +252,7 @@ void LIVI_Depth_model_pi::SetCurrentViewPort(PlugIn_ViewPort &vp)
     coord botRight(vp.lat_min, vp.lon_max);
  
     try{
-        bool success = dmDrawer->applyChartAreaData(topLeft, botRight);
+        bool success = dmDrawer->applyChartArea(topLeft, botRight);
     }
     catch (std::string exStr)
     {
@@ -364,17 +364,23 @@ wxArrayString LIVI_Depth_model_pi::GetDynamicChartClassNameArray(void)
 */
 bool LIVI_Depth_model_pi::RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp)
 {
-    bool success = dmDrawer->calculateDepthModelBitmap(*vp);
+    bool success = true;
+    //success = dmDrawer->reCalculateDepthModelBitmap(*vp);
 
     bool exception = false;
-    try                     {    success &= dmDrawer->drawDepthChart(dc);   }
-    catch (std::string ex)  {    exception = true;                          }
+    try
+    {
+        if (dmDrawer->hasDataset())
+            success &= dmDrawer->drawDepthChart(dc, *vp);
+    }
+    catch (std::string ex)
+    {
+        exception = true;
+    }
     if (!exception)
         dialog->SetPictureImportErrorText("Problem in drawing the picture.");
 
     return success;
-
-    RequestRefresh(m_parent_window); // refresh main window
 }
 
 /**
@@ -551,8 +557,10 @@ void LIVI_Depth_model_pi::OnColorOptionsApply()
 void LIVI_Depth_model_pi::OnFileImportFileChange(wxFileName fullFileName)
 {
     bool exception = false;
+    bool success = true;
     try {
-        bool success = dmDrawer->setDepthModelDataset(fullFileName);
+        success = dmDrawer->setDepthModelDataset(fullFileName);
+        dialog->SetPictureImportErrorText(std::string("picture successfully opened"));
     }
     catch (std::string exStr)
     {
@@ -560,10 +568,11 @@ void LIVI_Depth_model_pi::OnFileImportFileChange(wxFileName fullFileName)
         exception = true;
     }
 
+    RequestRefresh(m_parent_window); // refresh main window
+
     m_pconf->fileImport.filePath = fullFileName;
     m_pconf->SaveConfig();
 
-    RequestRefresh(m_parent_window); // refresh main window
 }
 
 /*
