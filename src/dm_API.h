@@ -82,7 +82,8 @@ public:
 
     /**
     * Sets the visualization scheme that will be used when opening and converting a
-    * raster data file to a drawable format.
+    * raster data file to a drawable format. openDataset() should be called after this
+    * for the new setting to take effect.
     *
     * @param[in] visScheme the desired visualization scheme
     */

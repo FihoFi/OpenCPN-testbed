@@ -45,7 +45,8 @@ private:
     DM_visualization _visScheme;
     
     bool dstSrsToLatLon(double e, double n, coord &latLons);
-    void reprojectDataset();
+    GDALDataset * reprojectDataset(GDALDataset *dsToReproject);
+    GDALDataset * visualizeDataset(GDALDataset *dsToVisualize);
 
 };
 

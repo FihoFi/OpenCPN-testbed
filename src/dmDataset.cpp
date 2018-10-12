@@ -131,7 +131,8 @@ bool dmDataset::openDataSet(const char * filename)
     {
         _srcWkt = GDALGetProjectionRef(_srcDataset);
 
-        reprojectDataset();
+        // TODO: reiwork by adding visualizeDataset()
+        reprojectDataset(_srcDataset);
 
         if (!_dstDataset)
             return false;
@@ -180,7 +181,8 @@ bool dmDataset::dstSrsToLatLon(double n, double e, coord &latLons)
     return true;
 }
 
-void dmDataset::reprojectDataset()
+// TODO: rework implementation appropriately
+GDALDataset * dmDataset::reprojectDataset(GDALDataset *dsToReproject)
 {
     // TODO: add GDALWarpOptions if needed (last argument of GDALAutoCreateWarpedVRT)
     if (_srcDataset)
@@ -208,7 +210,16 @@ void dmDataset::reprojectDataset()
 
         GDALClose(warpedDS);
         GDALDEMProcessingOptionsFree(psOptionsToFree);
+
+        return NULL;
     }
+}
+
+GDALDataset * dmDataset::visualizeDataset(GDALDataset *dsToReproject)
+{
+    // TODO: implement
+
+    return NULL;
 }
 
 void dmDataset::setSrcWkt(const char * wkt)
