@@ -20,6 +20,7 @@ public:
     bool getDatasetExtents(coord &topLeft, coord &botRight) override;
     bool setColourConfigurationFile(const char* filename, bool giveOwnership) override;
     bool setColourConfiguration(const char* fileContents, bool giveOwnership) override;
+    void setVisualizationScheme(DM_visualization visScheme) override;
     unsigned char * getRasterData(
         coord &topLeftOut, coord &botRightOut) override;
     unsigned char * getRasterData(int imgWidth, int imgHeight,
@@ -37,9 +38,11 @@ private:
 
     const char * _srcWkt;
     const char * _dstWkt;
+
     GDALDataset * _srcDataset;
     GDALDataset * _dstDataset;
 
+    DM_visualization _visScheme;
     
     bool dstSrsToLatLon(double e, double n, coord &latLons);
     void reprojectDataset();

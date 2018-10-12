@@ -70,6 +70,11 @@ bool dmDataset::setColourConfiguration(const char* fileContents, bool giveOwners
     return false;
 }
 
+void dmDataset::setVisualizationScheme(DM_visualization visScheme)
+{
+    _visScheme = visScheme;
+}
+
 unsigned char * dmDataset::getRasterData(
     coord &topLeftOut, coord &botRightOut)
 {
