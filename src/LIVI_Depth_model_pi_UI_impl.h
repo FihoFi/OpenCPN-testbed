@@ -49,17 +49,17 @@ class Position;
 class Dlg : public LIVIDMUI_DLG
 {
 public:
-        Dlg( wxWindow* parent, wxWindowID id = wxID_ANY,
-            const wxString& title = _("LIVI Depth model Plugin"),
-            const wxPoint& pos = wxDefaultPosition,
-            const wxSize& size = wxSize( -1,-1 ),
-            long style = wxCLOSE_BOX|wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
+    Dlg( wxWindow* parent, wxWindowID id = wxID_ANY,
+        const wxString& title = _("LIVI Depth model Plugin"),
+        const wxPoint& pos = wxDefaultPosition,
+        const wxSize& size = wxSize( -1,-1 ),
+        long style = wxCLOSE_BOX|wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
 
   //      void OnPSGPX( wxCommandEvent& event );
-		bool OpenXML();
+    bool OpenXML();
 
-//		vector<Position> my_positions;
-//		vector<Position> my_points;
+//	vector<Position> my_positions;
+//	vector<Position> my_points;
 
 //        void Calculate( wxCommandEvent& event, bool Export, int Pattern );
 //        void Addpoint(TiXmlElement* Route, wxString ptlat, wxString ptlon, wxString ptname, wxString ptsym, wxString pttype);
@@ -74,24 +74,24 @@ public:
     void        SetCustomLevel(int num, int level);
     double      GetCustomLevel(int num);
 
-        void        SetDepthChartFileName(wxFileName &fileName);
-        wxFileName  GetDepthChartFileName();
+    void        SetDepthChartFileName(wxFileName &fileName);
+    wxFileName  GetDepthChartFileName();
 
-        void        SetPictureImportErrorText(std::string errStr);
+    void        SetPictureImportErrorText(std::string errStr);
 
-        LIVI_Depth_model_pi *plugin; // for callbacks at UI events
+    LIVI_Depth_model_pi *plugin; // for callbacks at UI events
 
-//		wxString rte_start;
-//	    wxString rte_end;
+//  wxString rte_start;
+//  wxString rte_end;
 
 private:
-	    void         OnClose                       ( wxCloseEvent&   WXUNUSED(event) );
-        virtual void OnColorOptionsApplyButtonClick( wxCommandEvent& WXUNUSED(event) );
-        virtual void OnAboutLIVIDepthModel         ( wxCommandEvent& WXUNUSED(event) );
-        virtual void OnAboutWxWidgets              ( wxCommandEvent& WXUNUSED(event) );
-        virtual void OnFileImportFileChange  ( wxFileDirPickerEvent& WXUNUSED(event) );
+    void         OnClose                       ( wxCloseEvent&   WXUNUSED(event) );
+    virtual void OnColorOptionsApplyButtonClick( wxCommandEvent& WXUNUSED(event) );
+    virtual void OnAboutLIVIDepthModel         ( wxCommandEvent& WXUNUSED(event) );
+    virtual void OnAboutWxWidgets              ( wxCommandEvent& WXUNUSED(event) );
+    virtual void OnFileImportFileChange  ( wxFileDirPickerEvent& WXUNUSED(event) );
 
-        bool dbg;
+    bool dbg;
 
  //     double lat1, lon1, lat2, lon2;
  //     bool error_found;
