@@ -67,11 +67,15 @@ struct DMColorOptionConfig : dm_configAPI {
 
     wxColor m_customColours[DM_NUM_CUSTOM_COL]; // 0: col. for always too shallow, 4: col. for always deep enough
     double  m_customDepths[DM_NUM_CUSTOM_DEP]; // 0: level of too shallow, 3: level of always deep enough
+
     /*
     wxColor m_SlidingColours[2];    // 0:colour for too shallows, 1: colour for deep enoughs
     int     m_SlidingDepths[2];     // 0:depth of always too shallow, 1: depth of always deep enough
     int     m_SlidingSteps;         // Number of colour steps from deepest to shallowest
     */
+    wxColor m_twoColours[2]; // 0: col. for too shallow, 1: col. for deep enough
+    double  m_twoColoursDepth; // dividing depth
+
     virtual bool load() override;
     virtual bool save() override;
 
