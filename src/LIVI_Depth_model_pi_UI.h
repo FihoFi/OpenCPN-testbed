@@ -113,7 +113,6 @@ class LIVIDMUI_DLG : public wxDialog
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnFileImportFileChange( wxFileDirPickerEvent& event ) { event.Skip(); }
-		virtual void OnColorOptionsApplyButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnAboutLIVIDepthModel( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnAboutWxWidgets( wxCommandEvent& event ) { event.Skip(); }
 		

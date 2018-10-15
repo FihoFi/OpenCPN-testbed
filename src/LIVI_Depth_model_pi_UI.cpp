@@ -111,75 +111,75 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColorOptionsCustom_GridSizer->SetFlexibleDirection( wxBOTH );
 	dmColorOptionsCustom_GridSizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	dmColorOptionsCustom_TooShallow_Label = new wxStaticText( dmColorOptionsCustom_Panel, wxID_ANY, wxT("Too shallow, no go"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmColorOptionsCustom_TooShallow_Label = new wxStaticText( dmColourOptionsCustom_Panel, wxID_ANY, wxT("Too shallow, no go"), wxDefaultPosition, wxDefaultSize, 0 );
 	dmColorOptionsCustom_TooShallow_Label->Wrap( -1 );
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_TooShallow_Label, 0, wxALL, 5 );
 	
-	dmColorOptionsCustom_ColourPicker1 = new wxColourPickerCtrl( dmColorOptionsCustom_Panel, wxID_ANY, wxColour( 255, 0, 0 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	dmColorOptionsCustom_ColourPicker1 = new wxColourPickerCtrl( dmColourOptionsCustom_Panel, wxID_ANY, wxColour( 255, 0, 0 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	dmColorOptionsCustom_ColourPicker1->SetMinSize( wxSize( 70,-1 ) );
 	
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_ColourPicker1, 0, wxALL, 5 );
 	
-	dmEmpty_Label1 = new wxStaticText( dmColorOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	dmEmpty_Label1 = new wxStaticText( dmColourOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	dmEmpty_Label1->Wrap( -1 );
 	dmColorOptionsCustom_GridSizer->Add( dmEmpty_Label1, 0, wxALL, 5 );
 	
-	dmColorOptionsCustom_SpinCtrlDouble1 = new wxSpinCtrlDouble( dmColorOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -10000, 0, -17.500000, 1 );
+	dmColorOptionsCustom_SpinCtrlDouble1 = new wxSpinCtrlDouble( dmColourOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -10000, 0, -17.500000, 1 );
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_SpinCtrlDouble1, 0, wxALL, 5 );
 	
 	dmColorOptionsCustom_ABitRisky_Label = new wxStaticText( dmColourOptionsCustom_Panel, wxID_ANY, wxT("Cautiously on high water"), wxDefaultPosition, wxDefaultSize, 0 );
 	dmColorOptionsCustom_ABitRisky_Label->Wrap( -1 );
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_ABitRisky_Label, 0, wxALL, 5 );
 	
-	dmColorOptionsCustom_ColourPicker2 = new wxColourPickerCtrl( dmColorOptionsCustom_Panel, wxID_ANY, wxColour( 255, 196, 228 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	dmColorOptionsCustom_ColourPicker2 = new wxColourPickerCtrl( dmColourOptionsCustom_Panel, wxID_ANY, wxColour( 255, 196, 228 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	dmColorOptionsCustom_ColourPicker2->SetMinSize( wxSize( 70,-1 ) );
 	
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_ColourPicker2, 0, wxALL, 5 );
 	
-	dmEmpty_Label2 = new wxStaticText( dmColorOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	dmEmpty_Label2 = new wxStaticText( dmColourOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	dmEmpty_Label2->Wrap( -1 );
 	dmColorOptionsCustom_GridSizer->Add( dmEmpty_Label2, 0, wxALL, 5 );
 	
-	dmColorOptionsCustom_SpinCtrlDouble2 = new wxSpinCtrlDouble( dmColorOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -10000, 0, -20.000000, 1 );
+	dmColorOptionsCustom_SpinCtrlDouble2 = new wxSpinCtrlDouble( dmColourOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -10000, 0, -20.000000, 1 );
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_SpinCtrlDouble2, 0, wxALL, 5 );
 	
 	dmColorOptionsCustom_OK_Label = new wxStaticText( dmColourOptionsCustom_Panel, wxID_ANY, wxT("Cautiously on normal water"), wxDefaultPosition, wxDefaultSize, 0 );
 	dmColorOptionsCustom_OK_Label->Wrap( -1 );
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_OK_Label, 0, wxALL, 5 );
 	
-	dmColorOptionsCustom_ColourPicker3 = new wxColourPickerCtrl( dmColorOptionsCustom_Panel, wxID_ANY, wxColour( 255, 255, 255 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	dmColorOptionsCustom_ColourPicker3 = new wxColourPickerCtrl( dmColourOptionsCustom_Panel, wxID_ANY, wxColour( 255, 255, 255 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	dmColorOptionsCustom_ColourPicker3->SetMinSize( wxSize( 70,-1 ) );
 	
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_ColourPicker3, 0, wxALL, 5 );
 	
-	dmEmpty_Label3 = new wxStaticText( dmColorOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	dmEmpty_Label3 = new wxStaticText( dmColourOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	dmEmpty_Label3->Wrap( -1 );
 	dmColorOptionsCustom_GridSizer->Add( dmEmpty_Label3, 0, wxALL, 5 );
 	
-	dmColorOptionsCustom_SpinCtrlDouble3 = new wxSpinCtrlDouble( dmColorOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -10000, 0, -22.500000, 1 );
+	dmColorOptionsCustom_SpinCtrlDouble3 = new wxSpinCtrlDouble( dmColourOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -10000, 0, -22.500000, 1 );
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_SpinCtrlDouble3, 0, wxALL, 5 );
 	
 	dmColorOptionsCustom_OKOnLowWater_Label = new wxStaticText( dmColourOptionsCustom_Panel, wxID_ANY, wxT("Cautiously on low water"), wxDefaultPosition, wxDefaultSize, 0 );
 	dmColorOptionsCustom_OKOnLowWater_Label->Wrap( -1 );
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_OKOnLowWater_Label, 0, wxALL, 5 );
 	
-	dmColorOptionsCustom_ColourPicker4 = new wxColourPickerCtrl( dmColorOptionsCustom_Panel, wxID_ANY, wxColour( 128, 196, 255 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	dmColorOptionsCustom_ColourPicker4 = new wxColourPickerCtrl( dmColourOptionsCustom_Panel, wxID_ANY, wxColour( 128, 196, 255 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	dmColorOptionsCustom_ColourPicker4->SetMinSize( wxSize( 70,-1 ) );
 	
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_ColourPicker4, 0, wxALL, 5 );
 	
-	dmEmpty_Label4 = new wxStaticText( dmColorOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	dmEmpty_Label4 = new wxStaticText( dmColourOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	dmEmpty_Label4->Wrap( -1 );
 	dmColorOptionsCustom_GridSizer->Add( dmEmpty_Label4, 0, wxALL, 5 );
 	
-	dmColorOptionsCustom_SpinCtrlDouble4 = new wxSpinCtrlDouble( dmColorOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -10000, 0, -25.000000, 1 );
+	dmColorOptionsCustom_SpinCtrlDouble4 = new wxSpinCtrlDouble( dmColourOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -10000, 0, -25.000000, 1 );
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_SpinCtrlDouble4, 0, wxALL, 5 );
 	
-	dmColorOptionsCustom_Deep_Label = new wxStaticText( dmColorOptionsCustom_Panel, wxID_ANY, wxT("Deep, good to go"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmColorOptionsCustom_Deep_Label = new wxStaticText( dmColourOptionsCustom_Panel, wxID_ANY, wxT("Deep, good to go"), wxDefaultPosition, wxDefaultSize, 0 );
 	dmColorOptionsCustom_Deep_Label->Wrap( -1 );
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_Deep_Label, 0, wxALL, 5 );
 	
-	dmColorOptionsCustom_ColourPicker5 = new wxColourPickerCtrl( dmColorOptionsCustom_Panel, wxID_ANY, wxColour( 0, 0, 255 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	dmColorOptionsCustom_ColourPicker5 = new wxColourPickerCtrl( dmColourOptionsCustom_Panel, wxID_ANY, wxColour( 0, 0, 255 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	dmColorOptionsCustom_ColourPicker5->SetMinSize( wxSize( 70,-1 ) );
 	
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_ColourPicker5, 0, wxALL, 5 );
@@ -212,32 +212,32 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColorOptionsSliding_DeepestLevelOfInterest_Label->Wrap( -1 );
 	dmColorOptionsSliding_GridSizer->Add( dmColorOptionsSliding_DeepestLevelOfInterest_Label, 0, wxALL, 5 );
 	
-	dmColorOptionsSliding_DeepestLevelOfInterest_TextBox = new wxTextCtrl( dmColorOptionsSliding_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	dmColorOptionsSliding_DeepestLevelOfInterest_TextBox = new wxTextCtrl( dmColourOptionsSliding_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	dmColorOptionsSliding_DeepestLevelOfInterest_TextBox->SetToolTip( wxT("Set deepest level of interest in [m]") );
 	
 	dmColorOptionsSliding_GridSizer->Add( dmColorOptionsSliding_DeepestLevelOfInterest_TextBox, 0, wxALL, 5 );
 	
-	dmColorOptionsSliding_ColorAtDeepestLevelOfInterest_Label = new wxStaticText( dmColorOptionsSliding_Panel, wxID_ANY, wxT("Color at deepest level of interest"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmColorOptionsSliding_ColorAtDeepestLevelOfInterest_Label = new wxStaticText( dmColourOptionsSliding_Panel, wxID_ANY, wxT("Color at deepest level of interest"), wxDefaultPosition, wxDefaultSize, 0 );
 	dmColorOptionsSliding_ColorAtDeepestLevelOfInterest_Label->Wrap( -1 );
 	dmColorOptionsSliding_GridSizer->Add( dmColorOptionsSliding_ColorAtDeepestLevelOfInterest_Label, 0, wxALL, 5 );
 	
-	dmColorOptionsSliding_ColorAtDeepestLevelOfInterest_ColorPicker = new wxColourPickerCtrl( dmColorOptionsSliding_Panel, wxID_ANY, wxColour( 0, 0, 255 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	dmColorOptionsSliding_ColorAtDeepestLevelOfInterest_ColorPicker = new wxColourPickerCtrl( dmColourOptionsSliding_Panel, wxID_ANY, wxColour( 0, 0, 255 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	dmColorOptionsSliding_GridSizer->Add( dmColorOptionsSliding_ColorAtDeepestLevelOfInterest_ColorPicker, 0, wxALL, 5 );
 	
-	dmColorOptionsSliding_ShallowestLevelOfInterest_Label = new wxStaticText( dmColorOptionsSliding_Panel, wxID_ANY, wxT("Shallowest level of interest"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmColorOptionsSliding_ShallowestLevelOfInterest_Label = new wxStaticText( dmColourOptionsSliding_Panel, wxID_ANY, wxT("Shallowest level of interest"), wxDefaultPosition, wxDefaultSize, 0 );
 	dmColorOptionsSliding_ShallowestLevelOfInterest_Label->Wrap( -1 );
 	dmColorOptionsSliding_GridSizer->Add( dmColorOptionsSliding_ShallowestLevelOfInterest_Label, 0, wxALL, 5 );
 	
-	dmColorOptionsSliding_ColorAtShallowestLevelOfInterest_TextBox = new wxTextCtrl( dmColorOptionsSliding_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	dmColorOptionsSliding_ColorAtShallowestLevelOfInterest_TextBox = new wxTextCtrl( dmColourOptionsSliding_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	dmColorOptionsSliding_ColorAtShallowestLevelOfInterest_TextBox->SetToolTip( wxT("Set shallowest level of interest in [m]") );
 	
 	dmColorOptionsSliding_GridSizer->Add( dmColorOptionsSliding_ColorAtShallowestLevelOfInterest_TextBox, 0, wxALL, 5 );
 	
-	dmColorOptionsSliding_ColorAtShallowestLevelOfInterest_Label = new wxStaticText( dmColorOptionsSliding_Panel, wxID_ANY, wxT("Color at shallowest level of interest"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmColorOptionsSliding_ColorAtShallowestLevelOfInterest_Label = new wxStaticText( dmColourOptionsSliding_Panel, wxID_ANY, wxT("Color at shallowest level of interest"), wxDefaultPosition, wxDefaultSize, 0 );
 	dmColorOptionsSliding_ColorAtShallowestLevelOfInterest_Label->Wrap( -1 );
 	dmColorOptionsSliding_GridSizer->Add( dmColorOptionsSliding_ColorAtShallowestLevelOfInterest_Label, 0, wxALL, 5 );
 	
-	dmColorOptionsSliding_ShallowestLevelOfInterest_ColourPicker = new wxColourPickerCtrl( dmColorOptionsSliding_Panel, wxID_ANY, wxColour( 255, 0, 0 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	dmColorOptionsSliding_ShallowestLevelOfInterest_ColourPicker = new wxColourPickerCtrl( dmColourOptionsSliding_Panel, wxID_ANY, wxColour( 255, 0, 0 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	dmColorOptionsSliding_GridSizer->Add( dmColorOptionsSliding_ShallowestLevelOfInterest_ColourPicker, 0, wxALL, 5 );
 	
 	
@@ -379,7 +379,6 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	
 	// Connect Events
 	dmPictureImport_filePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( LIVIDMUI_DLG::OnFileImportFileChange ), NULL, this );
-	dmColorOptions_Apply_Button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnColorOptionsApplyButtonClick ), NULL, this );
 	dmAbout_LIVIDMPlugin_Button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnAboutLIVIDepthModel ), NULL, this );
 	dm_AboutWxWidgets_Button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnAboutWxWidgets ), NULL, this );
 }
@@ -388,7 +387,6 @@ LIVIDMUI_DLG::~LIVIDMUI_DLG()
 {
 	// Disconnect Events
 	dmPictureImport_filePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( LIVIDMUI_DLG::OnFileImportFileChange ), NULL, this );
-	dmColorOptions_Apply_Button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnColorOptionsApplyButtonClick ), NULL, this );
 	dmAbout_LIVIDMPlugin_Button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnAboutLIVIDepthModel ), NULL, this );
 	dm_AboutWxWidgets_Button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnAboutWxWidgets ), NULL, this );
 	
