@@ -156,7 +156,7 @@ bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
     GetCanvasPixLL(&vp, &r1, idealTopLeftLL.north,  idealTopLeftLL.east);   // up-left
     GetCanvasPixLL(&vp, &r2, idealBotRightLL.north, idealBotRightLL.east);  // low-right
 
-                                                                            // Calculate dimensions of the picture
+    // Calculate dimensions of the picture
     w = r2.x - r1.x; // max-min
     h = r2.y - r1.y; // max-min
 
@@ -286,10 +286,10 @@ bool dmDepthModelDrawer::needANewCropping()
 
     bool needNew = true;
 
-    needNew |= (chartTopLeftLL.north >= lastTopLeftLL.north);
-    needNew |= (chartTopLeftLL.east <= lastTopLeftLL.east);
+    needNew |= (chartTopLeftLL.north  >= lastTopLeftLL.north);
+    needNew |= (chartTopLeftLL.east   <= lastTopLeftLL.east);
     needNew |= (chartBotRightLL.north <= lastBotRightLL.north);
-    needNew |= (chartBotRightLL.east >= lastBotRightLL.east);
+    needNew |= (chartBotRightLL.east  >= lastBotRightLL.east);
 
     return needNew;
 }
