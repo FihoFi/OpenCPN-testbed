@@ -598,8 +598,30 @@ void LIVI_Depth_model_pi::OnFileImportFileChange(wxFileName fullFileName)
     bool exception = false;
     bool success = true;
     try {
-        success = dmDrawer->setDepthModelDataset(fullFileName);
-        dialog->SetPictureImportErrorText(std::string("picture successfully opened"));
+        dialog->SetPictureImportErrorText(std::string("Setting chart image type options"));
+
+        wxString chOptStr = dialog->GetSelectedChartOption();
+
+        if   (chOptStr.Contains("illshade"))
+        {    success = dmDrawer->setChartDrawTypeHillshade();    }
+        else
+        {
+            dialog->SetPictureImportErrorText(std::string("Internal error. Erroneous chart type."));
+        }
+
+        if(!success)
+        {
+            dialog->SetPictureImportErrorText(std::string("Internal error. Could not set up the chart image type."));
+            return;
+        }
+        dialog->SetPictureImportErrorText(std::string("Reading and projecting chart image to World Mercator"));
+        success &= dmDrawer->setDepthModelDataset(fullFileName);
+        if (!success)
+        {
+            dialog->SetPictureImportErrorText(std::string("Could not load the file as a chart image."));
+        }
+        else
+            dialog->SetPictureImportErrorText(std::string("Chart image successfully opened."));
     }
     catch (std::string exStr)
     {
