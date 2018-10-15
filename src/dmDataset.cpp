@@ -7,6 +7,7 @@
 bool dmDataset::driversRegistered = false;
 
 dmDataset::dmDataset() :
+    _visScheme(HILLSHADE),
     _srcDataset(NULL),
     _dstDataset(NULL)
 {
@@ -154,7 +155,7 @@ bool dmDataset::openDataSet(const char * filename)
 
         reprojectedDs = reprojectDataset(_srcDataset);
 
-        if (!reprojectDataset)
+        if (!reprojectedDs)
             return false;
 
         _dstDataset = visualizeDataset(reprojectedDs);
@@ -242,10 +243,6 @@ GDALDataset * dmDataset::visualizeDataset(GDALDataset *dsToVisualize)
 
     switch (_visScheme)
     {
-    case NONE:
-        resultDs = dsToVisualize;
-        break;
-
     case HILLSHADE:
         resultDs = (GDALDataset*)GDALDEMProcessing(".\\temp_ds.tif", dsToVisualize, "hillshade", NULL, gdaldemOptions, &err);
         GDALClose(dsToVisualize);
@@ -256,7 +253,9 @@ GDALDataset * dmDataset::visualizeDataset(GDALDataset *dsToVisualize)
         GDALClose(dsToVisualize);
         break;
 
+    case NONE:
     default:
+        resultDs = dsToVisualize;
         break;
     }
 
