@@ -18,6 +18,13 @@ struct coord {
     /*float*/double north; // mathematical y, latitude
 };
 
+enum DM_visualization
+{
+    NONE,
+    HILLSHADE,
+    COLOR_RELIEF
+};
+
 class /*DECL_EXP*/ dm_API
 {
 public:
@@ -72,6 +79,15 @@ public:
     *                        or ?the pointer is not null?
     */
     virtual bool setColourConfiguration(const char* fileContents, bool giveOwnership) = 0;
+
+    /**
+    * Sets the visualization scheme that will be used when opening and converting a
+    * raster data file to a drawable format. openDataset() should be called after this
+    * for the new setting to take effect.
+    *
+    * @param[in] visScheme the desired visualization scheme
+    */
+    virtual void setVisualizationScheme(DM_visualization visScheme) = 0;
 
      /**
     * Returns the whole raster data in the Dataset.
