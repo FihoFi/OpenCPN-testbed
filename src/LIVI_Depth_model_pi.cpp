@@ -604,6 +604,8 @@ void LIVI_Depth_model_pi::OnFileImportFileChange(wxFileName fullFileName)
 
         if   (chOptStr.Contains("illshade"))
         {    success = dmDrawer->setChartDrawTypeHillshade();    }
+        else if (chOptStr.Contains("lain"))
+        {    success = dmDrawer->setChartDrawTypePlain();        }
         else
         {
             dialog->SetPictureImportErrorText(std::string("Internal error. Erroneous chart type."));
