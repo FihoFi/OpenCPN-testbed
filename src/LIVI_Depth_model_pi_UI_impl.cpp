@@ -89,6 +89,22 @@ void Dlg::OnAboutWxWidgets(wxCommandEvent& WXUNUSED(event))
     wxInfoMessageBox(this);
 }
 
+wxString Dlg::GetSelectedChartOption()
+{
+    wxChoice* choice = this->dmChartOptions_choicebook->GetChoiceCtrl();
+    int acceptedSelection = choice->GetSelection();
+    wxString chString = choice->GetString(acceptedSelection);
+    return chString;
+}
+
+wxString Dlg::GetSelectedColourOption()
+{
+    wxChoice* choice = this->dmColourOptions_choisebook->GetChoiceCtrl();
+    int acceptedSelection = choice->GetSelection();
+    wxString chString = choice->GetString(acceptedSelection);
+    return chString;
+}
+
 void Dlg::SetCustomColor(int num, wxColour &col) {
 
     switch (num) {
@@ -120,10 +136,10 @@ wxColour Dlg::GetCustomColor(int num) {
 }
 
 wxFileName    Dlg::GetColorConfigurationFileName()
-{    return this->dmColorOptionsUserFile_filePicker->GetFileName();     }
+{    return this->dmColourOptionsUserFile_filePicker->GetFileName();     }
 
 void    Dlg::SetColorConfigurationFileName(wxFileName &fileName)
-{    this->dmColorOptionsUserFile_filePicker->SetFileName(fileName);    }
+{    this->dmColourOptionsUserFile_filePicker->SetFileName(fileName);    }
 
 void Dlg::SetCustomLevel(int num, int level)
 {
