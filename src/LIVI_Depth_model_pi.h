@@ -136,7 +136,16 @@ private:
   //bool                SaveConfig(void);
     void                PushConfigToUI(void);
     void                PullConfigFromUI(void);
-    wxString            GetDepthColourWksForGDAL();
+
+    wxFileName          GetUsersColorConfFile();
+    wxString            GetFiveColourDepthColourWks();
+    wxString            GetSlidingColourDepthColourWks();
+    wxString            GetTwoColourDepthColourWks();
+
+    wxFileName          fiveColoursFileName;
+    wxFileName          slidingColoursFileName;
+    wxFileName          twoColoursFileName;
+
     void                GetDepthModelPicture();
 
 

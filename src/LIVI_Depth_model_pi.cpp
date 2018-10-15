@@ -464,6 +464,10 @@ wxString LIVI_Depth_model_pi::GetCopyright() {
     return _("@ 2018, LIVI & Sitowise");
 }
 
+wxFileName LIVI_Depth_model_pi::GetUsersColorConfFile()
+{
+    return dialog->GetColorConfigurationFileName();
+}
 
 /**
 * Generates a well known string (wks) about colour settings, telling
@@ -475,11 +479,10 @@ wxString LIVI_Depth_model_pi::GetCopyright() {
 * amount to each "side", so the nearest colour will be the wanted one
 * at any depth level.
 */
-wxString LIVI_Depth_model_pi::GetDepthColourWksForGDAL()
+wxString LIVI_Depth_model_pi::GetFiveColourDepthColourWks()
 {
     static double nci = 0.0001; // Nearest colour tweak. Number in meters.
     static int opaque_level = 128;  // amount of opaqueness, value in [0...255]
-
 
     wxString wks_ColourSettings;
     for (int i = 0; i < DM_NUM_CUSTOM_DEP; i++) {
@@ -501,6 +504,42 @@ wxString LIVI_Depth_model_pi::GetDepthColourWksForGDAL()
         //      m_conf.m_customColours[i+1].Alpha())
         );
     }
+    return wks_ColourSettings;
+}
+
+wxString LIVI_Depth_model_pi::GetSlidingColourDepthColourWks()
+{
+    wxString wks_ColourSettings;
+
+    //TODO
+
+    return wks_ColourSettings;
+}
+
+wxString LIVI_Depth_model_pi::GetTwoColourDepthColourWks()
+{
+    static double nci = 0.0001; // Nearest colour tweak. Number in meters.
+    static int opaque_level = 128;  // amount of opaqueness, value in [0...255]
+
+    wxString wks_ColourSettings;
+    wks_ColourSettings.append(
+        wxString::Format(_T("%d %i %i %i %i\n"),
+            m_pconf->colour.m_twoColoursDepth + nci,
+            m_pconf->colour.m_twoColours[0].Red(),
+            m_pconf->colour.m_twoColours[0].Green(),
+            m_pconf->colour.m_twoColours[0].Blue(),
+            m_pconf->colour.m_twoColours[0].Alpha())
+    );
+    wks_ColourSettings.append(
+        wxString::Format(_T("%d %i %i %i %i\n"),
+            m_pconf->colour.m_twoColoursDepth,
+            m_pconf->colour.m_twoColours[1].Red(),
+            m_pconf->colour.m_twoColours[1].Green(),
+            m_pconf->colour.m_twoColours[1].Blue(),
+            opaque_level)
+        //      m_conf.m_customColours[i+1].Alpha())
+    );
+
     return wks_ColourSettings;
 }
 
