@@ -23,6 +23,11 @@ bool dmDepthModelDrawer::setChartDrawTypeRelief(wxFileName fileNamePath)
     return success;
 }
 
+bool dmDepthModelDrawer::setChartDrawTypeHillshade()
+{
+    return dataset.setVisualizationScheme(DM_visualization::HILLSHADE);
+}
+
 /**
 * Asks dmDataset to open the dataset in the file <i>fileName</i>, and queries
 * the World Mercator extents of the dataset.
