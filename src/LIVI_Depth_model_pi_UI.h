@@ -32,6 +32,7 @@
 
 ///////////////////////////////////////////////////////////////////////////
 
+#define DM_viz_COLOR_RELIEF 1000
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class LIVIDMUI_DLG
@@ -46,10 +47,20 @@ class LIVIDMUI_DLG : public wxDialog
 		wxStaticText* dmDepthModelFile_staticText;
 		wxFilePickerCtrl* dmPictureImport_filePicker;
 		wxStaticText* dmPictureImportError_staticText;
-		wxPanel* dmColorOptions_Panel;
-		wxStaticText* dmColorOptions_SelectShema_Label;
-		wxChoicebook* dmColorOptions_Choisebook;
-		wxPanel* dmColorOptionsCustom_Panel;
+		wxPanel* dmChartOptions_Panel;
+		wxStaticText* dmChartOptions_staticText;
+		wxChoicebook* dmChartOptions_choicebook;
+		wxPanel* dmChartOptions_ColorRelief_panel;
+		wxStaticText* dmChartOptions_ColourRelief_staticText;
+		wxStaticText* dmColourOptions_SelectShema_Label;
+		wxChoicebook* dmColourOptions_choisebook;
+		wxPanel* dmColourOptionsUserFile_Panel;
+		wxStaticText* dmEmpty_staticText1;
+		wxStaticText* dmColourOptionsUserFile_giveFile_staticText;
+		wxFilePickerCtrl* dmColourOptionsUserFile_filePicker;
+		wxStaticText* dmColourOptionsUserFile_help_staticText;
+		wxPanel* dmColourOptionsCustom_Panel;
+		wxStaticText* dmEmpty_staticText2;
 		wxStaticText* dmColorOptionsCustom_Label;
 		wxStaticText* dmColorOptionsCustom_TooShallow_Label;
 		wxColourPickerCtrl* dmColorOptionsCustom_ColourPicker1;
@@ -69,7 +80,9 @@ class LIVIDMUI_DLG : public wxDialog
 		wxSpinCtrlDouble* dmColorOptionsCustom_SpinCtrlDouble4;
 		wxStaticText* dmColorOptionsCustom_Deep_Label;
 		wxColourPickerCtrl* dmColorOptionsCustom_ColourPicker5;
-		wxPanel* dmColorOptionsSliding_Panel;
+		wxPanel* dmColourOptionsSliding_Panel;
+		wxStaticText* dmEmpty_staticText3;
+		wxStaticText* dmEmpty_staticText31;
 		wxStaticText* dmColorOptionsSliding_DeepestLevelOfInterest_Label;
 		wxTextCtrl* dmColorOptionsSliding_DeepestLevelOfInterest_TextBox;
 		wxStaticText* dmColorOptionsSliding_ColorAtDeepestLevelOfInterest_Label;
@@ -78,18 +91,15 @@ class LIVIDMUI_DLG : public wxDialog
 		wxTextCtrl* dmColorOptionsSliding_ColorAtShallowestLevelOfInterest_TextBox;
 		wxStaticText* dmColorOptionsSliding_ColorAtShallowestLevelOfInterest_Label;
 		wxColourPickerCtrl* dmColorOptionsSliding_ShallowestLevelOfInterest_ColourPicker;
-		wxPanel* dmColorOptionsConstant_Panel;
-		wxStaticText* dmColorOptionsConstant_SetStep_Label;
-		wxTextCtrl* dmColorOptionsConstant_SetStep_TextCtrl;
-		wxStaticText* dmColorOptionsConstant_ColorAtDeepestLevelOfInterest_Label1;
-		wxColourPickerCtrl* dmColorOptionsConstant_ColorAtDeepestLevelOfInterest_ColourPicker;
-		wxStaticText* dmColorOptionsConstant_ColorAtShallowestLevelOfInterest_Label1;
-		wxColourPickerCtrl* dmColorOptionsConstant_ShallowestLevelOfInterest_ColourPicker;
-		wxPanel* dmColorOptionsUserFile_Panel;
-		wxStaticText* dmColorOptionsUserFile_giveFile_staticText;
-		wxFilePickerCtrl* dmColorOptionsUserFile_filePicker;
-		wxStaticText* dmColorOptionsUserFile_help_staticText;
-		wxButton* dmColorOptions_Apply_Button;
+		wxPanel* dmColourOptionsTwoColours_Panel;
+		wxStaticText* dmEmpty_staticText4;
+		wxStaticText* dmEmpty_staticText5;
+		wxStaticText* dmColourOptionsTwoColours_DividingDepth_Label;
+		wxTextCtrl* dmColourOptionsTwoColours_DividingDepth_TextCtrl;
+		wxStaticText* dmColourOptionsTwoColours_ColourOfTooShallow_Label;
+		wxColourPickerCtrl* dmColourOptionsTwoColours_ColourOfTooShallow_ColourPicker;
+		wxStaticText* dmColourOptionsTwoColours_ColourOfDeepEnough_Label;
+		wxColourPickerCtrl* dmColourOptionsTwoColours_ColourOfDeepEnough_ColourPicker;
 		wxPanel* dmWaterLevel_Panel;
 		wxStaticText* dmEmpty;
 		wxStaticText* dmEmpty1;
