@@ -19,25 +19,40 @@ public:
     ~dmDepthModelDrawer();
 
     bool setDepthModelDataset(wxFileName &fileName);
-    bool applyChartAreaData(coord chartTopLeft, coord chartBotRight);
-    bool calculateDepthModelBitmap(PlugIn_ViewPort &vp);
-    bool drawDepthChart(wxDC &dc/*, PlugIn_ViewPort &vp*/);
+    bool hasDataset();
+    bool applyChartArea(coord chartTopLeft, coord chartBotRight);
+    bool applyChartArea(PlugIn_ViewPort &vp);
+    bool drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp);
+    bool reCalculateDepthModelBitmap(PlugIn_ViewPort &vp);
 
 private:
     chartState  modelState;
+    bool        chartAreaKnown;
+    bool datasetAvailable;
+
     wxFileName  depthModelFileName;
-    coord       imageTopLeft,  imageBotRight;
-    coord       chartTopLeft,  chartBotRight;
-    coord       wantedTopLeft, wantedBotRight;
-    coord       lastTopLeft,   lastBotRight;
+    dmDataset   dataset;
+    coord       wholeImageTopLeftWM,  wholeImageBotRightWM;
+    coord       croppedImageTopLeftWM, croppedImageBotRightWM;
+
+    coord       imageTopLeftLL,  imageBotRightLL;
+    coord       chartTopLeftLL,  chartBotRightLL;
+    coord       idealTopLeftLL,  idealBotRightLL;
+    coord       lastTopLeftLL,   lastBotRightLL;
 
 
     unsigned char*  rasterToDraw;
+    int w, h; // image width, and height
     wxBitmap        bmp;
     wxPoint         bitmapTopLeftPositioningPoint;
 
-    dmDataset   dataset;
 
+    bool calculateWholeWMProjectedImage();
+    bool calculateCroppedWMProjectedImage();
+    void WMtoLL(const coord& topLeftWMin, const coord& botRightWMin,
+                coord& topLeftLLout, coord& botRightLLout);
+    bool needANewCropping();
+    void calculateIdealImageCroppingLL();
     bool gimmeLatLons(crdSystem crdSys, /*transformation tr,*/
         double x1, double y1, double x2, double y2,
         double& lat1Out, double& lon1Out, double& lat2Out, double& lon2Out);

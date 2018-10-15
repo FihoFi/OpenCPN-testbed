@@ -35,8 +35,9 @@ private:
     static void registerGDALDrivers();
 
 
-    const char * _srcWkt;
-    const char * _dstWkt;
+    std::string _srcWkt;
+    std::string _dstWkt;
+    std::string _colorConfFilename;
     GDALDataset * _srcDataset;
     GDALDataset * _dstDataset;
 
