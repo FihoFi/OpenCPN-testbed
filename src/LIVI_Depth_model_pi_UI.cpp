@@ -331,6 +331,26 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmChartOptions_Hillshade_panel->Layout();
 	dmChartOptions_Hillshade_Sizer->Fit( dmChartOptions_Hillshade_panel );
 	dmChartOptions_choicebook->AddPage( dmChartOptions_Hillshade_panel, wxT("Draw a Hillshade chart"), true );
+	dmChartOptions_PlainImage_panel = new wxPanel( dmChartOptions_choicebook, DM_viz_NONE, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* dmChartOptions_PlainImage_Sizer;
+	dmChartOptions_PlainImage_Sizer = new wxBoxSizer( wxVERTICAL );
+	
+	dm_Empty_staticText = new wxStaticText( dmChartOptions_PlainImage_panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	dm_Empty_staticText->Wrap( -1 );
+	dmChartOptions_PlainImage_Sizer->Add( dm_Empty_staticText, 0, wxALL, 5 );
+	
+	dmChartOptions_PlainImage_staticText = new wxStaticText( dmChartOptions_PlainImage_panel, wxID_ANY, wxT("The image is drawn coordinates transformed to World Mercator, \nbut no other handling is made."), wxDefaultPosition, wxDefaultSize, 0 );
+	dmChartOptions_PlainImage_staticText->Wrap( -1 );
+	dmChartOptions_PlainImage_Sizer->Add( dmChartOptions_PlainImage_staticText, 0, wxALL, 5 );
+	
+	
+	dmChartOptions_PlainImage_panel->SetSizer( dmChartOptions_PlainImage_Sizer );
+	dmChartOptions_PlainImage_panel->Layout();
+	dmChartOptions_PlainImage_Sizer->Fit( dmChartOptions_PlainImage_panel );
+	dmChartOptions_choicebook->AddPage( dmChartOptions_PlainImage_panel, wxT("Draw a Plain image data chart"), false );
+	dmChartOptions_Sizer->Add( dmChartOptions_choicebook, 1, wxEXPAND | wxALL, 5 );
+	
+	
 	dmChartOptions_Panel->SetSizer( dmChartOptions_Sizer );
 	dmChartOptions_Panel->Layout();
 	dmChartOptions_Sizer->Fit( dmChartOptions_Panel );
