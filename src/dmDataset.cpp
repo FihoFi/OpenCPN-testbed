@@ -141,6 +141,8 @@ unsigned char * dmDataset::getRasterData(int imgWidth, int imgHeight,
 
 bool dmDataset::openDataSet(const char * filename)
 {
+    GDALDataset *reprojectedDs;
+
     if (_srcDataset)
         GDALClose(_srcDataset);
 
@@ -150,8 +152,12 @@ bool dmDataset::openDataSet(const char * filename)
     {
         _srcWkt = GDALGetProjectionRef(_srcDataset);
 
-        // TODO: reiwork by adding visualizeDataset()
-        reprojectDataset(_srcDataset);
+        reprojectedDs = reprojectDataset(_srcDataset);
+
+        if (!reprojectDataset)
+            return false;
+
+        _dstDataset = visualizeDataset(reprojectedDs);
 
         if (!_dstDataset)
             return false;
@@ -200,14 +206,10 @@ bool dmDataset::dstSrsToLatLon(double n, double e, coord &latLons)
     return true;
 }
 
-// TODO: rework implementation appropriately
 GDALDataset * dmDataset::reprojectDataset(GDALDataset *dsToReproject)
 {
-    if (_srcDataset)
+    if (dsToReproject)
     {
-        if (_dstDataset)
-            GDALClose(_dstDataset);
-
         int err = 0;
         GDALDataset *warpedDS;
         // TODO: take this from class variable/config?
@@ -220,24 +222,51 @@ GDALDataset * dmDataset::reprojectDataset(GDALDataset *dsToReproject)
         GDALWarpAppOptions *psWarpOptions = GDALWarpAppOptionsNew(warpOpts, NULL);
         warpedDS = (GDALDataset*)GDALWarp(".\\warped_ds.tif", NULL, 1, (GDALDatasetH*)&_srcDataset, psWarpOptions, &err);
 
-        // generate color relief image
-        GDALDEMProcessingOptions* gdaldemOptions = GDALDEMProcessingOptionsNew(nullptr, nullptr);
-        _dstDataset = (GDALDataset*)GDALDEMProcessing(".\\temp_ds.tif", warpedDS, "color-relief", _colorConfFilename.c_str(), gdaldemOptions, &err);
-
         // clean up
         GDALWarpAppOptionsFree(psWarpOptions);
-        GDALDEMProcessingOptionsFree(gdaldemOptions);
-        GDALClose(warpedDS);
 
-        return NULL;
+        if (err)
+            return NULL;
+
+        return warpedDS;
     }
-}
-
-GDALDataset * dmDataset::visualizeDataset(GDALDataset *dsToReproject)
-{
-    // TODO: implement
 
     return NULL;
+}
+
+GDALDataset * dmDataset::visualizeDataset(GDALDataset *dsToVisualize)
+{
+    int err = 0;
+    GDALDataset *resultDs;
+    GDALDEMProcessingOptions * gdaldemOptions = GDALDEMProcessingOptionsNew(nullptr, nullptr);
+
+    switch (_visScheme)
+    {
+    case NONE:
+        resultDs = dsToVisualize;
+        break;
+
+    case HILLSHADE:
+        resultDs = (GDALDataset*)GDALDEMProcessing(".\\temp_ds.tif", dsToVisualize, "hillshade", NULL, gdaldemOptions, &err);
+        GDALClose(dsToVisualize);
+        break;
+
+    case COLOR_RELIEF:
+        resultDs = (GDALDataset*)GDALDEMProcessing(".\\temp_ds.tif", dsToVisualize, "color-relief", _colorConfFilename.c_str(), gdaldemOptions, &err);
+        GDALClose(dsToVisualize);
+        break;
+
+    default:
+        break;
+    }
+
+    // clean up
+    GDALDEMProcessingOptionsFree(gdaldemOptions);
+    
+    if (err)
+        return NULL;
+
+    return resultDs;
 }
 
 void dmDataset::setSrcWkt(const char * wkt)
