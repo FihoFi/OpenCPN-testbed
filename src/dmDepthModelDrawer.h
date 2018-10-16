@@ -19,6 +19,8 @@ public:
     ~dmDepthModelDrawer();
 
     bool setChartDrawTypeRelief(wxFileName fileNamePath);
+    bool setChartDrawTypeHillshade();
+    bool setChartDrawTypePlain();
     bool setDepthModelDataset(wxFileName &fileName);
     bool hasDataset();
     bool applyChartArea(coord chartTopLeft, coord chartBotRight);

@@ -33,6 +33,8 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #define DM_viz_COLOR_RELIEF 1000
+#define DM_viz_HILLSHADE 1001
+#define DM_viz_NONE 1002
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class LIVIDMUI_DLG
@@ -100,6 +102,16 @@ class LIVIDMUI_DLG : public wxDialog
 		wxColourPickerCtrl* dmColourOptionsTwoColours_ColourOfTooShallow_ColourPicker;
 		wxStaticText* dmColourOptionsTwoColours_ColourOfDeepEnough_Label;
 		wxColourPickerCtrl* dmColourOptionsTwoColours_ColourOfDeepEnough_ColourPicker;
+		wxPanel* dmChartOptions_Hillshade_panel;
+		wxStaticText* dm_Empty_staticText1;
+		wxStaticText* dm_Empty_staticText2;
+		wxStaticText* dmChartOptions_Hillshade_Azimuth_staticText;
+		wxSpinCtrl* dmChartOptions_Hillshade_Azimuth_spinCtrl;
+		wxStaticText* dmChartOptions_Hillshade_Altitude_staticText;
+		wxSpinCtrl* dmChartOptions_Hillshade_Altitude_spinCtrl;
+		wxPanel* dmChartOptions_PlainImage_panel;
+		wxStaticText* dm_Empty_staticText;
+		wxStaticText* dmChartOptions_PlainImage_staticText;
 		wxPanel* dmWaterLevel_Panel;
 		wxStaticText* dmEmpty;
 		wxStaticText* dmEmpty1;
