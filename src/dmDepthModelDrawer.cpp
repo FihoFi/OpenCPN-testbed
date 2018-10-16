@@ -15,6 +15,14 @@ dmDepthModelDrawer::dmDepthModelDrawer() :
 dmDepthModelDrawer::~dmDepthModelDrawer()
 {    delete rasterToDraw;    }
 
+bool dmDepthModelDrawer::setChartDrawTypeRelief(wxFileName fileNamePath)
+{
+    const char* fileName = fileNamePath.GetFullPath();
+    bool success = dataset.setColourConfigurationFile(fileName, false);
+    success &= dataset.setVisualizationScheme(DM_visualization::COLOR_RELIEF);
+    return success;
+}
+
 /**
 * Asks dmDataset to open the dataset in the file <i>fileName</i>, and queries
 * the World Mercator extents of the dataset.

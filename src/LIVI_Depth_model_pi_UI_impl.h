@@ -55,22 +55,24 @@ public:
             const wxSize& size = wxSize( -1,-1 ),
             long style = wxCLOSE_BOX|wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
 
-  //      void OnPSGPX( wxCommandEvent& event );		
+  //      void OnPSGPX( wxCommandEvent& event );
 		bool OpenXML();
-		
+
 //		vector<Position> my_positions;
 //		vector<Position> my_points;
 
 //        void Calculate( wxCommandEvent& event, bool Export, int Pattern );
 //        void Addpoint(TiXmlElement* Route, wxString ptlat, wxString ptlon, wxString ptname, wxString ptsym, wxString pttype);
 
-        wxFileName  GetColorConfigurationFileName();
-        void        SetColorConfigurationFileName(wxFileName &fileName);
+    wxString    GetSelectedChartOption();
+    wxString    GetSelectedColourOption();
+    wxFileName  GetColorConfigurationFileName();
+    void        SetColorConfigurationFileName(wxFileName &fileName);
 
-        void        SetCustomColor(int num, wxColour& col);
-        wxColour    GetCustomColor(int num);
-        void        SetCustomLevel(int num, int level);
-        double      GetCustomLevel(int num);
+    void        SetCustomColor(int num, wxColour& col);
+    wxColour    GetCustomColor(int num);
+    void        SetCustomLevel(int num, int level);
+    double      GetCustomLevel(int num);
 
         void        SetDepthChartFileName(wxFileName &fileName);
         wxFileName  GetDepthChartFileName();
