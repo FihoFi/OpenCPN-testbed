@@ -135,7 +135,7 @@ dmRasterImgData * dmDataset::getRasterData(
      return imgData;
 }
 
-unsigned char * dmDataset::getRasterData(int imgWidth, int imgHeight,
+dmRasterImgData * dmDataset::getRasterData(int imgWidth, int imgHeight,
     const coord topLeftIn, const coord botRightIn,
     coord &topLeftOut, coord &botRightOut)
 {
