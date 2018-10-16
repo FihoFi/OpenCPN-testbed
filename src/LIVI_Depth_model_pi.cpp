@@ -465,10 +465,132 @@ wxString LIVI_Depth_model_pi::GetLongPluginVersionString() {
 wxString LIVI_Depth_model_pi::GetCopyright() {
     return _("@ 2018, LIVI & Sitowise");
 }
+bool LIVI_Depth_model_pi::SaveConfFileOfUISelection()
+{
+    bool success = true;
+    wxString chOptStr = dialog->GetSelectedColourOption();
+
+    if      (chOptStr.Contains("own"))     {}
+    else if (chOptStr.Contains("Five"))    { success &= SaveFiveColorConfToFile();    }
+    else if (chOptStr.Contains("Sliding")) { success &= SaveSlidingColorConfToFile(); }
+    else if (chOptStr.Contains("Two"))     { success &= SaveTwoColorConfToFile();     }
+
+    return success;
+}
+
+wxFileName LIVI_Depth_model_pi::GetConfFileOfUISelection()
+{
+    bool success = true;
+    wxString chOptStr = dialog->GetSelectedColourOption();
+
+    if      (chOptStr.Contains("own"))     { return GetUsersColorConfFile(); }
+    else if (chOptStr.Contains("Five"))    { return fiveColoursFileName;     }
+    else if (chOptStr.Contains("Sliding")) { return slidingColoursFileName;  }
+    else if (chOptStr.Contains("Two"))     { return twoColoursFileName;      }
+
+    else return wxFileName("");
+}
 
 wxFileName LIVI_Depth_model_pi::GetUsersColorConfFile()
 {
     return dialog->GetColorConfigurationFileName();
+}
+
+bool LIVI_Depth_model_pi::SaveFiveColorConfToFile()
+{
+    // Normal case: we have a functioning path available. Just write there
+    wxString path = fiveColoursFileName.GetFullPath();
+
+    // Try opening the file in the path
+    wxFile file(path, wxFile::write);
+    if (!file.Exists(path))
+    {
+        // No such path, set up a path
+        wxFileName fn;
+        fn.SetPath(*GetpSharedDataLocation());
+        fn.AppendDir(_T("plugins"));
+        fn.AppendDir(_T("LIVI_Depth_model_pi"));
+        fn.AppendDir(_T("colour_files"));
+        fn.SetFullName(_T("five_colour_set.txt"));
+
+        bool success = fn.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
+        if (success)
+            fiveColoursFileName = fn;
+        else
+            return false;   // Could not create the path. This is bad.
+    }
+    path = fiveColoursFileName.GetFullPath();
+
+    // Try opening the file again
+    file.Open(path, wxFile::write);
+    if (file.IsOpened())
+    {
+        bool success = file.Write(GetFiveColourDepthColourWks());
+        file.Close();
+
+        if (success)
+            return true;
+    }
+
+    if (!file.Exists(path))
+    {
+        wxFile file_newdir(path, wxFile::write);
+        bool isOpen = file_newdir.IsOpened();
+
+        //file_newdir.Create(path, true, wxFile::write);
+        //isOpen = file_newdir.IsOpened();
+
+        if (file_newdir.IsOpened())
+        {
+            bool success = file_newdir.Write(GetFiveColourDepthColourWks());
+            file_newdir.Close();
+
+            if (success)
+                return true;
+        }
+    }
+
+    return false;
+}
+
+bool LIVI_Depth_model_pi::SaveSlidingColorConfToFile()
+{
+    bool success = true;
+
+    slidingColoursFileName.SetPath(*GetpSharedDataLocation());
+    slidingColoursFileName.AppendDir(_T("plugins"));
+    slidingColoursFileName.AppendDir(_T("LIVI_Depth_model_pi"));
+    slidingColoursFileName.AppendDir(_T("colour_files"));
+    slidingColoursFileName.SetFullName(_T("sliding_colour_set.txt"));
+
+    wxFile file(slidingColoursFileName.GetPath(), wxFile::read_write);
+    if (file.IsOpened())
+    {
+        success &= file.Write(GetSlidingColourDepthColourWks());
+        file.Close();
+    }
+
+    return success;
+}
+
+bool LIVI_Depth_model_pi::SaveTwoColorConfToFile()
+{
+    bool success = true;
+
+    twoColoursFileName.SetPath(*GetpSharedDataLocation());
+    twoColoursFileName.AppendDir(_T("plugins"));
+    twoColoursFileName.AppendDir(_T("LIVI_Depth_model_pi"));
+    twoColoursFileName.AppendDir(_T("colour_files"));
+    twoColoursFileName.SetFullName(_T("two_colour_set.txt"));
+
+    wxFile file(twoColoursFileName.GetPath(), wxFile::read_write);
+    if (file.IsOpened())
+    {
+        success &= file.Write(GetTwoColourDepthColourWks());
+        file.Close();
+    }
+
+    return success;
 }
 
 /**
@@ -489,7 +611,7 @@ wxString LIVI_Depth_model_pi::GetFiveColourDepthColourWks()
     wxString wks_ColourSettings;
     for (int i = 0; i < DM_NUM_CUSTOM_DEP; i++) {
         wks_ColourSettings.append(
-            wxString::Format(_T("%d %i %i %i %i\n"), 
+            wxString::Format(_T("%f %i %i %i %i\r\n"), 
             m_pconf->colour.m_customDepths[i]+nci,
             m_pconf->colour.m_customColours[i].Red(),
             m_pconf->colour.m_customColours[i].Green(),
@@ -497,7 +619,7 @@ wxString LIVI_Depth_model_pi::GetFiveColourDepthColourWks()
             m_pconf->colour.m_customColours[i].Alpha())
         );
         wks_ColourSettings.append(
-            wxString::Format(_T("%d %i %i %i %i\n"), 
+            wxString::Format(_T("%f %i %i %i %i\r\n"), 
                 m_pconf->colour.m_customDepths[i],
                 m_pconf->colour.m_customColours[i+1].Red(),
                 m_pconf->colour.m_customColours[i+1].Green(),
@@ -608,16 +730,34 @@ void LIVI_Depth_model_pi::OnFileImportFileChange(wxFileName fullFileName)
         {    success = dmDrawer->setChartDrawTypeHillshade();    }
         else if (chOptStr.Contains("lain"))
         {    success = dmDrawer->setChartDrawTypePlain();        }
-        else
+        else if (chOptStr.Contains("elief"))
+        {
+            dialog->SetPictureImportErrorText(std::string("Setting colouring options"));
+
+            success &= SaveConfFileOfUISelection(); // Save, to get the current options in use
+
+            wxFileName colorFile = GetConfFileOfUISelection();
+            if (!colorFile.IsOk())
+            {
+                dialog->SetPictureImportErrorText(std::string("Could not interpret the colour definitions."));
+                return;
+            }
+            else
+            {
+                success &= dmDrawer->setChartDrawTypeRelief(colorFile);
+            }
+        }
+        else // (chOptStr. ...)
         {
             dialog->SetPictureImportErrorText(std::string("Internal error. Erroneous chart type."));
-        }
-
-        if(!success)
-        {
-            dialog->SetPictureImportErrorText(std::string("Internal error. Could not set up the chart image type."));
             return;
         }
+
+        if(!success) // dmDrawer->setChartDrawTypexxx
+        {
+            dialog->SetPictureImportErrorText(std::string("Internal error. Failure at instantiating the chart type."));
+        }
+
         dialog->SetPictureImportErrorText(std::string("Reading and projecting chart image to World Mercator"));
         success &= dmDrawer->setDepthModelDataset(fullFileName);
         if (!success)
@@ -639,6 +779,7 @@ void LIVI_Depth_model_pi::OnFileImportFileChange(wxFileName fullFileName)
     m_pconf->SaveConfig();
 
 }
+
 
 /*
 wxString &LIVI_Depth_model_pi::GetConfigFileName()
