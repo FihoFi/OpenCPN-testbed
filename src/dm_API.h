@@ -18,6 +18,23 @@ struct coord {
     /*float*/double north; // mathematical y, latitude
 };
 
+struct dmRasterImgData
+{
+    dmRasterImgData() :
+        rgb(nullptr),
+        alpha(nullptr)
+    { }
+
+    ~dmRasterImgData()
+    {
+        delete rgb;
+        delete alpha;
+    }
+
+    unsigned char *rgb;
+    unsigned char *alpha;
+};
+
 enum DM_visualization
 {
     NONE,
@@ -97,7 +114,7 @@ public:
     * @param[out] topLeftOut 
     * @param[out] botRightOut
     */
-    virtual unsigned char * getRasterData(
+    virtual dmRasterImgData * getRasterData(
         coord &topLeftOut, coord &botRightOut) = 0;
 
     /**
@@ -114,7 +131,7 @@ public:
     * @param[out] topLeftOut
     * @param[out] botRightOut
     */
-    virtual unsigned char * getRasterData(int imgWidth, int imgHeight,
+    virtual dmRasterImgData * getRasterData(int imgWidth, int imgHeight,
         const coord topLeftIn, const coord botRightIn,
         coord &topLeftOut, coord &botRightOut) = 0;
 };
