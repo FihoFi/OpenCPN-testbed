@@ -138,6 +138,10 @@ private:
     void                PullConfigFromUI(void);
 
     wxFileName          GetUsersColorConfFile();
+    bool                SaveFiveColorConfToFile();
+    bool                SaveSlidingColorConfToFile();
+    bool                SaveTwoColorConfToFile();
+
     wxString            GetFiveColourDepthColourWks();
     wxString            GetSlidingColourDepthColourWks();
     wxString            GetTwoColourDepthColourWks();

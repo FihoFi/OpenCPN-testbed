@@ -471,6 +471,66 @@ wxFileName LIVI_Depth_model_pi::GetUsersColorConfFile()
     return dialog->GetColorConfigurationFileName();
 }
 
+bool LIVI_Depth_model_pi::SaveFiveColorConfToFile()
+{
+    bool success = true;
+
+    fiveColoursFileName.SetPath(*GetpSharedDataLocation());
+    fiveColoursFileName.AppendDir(_T("plugins"));
+    fiveColoursFileName.AppendDir(_T("LIVI_Depth_model_pi"));
+    fiveColoursFileName.AppendDir(_T("colour_files"));
+    fiveColoursFileName.SetFullName(_T("five_colour_set.txt"));
+
+    wxFile file(fiveColoursFileName.GetPath(), wxFile::read_write);
+    if (file.IsOpened())
+    {
+        success &= file.Write(GetFiveColourDepthColourWks());
+        file.Close();
+    }
+
+    return success;
+}
+
+bool LIVI_Depth_model_pi::SaveSlidingColorConfToFile()
+{
+    bool success = true;
+
+    slidingColoursFileName.SetPath(*GetpSharedDataLocation());
+    slidingColoursFileName.AppendDir(_T("plugins"));
+    slidingColoursFileName.AppendDir(_T("LIVI_Depth_model_pi"));
+    slidingColoursFileName.AppendDir(_T("colour_files"));
+    slidingColoursFileName.SetFullName(_T("sliding_colour_set.txt"));
+
+    wxFile file(slidingColoursFileName.GetPath(), wxFile::read_write);
+    if (file.IsOpened())
+    {
+        success &= file.Write(GetSlidingColourDepthColourWks());
+        file.Close();
+    }
+
+    return success;
+}
+
+bool LIVI_Depth_model_pi::SaveTwoColorConfToFile()
+{
+    bool success = true;
+
+    twoColoursFileName.SetPath(*GetpSharedDataLocation());
+    twoColoursFileName.AppendDir(_T("plugins"));
+    twoColoursFileName.AppendDir(_T("LIVI_Depth_model_pi"));
+    twoColoursFileName.AppendDir(_T("colour_files"));
+    twoColoursFileName.SetFullName(_T("two_colour_set.txt"));
+
+    wxFile file(twoColoursFileName.GetPath(), wxFile::read_write);
+    if (file.IsOpened())
+    {
+        success &= file.Write(GetTwoColourDepthColourWks());
+        file.Close();
+    }
+
+    return success;
+}
+
 /**
 * Generates a well known string (wks) about colour settings, telling
 * the colouring options for GDAL colour_relief.
