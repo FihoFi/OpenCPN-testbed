@@ -295,7 +295,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmChartOptions_ColorRelief_panel->SetSizer( dmChartOptions_ColorRelief_Sizer );
 	dmChartOptions_ColorRelief_panel->Layout();
 	dmChartOptions_ColorRelief_Sizer->Fit( dmChartOptions_ColorRelief_panel );
-	dmChartOptions_choicebook->AddPage( dmChartOptions_ColorRelief_panel, wxT("(default) Draw a Depth model  (\"Color relief\") chart"), false );
+	dmChartOptions_choicebook->AddPage( dmChartOptions_ColorRelief_panel, wxT("(default) Draw a Depth model  (\"Color relief\") chart"), true );
 	dmChartOptions_Hillshade_panel = new wxPanel( dmChartOptions_choicebook, DM_viz_HILLSHADE, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* dmChartOptions_Hillshade_Sizer;
 	dmChartOptions_Hillshade_Sizer = new wxFlexGridSizer( 0, 2, 0, 0 );
@@ -330,7 +330,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmChartOptions_Hillshade_panel->SetSizer( dmChartOptions_Hillshade_Sizer );
 	dmChartOptions_Hillshade_panel->Layout();
 	dmChartOptions_Hillshade_Sizer->Fit( dmChartOptions_Hillshade_panel );
-	dmChartOptions_choicebook->AddPage( dmChartOptions_Hillshade_panel, wxT("Draw a Hillshade chart"), true );
+	dmChartOptions_choicebook->AddPage( dmChartOptions_Hillshade_panel, wxT("Draw a Hillshade chart"), false );
 	dmChartOptions_PlainImage_panel = new wxPanel( dmChartOptions_choicebook, DM_viz_NONE, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* dmChartOptions_PlainImage_Sizer;
 	dmChartOptions_PlainImage_Sizer = new wxBoxSizer( wxVERTICAL );
