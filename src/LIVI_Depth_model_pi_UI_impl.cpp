@@ -142,11 +142,11 @@ wxColour Dlg::GetCustomColor(int num) {
     return picker->GetColour();
 }
 
-wxFileName    Dlg::GetColorConfigurationFileName()
-{    return this->dmColourOptionsUserFile_filePicker->GetFileName();     }
-
-void    Dlg::SetColorConfigurationFileName(wxFileName &fileName)
+void Dlg::SetUserColourConfigurationFileName(wxFileName &fileName)
 {    this->dmColourOptionsUserFile_filePicker->SetFileName(fileName);    }
+
+wxFileName Dlg::GetUserColourConfigurationFileName()
+{    return this->dmColourOptionsUserFile_filePicker->GetFileName();     }
 
 void Dlg::SetCustomLevel(int num, int level)
 {

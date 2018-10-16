@@ -493,7 +493,7 @@ wxFileName LIVI_Depth_model_pi::GetConfFileOfUISelection()
 
 wxFileName LIVI_Depth_model_pi::GetUsersColorConfFile()
 {
-    return dialog->GetColorConfigurationFileName();
+    return dialog->GetUserColourConfigurationFileName();
 }
 
 bool LIVI_Depth_model_pi::SaveFiveColorConfToFile()
@@ -679,6 +679,7 @@ void LIVI_Depth_model_pi::PushConfigToUI(void)
     for (int i = 0; i < DM_NUM_CUSTOM_DEP; i++) {
         dialog->SetCustomLevel(i, m_pconf->colour.getDepth(i));
     }
+    dialog->SetUserColourConfigurationFileName(m_pconf->colour.userColourConfPath);
     dialog->SetDepthChartFileName(m_pconf->fileImport.filePath);
 }
 
@@ -694,6 +695,7 @@ void LIVI_Depth_model_pi::PullConfigFromUI(void)
     for (int i = 0; i < DM_NUM_CUSTOM_DEP; i++) {
         m_pconf->colour.setDepth(i, dialog->GetCustomLevel(i));
     }
+    m_pconf->colour.userColourConfPath = dialog->GetUserColourConfigurationFileName();
     m_pconf->fileImport.filePath = dialog->GetDepthChartFileName();
 
 }

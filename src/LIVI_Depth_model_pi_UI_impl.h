@@ -66,8 +66,8 @@ public:
 
     wxString    GetSelectedChartOption();
     wxString    GetSelectedColourOption();
-    wxFileName  GetColorConfigurationFileName();
-    void        SetColorConfigurationFileName(wxFileName &fileName);
+    void        SetUserColourConfigurationFileName(wxFileName &fileName);
+    wxFileName  GetUserColourConfigurationFileName();
 
     void        SetCustomColor(int num, wxColour& col);
     wxColour    GetCustomColor(int num);
