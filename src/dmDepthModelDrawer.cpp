@@ -15,10 +15,13 @@ dmDepthModelDrawer::dmDepthModelDrawer() :
 dmDepthModelDrawer::~dmDepthModelDrawer()
 {    delete raster;    }
 
-bool dmDepthModelDrawer::setChartDrawTypeRelief(wxFileName fileNamePath)
+bool dmDepthModelDrawer::setChartDrawTypeRelief(const wxFileName &fileNamePath)
 {
-    const char* fileName = fileNamePath.GetFullPath();
-    bool success = dataset.setColourConfigurationFile(fileName, false);
+    wxString    fileNameWxStr = fileNamePath.GetFullPath();
+    std::string fileNameStr = fileNameWxStr.ToStdString();
+    const char* fileNameCharPtr = fileNameStr.c_str();
+
+    bool success = dataset.setColourConfigurationFile(fileNameCharPtr, false);
     success &= dataset.setVisualizationScheme(DM_visualization::COLOR_RELIEF);
     return success;
 }
@@ -37,7 +40,7 @@ bool dmDepthModelDrawer::setChartDrawTypePlain()
 * Asks dmDataset to open the dataset in the file <i>fileName</i>, and queries
 * the World Mercator extents of the dataset.
 */
-bool dmDepthModelDrawer::setDepthModelDataset(wxFileName &fileName)
+bool dmDepthModelDrawer::setDepthModelDataset(const wxFileName &fileName)
 {
     wxString    fileNameWxStr   = fileName.GetFullPath();
     std::string fileNameStr     = fileNameWxStr.ToStdString();
