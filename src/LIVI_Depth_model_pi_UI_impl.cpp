@@ -71,7 +71,8 @@ void Dlg::OnColorOptionsApplyButtonClick(wxCommandEvent& event)
 void Dlg::OnAboutLIVIDepthModel(wxCommandEvent& WXUNUSED(event))
 {
     wxAboutDialogInfo aboutInfo;
-    aboutInfo.SetName       (plugin->GetCommonName()            );
+    aboutInfo.SetName       (plugin->GetCommonName() + wxString::Format(wxT(" v. %i.%i"),
+        plugin->GetPlugInVersionMajor(), plugin->GetPlugInVersionMinor()) );
     aboutInfo.SetIcon       (plugin->GetIcon()                  );
     aboutInfo.SetVersion    (plugin->GetPlugInVersionMajor() + "."
                              + plugin->GetPlugInVersionMinor(),

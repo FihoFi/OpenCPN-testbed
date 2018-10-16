@@ -372,12 +372,14 @@ bool LIVI_Depth_model_pi::RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp)
     {
         if (dmDrawer->hasDataset())
             success &= dmDrawer->drawDepthChart(dc, *vp);
+        else
+            success = false;
     }
     catch (std::string ex)
     {
         exception = true;
     }
-    if (!exception)
+    if (exception)
         dialog->SetPictureImportErrorText("Problem in drawing the picture.");
 
     return success;
