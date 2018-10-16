@@ -717,6 +717,12 @@ void LIVI_Depth_model_pi::OnColorOptionsApply()
     m_pconf->SaveConfig();
 }
 
+void LIVI_Depth_model_pi::OnUserColourFileChange(wxFileName fullFileName)
+{
+    m_pconf->colour.userColourConfPath = fullFileName;
+    m_pconf->SaveConfig();
+}
+
 void LIVI_Depth_model_pi::OnFileImportFileChange(wxFileName fullFileName)
 {
     bool exception = false;
