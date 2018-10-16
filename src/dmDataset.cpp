@@ -95,9 +95,13 @@ void dmDataset::setVisualizationScheme(DM_visualization visScheme)
     _visScheme = visScheme;
 }
 
-unsigned char * dmDataset::getRasterData(
+dmRasterImgData * dmDataset::getRasterData(
     coord &topLeftOut, coord &botRightOut)
 {
+    int xSize, ySize;
+    float *bandData;
+    dmRasterImgData *imgData;
+
     if (!_dstDataset)
         return NULL;
 
@@ -107,26 +111,25 @@ unsigned char * dmDataset::getRasterData(
     else
         return NULL;
 
-    int xSize, ySize;
-    float *bandData;
-    unsigned char *imgData;
-
     if (!getDatasetExtents(topLeftOut, botRightOut))
         return NULL;
 
     xSize = band->GetXSize();
     ySize = band->GetYSize();
 
-    imgData = (unsigned char*)malloc(sizeof(unsigned char) * 3 * xSize*ySize);
+    imgData = new dmRasterImgData();
+    imgData->rgb = new unsigned char[3 * xSize*ySize];
+    imgData->alpha = new unsigned char[xSize*ySize];
     bandData = (float*)CPLMalloc(sizeof(float)*xSize*ySize);
     band->RasterIO(GF_Read, 0, 0, xSize, ySize, bandData, xSize, ySize, GDT_Float32, 0, 0);
 
     for (int i = 0; i < xSize*ySize; i++)
     {
-        imgData[3 * i] = (unsigned char)bandData[i];
-        imgData[3 * i + 1] = (unsigned char)bandData[i];
-        imgData[3 * i + 2] = (unsigned char)bandData[i];
+        imgData->rgb[3 * i] = (unsigned char)bandData[i];
+        imgData->rgb[3 * i + 1] = (unsigned char)bandData[i];
+        imgData->rgb[3 * i + 2] = (unsigned char)bandData[i];
     }
+
     CPLFree(bandData);
 
      return imgData;
