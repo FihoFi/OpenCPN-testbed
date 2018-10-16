@@ -90,6 +90,7 @@ private:
     virtual void OnAboutLIVIDepthModel         ( wxCommandEvent& WXUNUSED(event) );
     virtual void OnAboutWxWidgets              ( wxCommandEvent& WXUNUSED(event) );
     virtual void OnFileImportFileChange  ( wxFileDirPickerEvent& WXUNUSED(event) );
+    virtual void OnUserColourFileChange  ( wxFileDirPickerEvent& WXUNUSED(event) );
 
     bool dbg;
 
