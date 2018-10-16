@@ -37,7 +37,7 @@ struct dmRasterImgData
 
 enum DM_visualization
 {
-    NONE,
+    NONE = 13579,  // Magic number much greater than 0, to avoid unintentionally accepted zeroes, and ones. Also More than wxID_HIGHEST = 5999, just in case the wxIDs could be used.
     HILLSHADE,
     COLOR_RELIEF
 };
@@ -103,8 +103,9 @@ public:
     * for the new setting to take effect.
     *
     * @param[in] visScheme the desired visualization scheme
+    * @return true, if given enumeration was ok, false else
     */
-    virtual void setVisualizationScheme(DM_visualization visScheme) = 0;
+    virtual bool setVisualizationScheme(DM_visualization visScheme) = 0;
 
      /**
     * Returns the whole raster data in the Dataset.
