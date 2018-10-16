@@ -104,35 +104,50 @@ dmRasterImgData * dmDataset::getRasterData(
 
     if (!_dstDataset)
         return NULL;
-
-    GDALRasterBand *band;
-    if (_dstDataset->GetRasterCount() > 0)
-        band = _dstDataset->GetRasterBand(1);
-    else
+    
+    GDALDataset::Bands bands = _dstDataset->GetBands();
+    if (bands.size() < 1)
         return NULL;
 
     if (!getDatasetExtents(topLeftOut, botRightOut))
         return NULL;
 
-    xSize = band->GetXSize();
-    ySize = band->GetYSize();
+    xSize = bands[0]->GetXSize();
+    ySize = bands[0]->GetYSize();
 
     imgData = new dmRasterImgData();
     imgData->rgb = new unsigned char[3 * xSize*ySize];
     imgData->alpha = new unsigned char[xSize*ySize];
-    bandData = (float*)CPLMalloc(sizeof(float)*xSize*ySize);
-    band->RasterIO(GF_Read, 0, 0, xSize, ySize, bandData, xSize, ySize, GDT_Float32, 0, 0);
 
-    for (int i = 0; i < xSize*ySize; i++)
+    // read RGB channel
+    int n = 0;
+    while (n < 3 && n < bands.size())
     {
-        imgData->rgb[3 * i] = (unsigned char)bandData[i];
-        imgData->rgb[3 * i + 1] = (unsigned char)bandData[i];
-        imgData->rgb[3 * i + 2] = (unsigned char)bandData[i];
+        bandData = (float*)CPLMalloc(sizeof(float)*xSize*ySize);
+        bands[n]->RasterIO(GF_Read, 0, 0, xSize, ySize, bandData, xSize, ySize, GDT_Float32, 0, 0);
+
+        for (int i = 0; i < xSize*ySize; i++)
+        {
+            imgData->rgb[3 * i + n] = (unsigned char)bandData[i];
+        }
+        CPLFree(bandData);
+        n++;
     }
 
-    CPLFree(bandData);
+    // read alpha channel
+    if (bands.size() > 3)
+    {
+        bandData = (float*)CPLMalloc(sizeof(float)*xSize*ySize);
+        bands[3]->RasterIO(GF_Read, 0, 0, xSize, ySize, bandData, xSize, ySize, GDT_Float32, 0, 0);
 
-     return imgData;
+        for (int i = 0; i < xSize*ySize; i++)
+        {
+            imgData->alpha[i] = (unsigned char)bandData[i];
+        }
+        CPLFree(bandData);
+    }
+
+    return imgData;
 }
 
 dmRasterImgData * dmDataset::getRasterData(int imgWidth, int imgHeight,
