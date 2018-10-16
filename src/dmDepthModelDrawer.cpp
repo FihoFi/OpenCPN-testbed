@@ -45,7 +45,7 @@ bool dmDepthModelDrawer::setDepthModelDataset(wxFileName &fileName)
 
     if (raster)
     {
-        free(raster);
+        delete(raster);
         raster = NULL;
     }
 
