@@ -90,9 +90,13 @@ bool dmDataset::setColourConfiguration(const char* fileContents, bool giveOwners
     return false;
 }
 
-void dmDataset::setVisualizationScheme(DM_visualization visScheme)
+bool dmDataset::setVisualizationScheme(DM_visualization visScheme)
 {
     _visScheme = visScheme;
+    if (visScheme == NONE || visScheme == HILLSHADE || visScheme == COLOR_RELIEF)
+        return true;
+    else
+        return false;
 }
 
 dmRasterImgData * dmDataset::getRasterData(
