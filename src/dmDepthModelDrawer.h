@@ -44,7 +44,7 @@ private:
     coord       lastTopLeftLL,   lastBotRightLL;
 
 
-    unsigned char*  rasterToDraw;
+    dmRasterImgData*  raster;
     int w, h; // image width, and height
     wxBitmap        bmp;
     wxPoint         bitmapTopLeftPositioningPoint;

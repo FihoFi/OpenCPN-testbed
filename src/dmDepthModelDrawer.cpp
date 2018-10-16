@@ -9,11 +9,11 @@
 dmDepthModelDrawer::dmDepthModelDrawer() :
     modelState(UNSET), 
     chartAreaKnown(false), datasetAvailable(false), depthModelFileName(),
-    rasterToDraw(NULL), w(0), h(0)
+    raster(NULL), w(0), h(0)
 {    }
 
 dmDepthModelDrawer::~dmDepthModelDrawer()
-{    delete rasterToDraw;    }
+{    delete raster;    }
 
 bool dmDepthModelDrawer::setChartDrawTypeRelief(wxFileName fileNamePath)
 {
@@ -43,10 +43,10 @@ bool dmDepthModelDrawer::setDepthModelDataset(wxFileName &fileName)
     std::string fileNameStr     = fileNameWxStr.ToStdString();
     const char* fileNameCharPtr = fileNameStr.c_str();
 
-    if (rasterToDraw)
+    if (raster)
     {
-        free(rasterToDraw);
-        rasterToDraw = NULL;
+        delete(raster);
+        raster = NULL;
     }
 
     bool success = dataset.openDataSet(fileNameCharPtr);
@@ -113,7 +113,7 @@ bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
     {
         try
         {
-            if (rasterToDraw)
+            if (raster)
             {
                 isNewLoad = false;
                 calculateCroppedWMProjectedImage();
@@ -177,15 +177,15 @@ bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
             //        depthModelFileName.GetName().ToStdString());
             //    return false;
             //}
-            original = wxImage(newW, newH, rasterToDraw, false);
+            original = wxImage(newW, newH, raster->rgb, raster->alpha, false);
             *originalFromGDAL = original.Scale(w, h, /*wxImageResizeQuality*/ wxIMAGE_QUALITY_NORMAL);
 
         }
         else
         {
-            originalFromGDAL = new wxImage(w, h, rasterToDraw, false);
+            originalFromGDAL = new wxImage(w, h, raster->rgb, raster->alpha, false);
         }
-        rasterToDraw = NULL; // was freed by wxImage constructor
+        raster = NULL; // was freed by wxImage constructor
 
         if (!(*originalFromGDAL).IsOk())
         {
@@ -218,9 +218,8 @@ bool dmDepthModelDrawer::calculateWholeWMProjectedImage()
 {
     bool success = true;
 
-    rasterToDraw = dataset.getRasterData(
-        wholeImageTopLeftWM, wholeImageBotRightWM);
-    success &= (rasterToDraw != NULL);
+    raster = dataset.getRasterData(wholeImageTopLeftWM, wholeImageBotRightWM);
+    success &= (raster != NULL);
 
     if (success)
     {    modelState = CHART_AREA_OK;    }
@@ -243,7 +242,7 @@ bool dmDepthModelDrawer::calculateCroppedWMProjectedImage()
 {
     bool success = true;
 
-    rasterToDraw = dataset.getRasterData(
+    raster = dataset.getRasterData(
         w, h, idealTopLeftLL, idealBotRightLL,
         croppedImageTopLeftWM, croppedImageBotRightWM);
 
@@ -279,7 +278,7 @@ bool dmDepthModelDrawer::needANewCropping()
         throw (std::string("dmDepthModelDrawer::needANewCropping does not need the canvas extent"));
     }
 
-    if (rasterToDraw==NULL)
+    if (raster==NULL)
     {
         return true;
     }
