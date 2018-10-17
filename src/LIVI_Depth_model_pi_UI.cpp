@@ -246,8 +246,6 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColorOptionsSliding_GridSizer->Fit( dmColourOptionsSliding_Panel );
 	dmColourOptions_choisebook->AddPage( dmColourOptionsSliding_Panel, wxT("Sliding color"), false );
 	dmColourOptionsTwoColours_Panel = new wxPanel( dmColourOptions_choisebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	dmColourOptionsTwoColours_Panel->Enable( false );
-	
 	wxFlexGridSizer* dmColorOptionsConstant_GridSizer;
 	dmColorOptionsConstant_GridSizer = new wxFlexGridSizer( 0, 2, 0, 0 );
 	dmColorOptionsConstant_GridSizer->SetFlexibleDirection( wxBOTH );
@@ -261,26 +259,26 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmEmpty_staticText5->Wrap( -1 );
 	dmColorOptionsConstant_GridSizer->Add( dmEmpty_staticText5, 0, wxALL, 5 );
 	
-	dmColourOptionsTwoColours_ColourOfTooShallow_Label = new wxStaticText( dmColourOptionsTwoColours_Panel, wxID_ANY, wxT("Colour when too shallow "), wxDefaultPosition, wxDefaultSize, 0 );
-	dmColourOptionsTwoColours_ColourOfTooShallow_Label->Wrap( -1 );
-	dmColorOptionsConstant_GridSizer->Add( dmColourOptionsTwoColours_ColourOfTooShallow_Label, 0, wxALL, 5 );
+	dmColourOptionsTwoColours_TooShallow_Label = new wxStaticText( dmColourOptionsTwoColours_Panel, wxID_ANY, wxT("Colour when too shallow "), wxDefaultPosition, wxDefaultSize, 0 );
+	dmColourOptionsTwoColours_TooShallow_Label->Wrap( -1 );
+	dmColorOptionsConstant_GridSizer->Add( dmColourOptionsTwoColours_TooShallow_Label, 0, wxALL, 5 );
 	
-	dmColourOptionsTwoColours_ColourOfTooShallow_ColourPicker = new wxColourPickerCtrl( dmColourOptionsTwoColours_Panel, wxID_ANY, wxColour( 255, 0, 0 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	dmColorOptionsConstant_GridSizer->Add( dmColourOptionsTwoColours_ColourOfTooShallow_ColourPicker, 0, wxALL, 5 );
+	dmColourOptionsTwoColours_TooShallow_ColourPicker = new wxColourPickerCtrl( dmColourOptionsTwoColours_Panel, wxID_ANY, wxColour( 255, 0, 0 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	dmColorOptionsConstant_GridSizer->Add( dmColourOptionsTwoColours_TooShallow_ColourPicker, 0, wxALL, 5 );
 	
 	dmColourOptionsTwoColours_DividingDepth_Label = new wxStaticText( dmColourOptionsTwoColours_Panel, wxID_ANY, wxT("Level difference between color change"), wxDefaultPosition, wxDefaultSize, 0 );
 	dmColourOptionsTwoColours_DividingDepth_Label->Wrap( -1 );
 	dmColorOptionsConstant_GridSizer->Add( dmColourOptionsTwoColours_DividingDepth_Label, 0, wxALL, 5 );
 	
-	dmColourOptionsTwoColours_DividingDepth_spinCtrlDouble = new wxSpinCtrlDouble( dmColourOptionsTwoColours_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 0, 1 );
+	dmColourOptionsTwoColours_DividingDepth_spinCtrlDouble = new wxSpinCtrlDouble( dmColourOptionsTwoColours_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 20.000000, 1 );
 	dmColorOptionsConstant_GridSizer->Add( dmColourOptionsTwoColours_DividingDepth_spinCtrlDouble, 0, wxALL, 5 );
 	
-	dmColourOptionsTwoColours_ColourOfDeepEnough_Label = new wxStaticText( dmColourOptionsTwoColours_Panel, wxID_ANY, wxT("Colour when deep enough"), wxDefaultPosition, wxDefaultSize, 0 );
-	dmColourOptionsTwoColours_ColourOfDeepEnough_Label->Wrap( -1 );
-	dmColorOptionsConstant_GridSizer->Add( dmColourOptionsTwoColours_ColourOfDeepEnough_Label, 0, wxALL, 5 );
+	dmColourOptionsTwoColours_DeepEnough_Label = new wxStaticText( dmColourOptionsTwoColours_Panel, wxID_ANY, wxT("Colour when deep enough"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmColourOptionsTwoColours_DeepEnough_Label->Wrap( -1 );
+	dmColorOptionsConstant_GridSizer->Add( dmColourOptionsTwoColours_DeepEnough_Label, 0, wxALL, 5 );
 	
-	dmColourOptionsTwoColours_ColourOfDeepEnough_ColourPicker = new wxColourPickerCtrl( dmColourOptionsTwoColours_Panel, wxID_ANY, wxColour( 0, 0, 255 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	dmColorOptionsConstant_GridSizer->Add( dmColourOptionsTwoColours_ColourOfDeepEnough_ColourPicker, 0, wxALL, 5 );
+	dmColourOptionsTwoColours_DeepEnough_ColourPicker = new wxColourPickerCtrl( dmColourOptionsTwoColours_Panel, wxID_ANY, wxColour( 0, 0, 255 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	dmColorOptionsConstant_GridSizer->Add( dmColourOptionsTwoColours_DeepEnough_ColourPicker, 0, wxALL, 5 );
 	
 	
 	dmColourOptionsTwoColours_Panel->SetSizer( dmColorOptionsConstant_GridSizer );

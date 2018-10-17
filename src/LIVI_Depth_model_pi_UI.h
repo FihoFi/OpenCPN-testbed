@@ -96,12 +96,12 @@ class LIVIDMUI_DLG : public wxDialog
 		wxPanel* dmColourOptionsTwoColours_Panel;
 		wxStaticText* dmEmpty_staticText4;
 		wxStaticText* dmEmpty_staticText5;
-		wxStaticText* dmColourOptionsTwoColours_ColourOfTooShallow_Label;
-		wxColourPickerCtrl* dmColourOptionsTwoColours_ColourOfTooShallow_ColourPicker;
+		wxStaticText* dmColourOptionsTwoColours_TooShallow_Label;
+		wxColourPickerCtrl* dmColourOptionsTwoColours_TooShallow_ColourPicker;
 		wxStaticText* dmColourOptionsTwoColours_DividingDepth_Label;
 		wxSpinCtrlDouble* dmColourOptionsTwoColours_DividingDepth_spinCtrlDouble;
-		wxStaticText* dmColourOptionsTwoColours_ColourOfDeepEnough_Label;
-		wxColourPickerCtrl* dmColourOptionsTwoColours_ColourOfDeepEnough_ColourPicker;
+		wxStaticText* dmColourOptionsTwoColours_DeepEnough_Label;
+		wxColourPickerCtrl* dmColourOptionsTwoColours_DeepEnough_ColourPicker;
 		wxPanel* dmChartOptions_Hillshade_panel;
 		wxStaticText* dm_Empty_staticText1;
 		wxStaticText* dm_Empty_staticText2;
