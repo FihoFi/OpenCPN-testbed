@@ -84,6 +84,12 @@ struct DMColorOptionConfig : dm_configAPI {
 
     double  getDepth(int i)              { return m_customDepths[i];  }
     void    setDepth(int i, double depth){ m_customDepths[i] = depth; }
+
+    wxColor getTwoColour(int i)              { return m_twoColours[i]; }
+    void    setTwoColour(int i, wxColor col) { m_twoColours[i] = col; }
+
+    double  getTwoColoursDepth()             { return m_twoColoursDepth; }
+    void    setTwoColoursDepth(double depth) { m_twoColoursDepth = depth; }
 };
 
 struct DMFileImportConfig : dm_configAPI {

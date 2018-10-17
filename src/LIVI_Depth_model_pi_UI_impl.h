@@ -74,6 +74,11 @@ public:
     void        SetCustomLevel(int num, int level);
     double      GetCustomLevel(int num);
 
+    void        SetTwoColours(int num, wxColour& col);
+    wxColour    GetTwoColours(int num);
+    void        SetDividingLevel(int level);
+    double      GetDividingLevel();
+
     void        SetDepthChartFileName(wxFileName &fileName);
     wxFileName  GetDepthChartFileName();
 
