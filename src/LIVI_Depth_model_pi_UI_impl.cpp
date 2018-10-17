@@ -175,6 +175,42 @@ double Dlg::GetCustomLevel(int num) {
     return spinCtrl->GetValue();
 }
 
+void Dlg::SetTwoColours(int num, wxColour& col)
+{
+    switch (num) {
+    case 0:    this->dmColourOptionsTwoColours_TooShallow_ColourPicker->SetColour(col);    break;
+    case 1:    this->dmColourOptionsTwoColours_DeepEnough_ColourPicker->SetColour(col);    break;
+    default:
+        // there is no such Colour picker to be altered
+        break;
+    }
+}
+
+wxColour Dlg::GetTwoColours(int num)
+{
+    wxColourPickerCtrl* picker;
+    switch (num) {
+    case 0:    picker = this->dmColourOptionsTwoColours_TooShallow_ColourPicker;    break;
+    case 1:    picker = this->dmColourOptionsTwoColours_DeepEnough_ColourPicker;    break;
+    default:
+        // there is no such Colour picker to be retrieved
+        return wxColour();  break;
+    }
+    return picker->GetColour();
+}
+
+void Dlg::SetDividingLevel(int level)
+{
+    this->dmColourOptionsTwoColours_DividingDepth_spinCtrlDouble->SetValue(level);
+}
+
+double Dlg::GetDividingLevel()
+{
+    wxSpinCtrlDouble* spinCtrl;
+    spinCtrl = this->dmColourOptionsTwoColours_DividingDepth_spinCtrlDouble;
+    return spinCtrl->GetValue();
+}
+
 wxFileName    Dlg::GetDepthChartFileName()
 {    return this->dmPictureImport_filePicker->GetFileName();    }
 
