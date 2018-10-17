@@ -569,16 +569,17 @@ wxString LIVI_Depth_model_pi::GetFiveColourDepthColourWks()
 {
     static double nci = 0.0001; // Nearest colour tweak. Number in meters.
     static int opaque_level = 128;  // amount of opaqueness, value in [0...255]
+    static int opaque_list[5] = {128, 96, 64, 32, 16};
 
     wxString wks_ColourSettings;
     for (int i = 0; i < DM_NUM_CUSTOM_DEP; i++) {
         wks_ColourSettings.append(
             wxString::Format(_T("%f %i %i %i %i\r\n"), 
-            m_pconf->colour.m_customDepths[i]+nci,
-            m_pconf->colour.m_customColours[i].Red(),
-            m_pconf->colour.m_customColours[i].Green(),
-            m_pconf->colour.m_customColours[i].Blue(),
-            m_pconf->colour.m_customColours[i].Alpha())
+                m_pconf->colour.m_customDepths[i]+nci,
+                m_pconf->colour.m_customColours[i].Red(),
+                m_pconf->colour.m_customColours[i].Green(),
+                m_pconf->colour.m_customColours[i].Blue(),
+                opaque_list[i])
         );
         wks_ColourSettings.append(
             wxString::Format(_T("%f %i %i %i %i\r\n"), 
@@ -586,10 +587,10 @@ wxString LIVI_Depth_model_pi::GetFiveColourDepthColourWks()
                 m_pconf->colour.m_customColours[i+1].Red(),
                 m_pconf->colour.m_customColours[i+1].Green(),
                 m_pconf->colour.m_customColours[i+1].Blue(),
-                opaque_level)
-        //      m_conf.m_customColours[i+1].Alpha())
+                opaque_list[i+1])
         );
     }
+
     return wks_ColourSettings;
 }
 
