@@ -572,6 +572,8 @@ wxString LIVI_Depth_model_pi::GetFiveColourDepthColourWks()
     static int opaque_list[5] = {128, 96, 64, 32, 16};
 
     wxString wks_ColourSettings;
+    wks_ColourSettings.append(wxString(_T("nv           0  0  0  0\r\n")));
+
     for (int i = 0; i < DM_NUM_CUSTOM_DEP; i++) {
         wks_ColourSettings.append(
             wxString::Format(_T("%f %i %i %i %i\r\n"), 
@@ -599,6 +601,7 @@ wxString LIVI_Depth_model_pi::GetSlidingColourDepthColourWks()
     wxString wks_ColourSettings;
 
     //TODO
+    wks_ColourSettings.append(wxString(_T("nv           0  0  0  0\r\n")));
 
     return wks_ColourSettings;
 }
@@ -609,6 +612,8 @@ wxString LIVI_Depth_model_pi::GetTwoColourDepthColourWks()
     static int opaque_level = 128;  // amount of opaqueness, value in [0...255]
 
     wxString wks_ColourSettings;
+
+    wks_ColourSettings.append(wxString(_T("nv           0  0  0  0\r\n")));
     wks_ColourSettings.append(
         wxString::Format(_T("%f %i %i %i %i\r\n"),
             m_pconf->colour.m_twoColoursDepth + nci,
