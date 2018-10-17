@@ -552,61 +552,8 @@ bool LIVI_Depth_model_pi::SaveColorConfToFile(
             return true;
     }
 
-//    if (!file.Exists(path))
-//    {
-//        wxFile file_newdir(path, wxFile::write);
-//        if (file_newdir.IsOpened())
-//        {
-//            bool success = file_newdir.Write(confText);
-//            file_newdir.Close();
-//
-//            if (success)
-//                return true;
-//        }
-//    }
-
     return false;
 }
-
-//bool LIVI_Depth_model_pi::SaveSlidingColorConfToFile()
-//{
-//    bool success = true;
-//
-//    slidingColoursFileName.SetPath(*GetpSharedDataLocation());
-//    slidingColoursFileName.AppendDir(_T("plugins"));
-//    slidingColoursFileName.AppendDir(_T("LIVI_Depth_model_pi"));
-//    slidingColoursFileName.AppendDir(_T("colour_files"));
-//    slidingColoursFileName.SetFullName(_T("sliding_colour_set.txt"));
-//
-//    wxFile file(slidingColoursFileName.GetPath(), wxFile::read_write);
-//    if (file.IsOpened())
-//    {
-//        success &= file.Write(GetSlidingColourDepthColourWks());
-//        file.Close();
-//    }
-//
-//    return success;
-//}
-//
-//bool LIVI_Depth_model_pi::SaveTwoColorConfToFile()
-//{
-//    bool success = true;
-//
-//    twoColoursFileName.SetPath(*GetpSharedDataLocation());
-//    twoColoursFileName.AppendDir(_T("plugins"));
-//    twoColoursFileName.AppendDir(_T("LIVI_Depth_model_pi"));
-//    twoColoursFileName.AppendDir(_T("colour_files"));
-//    twoColoursFileName.SetFullName(_T("two_colour_set.txt"));
-//
-//    wxFile file(twoColoursFileName.GetPath(), wxFile::read_write);
-//    if (file.IsOpened())
-//    {
-//        success &= file.Write(GetTwoColourDepthColourWks());
-//        file.Close();
-//    }
-//
-//    return success;
-//}
 
 /**
 * Generates a well known string (wks) about colour settings, telling
