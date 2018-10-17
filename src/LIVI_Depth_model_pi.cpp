@@ -641,6 +641,7 @@ void LIVI_Depth_model_pi::PushConfigToUI(void)
     for (int i = 0; i < DM_NUM_CUSTOM_DEP; i++) {
         dialog->SetCustomLevel(i, m_pconf->colour.getDepth(i));
     }
+
     for (int i = 0; i < 2; i++) {
         dialog->SetTwoColours(i, m_pconf->colour.getTwoColour(i));
     }
@@ -662,6 +663,12 @@ void LIVI_Depth_model_pi::PullConfigFromUI(void)
     for (int i = 0; i < DM_NUM_CUSTOM_DEP; i++) {
         m_pconf->colour.setDepth(i, dialog->GetCustomLevel(i));
     }
+
+    for (int i = 0; i < 2; i++) {
+        m_pconf->colour.setTwoColour(i, dialog->GetTwoColours(i));
+    }
+    m_pconf->colour.setTwoColoursDepth(dialog->GetDividingLevel());
+
     m_pconf->colour.userColourConfPath = dialog->GetUserColourConfigurationFileName();
     m_pconf->fileImport.filePath = dialog->GetDepthChartFileName();
 
