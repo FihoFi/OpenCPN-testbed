@@ -128,28 +128,15 @@ dmRasterImgData * dmDataset::getRasterData(
     int n = 0;
     while (n < 3 && n < bands.size())
     {
-        bandData = (float*)CPLMalloc(sizeof(float)*xSize*ySize);
-        bands[n]->RasterIO(GF_Read, 0, 0, xSize, ySize, bandData, xSize, ySize, GDT_Float32, 0, 0);
+        bands[n]->RasterIO(GF_Read, 0, 0, xSize, ySize, imgData->rgb + n, xSize, ySize, GDT_Byte, 3, 3*xSize);
 
-        for (int i = 0; i < xSize*ySize; i++)
-        {
-            imgData->rgb[3 * i + n] = (unsigned char)bandData[i];
-        }
-        CPLFree(bandData);
         n++;
     }
 
     // read alpha channel
     if (bands.size() > 3)
     {
-        bandData = (float*)CPLMalloc(sizeof(float)*xSize*ySize);
-        bands[3]->RasterIO(GF_Read, 0, 0, xSize, ySize, bandData, xSize, ySize, GDT_Float32, 0, 0);
-
-        for (int i = 0; i < xSize*ySize; i++)
-        {
-            imgData->alpha[i] = (unsigned char)bandData[i];
-        }
-        CPLFree(bandData);
+        bands[3]->RasterIO(GF_Read, 0, 0, xSize, ySize, imgData->alpha, xSize, ySize, GDT_Byte, 0, 0);
     }
 
     return imgData;
