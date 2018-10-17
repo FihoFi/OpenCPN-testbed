@@ -66,8 +66,8 @@ public:
 
     wxString    GetSelectedChartOption();
     wxString    GetSelectedColourOption();
-    wxFileName  GetColorConfigurationFileName();
-    void        SetColorConfigurationFileName(wxFileName &fileName);
+    void        SetUserColourConfigurationFileName(wxFileName &fileName);
+    wxFileName  GetUserColourConfigurationFileName();
 
     void        SetCustomColor(int num, wxColour& col);
     wxColour    GetCustomColor(int num);
@@ -90,6 +90,7 @@ private:
     virtual void OnAboutLIVIDepthModel         ( wxCommandEvent& WXUNUSED(event) );
     virtual void OnAboutWxWidgets              ( wxCommandEvent& WXUNUSED(event) );
     virtual void OnFileImportFileChange  ( wxFileDirPickerEvent& WXUNUSED(event) );
+    virtual void OnUserColourFileChange  ( wxFileDirPickerEvent& WXUNUSED(event) );
 
     bool dbg;
 

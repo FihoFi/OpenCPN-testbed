@@ -113,6 +113,7 @@ public:
 
 
     void OnColorOptionsApply();
+    void OnUserColourFileChange(wxFileName fullFileName);
     void OnFileImportFileChange(wxFileName fullFileName);
 
 private:

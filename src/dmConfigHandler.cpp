@@ -136,11 +136,11 @@ bool DMColorOptionConfig::load(void)
         }
 
         wxString colourConfPathStr;
-        success &= confFile->Read(wxT("ColourConfPath"), &colourConfPathStr);
+        success &= confFile->Read(wxT("UserColourConfPath"), &colourConfPathStr);
         wxFileName colourConfFilePath(colourConfPathStr);
         if (colourConfFilePath.FileExists())
         {
-            colourConfPath = colourConfFilePath;
+            userColourConfPath = colourConfFilePath;
         }
     }
     return success;
@@ -161,7 +161,7 @@ bool DMColorOptionConfig::save(void)
             success &= confFile->Write(wxT("CustomDepth" + std::to_string(i)), m_customDepths[i]);
         }
 
-        success &= confFile->Write(wxT("ColourConfPath"), colourConfPath.GetFullPath());
+        success &= confFile->Write(wxT("UserColourConfPath"), userColourConfPath.GetFullPath());
 
         return true;
     }
