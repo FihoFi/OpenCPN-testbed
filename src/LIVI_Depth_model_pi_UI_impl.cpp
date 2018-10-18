@@ -1,4 +1,4 @@
-/******************************************************************************
+﻿/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  LIVI_Depth_model Plugin
@@ -72,18 +72,17 @@ void Dlg::SetAboutInfo()
     this->dmAbout_name_staticText->SetLabelText(plugin->GetCommonName());
 
     this->dmAbout_version_staticText->SetLabel(wxString::Format(wxT(" v. %i.%i"),
-        plugin->GetPlugInVersionMajor(), plugin->GetPlugInVersionMinor())+
-		plugin->GetLongPluginVersionString());
+        plugin->GetPlugInVersionMajor(), plugin->GetPlugInVersionMinor()));
     this->dmAbout_description_staticText->SetLabel(plugin->GetLongDescription());
     this->dmAbout_copyright_staticText->SetLabel(plugin->GetCopyright());
 
     this->dmAbout_development_team_staticText->SetLabel(
         "Development team\n"
-        "    Stefan Engstr�m,   LIVI (project owner)\n"
+        "    Stefan Engström,   LIVI (project owner)\n"
         "    Tiina Ketolainen,  Sitowise (dev team coordinator)\n"
         "    Marjukka Kokkonen, Sitowise (front development)\n"
         "    Tommi Larjomaa,    Sitowise (backend development)\n"
-        "    Jarkko Ryypp�,     Sitowise (coordinate specialist)\n");
+        "    Jarkko Ryyppö,     Sitowise (coordinate specialist)\n");
     // aboutInfo.SetWebSite("http://notavailable.yet");
 }
 
