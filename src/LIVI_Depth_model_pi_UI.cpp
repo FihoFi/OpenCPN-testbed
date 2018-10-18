@@ -116,8 +116,6 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_TooShallow_Label, 0, wxALL, 5 );
 	
 	dmColorOptionsCustom_ColourPicker1 = new wxColourPickerCtrl( dmColourOptionsCustom_Panel, wxID_ANY, wxColour( 255, 0, 0 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	dmColorOptionsCustom_ColourPicker1->SetMinSize( wxSize( 70,-1 ) );
-	
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_ColourPicker1, 0, wxALL, 5 );
 	
 	dmEmpty_Label1 = new wxStaticText( dmColourOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
@@ -125,6 +123,8 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColorOptionsCustom_GridSizer->Add( dmEmpty_Label1, 0, wxALL, 5 );
 	
 	dmColorOptionsCustom_SpinCtrlDouble1 = new wxSpinCtrlDouble( dmColourOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -10000, 0, -17.500000, 1 );
+	dmColorOptionsCustom_SpinCtrlDouble1->SetMaxSize( wxSize( 100,-1 ) );
+	
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_SpinCtrlDouble1, 0, wxALL, 5 );
 	
 	dmColorOptionsCustom_ABitRisky_Label = new wxStaticText( dmColourOptionsCustom_Panel, wxID_ANY, wxT("Cautiously on high water"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -132,8 +132,6 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_ABitRisky_Label, 0, wxALL, 5 );
 	
 	dmColorOptionsCustom_ColourPicker2 = new wxColourPickerCtrl( dmColourOptionsCustom_Panel, wxID_ANY, wxColour( 255, 196, 228 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	dmColorOptionsCustom_ColourPicker2->SetMinSize( wxSize( 70,-1 ) );
-	
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_ColourPicker2, 0, wxALL, 5 );
 	
 	dmEmpty_Label2 = new wxStaticText( dmColourOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
@@ -141,6 +139,8 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColorOptionsCustom_GridSizer->Add( dmEmpty_Label2, 0, wxALL, 5 );
 	
 	dmColorOptionsCustom_SpinCtrlDouble2 = new wxSpinCtrlDouble( dmColourOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -10000, 0, -20.000000, 1 );
+	dmColorOptionsCustom_SpinCtrlDouble2->SetMaxSize( wxSize( 100,-1 ) );
+	
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_SpinCtrlDouble2, 0, wxALL, 5 );
 	
 	dmColorOptionsCustom_OK_Label = new wxStaticText( dmColourOptionsCustom_Panel, wxID_ANY, wxT("Cautiously on normal water"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -148,15 +148,15 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_OK_Label, 0, wxALL, 5 );
 	
 	dmColorOptionsCustom_ColourPicker3 = new wxColourPickerCtrl( dmColourOptionsCustom_Panel, wxID_ANY, wxColour( 255, 255, 255 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	dmColorOptionsCustom_ColourPicker3->SetMinSize( wxSize( 70,-1 ) );
-	
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_ColourPicker3, 0, wxALL, 5 );
 	
 	dmEmpty_Label3 = new wxStaticText( dmColourOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	dmEmpty_Label3->Wrap( -1 );
 	dmColorOptionsCustom_GridSizer->Add( dmEmpty_Label3, 0, wxALL, 5 );
 	
-	dmColorOptionsCustom_SpinCtrlDouble3 = new wxSpinCtrlDouble( dmColourOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -10000, 0, -22.500000, 1 );
+	dmColorOptionsCustom_SpinCtrlDouble3 = new wxSpinCtrlDouble( dmColourOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -10000, 10, -22.500000, 1 );
+	dmColorOptionsCustom_SpinCtrlDouble3->SetMaxSize( wxSize( 100,-1 ) );
+	
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_SpinCtrlDouble3, 0, wxALL, 5 );
 	
 	dmColorOptionsCustom_OKOnLowWater_Label = new wxStaticText( dmColourOptionsCustom_Panel, wxID_ANY, wxT("Cautiously on low water"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -164,8 +164,6 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_OKOnLowWater_Label, 0, wxALL, 5 );
 	
 	dmColorOptionsCustom_ColourPicker4 = new wxColourPickerCtrl( dmColourOptionsCustom_Panel, wxID_ANY, wxColour( 128, 196, 255 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	dmColorOptionsCustom_ColourPicker4->SetMinSize( wxSize( 70,-1 ) );
-	
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_ColourPicker4, 0, wxALL, 5 );
 	
 	dmEmpty_Label4 = new wxStaticText( dmColourOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
@@ -173,6 +171,8 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColorOptionsCustom_GridSizer->Add( dmEmpty_Label4, 0, wxALL, 5 );
 	
 	dmColorOptionsCustom_SpinCtrlDouble4 = new wxSpinCtrlDouble( dmColourOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -10000, 0, -25.000000, 1 );
+	dmColorOptionsCustom_SpinCtrlDouble4->SetMaxSize( wxSize( 100,-1 ) );
+	
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_SpinCtrlDouble4, 0, wxALL, 5 );
 	
 	dmColorOptionsCustom_Deep_Label = new wxStaticText( dmColourOptionsCustom_Panel, wxID_ANY, wxT("Deep, good to go"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -180,8 +180,6 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_Deep_Label, 0, wxALL, 5 );
 	
 	dmColorOptionsCustom_ColourPicker5 = new wxColourPickerCtrl( dmColourOptionsCustom_Panel, wxID_ANY, wxColour( 0, 0, 255 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	dmColorOptionsCustom_ColourPicker5->SetMinSize( wxSize( 70,-1 ) );
-	
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_ColourPicker5, 0, wxALL, 5 );
 	
 	
@@ -271,6 +269,8 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColorOptionsConstant_GridSizer->Add( dmColourOptionsTwoColours_DividingDepth_Label, 0, wxALL, 5 );
 	
 	dmColourOptionsTwoColours_DividingDepth_spinCtrlDouble = new wxSpinCtrlDouble( dmColourOptionsTwoColours_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 20.000000, 1 );
+	dmColourOptionsTwoColours_DividingDepth_spinCtrlDouble->SetMaxSize( wxSize( 100,-1 ) );
+	
 	dmColorOptionsConstant_GridSizer->Add( dmColourOptionsTwoColours_DividingDepth_spinCtrlDouble, 0, wxALL, 5 );
 	
 	dmColourOptionsTwoColours_DeepEnough_Label = new wxStaticText( dmColourOptionsTwoColours_Panel, wxID_ANY, wxT("Colour when deep enough"), wxDefaultPosition, wxDefaultSize, 0 );
