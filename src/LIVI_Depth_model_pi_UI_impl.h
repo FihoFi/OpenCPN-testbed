@@ -66,13 +66,18 @@ public:
 
     wxString    GetSelectedChartOption();
     wxString    GetSelectedColourOption();
-    wxFileName  GetColorConfigurationFileName();
-    void        SetColorConfigurationFileName(wxFileName &fileName);
+    void        SetUserColourConfigurationFileName(wxFileName &fileName);
+    wxFileName  GetUserColourConfigurationFileName();
 
     void        SetCustomColor(int num, wxColour& col);
     wxColour    GetCustomColor(int num);
     void        SetCustomLevel(int num, int level);
     double      GetCustomLevel(int num);
+
+    void        SetTwoColours(int num, wxColour& col);
+    wxColour    GetTwoColours(int num);
+    void        SetDividingLevel(int level);
+    double      GetDividingLevel();
 
     void        SetDepthChartFileName(wxFileName &fileName);
     wxFileName  GetDepthChartFileName();
@@ -90,6 +95,7 @@ private:
     virtual void OnAboutLIVIDepthModel         ( wxCommandEvent& WXUNUSED(event) );
     virtual void OnAboutWxWidgets              ( wxCommandEvent& WXUNUSED(event) );
     virtual void OnFileImportFileChange  ( wxFileDirPickerEvent& WXUNUSED(event) );
+    virtual void OnUserColourFileChange  ( wxFileDirPickerEvent& WXUNUSED(event) );
 
     bool dbg;
 

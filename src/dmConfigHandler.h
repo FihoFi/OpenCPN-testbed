@@ -62,8 +62,8 @@ struct DMColorOptionConfig : dm_configAPI {
     DMColorOptionConfig(wxFileConfig* confFile)
     {   this->confFile = confFile;    }
 
-    // Filepath to the user given colour conf file file
-    wxFileName colourConfPath;
+    // Filepath and filename of the user given colour conf file file
+    wxFileName userColourConfPath;
 
     wxColor m_customColours[DM_NUM_CUSTOM_COL]; // 0: col. for always too shallow, 4: col. for always deep enough
     double  m_customDepths[DM_NUM_CUSTOM_DEP]; // 0: level of too shallow, 3: level of always deep enough
@@ -84,6 +84,12 @@ struct DMColorOptionConfig : dm_configAPI {
 
     double  getDepth(int i)              { return m_customDepths[i];  }
     void    setDepth(int i, double depth){ m_customDepths[i] = depth; }
+
+    wxColor getTwoColour(int i)              { return m_twoColours[i]; }
+    void    setTwoColour(int i, wxColor col) { m_twoColours[i] = col; }
+
+    double  getTwoColoursDepth()             { return m_twoColoursDepth; }
+    void    setTwoColoursDepth(double depth) { m_twoColoursDepth = depth; }
 };
 
 struct DMFileImportConfig : dm_configAPI {

@@ -41,7 +41,7 @@ class LIVI_Depth_model_pi;
 
 Dlg::Dlg( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style )
     : LIVIDMUI_DLG( parent, id, title, pos, size, style )
-{	
+{
     this->Fit();
     dbg=false; //for debug output set to true
 //    this->dmAbout_LIVIDMIcon_bitmap->SetIcon(plugin->GetIcon());
@@ -60,6 +60,12 @@ void Dlg::OnFileImportFileChange(wxFileDirPickerEvent& WXUNUSED(event))
 {
     wxFileName fname = this->dmPictureImport_filePicker->GetFileName();
     plugin->OnFileImportFileChange(fname);
+}
+
+void Dlg::OnUserColourFileChange(wxFileDirPickerEvent& WXUNUSED(event))
+{
+    wxFileName fname = this->dmColourOptionsUserFile_filePicker->GetFileName();
+    plugin->OnUserColourFileChange(fname);
 }
 
 void Dlg::OnColorOptionsApplyButtonClick(wxCommandEvent& event)
@@ -136,11 +142,11 @@ wxColour Dlg::GetCustomColor(int num) {
     return picker->GetColour();
 }
 
-wxFileName    Dlg::GetColorConfigurationFileName()
-{    return this->dmColourOptionsUserFile_filePicker->GetFileName();     }
-
-void    Dlg::SetColorConfigurationFileName(wxFileName &fileName)
+void Dlg::SetUserColourConfigurationFileName(wxFileName &fileName)
 {    this->dmColourOptionsUserFile_filePicker->SetFileName(fileName);    }
+
+wxFileName Dlg::GetUserColourConfigurationFileName()
+{    return this->dmColourOptionsUserFile_filePicker->GetFileName();     }
 
 void Dlg::SetCustomLevel(int num, int level)
 {
@@ -166,6 +172,42 @@ double Dlg::GetCustomLevel(int num) {
         // there is no such Colour picker to be altered
         return -9999;  break;
     }
+    return spinCtrl->GetValue();
+}
+
+void Dlg::SetTwoColours(int num, wxColour& col)
+{
+    switch (num) {
+    case 0:    this->dmColourOptionsTwoColours_TooShallow_ColourPicker->SetColour(col);    break;
+    case 1:    this->dmColourOptionsTwoColours_DeepEnough_ColourPicker->SetColour(col);    break;
+    default:
+        // there is no such Colour picker to be altered
+        break;
+    }
+}
+
+wxColour Dlg::GetTwoColours(int num)
+{
+    wxColourPickerCtrl* picker;
+    switch (num) {
+    case 0:    picker = this->dmColourOptionsTwoColours_TooShallow_ColourPicker;    break;
+    case 1:    picker = this->dmColourOptionsTwoColours_DeepEnough_ColourPicker;    break;
+    default:
+        // there is no such Colour picker to be retrieved
+        return wxColour();  break;
+    }
+    return picker->GetColour();
+}
+
+void Dlg::SetDividingLevel(int level)
+{
+    this->dmColourOptionsTwoColours_DividingDepth_spinCtrlDouble->SetValue(level);
+}
+
+double Dlg::GetDividingLevel()
+{
+    wxSpinCtrlDouble* spinCtrl;
+    spinCtrl = this->dmColourOptionsTwoColours_DividingDepth_spinCtrlDouble;
     return spinCtrl->GetValue();
 }
 

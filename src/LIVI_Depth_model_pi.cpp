@@ -114,6 +114,7 @@ int LIVI_Depth_model_pi::Init(void)
     m_pconf = new dmConfigHandler(pFileConf, dialog);
 
     bool success = m_pconf->LoadConfig(); // config related to this plugin.
+    PushConfigToUI();
 
     //    This PlugIn needs a toolbar icon, so request its insertion
     if (m_pconf->general.m_bLIVI_Depth_modelShowIcon)
@@ -493,13 +494,32 @@ wxFileName LIVI_Depth_model_pi::GetConfFileOfUISelection()
 
 wxFileName LIVI_Depth_model_pi::GetUsersColorConfFile()
 {
-    return dialog->GetColorConfigurationFileName();
+    return dialog->GetUserColourConfigurationFileName();
 }
 
 bool LIVI_Depth_model_pi::SaveFiveColorConfToFile()
 {
+    wxString confText = GetFiveColourDepthColourWks();
+    return SaveColorConfToFile(fiveColoursFileName, _T("five_colour_set.txt"), confText);
+}
+
+bool LIVI_Depth_model_pi::SaveSlidingColorConfToFile()
+{
+    wxString confText = GetSlidingColourDepthColourWks();
+    return SaveColorConfToFile(slidingColoursFileName, _T("sliding_colour_set.txt"), confText);
+}
+
+bool LIVI_Depth_model_pi::SaveTwoColorConfToFile()
+{
+    wxString confText = GetTwoColourDepthColourWks();
+    return SaveColorConfToFile(twoColoursFileName, _T("two_colour_set.txt"), confText);
+}
+
+bool LIVI_Depth_model_pi::SaveColorConfToFile(
+    wxFileName &confFile, const wxString confFileName, const wxString confText)
+{
     // Normal case: we have a functioning path available. Just write there
-    wxString path = fiveColoursFileName.GetFullPath();
+    wxString path = confFile.GetFullPath();
 
     // Try opening the file in the path
     wxFile file(path, wxFile::write);
@@ -511,86 +531,28 @@ bool LIVI_Depth_model_pi::SaveFiveColorConfToFile()
         fn.AppendDir(_T("plugins"));
         fn.AppendDir(_T("LIVI_Depth_model_pi"));
         fn.AppendDir(_T("colour_files"));
-        fn.SetFullName(_T("five_colour_set.txt"));
+        fn.SetFullName(confFileName);
 
         bool success = fn.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
         if (success)
-            fiveColoursFileName = fn;
+            confFile = fn;
         else
             return false;   // Could not create the path. This is bad.
     }
-    path = fiveColoursFileName.GetFullPath();
+    path = confFile.GetFullPath();
 
     // Try opening the file again
     file.Open(path, wxFile::write);
     if (file.IsOpened())
     {
-        bool success = file.Write(GetFiveColourDepthColourWks());
+        bool success = file.Write(confText);
         file.Close();
 
         if (success)
             return true;
     }
 
-    if (!file.Exists(path))
-    {
-        wxFile file_newdir(path, wxFile::write);
-        bool isOpen = file_newdir.IsOpened();
-
-        //file_newdir.Create(path, true, wxFile::write);
-        //isOpen = file_newdir.IsOpened();
-
-        if (file_newdir.IsOpened())
-        {
-            bool success = file_newdir.Write(GetFiveColourDepthColourWks());
-            file_newdir.Close();
-
-            if (success)
-                return true;
-        }
-    }
-
     return false;
-}
-
-bool LIVI_Depth_model_pi::SaveSlidingColorConfToFile()
-{
-    bool success = true;
-
-    slidingColoursFileName.SetPath(*GetpSharedDataLocation());
-    slidingColoursFileName.AppendDir(_T("plugins"));
-    slidingColoursFileName.AppendDir(_T("LIVI_Depth_model_pi"));
-    slidingColoursFileName.AppendDir(_T("colour_files"));
-    slidingColoursFileName.SetFullName(_T("sliding_colour_set.txt"));
-
-    wxFile file(slidingColoursFileName.GetPath(), wxFile::read_write);
-    if (file.IsOpened())
-    {
-        success &= file.Write(GetSlidingColourDepthColourWks());
-        file.Close();
-    }
-
-    return success;
-}
-
-bool LIVI_Depth_model_pi::SaveTwoColorConfToFile()
-{
-    bool success = true;
-
-    twoColoursFileName.SetPath(*GetpSharedDataLocation());
-    twoColoursFileName.AppendDir(_T("plugins"));
-    twoColoursFileName.AppendDir(_T("LIVI_Depth_model_pi"));
-    twoColoursFileName.AppendDir(_T("colour_files"));
-    twoColoursFileName.SetFullName(_T("two_colour_set.txt"));
-
-    wxFile file(twoColoursFileName.GetPath(), wxFile::read_write);
-    if (file.IsOpened())
-    {
-        success &= file.Write(GetTwoColourDepthColourWks());
-        file.Close();
-    }
-
-    return success;
 }
 
 /**
@@ -606,17 +568,19 @@ bool LIVI_Depth_model_pi::SaveTwoColorConfToFile()
 wxString LIVI_Depth_model_pi::GetFiveColourDepthColourWks()
 {
     static double nci = 0.0001; // Nearest colour tweak. Number in meters.
-    static int opaque_level = 128;  // amount of opaqueness, value in [0...255]
+    static int opaque_list[5] = {128, 96, 64, 32, 16}; // Amount of opaqueness less for deeper water, values in [0...255]
 
     wxString wks_ColourSettings;
+    wks_ColourSettings.append(wxString(_T("nv           0  0  0  0\r\n")));
+
     for (int i = 0; i < DM_NUM_CUSTOM_DEP; i++) {
         wks_ColourSettings.append(
             wxString::Format(_T("%f %i %i %i %i\r\n"), 
-            m_pconf->colour.m_customDepths[i]+nci,
-            m_pconf->colour.m_customColours[i].Red(),
-            m_pconf->colour.m_customColours[i].Green(),
-            m_pconf->colour.m_customColours[i].Blue(),
-            m_pconf->colour.m_customColours[i].Alpha())
+                m_pconf->colour.m_customDepths[i]+nci,
+                m_pconf->colour.m_customColours[i].Red(),
+                m_pconf->colour.m_customColours[i].Green(),
+                m_pconf->colour.m_customColours[i].Blue(),
+                opaque_list[i])
         );
         wks_ColourSettings.append(
             wxString::Format(_T("%f %i %i %i %i\r\n"), 
@@ -624,10 +588,10 @@ wxString LIVI_Depth_model_pi::GetFiveColourDepthColourWks()
                 m_pconf->colour.m_customColours[i+1].Red(),
                 m_pconf->colour.m_customColours[i+1].Green(),
                 m_pconf->colour.m_customColours[i+1].Blue(),
-                opaque_level)
-        //      m_conf.m_customColours[i+1].Alpha())
+                opaque_list[i+1])
         );
     }
+
     return wks_ColourSettings;
 }
 
@@ -636,6 +600,7 @@ wxString LIVI_Depth_model_pi::GetSlidingColourDepthColourWks()
     wxString wks_ColourSettings;
 
     //TODO
+    wks_ColourSettings.append(wxString(_T("nv           0  0  0  0\r\n")));
 
     return wks_ColourSettings;
 }
@@ -646,8 +611,10 @@ wxString LIVI_Depth_model_pi::GetTwoColourDepthColourWks()
     static int opaque_level = 128;  // amount of opaqueness, value in [0...255]
 
     wxString wks_ColourSettings;
+
+    wks_ColourSettings.append(wxString(_T("nv           0  0  0  0\r\n")));
     wks_ColourSettings.append(
-        wxString::Format(_T("%d %i %i %i %i\n"),
+        wxString::Format(_T("%f %i %i %i %i\r\n"),
             m_pconf->colour.m_twoColoursDepth + nci,
             m_pconf->colour.m_twoColours[0].Red(),
             m_pconf->colour.m_twoColours[0].Green(),
@@ -655,13 +622,12 @@ wxString LIVI_Depth_model_pi::GetTwoColourDepthColourWks()
             m_pconf->colour.m_twoColours[0].Alpha())
     );
     wks_ColourSettings.append(
-        wxString::Format(_T("%d %i %i %i %i\n"),
+        wxString::Format(_T("%f %i %i %i %i\r\n"),
             m_pconf->colour.m_twoColoursDepth,
             m_pconf->colour.m_twoColours[1].Red(),
             m_pconf->colour.m_twoColours[1].Green(),
             m_pconf->colour.m_twoColours[1].Blue(),
             opaque_level)
-        //      m_conf.m_customColours[i+1].Alpha())
     );
 
     return wks_ColourSettings;
@@ -679,6 +645,13 @@ void LIVI_Depth_model_pi::PushConfigToUI(void)
     for (int i = 0; i < DM_NUM_CUSTOM_DEP; i++) {
         dialog->SetCustomLevel(i, m_pconf->colour.getDepth(i));
     }
+
+    for (int i = 0; i < 2; i++) {
+        dialog->SetTwoColours(i, m_pconf->colour.getTwoColour(i));
+    }
+    dialog->SetDividingLevel(m_pconf->colour.getTwoColoursDepth());
+
+    dialog->SetUserColourConfigurationFileName(m_pconf->colour.userColourConfPath);
     dialog->SetDepthChartFileName(m_pconf->fileImport.filePath);
 }
 
@@ -694,6 +667,13 @@ void LIVI_Depth_model_pi::PullConfigFromUI(void)
     for (int i = 0; i < DM_NUM_CUSTOM_DEP; i++) {
         m_pconf->colour.setDepth(i, dialog->GetCustomLevel(i));
     }
+
+    for (int i = 0; i < 2; i++) {
+        m_pconf->colour.setTwoColour(i, dialog->GetTwoColours(i));
+    }
+    m_pconf->colour.setTwoColoursDepth(dialog->GetDividingLevel());
+
+    m_pconf->colour.userColourConfPath = dialog->GetUserColourConfigurationFileName();
     m_pconf->fileImport.filePath = dialog->GetDepthChartFileName();
 
 }
@@ -717,8 +697,16 @@ void LIVI_Depth_model_pi::OnColorOptionsApply()
     m_pconf->SaveConfig();
 }
 
+void LIVI_Depth_model_pi::OnUserColourFileChange(wxFileName fullFileName)
+{
+    m_pconf->colour.userColourConfPath = fullFileName;
+    m_pconf->SaveConfig();
+}
+
 void LIVI_Depth_model_pi::OnFileImportFileChange(wxFileName fullFileName)
 {
+    OnColorOptionsApply();
+
     bool exception = false;
     bool success = true;
     try {

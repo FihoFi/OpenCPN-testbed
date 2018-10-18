@@ -248,7 +248,14 @@ GDALDataset * dmDataset::visualizeDataset(GDALDataset *dsToVisualize)
 {
     int err = 0;
     GDALDataset *resultDs;
+
     GDALDEMProcessingOptions * gdaldemOptions = GDALDEMProcessingOptionsNew(nullptr, nullptr);
+
+    char *colorReliefOptions[] = {
+        const_cast<char *>("-alpha"),
+        const_cast<char *>("-nearest_color_entry"),
+        nullptr };  // The last entry must be a nullptr
+    GDALDEMProcessingOptions * gdaldemOptionsColorRelief = GDALDEMProcessingOptionsNew(colorReliefOptions, nullptr);
 
     switch (_visScheme)
     {
@@ -258,7 +265,7 @@ GDALDataset * dmDataset::visualizeDataset(GDALDataset *dsToVisualize)
         break;
 
     case COLOR_RELIEF:
-        resultDs = (GDALDataset*)GDALDEMProcessing(".\\temp_ds.tif", dsToVisualize, "color-relief", _colorConfFilename.c_str(), gdaldemOptions, &err);
+        resultDs = (GDALDataset*)GDALDEMProcessing(".\\temp_ds.tif", dsToVisualize, "color-relief", _colorConfFilename.c_str(), gdaldemOptionsColorRelief, &err);
         GDALClose(dsToVisualize);
         break;
 
@@ -270,7 +277,8 @@ GDALDataset * dmDataset::visualizeDataset(GDALDataset *dsToVisualize)
 
     // clean up
     GDALDEMProcessingOptionsFree(gdaldemOptions);
-    
+    GDALDEMProcessingOptionsFree(gdaldemOptionsColorRelief);
+
     if (err)
         return NULL;
 

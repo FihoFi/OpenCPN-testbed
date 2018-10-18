@@ -118,6 +118,7 @@ bool DMColorOptionConfig::load(void)
     if (confFile)
     {
         confFile->SetPath(_T("/Settings/LIVI_Depth_model_pi/Colour"));
+
         for (int i = 0; i < DM_NUM_CUSTOM_COL; i++) {
             std::string colour = confFile->Read(_T("CustomColour") + std::to_string(i));
             if (sizeof(colour) == 0)
@@ -127,20 +128,32 @@ bool DMColorOptionConfig::load(void)
             unsigned char* valChar = (unsigned char*)colour.c_str();
             m_customColours[i] = wxColour(valChar);
         }
-
         for (int i = 0; i < DM_NUM_CUSTOM_DEP; i++) {
             std::string str = confFile->Read(_T("CustomDepth" + std::to_string(i)));
             if (str.length() == 0)
-                str = std::to_string(DM_NUM_CUSTOM_DEP * 5); // grey as default, if no color found
+                str = std::to_string(-20); // -20m if no depth found
             m_customDepths[i] = std::stoi(str);
         }
 
+        for (int i = 0; i < 2; i++) {
+            std::string colour = confFile->Read(_T("TwoColour") + std::to_string(i));
+            if (sizeof(colour) == 0)
+                colour = "#f0f0f0"; // grey as default, if no color found
+                                    // #ff0000, #ffc4e4, #ffffff, #80c4ff, #0000ff
+            unsigned char* valChar = (unsigned char*)colour.c_str();
+            m_twoColours[i] = wxColour(valChar);
+        }
+        std::string str = confFile->Read(_T("TwoColourDepth"));
+        if (str.length() == 0)
+            str = std::to_string(-20); // -20m if no depth found
+        m_twoColoursDepth = std::stoi(str);
+
         wxString colourConfPathStr;
-        success &= confFile->Read(wxT("ColourConfPath"), &colourConfPathStr);
+        success &= confFile->Read(wxT("UserColourConfPath"), &colourConfPathStr);
         wxFileName colourConfFilePath(colourConfPathStr);
         if (colourConfFilePath.FileExists())
         {
-            colourConfPath = colourConfFilePath;
+            userColourConfPath = colourConfFilePath;
         }
     }
     return success;
@@ -154,14 +167,20 @@ bool DMColorOptionConfig::save(void)
         confFile->SetPath(_T("/Settings/LIVI_Depth_model_pi/Colour"));
 
         for (int i = 0; i < DM_NUM_CUSTOM_COL; i++) {
-            success &= confFile->Write(wxT("CustomColour") + std::to_string(i),
+            success &= confFile->Write(_T("CustomColour") + std::to_string(i),
                 m_customColours[i].GetAsString(wxC2S_HTML_SYNTAX));
         }
         for (int i = 0; i < DM_NUM_CUSTOM_DEP; i++) {
-            success &= confFile->Write(wxT("CustomDepth" + std::to_string(i)), m_customDepths[i]);
+            success &= confFile->Write(_T("CustomDepth" + std::to_string(i)), m_customDepths[i]);
         }
 
-        success &= confFile->Write(wxT("ColourConfPath"), colourConfPath.GetFullPath());
+        for (int i = 0; i < 2; i++) {
+            success &= confFile->Write(_T("TwoColour") + std::to_string(i),
+                m_twoColours[i].GetAsString(wxC2S_HTML_SYNTAX));
+        }
+        success &= confFile->Write(_T("TwoColourDepth"), m_twoColoursDepth);
+
+        success &= confFile->Write(_T("UserColourConfPath"), userColourConfPath.GetFullPath());
 
         return true;
     }

@@ -113,6 +113,7 @@ public:
 
 
     void OnColorOptionsApply();
+    void OnUserColourFileChange(wxFileName fullFileName);
     void OnFileImportFileChange(wxFileName fullFileName);
 
 private:
@@ -144,6 +145,8 @@ private:
     bool                SaveFiveColorConfToFile();
     bool                SaveSlidingColorConfToFile();
     bool                SaveTwoColorConfToFile();
+    bool                SaveColorConfToFile(wxFileName &confPath,
+                            const wxString fileName, const wxString confText);
 
     wxString            GetFiveColourDepthColourWks();
     wxString            GetSlidingColourDepthColourWks();
