@@ -170,7 +170,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmEmpty_Label4->Wrap( -1 );
 	dmColorOptionsCustom_GridSizer->Add( dmEmpty_Label4, 0, wxALL, 5 );
 	
-	dmColorOptionsCustom_SpinCtrlDouble4 = new wxSpinCtrlDouble( dmColourOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -10000, 0, -25.000000, 1 );
+	dmColorOptionsCustom_SpinCtrlDouble4 = new wxSpinCtrlDouble( dmColourOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -10000, 10, -25.000000, 1 );
 	dmColorOptionsCustom_SpinCtrlDouble4->SetMaxSize( wxSize( 100,-1 ) );
 	
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_SpinCtrlDouble4, 0, wxALL, 5 );
@@ -268,7 +268,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColourOptionsTwoColours_DividingDepth_Label->Wrap( -1 );
 	dmColorOptionsConstant_GridSizer->Add( dmColourOptionsTwoColours_DividingDepth_Label, 0, wxALL, 5 );
 	
-	dmColourOptionsTwoColours_DividingDepth_spinCtrlDouble = new wxSpinCtrlDouble( dmColourOptionsTwoColours_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 20.000000, 1 );
+	dmColourOptionsTwoColours_DividingDepth_spinCtrlDouble = new wxSpinCtrlDouble( dmColourOptionsTwoColours_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -10000, 10, -21.000000, 1 );
 	dmColourOptionsTwoColours_DividingDepth_spinCtrlDouble->SetMaxSize( wxSize( 100,-1 ) );
 	
 	dmColorOptionsConstant_GridSizer->Add( dmColourOptionsTwoColours_DividingDepth_spinCtrlDouble, 0, wxALL, 5 );
