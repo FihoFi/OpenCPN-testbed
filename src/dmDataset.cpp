@@ -9,7 +9,8 @@ bool dmDataset::driversRegistered = false;
 dmDataset::dmDataset() :
     _visScheme(HILLSHADE),
     _srcDataset(NULL),
-    _dstDataset(NULL)
+    _dstDataset(NULL),
+    _dstWkt("PROJCS[\"WGS 84 / World Mercator\",GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\",SPHEROID[\"WGS 84\",6378137,298.257223563,AUTHORITY[\"EPSG\",\"7030\"]],AUTHORITY[\"EPSG\",\"6326\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.01745329251994328,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"4326\"]],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],PROJECTION[\"Mercator_1SP\"],PARAMETER[\"central_meridian\",0],PARAMETER[\"scale_factor\",1],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],AUTHORITY[\"EPSG\",\"3395\"],AXIS[\"Easting\",EAST],AXIS[\"Northing\",NORTH]]")
 {
     dmDataset::registerGDALDrivers();
 }
@@ -108,35 +109,37 @@ dmRasterImgData * dmDataset::getRasterData(
 
     if (!_dstDataset)
         return NULL;
-
-    GDALRasterBand *band;
-    if (_dstDataset->GetRasterCount() > 0)
-        band = _dstDataset->GetRasterBand(1);
-    else
+    
+    GDALDataset::Bands bands = _dstDataset->GetBands();
+    if (bands.size() < 1)
         return NULL;
 
     if (!getDatasetExtents(topLeftOut, botRightOut))
         return NULL;
 
-    xSize = band->GetXSize();
-    ySize = band->GetYSize();
+    xSize = bands[0]->GetXSize();
+    ySize = bands[0]->GetYSize();
 
     imgData = new dmRasterImgData();
     imgData->rgb = new unsigned char[3 * xSize*ySize];
     imgData->alpha = new unsigned char[xSize*ySize];
-    bandData = (float*)CPLMalloc(sizeof(float)*xSize*ySize);
-    band->RasterIO(GF_Read, 0, 0, xSize, ySize, bandData, xSize, ySize, GDT_Float32, 0, 0);
 
-    for (int i = 0; i < xSize*ySize; i++)
+    // read RGB channel
+    int n = 0;
+    while (n < 3 && n < bands.size())
     {
-        imgData->rgb[3 * i] = (unsigned char)bandData[i];
-        imgData->rgb[3 * i + 1] = (unsigned char)bandData[i];
-        imgData->rgb[3 * i + 2] = (unsigned char)bandData[i];
+        bands[n]->RasterIO(GF_Read, 0, 0, xSize, ySize, imgData->rgb + n, xSize, ySize, GDT_Byte, 3, 3*xSize);
+
+        n++;
     }
 
-    CPLFree(bandData);
+    // read alpha channel
+    if (bands.size() > 3)
+    {
+        bands[3]->RasterIO(GF_Read, 0, 0, xSize, ySize, imgData->alpha, xSize, ySize, GDT_Byte, 0, 0);
+    }
 
-     return imgData;
+    return imgData;
 }
 
 dmRasterImgData * dmDataset::getRasterData(int imgWidth, int imgHeight,
@@ -220,9 +223,8 @@ GDALDataset * dmDataset::reprojectDataset(GDALDataset *dsToReproject)
     {
         int err = 0;
         GDALDataset *warpedDS;
-        // TODO: take this from class variable/config?
-        std::string dstWKT = "PROJCS[\"WGS 84 / Pseudo - Mercator\",GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\",SPHEROID[\"WGS 84\",6378137,298.257223563,AUTHORITY[\"EPSG\",\"7030\"]],AUTHORITY[\"EPSG\",\"6326\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"4326\"]],PROJECTION[\"Mercator_1SP\"],PARAMETER[\"central_meridian\",0],PARAMETER[\"scale_factor\",1],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],AXIS[\"X\",EAST],AXIS[\"Y\",NORTH],EXTENSION[\"PROJ4\",\"+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs\"],AUTHORITY[\"EPSG\",\"3857\"]]";
-        char *warpOpts[] = { (char*)"-t_srs", (char *)dstWKT.c_str(),
+
+        char *warpOpts[] = { (char*)"-t_srs", (char *)_dstWkt.c_str(),
                              (char*)"-r",     (char*)"max",
                              NULL };
 
