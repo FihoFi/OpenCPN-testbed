@@ -114,7 +114,8 @@ public:
 
     void OnColorOptionsApply();
     void OnUserColourFileChange(wxFileName fullFileName);
-    void OnFileImportFileChange(wxFileName fullFileName);
+
+    void GenerateImage(wxFileName fullFileName);
 
 private:
 
@@ -155,9 +156,6 @@ private:
     wxFileName          fiveColoursFileName;
     wxFileName          slidingColoursFileName;
     wxFileName          twoColoursFileName;
-
-    void                GetDepthModelPicture();
-
 
     bool                m_ShowHelp,m_bCaptureCursor,m_bCaptureShip;
   //double              m_cursor_lon, m_cursor_lat;
