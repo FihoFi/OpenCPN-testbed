@@ -125,6 +125,7 @@ class LIVIDMUI_DLG : public wxDialog
 		wxStaticText* dmAbout_version_staticText;
 		wxStaticText* dmAbout_description_staticText;
 		wxStaticText* dmAbout_copyright_staticText;
+		wxStaticText* dmAbout_development_team_staticText;
 		wxButton* dm_AboutWxWidgets_Button;
 		
 		// Virtual event handlers, overide them in your derived class

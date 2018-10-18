@@ -417,6 +417,10 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmAbout_copyright_staticText->Wrap( 300 );
 	dmAbout_Sizer2->Add( dmAbout_copyright_staticText, 0, wxALL, 5 );
 	
+	dmAbout_development_team_staticText = new wxStaticText( dmAbout_Panel, wxID_ANY, wxT("depth model dev team"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmAbout_development_team_staticText->Wrap( -1 );
+	dmAbout_Sizer2->Add( dmAbout_development_team_staticText, 0, wxALL, 5 );
+	
 	dm_AboutWxWidgets_Button = new wxButton( dmAbout_Panel, wxID_ANY, wxT("About wxWidgets library used"), wxDefaultPosition, wxDefaultSize, 0 );
 	dmAbout_Sizer2->Add( dm_AboutWxWidgets_Button, 0, wxALL, 5 );
 	

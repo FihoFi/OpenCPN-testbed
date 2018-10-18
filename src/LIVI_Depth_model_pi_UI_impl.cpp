@@ -77,9 +77,14 @@ void Dlg::SetAboutInfo()
     this->dmAbout_description_staticText->SetLabel(plugin->GetLongDescription());
     this->dmAbout_copyright_staticText->SetLabel(plugin->GetCopyright());
 
+    this->dmAbout_development_team_staticText->SetLabel(
+        "Development team\n"
+        "    Stefan Engstr�m,   LIVI (project owner)\n"
+        "    Tiina Ketolainen,  Sitowise (dev team coordinator)\n"
+        "    Marjukka Kokkonen, Sitowise (front development)\n"
+        "    Tommi Larjomaa,    Sitowise (backend development)\n"
+        "    Jarkko Ryypp�,     Sitowise (coordinate specialist)\n");
     // aboutInfo.SetWebSite("http://notavailable.yet");
-    aboutInfo.AddDeveloper("Marjukka Kokkonen, Sitowise");
-    aboutInfo.AddDeveloper("Tommi Larjomaa, Sitowise");
 }
 
 void Dlg::OnAboutWxWidgets(wxCommandEvent& WXUNUSED(event))
