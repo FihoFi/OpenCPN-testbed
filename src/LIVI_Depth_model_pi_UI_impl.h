@@ -96,9 +96,8 @@ private:
     virtual void OnColorOptionsApplyButtonClick( wxCommandEvent& WXUNUSED(event) );
     virtual void OnAboutWxWidgets              ( wxCommandEvent& WXUNUSED(event) );
     virtual void OnFileImportFileChange  ( wxFileDirPickerEvent& WXUNUSED(event) );
+    virtual void OnGenerateImage               ( wxCommandEvent& WXUNUSED(event) );
     virtual void OnUserColourFileChange  ( wxFileDirPickerEvent& WXUNUSED(event) );
-
-    bool dbg;
 
  //     double lat1, lon1, lat2, lon2;
  //     bool error_found;
