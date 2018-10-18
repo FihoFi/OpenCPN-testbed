@@ -37,7 +37,12 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmPictureImport_fgSizer->SetFlexibleDirection( wxBOTH );
 	dmPictureImport_fgSizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
+	dmPictureImport_staticText = new wxStaticText( dmFileImport_Panel, wxID_ANY, wxT("Current drawing options:\n  Colour relief image\n  Five depth ranges"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmPictureImport_staticText->Wrap( -1 );
+	dmPictureImport_fgSizer->Add( dmPictureImport_staticText, 0, wxALL, 5 );
 	
+	dmPictureImport_GenerateImage_button = new wxButton( dmFileImport_Panel, wxID_ANY, wxT("Generate image"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmPictureImport_fgSizer->Add( dmPictureImport_GenerateImage_button, 0, wxALL, 5 );
 	dmFileImport_bSizer->Add( dmPictureImport_fgSizer, 1, wxEXPAND, 5 );
 	
 	
@@ -389,6 +394,9 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	wxBoxSizer* dmAbout_Icon_Sizer;
 	dmAbout_Icon_Sizer = new wxBoxSizer( wxVERTICAL );
 	
+	dmAbout_icon_bitmap = new wxStaticBitmap( dmAbout_Icon_Panel, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, 0 );
+	dmAbout_Icon_Sizer->Add( dmAbout_icon_bitmap, 0, wxALL, 5 );
+	
 	
 	dmAbout_Icon_Panel->SetSizer( dmAbout_Icon_Sizer );
 	dmAbout_Icon_Panel->Layout();
@@ -444,7 +452,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	this->Centre( wxBOTH );
 	
 	// Connect Events
-	dmPictureImport_filePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( LIVIDMUI_DLG::OnFileImportFileChange ), NULL, this );
+	dmPictureImport_GenerateImage_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnGenerateImage ), NULL, this );
 	dmColourOptionsUserFile_filePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( LIVIDMUI_DLG::OnUserColourFileChange ), NULL, this );
 	dm_AboutWxWidgets_Button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnAboutWxWidgets ), NULL, this );
 }
@@ -452,7 +460,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 LIVIDMUI_DLG::~LIVIDMUI_DLG()
 {
 	// Disconnect Events
-	dmPictureImport_filePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( LIVIDMUI_DLG::OnFileImportFileChange ), NULL, this );
+	dmPictureImport_GenerateImage_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnGenerateImage ), NULL, this );
 	dmColourOptionsUserFile_filePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( LIVIDMUI_DLG::OnUserColourFileChange ), NULL, this );
 	dm_AboutWxWidgets_Button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnAboutWxWidgets ), NULL, this );
 	

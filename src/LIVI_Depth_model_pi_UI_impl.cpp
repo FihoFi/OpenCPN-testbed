@@ -50,8 +50,14 @@ void Dlg::OnClose(wxCloseEvent& event)
 
 void Dlg::OnFileImportFileChange(wxFileDirPickerEvent& WXUNUSED(event))
 {
+    //wxFileName fname = this->dmPictureImport_filePicker->GetFileName();
+    //plugin->OnFileImportFileChange(fname);
+}
+
+void Dlg::OnGenerateImage(wxCommandEvent& WXUNUSED(event))
+{
     wxFileName fname = this->dmPictureImport_filePicker->GetFileName();
-    plugin->OnFileImportFileChange(fname);
+    plugin->GenerateImage(fname);
 }
 
 void Dlg::OnUserColourFileChange(wxFileDirPickerEvent& WXUNUSED(event))

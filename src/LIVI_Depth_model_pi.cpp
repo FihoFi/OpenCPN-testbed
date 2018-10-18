@@ -465,6 +465,7 @@ wxString LIVI_Depth_model_pi::GetLongPluginVersionString() {
 wxString LIVI_Depth_model_pi::GetCopyright() {
     return _("@ 2018, LIVI & Sitowise");
 }
+
 bool LIVI_Depth_model_pi::SaveConfFileOfUISelection()
 {
     bool success = true;
@@ -702,8 +703,20 @@ void LIVI_Depth_model_pi::OnUserColourFileChange(wxFileName fullFileName)
     m_pconf->SaveConfig();
 }
 
-void LIVI_Depth_model_pi::OnFileImportFileChange(wxFileName fullFileName)
+void LIVI_Depth_model_pi::GenerateImage(wxFileName fullFileName)
 {
+    // Check existance of the file
+    wxString path = fullFileName.GetFullPath();
+    wxFile file(path, wxFile::read); // also opens the file, if it exists!
+    if (!file.Exists(path))
+    {
+        dialog->SetPictureImportErrorText(std::string("The given file cannot be found"));
+        return;
+    }
+    else if(file.IsOpened())
+        file.Close();
+
+    // Save whatever colour settings the user has chosen.
     OnColorOptionsApply();
 
     bool exception = false;
@@ -766,7 +779,6 @@ void LIVI_Depth_model_pi::OnFileImportFileChange(wxFileName fullFileName)
     m_pconf->SaveConfig();
 
 }
-
 
 /*
 wxString &LIVI_Depth_model_pi::GetConfigFileName()
