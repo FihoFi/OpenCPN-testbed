@@ -25,7 +25,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmDepthModelFile_staticText->Wrap( -1 );
 	dmFileImport_bSizer->Add( dmDepthModelFile_staticText, 0, wxALL, 5 );
 	
-	dmPictureImport_filePicker = new wxFilePickerCtrl( dmFileImport_Panel, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxSize( 380,-1 ), wxFLP_DEFAULT_STYLE );
+	dmPictureImport_filePicker = new wxFilePickerCtrl( dmFileImport_Panel, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("Tif/Tiff  image file(*.tif;*.tiff)|*.tif;*.tiff|BAG file (*.bag)|*.bag|Any file (*.*)|*.*"), wxDefaultPosition, wxSize( 380,-1 ), wxFLP_DEFAULT_STYLE );
 	dmFileImport_bSizer->Add( dmPictureImport_filePicker, 0, wxALL, 5 );
 	
 	dmPictureImportError_staticText = new wxStaticText( dmFileImport_Panel, wxID_ANY, wxT("(everything ok)"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -80,7 +80,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColourOptionsUserFile_giveFile_staticText->Wrap( -1 );
 	dmColourOptionsUserFile_bSizer->Add( dmColourOptionsUserFile_giveFile_staticText, 0, wxALL, 5 );
 	
-	dmColourOptionsUserFile_filePicker = new wxFilePickerCtrl( dmColourOptionsUserFile_Panel, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxSize( 380,-1 ), wxFLP_DEFAULT_STYLE );
+	dmColourOptionsUserFile_filePicker = new wxFilePickerCtrl( dmColourOptionsUserFile_Panel, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("Text file(*.txt)|*.txt|Any file (*.*)|*.*"), wxDefaultPosition, wxSize( 360,-1 ), wxFLP_DEFAULT_STYLE );
 	dmColourOptionsUserFile_bSizer->Add( dmColourOptionsUserFile_filePicker, 0, wxALL, 5 );
 	
 	dmColourOptionsUserFile_help_staticText = new wxStaticText( dmColourOptionsUserFile_Panel, wxID_ANY, wxT("Colouring is made by GDAL/gdaldem.\nThe file must be a text file, containing following data at each row:\n\n<depth/percentage value> <r> <g> <b> <alpha>\n\nExample (depth values)         Example (percentage values)\n\n-10  255   0     0   128             10% 255   0      0  128    \n-15   0      0   255 128             21%   0     0   255 128    \n-20   0   255    0   128             75%   0   255   0   128    \nnv    0      0     0      0              nv      0     0     0     0     \n\nThe alpha value tells the amount of opaqueness (inverse of \ntransparency) for the colour.\n\"nv\" stands for \"no value\".\nAll of the values r,g,b, and alpha must be between 0...255."), wxDefaultPosition, wxDefaultSize, 0 );
