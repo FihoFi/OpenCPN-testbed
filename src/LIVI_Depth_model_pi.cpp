@@ -568,8 +568,7 @@ bool LIVI_Depth_model_pi::SaveColorConfToFile(
 wxString LIVI_Depth_model_pi::GetFiveColourDepthColourWks()
 {
     static double nci = 0.0001; // Nearest colour tweak. Number in meters.
-    static int opaque_level = 128;  // amount of opaqueness, value in [0...255]
-    static int opaque_list[5] = {128, 96, 64, 32, 16};
+    static int opaque_list[5] = {128, 96, 64, 32, 16}; // Amount of opaqueness less for deeper water, values in [0...255]
 
     wxString wks_ColourSettings;
     wks_ColourSettings.append(wxString(_T("nv           0  0  0  0\r\n")));
@@ -629,7 +628,6 @@ wxString LIVI_Depth_model_pi::GetTwoColourDepthColourWks()
             m_pconf->colour.m_twoColours[1].Green(),
             m_pconf->colour.m_twoColours[1].Blue(),
             opaque_level)
-        //      m_conf.m_customColours[i+1].Alpha())
     );
 
     return wks_ColourSettings;
