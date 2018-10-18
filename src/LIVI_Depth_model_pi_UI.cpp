@@ -32,10 +32,10 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmPictureImportError_staticText->Wrap( -1 );
 	dmFileImport_bSizer->Add( dmPictureImportError_staticText, 0, wxALL, 5 );
 	
-	wxFlexGridSizer* fgSizer6;
-	fgSizer6 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer6->SetFlexibleDirection( wxBOTH );
-	fgSizer6->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	wxFlexGridSizer* dmPictureImport_fgSizer;
+	dmPictureImport_fgSizer = new wxFlexGridSizer( 0, 2, 0, 0 );
+	dmPictureImport_fgSizer->SetFlexibleDirection( wxBOTH );
+	dmPictureImport_fgSizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
 	dmFileImport_bSizer->Add( fgSizer6, 1, wxEXPAND, 5 );
 	
@@ -397,14 +397,25 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	wxBoxSizer* dmAbout_Sizer2;
 	dmAbout_Sizer2 = new wxBoxSizer( wxVERTICAL );
 	
-	dmAbout_Label = new wxStaticText( dmAbout_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL );
-	dmAbout_Label->Wrap( -1 );
-	dmAbout_Sizer2->Add( dmAbout_Label, 0, wxALL, 5 );
+	dmEmpty_label = new wxStaticText( dmAbout_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL );
+	dmEmpty_label->Wrap( -1 );
+	dmAbout_Sizer2->Add( dmEmpty_label, 0, wxALL, 5 );
 	
-	dmAbout_LIVIDMPlugin_Button = new wxButton( dmAbout_Panel, wxID_ANY, wxT("About LIVI Depth model plugin"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
+	dmAbout_name_staticText = new wxStaticText( dmAbout_Panel, wxID_ANY, wxT("Depth model by LIVI"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmAbout_name_staticText->Wrap( 300 );
+	dmAbout_Sizer2->Add( dmAbout_name_staticText, 0, wxALL, 5 );
 	
-	dmAbout_LIVIDMPlugin_Button->SetBitmapPosition( wxRIGHT );
-	dmAbout_Sizer2->Add( dmAbout_LIVIDMPlugin_Button, 0, wxALL, 5 );
+	dmAbout_version_staticText = new wxStaticText( dmAbout_Panel, wxID_ANY, wxT("v. (undefined now, set in code)"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmAbout_version_staticText->Wrap( -1 );
+	dmAbout_Sizer2->Add( dmAbout_version_staticText, 0, wxALL, 5 );
+	
+	dmAbout_description_staticText = new wxStaticText( dmAbout_Panel, wxID_ANY, wxT("Interpret'n draw depth model charts"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmAbout_description_staticText->Wrap( 300 );
+	dmAbout_Sizer2->Add( dmAbout_description_staticText, 0, wxALL, 5 );
+	
+	dmAbout_copyright_staticText = new wxStaticText( dmAbout_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	dmAbout_copyright_staticText->Wrap( 300 );
+	dmAbout_Sizer2->Add( dmAbout_copyright_staticText, 0, wxALL, 5 );
 	
 	dm_AboutWxWidgets_Button = new wxButton( dmAbout_Panel, wxID_ANY, wxT("About wxWidgets library used"), wxDefaultPosition, wxDefaultSize, 0 );
 	dmAbout_Sizer2->Add( dm_AboutWxWidgets_Button, 0, wxALL, 5 );
@@ -430,7 +441,6 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	// Connect Events
 	dmPictureImport_filePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( LIVIDMUI_DLG::OnFileImportFileChange ), NULL, this );
 	dmColourOptionsUserFile_filePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( LIVIDMUI_DLG::OnUserColourFileChange ), NULL, this );
-	dmAbout_LIVIDMPlugin_Button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnAboutLIVIDepthModel ), NULL, this );
 	dm_AboutWxWidgets_Button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnAboutWxWidgets ), NULL, this );
 }
 
@@ -439,7 +449,6 @@ LIVIDMUI_DLG::~LIVIDMUI_DLG()
 	// Disconnect Events
 	dmPictureImport_filePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( LIVIDMUI_DLG::OnFileImportFileChange ), NULL, this );
 	dmColourOptionsUserFile_filePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( LIVIDMUI_DLG::OnUserColourFileChange ), NULL, this );
-	dmAbout_LIVIDMPlugin_Button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnAboutLIVIDepthModel ), NULL, this );
 	dm_AboutWxWidgets_Button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnAboutWxWidgets ), NULL, this );
 	
 }
