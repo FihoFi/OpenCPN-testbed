@@ -37,7 +37,8 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmPictureImport_fgSizer->SetFlexibleDirection( wxBOTH );
 	dmPictureImport_fgSizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	dmFileImport_bSizer->Add( fgSizer6, 1, wxEXPAND, 5 );
+	
+	dmFileImport_bSizer->Add( dmPictureImport_fgSizer, 1, wxEXPAND, 5 );
 	
 	
 	dmFileImport_Panel->SetSizer( dmFileImport_bSizer );
@@ -264,7 +265,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColourOptionsTwoColours_TooShallow_ColourPicker = new wxColourPickerCtrl( dmColourOptionsTwoColours_Panel, wxID_ANY, wxColour( 255, 0, 0 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	dmColorOptionsConstant_GridSizer->Add( dmColourOptionsTwoColours_TooShallow_ColourPicker, 0, wxALL, 5 );
 	
-	dmColourOptionsTwoColours_DividingDepth_Label = new wxStaticText( dmColourOptionsTwoColours_Panel, wxID_ANY, wxT("Level difference between color change"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmColourOptionsTwoColours_DividingDepth_Label = new wxStaticText( dmColourOptionsTwoColours_Panel, wxID_ANY, wxT("Depth of deep enough"), wxDefaultPosition, wxDefaultSize, 0 );
 	dmColourOptionsTwoColours_DividingDepth_Label->Wrap( -1 );
 	dmColorOptionsConstant_GridSizer->Add( dmColourOptionsTwoColours_DividingDepth_Label, 0, wxALL, 5 );
 	
@@ -366,7 +367,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmEmpty1->Wrap( -1 );
 	gSizer7->Add( dmEmpty1, 0, wxALL, 5 );
 	
-	dmWaterLevel_Label = new wxStaticText( dmWaterLevel_Panel, wxID_ANY, wxT("Set current water level\nabove or below normal sea level"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmWaterLevel_Label = new wxStaticText( dmWaterLevel_Panel, wxID_ANY, wxT("Set current water level\ncompared to normal"), wxDefaultPosition, wxDefaultSize, 0 );
 	dmWaterLevel_Label->Wrap( -1 );
 	gSizer7->Add( dmWaterLevel_Label, 0, wxALL, 5 );
 	
