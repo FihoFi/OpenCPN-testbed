@@ -119,14 +119,18 @@ class LIVIDMUI_DLG : public wxDialog
 		wxTextCtrl* dmWaterLevel_textCtrl;
 		wxPanel* dmAbout_Panel;
 		wxPanel* dmAbout_Icon_Panel;
-		wxStaticText* dmAbout_Label;
-		wxButton* dmAbout_LIVIDMPlugin_Button;
+		wxStaticBitmap* dmAbout_icon_bitmap;
+		wxStaticText* dmEmpty_label;
+		wxStaticText* dmAbout_name_staticText;
+		wxStaticText* dmAbout_version_staticText;
+		wxStaticText* dmAbout_description_staticText;
+		wxStaticText* dmAbout_copyright_staticText;
+		wxStaticText* dmAbout_development_team_staticText;
 		wxButton* dm_AboutWxWidgets_Button;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnFileImportFileChange( wxFileDirPickerEvent& event ) { event.Skip(); }
 		virtual void OnUserColourFileChange( wxFileDirPickerEvent& event ) { event.Skip(); }
-		virtual void OnAboutLIVIDepthModel( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnAboutWxWidgets( wxCommandEvent& event ) { event.Skip(); }
 		
 	

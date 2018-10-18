@@ -43,15 +43,7 @@ Dlg::Dlg( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint&
     : LIVIDMUI_DLG( parent, id, title, pos, size, style )
 {
     this->Fit();
-    dbg=false; //for debug output set to true
-//    this->dmAbout_LIVIDMIcon_bitmap->SetIcon(plugin->GetIcon());
-//    wxGDIImage* icon = plugin->GetIcon();
-//    wxStaticBitmap* aboutIcon = new wxStaticBitmap(
-//          this->dmAbout_Panel, wxID_ANY,, wxDefaultPosition, wxSize(-1, -1), 0);
-//    this->dmAbout_Icon_Panel->AddIcon(plugin->GetIcon());
 }
-
-
 
 void Dlg::OnClose(wxCloseEvent& event)
 {   plugin->OnDepthModelDialogClose();   }
@@ -73,22 +65,26 @@ void Dlg::OnColorOptionsApplyButtonClick(wxCommandEvent& event)
     plugin->OnColorOptionsApply();
 }
 
-#include <wx/aboutdlg.h>
-void Dlg::OnAboutLIVIDepthModel(wxCommandEvent& WXUNUSED(event))
+void Dlg::SetAboutInfo()
 {
-    wxAboutDialogInfo aboutInfo;
-    aboutInfo.SetName       (plugin->GetCommonName() + wxString::Format(wxT(" v. %i.%i"),
-        plugin->GetPlugInVersionMajor(), plugin->GetPlugInVersionMinor()) );
-    aboutInfo.SetIcon       (plugin->GetIcon()                  );
-    aboutInfo.SetVersion    (plugin->GetPlugInVersionMajor() + "."
-                             + plugin->GetPlugInVersionMinor(),
-                            plugin->GetLongPluginVersionString());
-    aboutInfo.SetDescription(plugin->GetLongDescription()       );
-    aboutInfo.SetCopyright  (plugin->GetCopyright()             );
+    this->dmAbout_icon_bitmap->SetIcon(plugin->GetIcon());
+
+    this->dmAbout_name_staticText->SetLabelText(plugin->GetCommonName());
+
+    this->dmAbout_version_staticText->SetLabel(wxString::Format(wxT(" v. %i.%i"),
+        plugin->GetPlugInVersionMajor(), plugin->GetPlugInVersionMinor())+
+		plugin->GetLongPluginVersionString());
+    this->dmAbout_description_staticText->SetLabel(plugin->GetLongDescription());
+    this->dmAbout_copyright_staticText->SetLabel(plugin->GetCopyright());
+
+    this->dmAbout_development_team_staticText->SetLabel(
+        "Development team\n"
+        "    Stefan Engstr�m,   LIVI (project owner)\n"
+        "    Tiina Ketolainen,  Sitowise (dev team coordinator)\n"
+        "    Marjukka Kokkonen, Sitowise (front development)\n"
+        "    Tommi Larjomaa,    Sitowise (backend development)\n"
+        "    Jarkko Ryypp�,     Sitowise (coordinate specialist)\n");
     // aboutInfo.SetWebSite("http://notavailable.yet");
-    aboutInfo.AddDeveloper("Marjukka Kokkonen, Sitowise");
-    aboutInfo.AddDeveloper("Tommi Larjomaa, Sitowise");
-    wxAboutBox(aboutInfo);
 }
 
 void Dlg::OnAboutWxWidgets(wxCommandEvent& WXUNUSED(event))
