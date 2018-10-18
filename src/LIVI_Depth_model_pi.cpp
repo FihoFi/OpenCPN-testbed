@@ -108,8 +108,13 @@ int LIVI_Depth_model_pi::Init(void)
     // opencpn canvas pointer, to be the parent for UI dialog, ...
     m_parent_window = GetOCPNCanvasWindow(); // ocpn_plugin.h
 
+    // Save the icon bitmap of this plugin as icon. About dialog needs this.
+    m_icon = new wxIcon(); // Moved to initialization list
+    m_icon->CopyFromBitmap(*_img_LIVI_Depth_model);
+
     dialog = new Dlg(m_parent_window);
     dialog->plugin = this;
+    dialog->SetAboutInfo();
 
     m_pconf = new dmConfigHandler(pFileConf, dialog);
 
@@ -297,12 +302,6 @@ void LIVI_Depth_model_pi::SetColorScheme(PI_ColorScheme cs)
 */
 void LIVI_Depth_model_pi::OnToolbarToolCallback(int id)
 {
-    if(!m_icon)
-    {
-        // Save the icon bitmap of this plugin as icon. About dialog needs this.
-        m_icon = new wxIcon();
-        m_icon->CopyFromBitmap(*_img_LIVI_Depth_model);
-    }
     if (m_pconf == NULL) 
     {
         wxFileConfig* confFile = GetOCPNConfigObject(); // Get the configuration file contents;
