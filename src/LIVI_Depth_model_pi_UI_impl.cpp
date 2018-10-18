@@ -72,8 +72,7 @@ void Dlg::SetAboutInfo()
     this->dmAbout_name_staticText->SetLabelText(plugin->GetCommonName());
 
     this->dmAbout_version_staticText->SetLabel(wxString::Format(wxT(" v. %i.%i"),
-        plugin->GetPlugInVersionMajor(), plugin->GetPlugInVersionMinor())+
-		plugin->GetLongPluginVersionString());
+        plugin->GetPlugInVersionMajor(), plugin->GetPlugInVersionMinor()));
     this->dmAbout_description_staticText->SetLabel(plugin->GetLongDescription());
     this->dmAbout_copyright_staticText->SetLabel(plugin->GetCopyright());
 
