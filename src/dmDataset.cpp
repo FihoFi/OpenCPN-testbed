@@ -157,18 +157,24 @@ bool dmDataset::openDataSet(const char * filename)
     if (_srcDataset)
         GDALClose(_srcDataset);
 
+    if (_dstDataset)
+        GDALClose(_dstDataset);
+
     _srcDataset = (GDALDataset *)GDALOpen(filename, GA_ReadOnly);
 
     if (_srcDataset)
     {
         _srcWkt = GDALGetProjectionRef(_srcDataset);
 
-        reprojectedDs = reprojectDataset(_srcDataset);
+        reprojectedDs = visualizeDataset(_srcDataset);
 
         if (!reprojectedDs)
             return false;
 
-        _dstDataset = visualizeDataset(reprojectedDs);
+        _dstDataset = reprojectDataset(reprojectedDs);
+
+        if (reprojectedDs)
+            GDALClose(reprojectedDs);
 
         if (!_dstDataset)
             return false;
@@ -226,11 +232,12 @@ GDALDataset * dmDataset::reprojectDataset(GDALDataset *dsToReproject)
 
         char *warpOpts[] = { (char*)"-t_srs", (char *)_dstWkt.c_str(),
                              (char*)"-r",     (char*)"max",
+                             (char*)"-nosrcalpha",
                              NULL };
 
         // coordinate system reprojection
         GDALWarpAppOptions *psWarpOptions = GDALWarpAppOptionsNew(warpOpts, NULL);
-        warpedDS = (GDALDataset*)GDALWarp(".\\warped_ds.tif", NULL, 1, (GDALDatasetH*)&_srcDataset, psWarpOptions, &err);
+        warpedDS = (GDALDataset*)GDALWarp(".\\warped_ds.tif", NULL, 1, (GDALDatasetH*)&dsToReproject, psWarpOptions, &err);
 
         // clean up
         GDALWarpAppOptionsFree(psWarpOptions);
@@ -261,12 +268,10 @@ GDALDataset * dmDataset::visualizeDataset(GDALDataset *dsToVisualize)
     {
     case HILLSHADE:
         resultDs = (GDALDataset*)GDALDEMProcessing(".\\temp_ds.tif", dsToVisualize, "hillshade", NULL, gdaldemOptions, &err);
-        GDALClose(dsToVisualize);
         break;
 
     case COLOR_RELIEF:
         resultDs = (GDALDataset*)GDALDEMProcessing(".\\temp_ds.tif", dsToVisualize, "color-relief", _colorConfFilename.c_str(), gdaldemOptionsColorRelief, &err);
-        GDALClose(dsToVisualize);
         break;
 
     case NONE:
