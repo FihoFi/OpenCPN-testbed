@@ -103,7 +103,7 @@ bool dmDataset::setVisualizationScheme(DM_visualization visScheme)
 dmRasterImgData * dmDataset::getRasterData(
     coord &topLeftOut, coord &botRightOut)
 {
-    int xSize, ySize;
+    int xSize, ySize, n;
     float *bandData;
     dmRasterImgData *imgData;
 
@@ -124,20 +124,22 @@ dmRasterImgData * dmDataset::getRasterData(
     imgData->rgb = new unsigned char[3 * xSize*ySize];
     imgData->alpha = new unsigned char[xSize*ySize];
 
+    n = 0;
+
     // read RGB channel
-    int n = 0;
-    while (n < 3 && n < bands.size())
+    while (n < 3)
     {
-        bands[n]->RasterIO(GF_Read, 0, 0, xSize, ySize, imgData->rgb + n, xSize, ySize, GDT_Byte, 3, 3*xSize);
+        if (_visScheme == HILLSHADE)
+            bands[0]->RasterIO(GF_Read, 0, 0, xSize, ySize, imgData->rgb + n, xSize, ySize, GDT_Byte, 3, 3 * xSize);
+        else if ((_visScheme == COLOR_RELIEF || _visScheme == NONE) && n < bands.size())
+            bands[n]->RasterIO(GF_Read, 0, 0, xSize, ySize, imgData->rgb + n, xSize, ySize, GDT_Byte, 3, 3*xSize);
 
         n++;
     }
 
-    // read alpha channel
-    if (bands.size() > 3)
-    {
-        bands[3]->RasterIO(GF_Read, 0, 0, xSize, ySize, imgData->alpha, xSize, ySize, GDT_Byte, 0, 0);
-    }
+    // read alpha channel (assumed to be the in the last raster band)
+    if (bands.size() > 1)
+        bands[bands.size()-1]->RasterIO(GF_Read, 0, 0, xSize, ySize, imgData->alpha, xSize, ySize, GDT_Byte, 0, 0);
 
     return imgData;
 }
