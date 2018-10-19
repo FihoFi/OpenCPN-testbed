@@ -64,6 +64,8 @@ public:
 //        void Calculate( wxCommandEvent& event, bool Export, int Pattern );
 //        void Addpoint(TiXmlElement* Route, wxString ptlat, wxString ptlon, wxString ptname, wxString ptsym, wxString pttype);
 
+    virtual void SetAboutInfo();
+
     wxString    GetSelectedChartOption();
     wxString    GetSelectedColourOption();
     void        SetUserColourConfigurationFileName(wxFileName &fileName);
@@ -90,14 +92,12 @@ public:
 //  wxString rte_end;
 
 private:
-    void         OnClose                       ( wxCloseEvent&   WXUNUSED(event) );
+    virtual void OnClose                       ( wxCloseEvent&   WXUNUSED(event) );
     virtual void OnColorOptionsApplyButtonClick( wxCommandEvent& WXUNUSED(event) );
-    virtual void OnAboutLIVIDepthModel         ( wxCommandEvent& WXUNUSED(event) );
     virtual void OnAboutWxWidgets              ( wxCommandEvent& WXUNUSED(event) );
     virtual void OnFileImportFileChange  ( wxFileDirPickerEvent& WXUNUSED(event) );
+    virtual void OnGenerateImage               ( wxCommandEvent& WXUNUSED(event) );
     virtual void OnUserColourFileChange  ( wxFileDirPickerEvent& WXUNUSED(event) );
-
-    bool dbg;
 
  //     double lat1, lon1, lat2, lon2;
  //     bool error_found;

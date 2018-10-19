@@ -25,19 +25,25 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmDepthModelFile_staticText->Wrap( -1 );
 	dmFileImport_bSizer->Add( dmDepthModelFile_staticText, 0, wxALL, 5 );
 	
-	dmPictureImport_filePicker = new wxFilePickerCtrl( dmFileImport_Panel, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxSize( 380,-1 ), wxFLP_DEFAULT_STYLE );
+	dmPictureImport_filePicker = new wxFilePickerCtrl( dmFileImport_Panel, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("Tif/Tiff  image file(*.tif;*.tiff)|*.tif;*.tiff|BAG file (*.bag)|*.bag|Any file (*.*)|*.*"), wxDefaultPosition, wxSize( 380,-1 ), wxFLP_DEFAULT_STYLE );
 	dmFileImport_bSizer->Add( dmPictureImport_filePicker, 0, wxALL, 5 );
 	
 	dmPictureImportError_staticText = new wxStaticText( dmFileImport_Panel, wxID_ANY, wxT("(everything ok)"), wxDefaultPosition, wxDefaultSize, 0 );
 	dmPictureImportError_staticText->Wrap( -1 );
 	dmFileImport_bSizer->Add( dmPictureImportError_staticText, 0, wxALL, 5 );
 	
-	wxFlexGridSizer* fgSizer6;
-	fgSizer6 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer6->SetFlexibleDirection( wxBOTH );
-	fgSizer6->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	wxFlexGridSizer* dmPictureImport_fgSizer;
+	dmPictureImport_fgSizer = new wxFlexGridSizer( 0, 2, 0, 0 );
+	dmPictureImport_fgSizer->SetFlexibleDirection( wxBOTH );
+	dmPictureImport_fgSizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	dmFileImport_bSizer->Add( fgSizer6, 1, wxEXPAND, 5 );
+	dmPictureImport_staticText = new wxStaticText( dmFileImport_Panel, wxID_ANY, wxT("Current drawing options:\n  Colour relief image\n  Five depth ranges"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmPictureImport_staticText->Wrap( -1 );
+	dmPictureImport_fgSizer->Add( dmPictureImport_staticText, 0, wxALL, 5 );
+	
+	dmPictureImport_GenerateImage_button = new wxButton( dmFileImport_Panel, wxID_ANY, wxT("Generate image"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmPictureImport_fgSizer->Add( dmPictureImport_GenerateImage_button, 0, wxALL, 5 );
+	dmFileImport_bSizer->Add( dmPictureImport_fgSizer, 1, wxEXPAND, 5 );
 	
 	
 	dmFileImport_Panel->SetSizer( dmFileImport_bSizer );
@@ -80,7 +86,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColourOptionsUserFile_giveFile_staticText->Wrap( -1 );
 	dmColourOptionsUserFile_bSizer->Add( dmColourOptionsUserFile_giveFile_staticText, 0, wxALL, 5 );
 	
-	dmColourOptionsUserFile_filePicker = new wxFilePickerCtrl( dmColourOptionsUserFile_Panel, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxSize( 380,-1 ), wxFLP_DEFAULT_STYLE );
+	dmColourOptionsUserFile_filePicker = new wxFilePickerCtrl( dmColourOptionsUserFile_Panel, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("Text file(*.txt)|*.txt|Any file (*.*)|*.*"), wxDefaultPosition, wxSize( 360,-1 ), wxFLP_DEFAULT_STYLE );
 	dmColourOptionsUserFile_bSizer->Add( dmColourOptionsUserFile_filePicker, 0, wxALL, 5 );
 	
 	dmColourOptionsUserFile_help_staticText = new wxStaticText( dmColourOptionsUserFile_Panel, wxID_ANY, wxT("Colouring is made by GDAL/gdaldem.\nThe file must be a text file, containing following data at each row:\n\n<depth/percentage value> <r> <g> <b> <alpha>\n\nExample (depth values)         Example (percentage values)\n\n-10  255   0     0   128             10% 255   0      0  128    \n-15   0      0   255 128             21%   0     0   255 128    \n-20   0   255    0   128             75%   0   255   0   128    \nnv    0      0     0      0              nv      0     0     0     0     \n\nThe alpha value tells the amount of opaqueness (inverse of \ntransparency) for the colour.\n\"nv\" stands for \"no value\".\nAll of the values r,g,b, and alpha must be between 0...255."), wxDefaultPosition, wxDefaultSize, 0 );
@@ -116,8 +122,6 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_TooShallow_Label, 0, wxALL, 5 );
 	
 	dmColorOptionsCustom_ColourPicker1 = new wxColourPickerCtrl( dmColourOptionsCustom_Panel, wxID_ANY, wxColour( 255, 0, 0 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	dmColorOptionsCustom_ColourPicker1->SetMinSize( wxSize( 70,-1 ) );
-	
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_ColourPicker1, 0, wxALL, 5 );
 	
 	dmEmpty_Label1 = new wxStaticText( dmColourOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
@@ -125,6 +129,8 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColorOptionsCustom_GridSizer->Add( dmEmpty_Label1, 0, wxALL, 5 );
 	
 	dmColorOptionsCustom_SpinCtrlDouble1 = new wxSpinCtrlDouble( dmColourOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -10000, 0, -17.500000, 1 );
+	dmColorOptionsCustom_SpinCtrlDouble1->SetMaxSize( wxSize( 100,-1 ) );
+	
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_SpinCtrlDouble1, 0, wxALL, 5 );
 	
 	dmColorOptionsCustom_ABitRisky_Label = new wxStaticText( dmColourOptionsCustom_Panel, wxID_ANY, wxT("Cautiously on high water"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -132,8 +138,6 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_ABitRisky_Label, 0, wxALL, 5 );
 	
 	dmColorOptionsCustom_ColourPicker2 = new wxColourPickerCtrl( dmColourOptionsCustom_Panel, wxID_ANY, wxColour( 255, 196, 228 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	dmColorOptionsCustom_ColourPicker2->SetMinSize( wxSize( 70,-1 ) );
-	
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_ColourPicker2, 0, wxALL, 5 );
 	
 	dmEmpty_Label2 = new wxStaticText( dmColourOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
@@ -141,6 +145,8 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColorOptionsCustom_GridSizer->Add( dmEmpty_Label2, 0, wxALL, 5 );
 	
 	dmColorOptionsCustom_SpinCtrlDouble2 = new wxSpinCtrlDouble( dmColourOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -10000, 0, -20.000000, 1 );
+	dmColorOptionsCustom_SpinCtrlDouble2->SetMaxSize( wxSize( 100,-1 ) );
+	
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_SpinCtrlDouble2, 0, wxALL, 5 );
 	
 	dmColorOptionsCustom_OK_Label = new wxStaticText( dmColourOptionsCustom_Panel, wxID_ANY, wxT("Cautiously on normal water"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -148,15 +154,15 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_OK_Label, 0, wxALL, 5 );
 	
 	dmColorOptionsCustom_ColourPicker3 = new wxColourPickerCtrl( dmColourOptionsCustom_Panel, wxID_ANY, wxColour( 255, 255, 255 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	dmColorOptionsCustom_ColourPicker3->SetMinSize( wxSize( 70,-1 ) );
-	
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_ColourPicker3, 0, wxALL, 5 );
 	
 	dmEmpty_Label3 = new wxStaticText( dmColourOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	dmEmpty_Label3->Wrap( -1 );
 	dmColorOptionsCustom_GridSizer->Add( dmEmpty_Label3, 0, wxALL, 5 );
 	
-	dmColorOptionsCustom_SpinCtrlDouble3 = new wxSpinCtrlDouble( dmColourOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -10000, 0, -22.500000, 1 );
+	dmColorOptionsCustom_SpinCtrlDouble3 = new wxSpinCtrlDouble( dmColourOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -10000, 10, -22.500000, 1 );
+	dmColorOptionsCustom_SpinCtrlDouble3->SetMaxSize( wxSize( 100,-1 ) );
+	
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_SpinCtrlDouble3, 0, wxALL, 5 );
 	
 	dmColorOptionsCustom_OKOnLowWater_Label = new wxStaticText( dmColourOptionsCustom_Panel, wxID_ANY, wxT("Cautiously on low water"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -164,15 +170,15 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_OKOnLowWater_Label, 0, wxALL, 5 );
 	
 	dmColorOptionsCustom_ColourPicker4 = new wxColourPickerCtrl( dmColourOptionsCustom_Panel, wxID_ANY, wxColour( 128, 196, 255 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	dmColorOptionsCustom_ColourPicker4->SetMinSize( wxSize( 70,-1 ) );
-	
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_ColourPicker4, 0, wxALL, 5 );
 	
 	dmEmpty_Label4 = new wxStaticText( dmColourOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	dmEmpty_Label4->Wrap( -1 );
 	dmColorOptionsCustom_GridSizer->Add( dmEmpty_Label4, 0, wxALL, 5 );
 	
-	dmColorOptionsCustom_SpinCtrlDouble4 = new wxSpinCtrlDouble( dmColourOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -10000, 0, -25.000000, 1 );
+	dmColorOptionsCustom_SpinCtrlDouble4 = new wxSpinCtrlDouble( dmColourOptionsCustom_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -10000, 10, -25.000000, 1 );
+	dmColorOptionsCustom_SpinCtrlDouble4->SetMaxSize( wxSize( 100,-1 ) );
+	
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_SpinCtrlDouble4, 0, wxALL, 5 );
 	
 	dmColorOptionsCustom_Deep_Label = new wxStaticText( dmColourOptionsCustom_Panel, wxID_ANY, wxT("Deep, good to go"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -180,8 +186,6 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_Deep_Label, 0, wxALL, 5 );
 	
 	dmColorOptionsCustom_ColourPicker5 = new wxColourPickerCtrl( dmColourOptionsCustom_Panel, wxID_ANY, wxColour( 0, 0, 255 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	dmColorOptionsCustom_ColourPicker5->SetMinSize( wxSize( 70,-1 ) );
-	
 	dmColorOptionsCustom_GridSizer->Add( dmColorOptionsCustom_ColourPicker5, 0, wxALL, 5 );
 	
 	
@@ -266,11 +270,13 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColourOptionsTwoColours_TooShallow_ColourPicker = new wxColourPickerCtrl( dmColourOptionsTwoColours_Panel, wxID_ANY, wxColour( 255, 0, 0 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	dmColorOptionsConstant_GridSizer->Add( dmColourOptionsTwoColours_TooShallow_ColourPicker, 0, wxALL, 5 );
 	
-	dmColourOptionsTwoColours_DividingDepth_Label = new wxStaticText( dmColourOptionsTwoColours_Panel, wxID_ANY, wxT("Level difference between color change"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmColourOptionsTwoColours_DividingDepth_Label = new wxStaticText( dmColourOptionsTwoColours_Panel, wxID_ANY, wxT("Depth of deep enough"), wxDefaultPosition, wxDefaultSize, 0 );
 	dmColourOptionsTwoColours_DividingDepth_Label->Wrap( -1 );
 	dmColorOptionsConstant_GridSizer->Add( dmColourOptionsTwoColours_DividingDepth_Label, 0, wxALL, 5 );
 	
-	dmColourOptionsTwoColours_DividingDepth_spinCtrlDouble = new wxSpinCtrlDouble( dmColourOptionsTwoColours_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 20.000000, 1 );
+	dmColourOptionsTwoColours_DividingDepth_spinCtrlDouble = new wxSpinCtrlDouble( dmColourOptionsTwoColours_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -10000, 10, -21.000000, 1 );
+	dmColourOptionsTwoColours_DividingDepth_spinCtrlDouble->SetMaxSize( wxSize( 100,-1 ) );
+	
 	dmColorOptionsConstant_GridSizer->Add( dmColourOptionsTwoColours_DividingDepth_spinCtrlDouble, 0, wxALL, 5 );
 	
 	dmColourOptionsTwoColours_DeepEnough_Label = new wxStaticText( dmColourOptionsTwoColours_Panel, wxID_ANY, wxT("Colour when deep enough"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -366,7 +372,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmEmpty1->Wrap( -1 );
 	gSizer7->Add( dmEmpty1, 0, wxALL, 5 );
 	
-	dmWaterLevel_Label = new wxStaticText( dmWaterLevel_Panel, wxID_ANY, wxT("Set current water level\nabove or below normal sea level"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmWaterLevel_Label = new wxStaticText( dmWaterLevel_Panel, wxID_ANY, wxT("Set current water level\ncompared to normal"), wxDefaultPosition, wxDefaultSize, 0 );
 	dmWaterLevel_Label->Wrap( -1 );
 	gSizer7->Add( dmWaterLevel_Label, 0, wxALL, 5 );
 	
@@ -388,6 +394,9 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	wxBoxSizer* dmAbout_Icon_Sizer;
 	dmAbout_Icon_Sizer = new wxBoxSizer( wxVERTICAL );
 	
+	dmAbout_icon_bitmap = new wxStaticBitmap( dmAbout_Icon_Panel, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, 0 );
+	dmAbout_Icon_Sizer->Add( dmAbout_icon_bitmap, 0, wxALL, 5 );
+	
 	
 	dmAbout_Icon_Panel->SetSizer( dmAbout_Icon_Sizer );
 	dmAbout_Icon_Panel->Layout();
@@ -397,14 +406,29 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	wxBoxSizer* dmAbout_Sizer2;
 	dmAbout_Sizer2 = new wxBoxSizer( wxVERTICAL );
 	
-	dmAbout_Label = new wxStaticText( dmAbout_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL );
-	dmAbout_Label->Wrap( -1 );
-	dmAbout_Sizer2->Add( dmAbout_Label, 0, wxALL, 5 );
+	dmEmpty_label = new wxStaticText( dmAbout_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL );
+	dmEmpty_label->Wrap( -1 );
+	dmAbout_Sizer2->Add( dmEmpty_label, 0, wxALL, 5 );
 	
-	dmAbout_LIVIDMPlugin_Button = new wxButton( dmAbout_Panel, wxID_ANY, wxT("About LIVI Depth model plugin"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
+	dmAbout_name_staticText = new wxStaticText( dmAbout_Panel, wxID_ANY, wxT("Depth model by LIVI"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmAbout_name_staticText->Wrap( 300 );
+	dmAbout_Sizer2->Add( dmAbout_name_staticText, 0, wxALL, 5 );
 	
-	dmAbout_LIVIDMPlugin_Button->SetBitmapPosition( wxRIGHT );
-	dmAbout_Sizer2->Add( dmAbout_LIVIDMPlugin_Button, 0, wxALL, 5 );
+	dmAbout_version_staticText = new wxStaticText( dmAbout_Panel, wxID_ANY, wxT("v. (undefined now, set in code)"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmAbout_version_staticText->Wrap( -1 );
+	dmAbout_Sizer2->Add( dmAbout_version_staticText, 0, wxALL, 5 );
+	
+	dmAbout_description_staticText = new wxStaticText( dmAbout_Panel, wxID_ANY, wxT("Interpret'n draw depth model charts"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmAbout_description_staticText->Wrap( 300 );
+	dmAbout_Sizer2->Add( dmAbout_description_staticText, 0, wxALL, 5 );
+	
+	dmAbout_copyright_staticText = new wxStaticText( dmAbout_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	dmAbout_copyright_staticText->Wrap( 300 );
+	dmAbout_Sizer2->Add( dmAbout_copyright_staticText, 0, wxALL, 5 );
+	
+	dmAbout_development_team_staticText = new wxStaticText( dmAbout_Panel, wxID_ANY, wxT("depth model dev team"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmAbout_development_team_staticText->Wrap( -1 );
+	dmAbout_Sizer2->Add( dmAbout_development_team_staticText, 0, wxALL, 5 );
 	
 	dm_AboutWxWidgets_Button = new wxButton( dmAbout_Panel, wxID_ANY, wxT("About wxWidgets library used"), wxDefaultPosition, wxDefaultSize, 0 );
 	dmAbout_Sizer2->Add( dm_AboutWxWidgets_Button, 0, wxALL, 5 );
@@ -428,18 +452,16 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	this->Centre( wxBOTH );
 	
 	// Connect Events
-	dmPictureImport_filePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( LIVIDMUI_DLG::OnFileImportFileChange ), NULL, this );
+	dmPictureImport_GenerateImage_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnGenerateImage ), NULL, this );
 	dmColourOptionsUserFile_filePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( LIVIDMUI_DLG::OnUserColourFileChange ), NULL, this );
-	dmAbout_LIVIDMPlugin_Button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnAboutLIVIDepthModel ), NULL, this );
 	dm_AboutWxWidgets_Button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnAboutWxWidgets ), NULL, this );
 }
 
 LIVIDMUI_DLG::~LIVIDMUI_DLG()
 {
 	// Disconnect Events
-	dmPictureImport_filePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( LIVIDMUI_DLG::OnFileImportFileChange ), NULL, this );
+	dmPictureImport_GenerateImage_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnGenerateImage ), NULL, this );
 	dmColourOptionsUserFile_filePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( LIVIDMUI_DLG::OnUserColourFileChange ), NULL, this );
-	dmAbout_LIVIDMPlugin_Button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnAboutLIVIDepthModel ), NULL, this );
 	dm_AboutWxWidgets_Button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnAboutWxWidgets ), NULL, this );
 	
 }
