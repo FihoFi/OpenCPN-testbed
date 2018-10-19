@@ -471,7 +471,7 @@ bool LIVI_Depth_model_pi::SaveConfFileOfUISelection()
     bool success = true;
     wxString chOptStr = dialog->GetSelectedColourOption();
 
-    if      (chOptStr.Contains("own"))     {}
+    if      (chOptStr.Contains("your"))    {}
     else if (chOptStr.Contains("Five"))    { success &= SaveFiveColorConfToFile();    }
     else if (chOptStr.Contains("Sliding")) { success &= SaveSlidingColorConfToFile(); }
     else if (chOptStr.Contains("Two"))     { success &= SaveTwoColorConfToFile();     }
@@ -484,7 +484,7 @@ wxFileName LIVI_Depth_model_pi::GetConfFileOfUISelection()
     bool success = true;
     wxString chOptStr = dialog->GetSelectedColourOption();
 
-    if      (chOptStr.Contains("own"))     { return GetUsersColorConfFile(); }
+    if      (chOptStr.Contains("your"))    { return GetUsersColorConfFile(); }
     else if (chOptStr.Contains("Five"))    { return fiveColoursFileName;     }
     else if (chOptStr.Contains("Sliding")) { return slidingColoursFileName;  }
     else if (chOptStr.Contains("Two"))     { return twoColoursFileName;      }
