@@ -99,7 +99,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColourOptionsUserFile_Panel->SetSizer( dmColourOptionsUserFile_bSizer );
 	dmColourOptionsUserFile_Panel->Layout();
 	dmColourOptionsUserFile_bSizer->Fit( dmColourOptionsUserFile_Panel );
-	dmColourOptions_choisebook->AddPage( dmColourOptionsUserFile_Panel, wxT("User your own colouring file"), false );
+	dmColourOptions_choisebook->AddPage( dmColourOptionsUserFile_Panel, wxT("Give your colour definition file"), false );
 	dmColourOptionsCustom_Panel = new wxPanel( dmColourOptions_choisebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* dmColorOptionsCustom_Sizer;
 	dmColorOptionsCustom_Sizer = new wxBoxSizer( wxVERTICAL );
@@ -195,7 +195,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColourOptionsCustom_Panel->SetSizer( dmColorOptionsCustom_Sizer );
 	dmColourOptionsCustom_Panel->Layout();
 	dmColorOptionsCustom_Sizer->Fit( dmColourOptionsCustom_Panel );
-	dmColourOptions_choisebook->AddPage( dmColourOptionsCustom_Panel, wxT("(default) Five colours"), true );
+	dmColourOptions_choisebook->AddPage( dmColourOptionsCustom_Panel, wxT("(default) Five depth ranges"), true );
 	dmColourOptionsSliding_Panel = new wxPanel( dmColourOptions_choisebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	dmColourOptionsSliding_Panel->Enable( false );
 	
@@ -248,7 +248,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColourOptionsSliding_Panel->SetSizer( dmColorOptionsSliding_GridSizer );
 	dmColourOptionsSliding_Panel->Layout();
 	dmColorOptionsSliding_GridSizer->Fit( dmColourOptionsSliding_Panel );
-	dmColourOptions_choisebook->AddPage( dmColourOptionsSliding_Panel, wxT("Sliding color"), false );
+	dmColourOptions_choisebook->AddPage( dmColourOptionsSliding_Panel, wxT("Sliding colour"), false );
 	dmColourOptionsTwoColours_Panel = new wxPanel( dmColourOptions_choisebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* dmColorOptionsConstant_GridSizer;
 	dmColorOptionsConstant_GridSizer = new wxFlexGridSizer( 0, 2, 0, 0 );
