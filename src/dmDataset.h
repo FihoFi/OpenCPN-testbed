@@ -23,9 +23,10 @@ public:
     bool setVisualizationScheme(DM_visualization visScheme) override;
     dmRasterImgData * getRasterData(
         coord &topLeftOut, coord &botRightOut) override;
-    dmRasterImgData * getRasterData(int imgWidth, int imgHeight,
+    dmRasterImgData * getRasterData(
         const coord topLeftIn, const coord botRightIn,
-        coord &topLeftOut, coord &botRightOut) override;
+        coord &topLeftOut, coord &botRightOut,
+        int &imgWidth, int &imgHeight) override;
     bool openDataSet(const char* filename) override;
     void setSrcWkt(const char * wkt);
     void setDstWkt(const char * wkt);

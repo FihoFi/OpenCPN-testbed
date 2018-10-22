@@ -145,9 +145,10 @@ dmRasterImgData * dmDataset::getRasterData(
     return imgData;
 }
 
-dmRasterImgData * dmDataset::getRasterData(int imgWidth, int imgHeight,
+dmRasterImgData * dmDataset::getRasterData(
     const coord topLeftIn, const coord botRightIn,
-    coord &topLeftOut, coord &botRightOut)
+    coord &topLeftOut, coord &botRightOut,
+    int &imgWidth, int &imgHeight)
 {
     // TODO: implement
     return NULL;
