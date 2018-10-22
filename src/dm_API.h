@@ -65,6 +65,12 @@ public:
     /** Destructor making this class abstract. */
     virtual ~dm_API() = 0;
 
+    /**
+    * Opens the dataset, defined by file <i>filename</i>,and transforms it to
+    * World Mercator coordinate system.
+    *
+    * @return true, if opening, and transforming the dataset was successful, false else.
+    */
     virtual bool openDataSet(const char* filename) = 0;
     //MRJ: is the same as bool setFileName(const char* filename);
 
@@ -96,6 +102,7 @@ public:
     * @param[in] filename   Filepath of a file containing the colour configuration.
     * @param[in] giveOwnership  Tells, if the pointer deletion responsibility
     *                           is handled to the respondent.
+    *
     * @return true, if the file exists (TODO ?and is a valid colour configuration file? TODO)
     */
     virtual bool setColourConfigurationFile(const char* filename, bool giveOwnership) = 0;
@@ -108,6 +115,7 @@ public:
     *                           generated depth model chart.
     * @param[in] giveOwnership  Tells, if the pointer deletion responsibility
     *                           is handled to the respondent.
+    *
     * @return true, if (TODO ?the fileContents is a valid colour configuration? 
     *                        or ?the pointer is not null?
     */
@@ -123,34 +131,50 @@ public:
     */
     virtual bool setVisualizationScheme(DM_visualization visScheme) = 0;
 
-     /**
-    * Returns the whole raster data in the Dataset.
-    * The coordinate span of the dataset is returned in the parameters.
+    /**
+    * Returns the whole raster data in the Dataset, unscaled.
+    * The coordinate span of the returned dataset, is returned in the
+    * xxXxOut parameters, in World Mercator coordinates.
     * The ownership of the returned pointer is handed to the caller.
     *
-    * @param[out] topLeftOut 
-    * @param[out] botRightOut
+    * @param[out] topLeftOut  The top-left coordinate corner of the returned
+    *                       image, in World Mercator coordinates.
+    * @param[out] botRightOut The bottom-right coordinate corner of the returned
+    *                       image, in World Mercator coordinates.
+    *
+    * @return Pointer to the whole, unscaled raster image data in World Mercator
+    *         coordinate system
     */
     virtual dmRasterImgData * getRasterData(
         coord &topLeftOut, coord &botRightOut) = 0;
 
     /**
-    * Returns a square part of the Dataset spanned by the two given (In)
-    * coordinate pairs.
-    * The coordinate span of the returned Dataset part  is returned
-    * in the (Out) parameters.
+    * Returns a (possibly) cropped square part of the Dataset in World Marcator
+    * coordinate system, spanned by the two given xxXxIn WM coordinate pairs.
+    * The coordinate span of the returned dataset part is returned
+    * in the xxXxOut parameters, in World Mercator coordinates.
     * The ownership of the returned pointer is handed to the caller.
+    * The xxXxOut coordinates are set to nearest whole pixels of the whole
+    * dataset, that are outside the cropping area, defined by the xxXxIn coordinates
     *
-    * @param[out] imgWidth desired width of the resulting image
-    * @param[out] imgHeight desired height of the resulting image
-    * @param[in] topLeftIn  
-    * @param[in] botRightIn
-    * @param[out] topLeftOut
-    * @param[out] botRightOut
+    * @param[in] topLeftIn  The top-left coordinate corner of the wanted cropped
+    *                       image, in World Mercator coordinates.
+    * @param[in] botRightIn The bottom-right coordinate corner of the wanted cropped
+    *                       image, in World Mercator coordinates.
+    * @param[out] topLeftOut  The top-left coordinate corner of the returned cropped
+    *                       image, in World Mercator coordinates.
+    * @param[out] botRightOut The bottom-right coordinate corner of the returned cropped
+    *                       image, in World Mercator coordinates.
+    * @param[out] imgWidth  The width  of the resulting image, in pixels.
+    * @param[out] imgHeight The height of the resulting image, in pixels.
+    *
+    * @return Pointer to the cropped, unscaled raster image data in World Mercator
+    *         coordinate system
     */
-    virtual dmRasterImgData * getRasterData(int imgWidth, int imgHeight,
+    virtual dmRasterImgData * getRasterData(
         const coord topLeftIn, const coord botRightIn,
-        coord &topLeftOut, coord &botRightOut) = 0;
+        coord &topLeftOut, coord &botRightOut,
+        int &imgWidth, int &imgHeight) = 0;
 
     dmLogWriter* logWriter;
 };
