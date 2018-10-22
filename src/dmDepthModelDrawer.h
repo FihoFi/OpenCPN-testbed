@@ -9,7 +9,7 @@
 #include "dmDataset.h"
 
 
-class dmDepthModelDrawer
+class dmDepthModelDrawer : public dmLogWriter
 {
 public:
     typedef enum chartState { UNSET, FILE_SET, PROJECTION_OK, CHART_AREA_OK, BITMAP_AVAILABLE } chartState;
@@ -17,6 +17,12 @@ public:
 
     dmDepthModelDrawer();
     ~dmDepthModelDrawer();
+
+    virtual void logFatalError(const char* message) override;
+    virtual void logError     (const char* message) override;
+    virtual void logWarning   (const char* message) override;
+    virtual void logMessage   (const char* message) override;
+    virtual void logInfo      (const char* message) override;
 
     bool setChartDrawTypeRelief(const wxFileName &fileNamePath);
     bool setChartDrawTypeHillshade();
@@ -27,6 +33,7 @@ public:
     bool applyChartArea(PlugIn_ViewPort &vp);
     bool drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp);
     bool reCalculateDepthModelBitmap(PlugIn_ViewPort &vp);
+
 
 private:
     chartState  modelState;
