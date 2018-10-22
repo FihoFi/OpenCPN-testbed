@@ -6,7 +6,8 @@
 
 bool dmDataset::driversRegistered = false;
 
-dmDataset::dmDataset() :
+dmDataset::dmDataset(dmLogWriter* logWriter) :
+    dm_API(logWriter),
     _visScheme(HILLSHADE),
     _srcDataset(NULL),
     _dstDataset(NULL),

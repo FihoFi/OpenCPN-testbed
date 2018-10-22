@@ -12,7 +12,7 @@ class dmDataset : public dm_API
 {
 
 public:
-    dmDataset();
+    dmDataset(dmLogWriter* logWriter);
     ~dmDataset();
 
 

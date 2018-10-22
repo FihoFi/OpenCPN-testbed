@@ -9,11 +9,22 @@
 dmDepthModelDrawer::dmDepthModelDrawer() :
     modelState(UNSET), 
     chartAreaKnown(false), datasetAvailable(false), depthModelFileName(),
-    raster(NULL), w(0), h(0)
+    dataset(this), raster(NULL), w(0), h(0)
 {    }
 
 dmDepthModelDrawer::~dmDepthModelDrawer()
 {    delete raster;    }
+
+void dmDepthModelDrawer::logFatalError(const char* message)
+{    wxLogFatalError(wxString(message));    }
+void dmDepthModelDrawer::logError(const char* message)
+{    wxLogError(wxString(message));         }
+void dmDepthModelDrawer::logWarning(const char* message)
+{    wxLogWarning(wxString(message));       }
+void dmDepthModelDrawer::logMessage(const char* message)
+{    wxLogMessage(wxString(message));       }
+void dmDepthModelDrawer::logInfo(const char* message)
+{    wxLogInfo(wxString(message));          }
 
 bool dmDepthModelDrawer::setChartDrawTypeRelief(const wxFileName &fileNamePath)
 {
