@@ -132,7 +132,8 @@ public:
     virtual bool setVisualizationScheme(DM_visualization visScheme) = 0;
 
     /**
-    * Returns the whole raster data in the Dataset, unscaled.
+    * Returns the whole raster data in the Dataset in World Mercator
+    * coordinate system, unscaled.
     * The coordinate span of the returned dataset, is returned in the
     * xxXxOut parameters, in World Mercator coordinates.
     * The ownership of the returned pointer is handed to the caller.
@@ -149,8 +150,8 @@ public:
         coord &topLeftOut, coord &botRightOut) = 0;
 
     /**
-    * Returns a (possibly) cropped square part of the Dataset in World Marcator
-    * coordinate system, spanned by the two given xxXxIn WM coordinate pairs.
+    * Returns a (possibly) cropped square part of the Dataset in World Mercator
+    * coordinate system, unscaled, spanned by the two given xxXxIn WM coordinate pairs.
     * The coordinate span of the returned dataset part is returned
     * in the xxXxOut parameters, in World Mercator coordinates.
     * The ownership of the returned pointer is handed to the caller.
