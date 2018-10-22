@@ -23,9 +23,9 @@ public:
     bool setVisualizationScheme(DM_visualization visScheme) override;
     dmRasterImgData * getRasterData(
         coord &topLeftOut, coord &botRightOut) override;
-    dmRasterImgData * getRasterData(int imgWidth, int imgHeight,
-        const coord topLeftIn, const coord botRightIn,
-        coord &topLeftOut, coord &botRightOut) override;
+    dmRasterImgData * getRasterData(const coord topLeftIn, const coord botRightIn,
+        coord &topLeftOut, coord &botRightOut,
+        int &imgWidth, int &imgHeight) override;
     bool openDataSet(const char* filename) override;
     void setSrcWkt(const char * wkt);
     void setDstWkt(const char * wkt);
@@ -45,6 +45,10 @@ private:
     DM_visualization _visScheme;
     
     bool dstSrsToLatLon(double e, double n, coord &latLons);
+    bool getCropExtents(coord topLeftIn, coord botRightIn,
+        coord &topLeftOut, coord &botRightOut,
+        int &pixOffsetX, int &pixOffsetY,
+        int &imgWidth, int &imgHeight);
     GDALDataset * reprojectDataset(GDALDataset *dsToReproject);
     GDALDataset * visualizeDataset(GDALDataset *dsToVisualize);
 

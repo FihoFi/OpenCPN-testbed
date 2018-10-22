@@ -1,6 +1,7 @@
 #include "dmDataset.h"
 
 #include <stdio.h>
+#include <algorithm>
 #include "gdal_utils.h"
 #include "proj.h"
 
@@ -145,11 +146,49 @@ dmRasterImgData * dmDataset::getRasterData(
     return imgData;
 }
 
-dmRasterImgData * dmDataset::getRasterData(int imgWidth, int imgHeight,
-    const coord topLeftIn, const coord botRightIn,
-    coord &topLeftOut, coord &botRightOut)
+dmRasterImgData * dmDataset::getRasterData(const coord topLeftIn, const coord botRightIn,
+    coord &topLeftOut, coord &botRightOut,
+    int &imgWidth, int &imgHeight)
 {
-    // TODO: implement
+    int n;
+    int imgOffsetX, imgOffsetY;
+    dmRasterImgData *imgData;
+
+    getCropExtents(topLeftIn, botRightIn,
+        topLeftOut, botRightOut,
+        imgOffsetX, imgOffsetY,
+        imgWidth, imgHeight);
+
+    if (!_dstDataset)
+        return NULL;
+
+    GDALDataset::Bands bands = _dstDataset->GetBands();
+    if (bands.size() < 1)
+        return NULL;
+    
+    imgData = new dmRasterImgData();
+    imgData->rgb = new unsigned char[3 * imgWidth*imgHeight];
+    imgData->alpha = new unsigned char[imgWidth*imgHeight];
+
+    n = 0;
+
+    // read RGB channel
+    while (n < 3)
+    {
+        if (_visScheme == HILLSHADE)
+            bands[0]->RasterIO(GF_Read, 0, 0, imgWidth, imgHeight, imgData->rgb + n, imgWidth, imgHeight, GDT_Byte, 3, 3 * imgWidth);
+        else if ((_visScheme == COLOR_RELIEF || _visScheme == NONE) && n < bands.size())
+            bands[n]->RasterIO(GF_Read, 0, 0, imgWidth, imgHeight, imgData->rgb + n, imgWidth, imgHeight, GDT_Byte, 3, 3 * imgWidth);
+
+        n++;
+    }
+
+    // read alpha channel (assumed to be the in the last raster band)
+    if (bands.size() > 1)
+        bands[bands.size() - 1]->RasterIO(GF_Read, 0, 0, imgWidth, imgHeight, imgData->alpha, imgWidth, imgHeight, GDT_Byte, 0, 0);
+
+    return imgData;
+
     return NULL;
 }
 
@@ -224,6 +263,70 @@ bool dmDataset::dstSrsToLatLon(double n, double e, coord &latLons)
     proj_destroy(projection);
 
     return true;
+}
+
+bool dmDataset::getCropExtents(coord topLeftIn, coord botRightIn,
+    coord &topLeftOut, coord &botRightOut,
+    int &imgOffsetX, int &imgOffsetY,
+    int &imgWidth, int &imgHeight)
+{
+    int xSize = _dstDataset->GetRasterXSize();
+    int ySize = _dstDataset->GetRasterYSize();
+    double geoTransform[6];
+
+    if (_dstDataset->GetGeoTransform(geoTransform) != CE_None)
+    {
+        return false;
+    }
+
+    coord topLeftRaster(geoTransform[3],
+                        geoTransform[0]);
+    coord botRightRaster(geoTransform[3] + xSize * geoTransform[4] + ySize * geoTransform[5],
+                         geoTransform[0] + xSize * geoTransform[1] + ySize * geoTransform[2]);
+
+    if (topLeftIn.east < topLeftRaster.east)
+    {
+        imgOffsetX = 0;
+        topLeftOut.east = topLeftRaster.east;
+    }
+    else
+    {
+        imgOffsetX = std::floor((topLeftIn.east - topLeftRaster.east) / geoTransform[1]);
+        topLeftOut.east = geoTransform[0] + imgOffsetX * geoTransform[1];
+    }
+
+    if (topLeftIn.north < topLeftRaster.east)
+    {
+        imgOffsetY = 0;
+        topLeftOut.north = topLeftRaster.north;
+    }
+    else
+    {
+        imgOffsetY = std::floor((topLeftIn.north - topLeftRaster.north) / geoTransform[5]);
+        topLeftOut.north = geoTransform[3] + imgOffsetY * geoTransform[5];
+    }
+
+    if (botRightIn.east > botRightRaster.east)
+    {
+        imgWidth = xSize - imgOffsetX;
+        botRightOut.east = botRightRaster.east;
+    }
+    else
+    {
+        imgWidth = std::ceil((botRightIn.east - topLeftRaster.east) / geoTransform[1]) - imgOffsetX;
+        botRightOut.east = topLeftOut.east + imgWidth*geoTransform[1];
+    }
+
+    if (botRightIn.north > botRightRaster.north)
+    {
+        imgHeight = ySize - imgOffsetY;
+        botRightOut.north = botRightRaster.north;
+    }
+    else
+    {
+        imgHeight = std::ceil((botRightIn.north - topLeftRaster.north) / geoTransform[5]) - imgOffsetY;
+        botRightOut.north = topLeftOut.north + imgHeight * geoTransform[5];
+    }
 }
 
 GDALDataset * dmDataset::reprojectDataset(GDALDataset *dsToReproject)
