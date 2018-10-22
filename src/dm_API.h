@@ -50,7 +50,11 @@ public:
     /** Destructor making this class abstract. */
     virtual ~dmLogWriter() = 0;
 
+    virtual void logFatalError(const char* message) = 0;
+    virtual void logError(const char* message) = 0;
+    virtual void logWarning(const char* message) = 0;
     virtual void logMessage(const char* message) = 0;
+    virtual void logInfo(const char* message) = 0;
 };
 
 class /*DECL_EXP*/ dm_API
