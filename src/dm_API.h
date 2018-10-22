@@ -46,7 +46,7 @@ enum DM_visualization
 class /*DECL_EXP*/ dmLogWriter
 {
 public:
-    //inline dmOCPNLogWriter();
+    //inline dmLogWriter();
     /** Destructor making this class abstract. */
     virtual ~dmLogWriter() = 0;
 
@@ -60,10 +60,7 @@ public:
 class /*DECL_EXP*/ dm_API
 {
 public:
-    dm_API(dmLogWriter* logWriter)
-        : logWriter(logWriter)
-    {
-    }
+    dm_API(dmLogWriter* logWriter);
 
     /** Destructor making this class abstract. */
     virtual ~dm_API() = 0;
