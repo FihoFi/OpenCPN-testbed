@@ -235,7 +235,7 @@ GDALDataset * dmDataset::reprojectDataset(GDALDataset *dsToReproject)
 
         char *warpOpts[] = { (char*)"-t_srs", (char *)_dstWkt.c_str(),
                              (char*)"-r",     (char*)"max",
-                             (char*)"-nosrcalpha",
+                             (_visScheme == HILLSHADE) ? ((char*)"-dstalpha") : ((char*)"-nosrcalpha"),
                              NULL };
 
         // coordinate system reprojection
