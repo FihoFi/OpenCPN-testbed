@@ -42,10 +42,25 @@ enum DM_visualization
     COLOR_RELIEF
 };
 
+
+class /*DECL_EXP*/ dmLogWriter
+{
+public:
+    //inline dmOCPNLogWriter();
+    /** Destructor making this class abstract. */
+    virtual ~dmLogWriter() = 0;
+
+    virtual void logMessage(const char* message) = 0;
+};
+
 class /*DECL_EXP*/ dm_API
 {
 public:
-    //inline dm_API();
+    dm_API(dmLogWriter* logWriter)
+        : logWriter(logWriter)
+    {
+    }
+
     /** Destructor making this class abstract. */
     virtual ~dm_API() = 0;
 
@@ -135,5 +150,8 @@ public:
     virtual dmRasterImgData * getRasterData(int imgWidth, int imgHeight,
         const coord topLeftIn, const coord botRightIn,
         coord &topLeftOut, coord &botRightOut) = 0;
+
+    dmLogWriter* logWriter;
 };
+
 #endif _DM_API_
