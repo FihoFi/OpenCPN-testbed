@@ -23,7 +23,8 @@ public:
     bool setVisualizationScheme(DM_visualization visScheme) override;
     dmRasterImgData * getRasterData(
         coord &topLeftOut, coord &botRightOut) override;
-    dmRasterImgData * getRasterData(const coord topLeftIn, const coord botRightIn,
+    dmRasterImgData * getRasterData(
+        const coord topLeftIn, const coord botRightIn,
         coord &topLeftOut, coord &botRightOut,
         int &imgWidth, int &imgHeight) override;
     bool openDataSet(const char* filename) override;
