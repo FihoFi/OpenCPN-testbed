@@ -285,6 +285,20 @@ bool dmDataset::getCropExtents(coord topLeftIn, coord botRightIn,
     coord botRightRaster(geoTransform[3] + xSize * geoTransform[4] + ySize * geoTransform[5],
                          geoTransform[0] + xSize * geoTransform[1] + ySize * geoTransform[2]);
 
+    // requested rectangle is outside of raster extents
+    if (topLeftIn.east > botRightRaster.east ||
+        topLeftIn.north > botRightRaster.north ||
+        botRightIn.east < topLeftRaster.east ||
+        botRightIn.north < topLeftRaster.north)
+    {
+        imgOffsetX = 0;
+        imgOffsetY = 0;
+        imgWidth = 0;
+        imgHeight = 0;
+
+        return true;
+    }
+
     if (topLeftIn.east < topLeftRaster.east)
     {
         imgOffsetX = 0;
@@ -328,6 +342,8 @@ bool dmDataset::getCropExtents(coord topLeftIn, coord botRightIn,
         imgHeight = std::ceil((botRightIn.north - topLeftRaster.north) / geoTransform[5]) - imgOffsetY;
         botRightOut.north = topLeftOut.north + imgHeight * geoTransform[5];
     }
+
+    return true;
 }
 
 GDALDataset * dmDataset::reprojectDataset(GDALDataset *dsToReproject)
