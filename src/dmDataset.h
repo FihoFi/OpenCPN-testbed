@@ -31,11 +31,25 @@ public:
     void setSrcWkt(const char * wkt);
     void setDstWkt(const char * wkt);
 
+    // setters for hillshade parameters
+    bool setHillshadeZFactor(double zFactor) override;
+    bool setHillshadeScale(double scale) override;
+    bool setHillshadeAzimuth(double azimuth) override;
+    bool setHillshadeAltitude(double altitude) override;
+    bool setHillshadeCombined(bool combined) override;
+    bool setHillshadeMultidirectional(bool multidirectional) override;
 
 private:
     static bool driversRegistered;
     static void registerGDALDrivers();
 
+    // hillshade parameters
+    int _hillshadeParamZFactor;
+    int _hillshadeParamScale;
+    int _hillshadeParamAzimuth;
+    int _hillshadeParamAltitude;
+    bool _hillshadeParamCombined;
+    bool _hillshadeParamMultidirectional;
 
     std::string _srcWkt;
     std::string _dstWkt;
