@@ -46,6 +46,10 @@ private:
     DM_visualization _visScheme;
     
     bool dstSrsToLatLon(double e, double n, coord &latLons);
+    bool getCropExtents(coord topLeftIn, coord botRightIn,
+        coord &topLeftOut, coord &botRightOut,
+        int &pixOffsetX, int &pixOffsetY,
+        int &imgWidth, int &imgHeight);
     GDALDataset * reprojectDataset(GDALDataset *dsToReproject);
     GDALDataset * visualizeDataset(GDALDataset *dsToVisualize);
 
