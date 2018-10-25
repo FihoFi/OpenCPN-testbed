@@ -18,6 +18,47 @@ struct coord {
     /*float*/double north; // mathematical y, latitude
 };
 
+
+class extent
+{
+    extent()
+        : topLeft(), botRight()
+    {}
+
+    /**
+    * @return   true, if area spanned by <i>other> is fully inside
+    *           of this object's spanning area, or if the areas are equal.
+    *           false else.
+    */
+    bool const isWithin(const extent &other);
+
+    /**
+    * @return   true, if the area spanned by <i>other> overlaps with the
+    *           area spanned by this object's, or if the areas are equal.
+    *           false if there is no common point.
+    */
+    bool const overlaps(const extent &other);
+
+    /**
+    * @todo How should we react, if the extents do not overlap?
+    *
+    * @return   The extent spanning the area common to <i>this</i> object,
+    *           and the <i>other</i>.
+    */
+    extent const getSectionWith(const extent &other);
+
+    /**
+    * @todo How should we react, if the extents do not overlap?
+    *
+    * @return   The coordinates of <i>this</i> object, and the <i>other</i>,
+    *           that span the maximal area.
+    */
+    extent const getMaxes(const extent &other);
+
+    coord topLeft;
+    coord botRight;
+};
+
 struct dmRasterImgData
 {
     dmRasterImgData() :
