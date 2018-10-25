@@ -225,6 +225,9 @@ bool dmDataset::openDataSet(const char * filename)
         if (!_dstDataset)
             return false;
 
+        if (_visScheme == HILLSHADE)
+            applyHillshadeAlphaMask(_dstDataset);
+
         _dstWkt = GDALGetProjectionRef(_dstDataset);
 
         return true;
@@ -288,6 +291,43 @@ bool dmDataset::setHillshadeMultidirectional(bool multidirectional)
 
 
 /* private */
+
+bool dmDataset::applyHillshadeAlphaMask(GDALDataset * ds)
+{
+    unsigned char * alpha;
+    int xSize, ySize;
+    GDALRasterBand *band;
+
+    if (!ds)
+        return false;
+
+    GDALDataset::Bands bands = ds->GetBands();
+
+    if (bands.size() < 2)
+        return false;
+
+    band = bands[1];
+
+    xSize = band->GetXSize();
+    ySize = band->GetYSize();
+
+    alpha = new unsigned char[xSize*ySize];
+
+    band->RasterIO(GF_Read, 0, 0, xSize, ySize, alpha, xSize, ySize, GDT_Byte, 0, 0);
+
+    for (int i = 0; i < xSize*ySize; i++)
+    {
+        if (alpha[i] != 0) // max alpha channel value
+            alpha[i] = 128;
+    }
+
+    band->RasterIO(GF_Write, 0, 0, xSize, ySize, alpha, xSize, ySize, GDT_Byte, 0, 0);
+
+
+
+
+    delete[] alpha;
+}
 
 void dmDataset::registerGDALDrivers()
 {
