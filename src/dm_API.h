@@ -177,6 +177,81 @@ public:
         coord &topLeftOut, coord &botRightOut,
         int &imgWidth, int &imgHeight) = 0;
 
+
+    /* Setters for hillshade parameters */
+
+    /**
+    * Sets zFactor parameter for hillshade visualization type.
+    *
+    * @param[in] zFactor vertical exaggeration used to pre-multiply the
+    *                    elevations [GDAL documentation]
+    *
+    * @return false if an error occurred, true otherwise
+    */
+    virtual bool setHillshadeZFactor(double zFactor) = 0;
+
+    /**
+    * Sets scale parameter for hillshade visualization type.
+    *
+    * @param[in] scale ratio of vertical units to horizontal. If the horizontal
+    *                  unit of the source DEM is degrees (e.g Lat/Long WGS84
+    *                  projection), you can use scale=111120 if the vertical units
+    *                  are meters (or scale=370400 if they are in feet) [GDAL documentation]
+    *
+    * @return false if an error occurred, true otherwise
+    */
+    virtual bool setHillshadeScale(double scale) = 0;
+
+
+    /**
+    * Sets azimuth parameter for hillshade visualization type. Default value on
+    * initialization is 315.
+    *
+    * @param[in] azimuth azimuth of the light, in degrees. 0 if it comes from
+    *                    the top of the raster, 90 from the east, ... The
+    *                    default value, 315, should rarely be changed as it is
+    *                    the value generally used to generate shaded maps. [GDAL documentation]
+    *
+    * @return false if an error occurred, true otherwise
+    */
+    virtual bool setHillshadeAzimuth(double azimuth) = 0;
+
+
+    /**
+    * Sets altitude parameter for hillshade visualization type. Default value on
+    * initialization is 45.
+    *
+    * @param[in] altitude altitude of the light, in degrees. 90 if the light
+    *                     comes from above the DEM, 0 if it is raking light. [GDAL documentation]
+    *
+    * @return false if an error occurred, true otherwise
+    */
+    virtual bool setHillshadeAltitude(double altitude) = 0;
+
+
+    /**
+    * Sets combined flag for hillshade visualization type.
+    *
+    * @param[in] combined combined shading, a combination of slope and oblique
+                          shading [GDAL documentation]
+    *
+    * @return false if an error occurred, true otherwise
+    */
+    virtual bool setHillshadeCombined(bool combined) = 0;
+
+
+    /**
+    * Sets multidirectional flag for hillshade visualization type. This flag is
+    * false by default.
+    *
+    * @param[in] multidirectional multidirectional shading, a combination of
+    *                             hillshading illuminated from 225 deg, 270 deg,
+    *                             315 deg, and 360 deg azimuth. [GDAL documentation]
+    *
+    * @return false if an error occurred, true otherwise
+    */
+    virtual bool setHillshadeMultidirectional(bool multidirectional) = 0;
+
     dmLogWriter* logWriter;
 };
 

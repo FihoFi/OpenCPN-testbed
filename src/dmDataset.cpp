@@ -12,7 +12,10 @@ dmDataset::dmDataset(dmLogWriter* logWriter) :
     _visScheme(HILLSHADE),
     _srcDataset(NULL),
     _dstDataset(NULL),
-    _dstWkt("PROJCS[\"WGS 84 / World Mercator\",GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\",SPHEROID[\"WGS 84\",6378137,298.257223563,AUTHORITY[\"EPSG\",\"7030\"]],AUTHORITY[\"EPSG\",\"6326\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.01745329251994328,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"4326\"]],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],PROJECTION[\"Mercator_1SP\"],PARAMETER[\"central_meridian\",0],PARAMETER[\"scale_factor\",1],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],AUTHORITY[\"EPSG\",\"3395\"],AXIS[\"Easting\",EAST],AXIS[\"Northing\",NORTH]]")
+    _dstWkt("PROJCS[\"WGS 84 / World Mercator\",GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\",SPHEROID[\"WGS 84\",6378137,298.257223563,AUTHORITY[\"EPSG\",\"7030\"]],AUTHORITY[\"EPSG\",\"6326\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.01745329251994328,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"4326\"]],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],PROJECTION[\"Mercator_1SP\"],PARAMETER[\"central_meridian\",0],PARAMETER[\"scale_factor\",1],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],AUTHORITY[\"EPSG\",\"3395\"],AXIS[\"Easting\",EAST],AXIS[\"Northing\",NORTH]]"),
+    _hillshadeParamAzimuth(315.),
+    _hillshadeParamAltitude(45.),
+    _hillshadeParamMultidirectional(false)
 {
     dmDataset::registerGDALDrivers();
 }
@@ -230,6 +233,62 @@ bool dmDataset::openDataSet(const char * filename)
     return false;
 }
 
+void dmDataset::setSrcWkt(const char * wkt)
+{
+    _srcWkt = wkt;
+}
+
+void dmDataset::setDstWkt(const char * wkt)
+{
+    _dstWkt = wkt;
+}
+
+
+bool dmDataset::setHillshadeZFactor(double zFactor)
+{
+    _hillshadeParamZFactor = zFactor;
+
+    return true;
+}
+
+bool dmDataset::setHillshadeScale(double scale)
+{
+    _hillshadeParamScale = scale;
+
+    return true;
+}
+
+bool dmDataset::setHillshadeAzimuth(double azimuth)
+{
+    _hillshadeParamAzimuth = azimuth;
+
+    return true;
+}
+
+bool dmDataset::setHillshadeAltitude(double altitude)
+{
+    _hillshadeParamAltitude = altitude;
+
+    return true;
+}
+
+bool dmDataset::setHillshadeCombined(bool combined)
+{
+    _hillshadeParamCombined = combined;
+
+    return true;
+}
+
+bool dmDataset::setHillshadeMultidirectional(bool multidirectional)
+{
+    _hillshadeParamMultidirectional = multidirectional;
+
+    return true;
+}
+
+
+/* private */
+
 void dmDataset::registerGDALDrivers()
 {
     if (!driversRegistered)
@@ -330,6 +389,33 @@ bool dmDataset::getCropExtents(coord topLeftIn, coord botRightIn,
     }
 }
 
+
+std::vector<std::string> dmDataset::getGdaldemOptionsVec()
+{
+    std::vector<std::string> optionsVec;
+
+    switch (_visScheme)
+    {
+    case HILLSHADE:
+        optionsVec.push_back("-az");
+        optionsVec.push_back(std::to_string(_hillshadeParamAzimuth));
+        optionsVec.push_back("-alt");
+        optionsVec.push_back(std::to_string(_hillshadeParamAltitude));
+        if (_hillshadeParamMultidirectional)
+            optionsVec.push_back("-multidirectional");
+        break;
+    case COLOR_RELIEF:
+        optionsVec.push_back("-alpha");
+        optionsVec.push_back("-nearest_color_entry");
+        break;
+    case NONE:
+    default:
+        break;
+    }
+
+    return optionsVec;
+}
+
 GDALDataset * dmDataset::reprojectDataset(GDALDataset *dsToReproject)
 {
     if (dsToReproject)
@@ -363,13 +449,16 @@ GDALDataset * dmDataset::visualizeDataset(GDALDataset *dsToVisualize)
     int err = 0;
     GDALDataset *resultDs;
 
-    GDALDEMProcessingOptions * gdaldemOptions = GDALDEMProcessingOptionsNew(nullptr, nullptr);
+    // put gdaldem processing flags into a c string array
+    std::vector<std::string> optionsVec = getGdaldemOptionsVec();
+    char** optionsArr = new char*[optionsVec.size() + 1];
+    for (int i = 0; i<optionsVec.size(); i++)
+    {
+        optionsArr[i] = (char*)optionsVec[i].c_str();
+    }
+    optionsArr[optionsVec.size()] = nullptr;
 
-    char *colorReliefOptions[] = {
-        const_cast<char *>("-alpha"),
-        const_cast<char *>("-nearest_color_entry"),
-        nullptr };  // The last entry must be a nullptr
-    GDALDEMProcessingOptions * gdaldemOptionsColorRelief = GDALDEMProcessingOptionsNew(colorReliefOptions, nullptr);
+    GDALDEMProcessingOptions * gdaldemOptions = GDALDEMProcessingOptionsNew(optionsArr, nullptr);
 
     switch (_visScheme)
     {
@@ -378,7 +467,7 @@ GDALDataset * dmDataset::visualizeDataset(GDALDataset *dsToVisualize)
         break;
 
     case COLOR_RELIEF:
-        resultDs = (GDALDataset*)GDALDEMProcessing(".\\temp_ds.tif", dsToVisualize, "color-relief", _colorConfFilename.c_str(), gdaldemOptionsColorRelief, &err);
+        resultDs = (GDALDataset*)GDALDEMProcessing(".\\temp_ds.tif", dsToVisualize, "color-relief", _colorConfFilename.c_str(), gdaldemOptions, &err);
         break;
 
     case NONE:
@@ -389,20 +478,9 @@ GDALDataset * dmDataset::visualizeDataset(GDALDataset *dsToVisualize)
 
     // clean up
     GDALDEMProcessingOptionsFree(gdaldemOptions);
-    GDALDEMProcessingOptionsFree(gdaldemOptionsColorRelief);
 
     if (err)
         return NULL;
 
     return resultDs;
-}
-
-void dmDataset::setSrcWkt(const char * wkt)
-{
-    _srcWkt = wkt;
-}
-
-void dmDataset::setDstWkt(const char * wkt)
-{
-    _dstWkt  = wkt;
 }
