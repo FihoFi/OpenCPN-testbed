@@ -44,10 +44,10 @@ private:
     static void registerGDALDrivers();
 
     // hillshade parameters
-    int _hillshadeParamZFactor;
-    int _hillshadeParamScale;
-    int _hillshadeParamAzimuth;
-    int _hillshadeParamAltitude;
+    double _hillshadeParamZFactor;
+    double _hillshadeParamScale;
+    double _hillshadeParamAzimuth;
+    double _hillshadeParamAltitude;
     bool _hillshadeParamCombined;
     bool _hillshadeParamMultidirectional;
 

@@ -204,7 +204,8 @@ public:
 
 
     /**
-    * Sets azimuth parameter for hillshade visualization type.
+    * Sets azimuth parameter for hillshade visualization type. Default value on
+    * initialization is 315.
     *
     * @param[in] azimuth azimuth of the light, in degrees. 0 if it comes from
     *                    the top of the raster, 90 from the east, ... The
@@ -217,7 +218,8 @@ public:
 
 
     /**
-    * Sets altitude parameter for hillshade visualization type.
+    * Sets altitude parameter for hillshade visualization type. Default value on
+    * initialization is 45.
     *
     * @param[in] altitude altitude of the light, in degrees. 90 if the light
     *                     comes from above the DEM, 0 if it is raking light. [GDAL documentation]
@@ -239,7 +241,8 @@ public:
 
 
     /**
-    * Sets multidirectional flag for hillshade visualization type.
+    * Sets multidirectional flag for hillshade visualization type. This flag is
+    * false by default.
     *
     * @param[in] multidirectional multidirectional shading, a combination of
     *                             hillshading illuminated from 225 deg, 270 deg,
