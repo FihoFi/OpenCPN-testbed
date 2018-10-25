@@ -1,30 +1,30 @@
 #include "dm_API.h"
 
-extent::extent()
+dmExtent::dmExtent()
     : topLeft(), botRight()
 {}
 
-extent::extent(coord topLeft, coord botRight)
+dmExtent::dmExtent(coord topLeft, coord botRight)
     : topLeft(topLeft), botRight(botRight)
 {}
 
-extent::extent(double top, double left, double bot, double right)
+dmExtent::dmExtent(double top, double left, double bot, double right)
     : topLeft(top, left), botRight(bot, right)
 {}
 
-extent& extent::operator=(const extent& other)
+dmExtent& dmExtent::operator=(const dmExtent& other)
 {
     this->topLeft  = other.topLeft;
     this->botRight = other.botRight;
 }
 
-bool extent::operator==(extent& other)
+bool dmExtent::operator==(dmExtent& other)
 {
     this->topLeft  = other.topLeft;
     this->botRight = other.botRight;
 }
 
-bool const extent::isWithin(const extent& other)
+bool const dmExtent::isWithin(const dmExtent& other)
 {
     bool isInside = true;
 
@@ -37,11 +37,11 @@ bool const extent::isWithin(const extent& other)
 }
 
 // If the section is empty (or zero-area), the extents are not overlapping.
-bool const extent::overlaps(const extent& other)
+bool const dmExtent::overlaps(const dmExtent& other)
 {
-    extent section = this->getSectionWith(other);
+    dmExtent section = this->getSectionWith(other);
 
-    if (section==extent())
+    if (section== dmExtent())
         return false;
     else
         return true;
@@ -49,9 +49,9 @@ bool const extent::overlaps(const extent& other)
 
 /* Currently returns default (0) value coordinates, if the section is empty,
  * or zero area. */
-extent const extent::getSectionWith(const extent &other)
+dmExtent const dmExtent::getSectionWith(const dmExtent &other)
 {
-    extent section;
+    dmExtent section;
 
     section.topLeft.north =
         (this.topLeft.north < other.topLeft.north) ?
@@ -67,16 +67,16 @@ extent const extent::getSectionWith(const extent &other)
         this.botRight.east : other.botRight.east;
 
     if (section.topLeft.north < section.botRight.north)
-        return extent();
+        return dmExtent();
     if (section.topLeft.east > section.botRight.east)
-        return extent();
+        return dmExtent();
 
     return section;
 }
 
-extent const extent::getMaxes(const extent &other)
+dmExtent const dmExtent::getMaxes(const dmExtent &other)
 {
-    extent maxes;
+    dmExtent maxes;
 
     maxes.topLeft.north =
         (this.topLeft.north > other.topLeft.north) ?

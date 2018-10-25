@@ -19,28 +19,28 @@ struct coord {
 };
 
 
-class extent
+class dmExtent
 {
-    extent();
-    extent(coord topLeft, coord botRight);
-    extent(double top, double left, double bot, double right);
+    dmExtent();
+    dmExtent(coord topLeft, coord botRight);
+    dmExtent(double top, double left, double bot, double right);
 
-    extent& operator= (const extent& other);
-    bool    operator==(const extent& other);
+    dmExtent& operator= (const dmExtent& other);
+    bool    operator==(const dmExtent& other);
 
     /**
     * @return   true, if area spanned by <i>other> is fully inside
     *           of this object's spanning area, or if the areas are equal.
     *           false else.
     */
-    bool const isWithin(const extent& other);
+    bool const isWithin(const dmExtent& other);
 
     /**
     * @return   true, if the area spanned by <i>other> overlaps with the
     *           area spanned by this object's, or if the areas are equal.
     *           false if there is no common point.
     */
-    bool const overlaps(const extent& other);
+    bool const overlaps(const dmExtent& other);
 
     /**
     * @todo How should we react, if the extents do not overlap?
@@ -48,7 +48,7 @@ class extent
     * @return   The extent spanning the area common to <i>this</i> object,
     *           and the <i>other</i>.
     */
-    extent const getSectionWith(const extent& other);
+    dmExtent const getSectionWith(const dmExtent& other);
 
     /**
     * @todo How should we react, if the extents do not overlap?
@@ -56,7 +56,7 @@ class extent
     * @return   The coordinates of <i>this</i> object, and the <i>other</i>,
     *           that span the maximal area.
     */
-    extent const getMaxes(const extent& other);
+    dmExtent const getMaxes(const dmExtent& other);
 
     coord topLeft;
     coord botRight;
