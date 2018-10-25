@@ -64,6 +64,7 @@ private:
         coord &topLeftOut, coord &botRightOut,
         int &pixOffsetX, int &pixOffsetY,
         int &imgWidth, int &imgHeight);
+    std::vector<std::string> getGdaldemOptionsVec();
     GDALDataset * reprojectDataset(GDALDataset *dsToReproject);
     GDALDataset * visualizeDataset(GDALDataset *dsToVisualize);
 

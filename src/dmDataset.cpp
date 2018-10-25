@@ -389,6 +389,33 @@ bool dmDataset::getCropExtents(coord topLeftIn, coord botRightIn,
     }
 }
 
+
+std::vector<std::string> dmDataset::getGdaldemOptionsVec()
+{
+    std::vector<std::string> optionsVec;
+
+    switch (_visScheme)
+    {
+    case HILLSHADE:
+        optionsVec.push_back("-az");
+        optionsVec.push_back(std::to_string(_hillshadeParamAzimuth));
+        optionsVec.push_back("-alt");
+        optionsVec.push_back(std::to_string(_hillshadeParamAltitude));
+        if (_hillshadeParamMultidirectional)
+            optionsVec.push_back("-multidirectional");
+        break;
+    case COLOR_RELIEF:
+        optionsVec.push_back("-alpha");
+        optionsVec.push_back("-nearest_color_entry");
+        break;
+    case NONE:
+    default:
+        break;
+    }
+
+    return optionsVec;
+}
+
 GDALDataset * dmDataset::reprojectDataset(GDALDataset *dsToReproject)
 {
     if (dsToReproject)
@@ -422,13 +449,16 @@ GDALDataset * dmDataset::visualizeDataset(GDALDataset *dsToVisualize)
     int err = 0;
     GDALDataset *resultDs;
 
-    GDALDEMProcessingOptions * gdaldemOptions = GDALDEMProcessingOptionsNew(nullptr, nullptr);
+    // put gdaldem processing flags into a c string array
+    std::vector<std::string> optionsVec = getGdaldemOptionsVec();
+    char** optionsArr = new char*[optionsVec.size() + 1];
+    for (int i = 0; i<optionsVec.size(); i++)
+    {
+        optionsArr[i] = (char*)optionsVec[i].c_str();
+    }
+    optionsArr[optionsVec.size()] = nullptr;
 
-    char *colorReliefOptions[] = {
-        const_cast<char *>("-alpha"),
-        const_cast<char *>("-nearest_color_entry"),
-        nullptr };  // The last entry must be a nullptr
-    GDALDEMProcessingOptions * gdaldemOptionsColorRelief = GDALDEMProcessingOptionsNew(colorReliefOptions, nullptr);
+    GDALDEMProcessingOptions * gdaldemOptions = GDALDEMProcessingOptionsNew(optionsArr, nullptr);
 
     switch (_visScheme)
     {
@@ -437,7 +467,7 @@ GDALDataset * dmDataset::visualizeDataset(GDALDataset *dsToVisualize)
         break;
 
     case COLOR_RELIEF:
-        resultDs = (GDALDataset*)GDALDEMProcessing(".\\temp_ds.tif", dsToVisualize, "color-relief", _colorConfFilename.c_str(), gdaldemOptionsColorRelief, &err);
+        resultDs = (GDALDataset*)GDALDEMProcessing(".\\temp_ds.tif", dsToVisualize, "color-relief", _colorConfFilename.c_str(), gdaldemOptions, &err);
         break;
 
     case NONE:
@@ -448,7 +478,6 @@ GDALDataset * dmDataset::visualizeDataset(GDALDataset *dsToVisualize)
 
     // clean up
     GDALDEMProcessingOptionsFree(gdaldemOptions);
-    GDALDEMProcessingOptionsFree(gdaldemOptionsColorRelief);
 
     if (err)
         return NULL;
