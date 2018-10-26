@@ -74,7 +74,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmChartOptions_ColorRelief_Sizer->Add( dmColourOptions_SelectShema_Label, 0, wxALL, 5 );
 	
 	dmColourOptions_choisebook = new wxChoicebook( dmChartOptions_ColorRelief_panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxCHB_DEFAULT );
-	dmColourOptionsUserFile_Panel = new wxPanel( dmColourOptions_choisebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	dmColourOptionsUserFile_Panel = new wxPanel( dmColourOptions_choisebook, DM_viz_USER_FILE, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* dmColourOptionsUserFile_bSizer;
 	dmColourOptionsUserFile_bSizer = new wxBoxSizer( wxVERTICAL );
 	
@@ -100,7 +100,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColourOptionsUserFile_Panel->Layout();
 	dmColourOptionsUserFile_bSizer->Fit( dmColourOptionsUserFile_Panel );
 	dmColourOptions_choisebook->AddPage( dmColourOptionsUserFile_Panel, wxT("Give your colour definition file"), false );
-	dmColourOptionsCustom_Panel = new wxPanel( dmColourOptions_choisebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	dmColourOptionsCustom_Panel = new wxPanel( dmColourOptions_choisebook, DM_viz_FIVE_DEPTH_RANGES, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* dmColorOptionsCustom_Sizer;
 	dmColorOptionsCustom_Sizer = new wxBoxSizer( wxVERTICAL );
 	
@@ -196,7 +196,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColourOptionsCustom_Panel->Layout();
 	dmColorOptionsCustom_Sizer->Fit( dmColourOptionsCustom_Panel );
 	dmColourOptions_choisebook->AddPage( dmColourOptionsCustom_Panel, wxT("(default) Five depth ranges"), true );
-	dmColourOptionsSliding_Panel = new wxPanel( dmColourOptions_choisebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	dmColourOptionsSliding_Panel = new wxPanel( dmColourOptions_choisebook, DM_viz_SLIDING_COLOUR, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	dmColourOptionsSliding_Panel->Enable( false );
 	
 	wxFlexGridSizer* dmColorOptionsSliding_GridSizer;
@@ -249,7 +249,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColourOptionsSliding_Panel->Layout();
 	dmColorOptionsSliding_GridSizer->Fit( dmColourOptionsSliding_Panel );
 	dmColourOptions_choisebook->AddPage( dmColourOptionsSliding_Panel, wxT("Sliding colour"), false );
-	dmColourOptionsTwoColours_Panel = new wxPanel( dmColourOptions_choisebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	dmColourOptionsTwoColours_Panel = new wxPanel( dmColourOptions_choisebook, DM_viz_TWO_DEPTH_RANGES, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* dmColorOptionsConstant_GridSizer;
 	dmColorOptionsConstant_GridSizer = new wxFlexGridSizer( 0, 2, 0, 0 );
 	dmColorOptionsConstant_GridSizer->SetFlexibleDirection( wxBOTH );
