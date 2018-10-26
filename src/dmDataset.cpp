@@ -214,6 +214,9 @@ bool dmDataset::openDataSet(const char * filename)
         if (!_dstDataset)
             return false;
 
+        if (_visScheme == HILLSHADE)
+            applyHillshadeAlphaMask(_dstDataset);
+
         if (!allocateImgDataMemory())
             return false;
 
@@ -311,6 +314,40 @@ bool dmDataset::allocateImgDataMemory()
     _imgData->alpha = new unsigned char[xSize*ySize];
 
     return true;
+}
+
+bool dmDataset::applyHillshadeAlphaMask(GDALDataset * ds)
+{
+    unsigned char * alpha;
+    int xSize, ySize;
+    GDALRasterBand *band;
+
+    if (!ds)
+        return false;
+
+    GDALDataset::Bands bands = ds->GetBands();
+
+    if (bands.size() < 2)
+        return false;
+
+    band = bands[1];
+
+    xSize = band->GetXSize();
+    ySize = band->GetYSize();
+
+    alpha = new unsigned char[xSize*ySize];
+
+    band->RasterIO(GF_Read, 0, 0, xSize, ySize, alpha, xSize, ySize, GDT_Byte, 0, 0);
+
+    for (int i = 0; i < xSize*ySize; i++)
+    {
+        if (alpha[i] != 0) // skip transparent (no-value) pixels
+            alpha[i] = 128; // set reasonable transparency value (TODO: get from config/class variable?)
+    }
+
+    band->RasterIO(GF_Write, 0, 0, xSize, ySize, alpha, xSize, ySize, GDT_Byte, 0, 0);
+
+    delete[] alpha;
 }
 
 bool dmDataset::dstSrsToLatLon(double n, double e, coord &latLons)
