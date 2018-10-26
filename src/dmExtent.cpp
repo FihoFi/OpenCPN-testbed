@@ -1,4 +1,5 @@
 #include "dmExtent.h"
+#include <algorithm>
 
 dmExtent::dmExtent()
     : topLeft(), botRight()
@@ -58,18 +59,10 @@ dmExtent const dmExtent::getSectionWith(const dmExtent &other)
 {
     dmExtent section;
 
-    section.topLeft.north =
-        (this->topLeft.north < other.topLeft.north) ?
-         this->topLeft.north : other.topLeft.north;
-    section.topLeft.east =
-        (this->topLeft.east > other.topLeft.east) ?
-         this->topLeft.east : other.topLeft.east;
-    section.botRight.north =
-        (this->botRight.north > other.botRight.north) ?
-         this->botRight.north : other.botRight.north;
-    section.botRight.east =
-        (this->botRight.east < other.botRight.east) ?
-         this->botRight.east : other.botRight.east;
+    section.topLeft.north = std::min(this->topLeft.north, other.topLeft.north);
+    section.topLeft.east = std::max(this->topLeft.east, other.topLeft.east);
+    section.botRight.north = std::max(this->botRight.north, other.botRight.north);
+    section.botRight.east = std::min(this->botRight.east, other.botRight.east);
 
     if (section.topLeft.north < section.botRight.north)
         return dmExtent();
@@ -83,18 +76,10 @@ dmExtent const dmExtent::getMaxes(const dmExtent &other)
 {
     dmExtent maxes;
 
-    maxes.topLeft.north =
-        (this->topLeft.north > other.topLeft.north) ?
-         this->topLeft.north : other.topLeft.north;
-    maxes.topLeft.east =
-        (this->topLeft.east < other.topLeft.east) ?
-         this->topLeft.east : other.topLeft.east;
-    maxes.botRight.north =
-        (this->botRight.north < other.botRight.north) ?
-         this->botRight.north : other.botRight.north;
-    maxes.botRight.east =
-        (this->botRight.east > other.botRight.east) ?
-         this->botRight.east : other.botRight.east;
+    maxes.topLeft.north = std::max(this->topLeft.north, other.topLeft.north);
+    maxes.topLeft.east = std::min(this->topLeft.east, other.topLeft.east);
+    maxes.botRight.north = std::min(this->botRight.north, other.botRight.north);
+    maxes.botRight.east = std::max(this->botRight.east, other.botRight.east);
 
     return maxes;
 }
