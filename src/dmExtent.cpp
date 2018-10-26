@@ -1,4 +1,4 @@
-#include "dm_API.h"
+#include "dmExtent.h"
 
 dmExtent::dmExtent()
     : topLeft(), botRight()
@@ -16,22 +16,27 @@ dmExtent& dmExtent::operator=(const dmExtent& other)
 {
     this->topLeft  = other.topLeft;
     this->botRight = other.botRight;
+
+    return *this;
 }
 
-bool dmExtent::operator==(dmExtent& other)
+bool dmExtent::operator==(const dmExtent& other)
 {
-    this->topLeft  = other.topLeft;
-    this->botRight = other.botRight;
+    if (this->topLeft == other.topLeft &&
+        this->botRight == other.botRight)
+        return true;
+    else
+        return false;
 }
 
 bool const dmExtent::isWithin(const dmExtent& other)
 {
     bool isInside = true;
 
-    isInside &= (this.topLeft.north <= other.topLeft.north);
-    isInside &= (this.topLeft.east  >= other.topLeft.east );
-    isInside &= (this.botRight.north >= other.botRight.north);
-    isInside &= (this.botRight.east  <= other.botRight.east );
+    isInside &= (this->topLeft.north <= other.topLeft.north);
+    isInside &= (this->topLeft.east  >= other.topLeft.east );
+    isInside &= (this->botRight.north >= other.botRight.north);
+    isInside &= (this->botRight.east  <= other.botRight.east );
 
     return isInside;
 }
@@ -54,17 +59,17 @@ dmExtent const dmExtent::getSectionWith(const dmExtent &other)
     dmExtent section;
 
     section.topLeft.north =
-        (this.topLeft.north < other.topLeft.north) ?
-        this.topLeft.north : other.topLeft.north;
+        (this->topLeft.north < other.topLeft.north) ?
+         this->topLeft.north : other.topLeft.north;
     section.topLeft.east =
-        (this.topLeft.east > other.topLeft.east) ?
-        this.topLeft.east : other.topLeft.east;
+        (this->topLeft.east > other.topLeft.east) ?
+         this->topLeft.east : other.topLeft.east;
     section.botRight.north =
-        (this.botRight.north > other.botRight.north) ?
-        this.botRight.north : other.botRight.north;
+        (this->botRight.north > other.botRight.north) ?
+         this->botRight.north : other.botRight.north;
     section.botRight.east =
-        (this.botRight.east < other.botRight.east) ?
-        this.botRight.east : other.botRight.east;
+        (this->botRight.east < other.botRight.east) ?
+         this->botRight.east : other.botRight.east;
 
     if (section.topLeft.north < section.botRight.north)
         return dmExtent();
@@ -79,17 +84,17 @@ dmExtent const dmExtent::getMaxes(const dmExtent &other)
     dmExtent maxes;
 
     maxes.topLeft.north =
-        (this.topLeft.north > other.topLeft.north) ?
-        this.topLeft.north : other.topLeft.north;
+        (this->topLeft.north > other.topLeft.north) ?
+         this->topLeft.north : other.topLeft.north;
     maxes.topLeft.east =
-        (this.topLeft.east < other.topLeft.east) ?
-        this.topLeft.east : other.topLeft.east;
+        (this->topLeft.east < other.topLeft.east) ?
+         this->topLeft.east : other.topLeft.east;
     maxes.botRight.north =
-        (this.botRight.north < other.botRight.north) ?
-        this.botRight.north : other.botRight.north;
+        (this->botRight.north < other.botRight.north) ?
+         this->botRight.north : other.botRight.north;
     maxes.botRight.east =
-        (this.botRight.east > other.botRight.east) ?
-        this.botRight.east : other.botRight.east;
+        (this->botRight.east > other.botRight.east) ?
+         this->botRight.east : other.botRight.east;
 
     return maxes;
 }
