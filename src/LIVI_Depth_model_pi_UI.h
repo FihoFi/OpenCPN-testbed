@@ -136,7 +136,10 @@ class LIVIDMUI_DLG : public wxDialog
 		wxButton* dm_AboutWxWidgets_Button;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void OnImageFileChange( wxFileDirPickerEvent& event ) { event.Skip(); }
 		virtual void OnGenerateImage( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnChartTypeChange( wxChoicebookEvent& event ) { event.Skip(); }
+		virtual void OnColourSchemaChange( wxChoicebookEvent& event ) { event.Skip(); }
 		virtual void OnUserColourFileChange( wxFileDirPickerEvent& event ) { event.Skip(); }
 		virtual void OnAboutWxWidgets( wxCommandEvent& event ) { event.Skip(); }
 		
