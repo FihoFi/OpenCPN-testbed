@@ -63,7 +63,7 @@ void Dlg::OnImageFileChange(wxFileDirPickerEvent& WXUNUSED(event))
 void Dlg::OnGenerateImage(wxCommandEvent& WXUNUSED(event))
 {
     wxFileName fname = this->dmPictureImport_filePicker->GetFileName();
-    plugin->GenerateImage(fname);
+    plugin->OnGenerateImage(fname);
 }
 
 void Dlg::OnChartTypeChange(wxChoicebookEvent& WXUNUSED(event))
