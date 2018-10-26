@@ -27,8 +27,16 @@ struct dmRasterImgData
 
     ~dmRasterImgData()
     {
-        delete rgb;
-        delete alpha;
+        if (rgb)
+        {
+            delete rgb;
+            rgb = nullptr;
+        }
+        if (alpha)
+        {
+            delete alpha;
+            alpha = nullptr;
+        }
     }
 
     unsigned char *rgb;

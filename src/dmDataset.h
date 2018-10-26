@@ -56,9 +56,11 @@ private:
     std::string _colorConfFilename;
     GDALDataset * _srcDataset;
     GDALDataset * _dstDataset;
+    dmRasterImgData * _imgData;
 
     DM_visualization _visScheme;
     
+    bool allocateImgDataMemory();
     bool dstSrsToLatLon(double e, double n, coord &latLons);
     bool getCropExtents(coord topLeftIn, coord botRightIn,
         coord &topLeftOut, coord &botRightOut,
