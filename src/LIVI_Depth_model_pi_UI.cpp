@@ -197,57 +197,58 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColorOptionsCustom_Sizer->Fit( dmColourOptionsCustom_Panel );
 	dmColourOptions_choisebook->AddPage( dmColourOptionsCustom_Panel, wxT("(default) Five depth ranges"), true );
 	dmColourOptionsSliding_Panel = new wxPanel( dmColourOptions_choisebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	dmColourOptionsSliding_Panel->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_GRAYTEXT ) );
 	dmColourOptionsSliding_Panel->Enable( false );
 	
-	wxFlexGridSizer* dmColorOptionsSliding_GridSizer;
-	dmColorOptionsSliding_GridSizer = new wxFlexGridSizer( 0, 2, 0, 0 );
-	dmColorOptionsSliding_GridSizer->SetFlexibleDirection( wxBOTH );
-	dmColorOptionsSliding_GridSizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	wxFlexGridSizer* dmColourOptionsSliding_GridSizer;
+	dmColourOptionsSliding_GridSizer = new wxFlexGridSizer( 0, 2, 0, 0 );
+	dmColourOptionsSliding_GridSizer->SetFlexibleDirection( wxBOTH );
+	dmColourOptionsSliding_GridSizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
 	dmEmpty_staticText3 = new wxStaticText( dmColourOptionsSliding_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	dmEmpty_staticText3->Wrap( -1 );
-	dmColorOptionsSliding_GridSizer->Add( dmEmpty_staticText3, 0, wxALL, 5 );
+	dmColourOptionsSliding_GridSizer->Add( dmEmpty_staticText3, 0, wxALL, 5 );
 	
 	dmEmpty_staticText31 = new wxStaticText( dmColourOptionsSliding_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	dmEmpty_staticText31->Wrap( -1 );
-	dmColorOptionsSliding_GridSizer->Add( dmEmpty_staticText31, 0, wxALL, 5 );
+	dmColourOptionsSliding_GridSizer->Add( dmEmpty_staticText31, 0, wxALL, 5 );
 	
-	dmColorOptionsSliding_DeepestLevelOfInterest_Label = new wxStaticText( dmColourOptionsSliding_Panel, wxID_ANY, wxT("Deepest level of interest"), wxDefaultPosition, wxDefaultSize, 0 );
-	dmColorOptionsSliding_DeepestLevelOfInterest_Label->Wrap( -1 );
-	dmColorOptionsSliding_GridSizer->Add( dmColorOptionsSliding_DeepestLevelOfInterest_Label, 0, wxALL, 5 );
+	dmColourOptionsSliding_ShallowestLevelOfInterest_Label = new wxStaticText( dmColourOptionsSliding_Panel, wxID_ANY, wxT("Shallowest level of interest"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmColourOptionsSliding_ShallowestLevelOfInterest_Label->Wrap( -1 );
+	dmColourOptionsSliding_GridSizer->Add( dmColourOptionsSliding_ShallowestLevelOfInterest_Label, 0, wxALL, 5 );
 	
-	dmColorOptionsSliding_DeepestLevelOfInterest_TextBox = new wxTextCtrl( dmColourOptionsSliding_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	dmColorOptionsSliding_DeepestLevelOfInterest_TextBox->SetToolTip( wxT("Set deepest level of interest in [m]") );
+	dmColourOptionsSliding_ColourAtShallowestLevelOfInterest_spinCtrlDouble = new wxSpinCtrlDouble( dmColourOptionsSliding_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -10000, 10, -20, 1 );
+	dmColourOptionsSliding_ColourAtShallowestLevelOfInterest_spinCtrlDouble->SetMaxSize( wxSize( 100,-1 ) );
 	
-	dmColorOptionsSliding_GridSizer->Add( dmColorOptionsSliding_DeepestLevelOfInterest_TextBox, 0, wxALL, 5 );
+	dmColourOptionsSliding_GridSizer->Add( dmColourOptionsSliding_ColourAtShallowestLevelOfInterest_spinCtrlDouble, 0, wxALL, 5 );
 	
-	dmColorOptionsSliding_ColorAtDeepestLevelOfInterest_Label = new wxStaticText( dmColourOptionsSliding_Panel, wxID_ANY, wxT("Color at deepest level of interest"), wxDefaultPosition, wxDefaultSize, 0 );
-	dmColorOptionsSliding_ColorAtDeepestLevelOfInterest_Label->Wrap( -1 );
-	dmColorOptionsSliding_GridSizer->Add( dmColorOptionsSliding_ColorAtDeepestLevelOfInterest_Label, 0, wxALL, 5 );
+	dmColourOptionsSliding_ColourAtShallowestLevelOfInterest_Label = new wxStaticText( dmColourOptionsSliding_Panel, wxID_ANY, wxT("Colour at shallowest level of interest"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmColourOptionsSliding_ColourAtShallowestLevelOfInterest_Label->Wrap( -1 );
+	dmColourOptionsSliding_GridSizer->Add( dmColourOptionsSliding_ColourAtShallowestLevelOfInterest_Label, 0, wxALL, 5 );
 	
-	dmColorOptionsSliding_ColorAtDeepestLevelOfInterest_ColorPicker = new wxColourPickerCtrl( dmColourOptionsSliding_Panel, wxID_ANY, wxColour( 0, 0, 255 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	dmColorOptionsSliding_GridSizer->Add( dmColorOptionsSliding_ColorAtDeepestLevelOfInterest_ColorPicker, 0, wxALL, 5 );
+	dmColourOptionsSliding_ShallowestLevelOfInterest_ColourPicker = new wxColourPickerCtrl( dmColourOptionsSliding_Panel, wxID_ANY, wxColour( 255, 0, 0 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	dmColourOptionsSliding_GridSizer->Add( dmColourOptionsSliding_ShallowestLevelOfInterest_ColourPicker, 0, wxALL, 5 );
 	
-	dmColorOptionsSliding_ShallowestLevelOfInterest_Label = new wxStaticText( dmColourOptionsSliding_Panel, wxID_ANY, wxT("Shallowest level of interest"), wxDefaultPosition, wxDefaultSize, 0 );
-	dmColorOptionsSliding_ShallowestLevelOfInterest_Label->Wrap( -1 );
-	dmColorOptionsSliding_GridSizer->Add( dmColorOptionsSliding_ShallowestLevelOfInterest_Label, 0, wxALL, 5 );
+	dmColourOptionsSliding_DeepestLevelOfInterest_Label = new wxStaticText( dmColourOptionsSliding_Panel, wxID_ANY, wxT("Deepest level of interest"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmColourOptionsSliding_DeepestLevelOfInterest_Label->Wrap( -1 );
+	dmColourOptionsSliding_GridSizer->Add( dmColourOptionsSliding_DeepestLevelOfInterest_Label, 0, wxALL, 5 );
 	
-	dmColorOptionsSliding_ColorAtShallowestLevelOfInterest_TextBox = new wxTextCtrl( dmColourOptionsSliding_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	dmColorOptionsSliding_ColorAtShallowestLevelOfInterest_TextBox->SetToolTip( wxT("Set shallowest level of interest in [m]") );
+	dmColourOptionsSliding_DeepestLevelOfInterest_spinCtrlDouble = new wxSpinCtrlDouble( dmColourOptionsSliding_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -10000, 10, -30, 1 );
+	dmColourOptionsSliding_DeepestLevelOfInterest_spinCtrlDouble->SetMaxSize( wxSize( 100,-1 ) );
 	
-	dmColorOptionsSliding_GridSizer->Add( dmColorOptionsSliding_ColorAtShallowestLevelOfInterest_TextBox, 0, wxALL, 5 );
+	dmColourOptionsSliding_GridSizer->Add( dmColourOptionsSliding_DeepestLevelOfInterest_spinCtrlDouble, 0, wxALL, 5 );
 	
-	dmColorOptionsSliding_ColorAtShallowestLevelOfInterest_Label = new wxStaticText( dmColourOptionsSliding_Panel, wxID_ANY, wxT("Color at shallowest level of interest"), wxDefaultPosition, wxDefaultSize, 0 );
-	dmColorOptionsSliding_ColorAtShallowestLevelOfInterest_Label->Wrap( -1 );
-	dmColorOptionsSliding_GridSizer->Add( dmColorOptionsSliding_ColorAtShallowestLevelOfInterest_Label, 0, wxALL, 5 );
+	dmColourOptionsSliding_ColourAtDeepestLevelOfInterest_Label = new wxStaticText( dmColourOptionsSliding_Panel, wxID_ANY, wxT("Colour at deepest level of interest"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmColourOptionsSliding_ColourAtDeepestLevelOfInterest_Label->Wrap( -1 );
+	dmColourOptionsSliding_GridSizer->Add( dmColourOptionsSliding_ColourAtDeepestLevelOfInterest_Label, 0, wxALL, 5 );
 	
-	dmColorOptionsSliding_ShallowestLevelOfInterest_ColourPicker = new wxColourPickerCtrl( dmColourOptionsSliding_Panel, wxID_ANY, wxColour( 255, 0, 0 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	dmColorOptionsSliding_GridSizer->Add( dmColorOptionsSliding_ShallowestLevelOfInterest_ColourPicker, 0, wxALL, 5 );
+	dmColourOptionsSliding_ColourAtDeepestLevelOfInterest_ColourPicker = new wxColourPickerCtrl( dmColourOptionsSliding_Panel, wxID_ANY, wxColour( 0, 0, 255 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	dmColourOptionsSliding_GridSizer->Add( dmColourOptionsSliding_ColourAtDeepestLevelOfInterest_ColourPicker, 0, wxALL, 5 );
 	
 	
-	dmColourOptionsSliding_Panel->SetSizer( dmColorOptionsSliding_GridSizer );
+	dmColourOptionsSliding_Panel->SetSizer( dmColourOptionsSliding_GridSizer );
 	dmColourOptionsSliding_Panel->Layout();
-	dmColorOptionsSliding_GridSizer->Fit( dmColourOptionsSliding_Panel );
+	dmColourOptionsSliding_GridSizer->Fit( dmColourOptionsSliding_Panel );
 	dmColourOptions_choisebook->AddPage( dmColourOptionsSliding_Panel, wxT("Sliding colour"), false );
 	dmColourOptionsTwoColours_Panel = new wxPanel( dmColourOptions_choisebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* dmColorOptionsConstant_GridSizer;
