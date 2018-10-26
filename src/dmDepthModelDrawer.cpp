@@ -160,8 +160,6 @@ bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
 
         idealTopLeftLL = imageTopLeftLL;
         idealBotRightLL = imageBotRightLL;
-//        lastTopLeftLL = idealTopLeftLL;
- //       lastBotRightLL = idealBotRightLL;
         modelState = PROJECTION_OK;
     }
 
@@ -192,7 +190,7 @@ bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
             //    return false;
             //}
             original = wxImage(newW, newH, raster->rgb, raster->alpha, true);
-            *originalFromGDAL = original.Scale(w, h, /*wxImageResizeQuality*/ wxIMAGE_QUALITY_NORMAL);
+            *originalFromGDAL = original.Scale(w, h, wxIMAGE_QUALITY_NORMAL);
 
         }
         else
@@ -288,8 +286,8 @@ bool dmDepthModelDrawer::needANewCropping()
 {
     if (!chartAreaKnown)
     {
-        wxLogMessage(_T("dmDepthModelDrawer::needANewCropping does not need the canvas extent: "));
-        throw (std::string("dmDepthModelDrawer::needANewCropping does not need the canvas extent"));
+        wxLogMessage(_T("dmDepthModelDrawer::needANewCropping does not know the canvas extent: "));
+        throw (std::string("dmDepthModelDrawer::needANewCropping does not know the canvas extent"));
     }
 
     if (raster==NULL)
