@@ -341,8 +341,8 @@ bool dmDataset::applyHillshadeAlphaMask(GDALDataset * ds)
 
     for (int i = 0; i < xSize*ySize; i++)
     {
-        if (alpha[i] != 0) // max alpha channel value
-            alpha[i] = 128;
+        if (alpha[i] != 0) // skip transparent (no-value) pixels
+            alpha[i] = 128; // set reasonable transparency value (TODO: get from config/class variable?)
     }
 
     band->RasterIO(GF_Write, 0, 0, xSize, ySize, alpha, xSize, ySize, GDT_Byte, 0, 0);
