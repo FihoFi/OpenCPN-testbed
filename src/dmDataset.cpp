@@ -323,9 +323,6 @@ bool dmDataset::applyHillshadeAlphaMask(GDALDataset * ds)
 
     band->RasterIO(GF_Write, 0, 0, xSize, ySize, alpha, xSize, ySize, GDT_Byte, 0, 0);
 
-
-
-
     delete[] alpha;
 }
 
