@@ -56,9 +56,12 @@ private:
     std::string _colorConfFilename;
     GDALDataset * _srcDataset;
     GDALDataset * _dstDataset;
+    dmRasterImgData * _imgData;
 
     DM_visualization _visScheme;
 
+    bool allocateImgDataMemory();
+    bool applyHillshadeAlphaMask(GDALDataset * ds);
     bool dstSrsToLatLon(double e, double n, coord &latLons);
     bool getCropExtents(coord topLeftIn, coord botRightIn,
         coord &topLeftOut, coord &botRightOut,
@@ -68,7 +71,6 @@ private:
     GDALDataset * reprojectDataset(GDALDataset *dsToReproject);
     GDALDataset * visualizeDataset(GDALDataset *dsToVisualize);
 
-    bool applyHillshadeAlphaMask(GDALDataset * ds);
 };
 
 #endif _DM_DATASET_

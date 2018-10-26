@@ -191,13 +191,13 @@ bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
             //        depthModelFileName.GetName().ToStdString());
             //    return false;
             //}
-            original = wxImage(newW, newH, raster->rgb, raster->alpha, false);
+            original = wxImage(newW, newH, raster->rgb, raster->alpha, true);
             *originalFromGDAL = original.Scale(w, h, /*wxImageResizeQuality*/ wxIMAGE_QUALITY_NORMAL);
 
         }
         else
         {
-            originalFromGDAL = new wxImage(w, h, raster->rgb, raster->alpha, false);
+            originalFromGDAL = new wxImage(w, h, raster->rgb, raster->alpha, true);
         }
         raster = NULL; // was freed by wxImage constructor
 
