@@ -49,6 +49,7 @@ SET(SRC_LIVI_Depth_model
         src/NavFunc.cpp
         src/dmDepthModelDrawer.h
         src/dmDepthModelDrawer.cpp
+        src/dmExtent.h
         src/dmExtent.cpp
         src/ocpn_plugin.h
         src/tinyxml.cpp
