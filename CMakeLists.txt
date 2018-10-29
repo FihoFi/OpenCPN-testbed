@@ -51,6 +51,8 @@ SET(SRC_LIVI_Depth_model
         src/dmDepthModelDrawer.cpp
         src/dmDrawingState.h
         src/dmDrawingState.cpp
+        src/dmExtent.h
+        src/dmExtent.cpp
         src/ocpn_plugin.h
         src/tinyxml.cpp
         src/tinyxmlerror.cpp
