@@ -255,8 +255,8 @@ bool dmDepthModelDrawer::calculateCroppedWMProjectedImage()
     bool success = true;
 
     raster = dataset.getRasterData(
-        w, h, idealTopLeftLL, idealBotRightLL,
-        croppedImageTopLeftWM, croppedImageBotRightWM);
+        idealTopLeftLL, idealBotRightLL,
+        croppedImageTopLeftWM, croppedImageBotRightWM, w, h);
 
     if (success)
     {    modelState = CHART_AREA_OK;    }
