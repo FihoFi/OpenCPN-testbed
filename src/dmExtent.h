@@ -15,14 +15,14 @@ class dmExtent
     bool      operator==(const dmExtent& other);
 
     /**
-    * @return   true, if area spanned by <i>other> is fully inside
+    * @return   true, if area spanned by <i>other</i> is fully inside
     *           of this object's spanning area, or if the areas are equal.
     *           false else.
     */
     bool const isWithin(const dmExtent& other);
 
     /**
-    * @return   true, if the area spanned by <i>other> overlaps with the
+    * @return   true, if the area spanned by <i>other</i> overlaps with the
     *           area spanned by this object's, or if the areas are equal.
     *           false if there is no common point.
     */
