@@ -31,25 +31,43 @@ public:
     void setSrcWkt(const char * wkt);
     void setDstWkt(const char * wkt);
 
+    // setters for hillshade parameters
+    bool setHillshadeZFactor(double zFactor) override;
+    bool setHillshadeScale(double scale) override;
+    bool setHillshadeAzimuth(double azimuth) override;
+    bool setHillshadeAltitude(double altitude) override;
+    bool setHillshadeCombined(bool combined) override;
+    bool setHillshadeMultidirectional(bool multidirectional) override;
 
 private:
     static bool driversRegistered;
     static void registerGDALDrivers();
 
+    // hillshade parameters
+    double _hillshadeParamZFactor;
+    double _hillshadeParamScale;
+    double _hillshadeParamAzimuth;
+    double _hillshadeParamAltitude;
+    bool _hillshadeParamCombined;
+    bool _hillshadeParamMultidirectional;
 
     std::string _srcWkt;
     std::string _dstWkt;
     std::string _colorConfFilename;
     GDALDataset * _srcDataset;
     GDALDataset * _dstDataset;
+    dmRasterImgData * _imgData;
 
     DM_visualization _visScheme;
-    
+
+    bool allocateImgDataMemory();
+    bool applyHillshadeAlphaMask(GDALDataset * ds);
     bool dstSrsToLatLon(double e, double n, coord &latLons);
     bool getCropExtents(coord topLeftIn, coord botRightIn,
         coord &topLeftOut, coord &botRightOut,
         int &pixOffsetX, int &pixOffsetY,
         int &imgWidth, int &imgHeight);
+    std::vector<std::string> getGdaldemOptionsVec();
     GDALDataset * reprojectDataset(GDALDataset *dsToReproject);
     GDALDataset * visualizeDataset(GDALDataset *dsToVisualize);
 

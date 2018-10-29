@@ -54,10 +54,26 @@ void Dlg::OnFileImportFileChange(wxFileDirPickerEvent& WXUNUSED(event))
     //plugin->OnFileImportFileChange(fname);
 }
 
+void Dlg::OnImageFileChange(wxFileDirPickerEvent& WXUNUSED(event))
+{
+    wxFileName fname = this->dmPictureImport_filePicker->GetFileName();
+    plugin->OnImageFileChange(fname);
+}
+
 void Dlg::OnGenerateImage(wxCommandEvent& WXUNUSED(event))
 {
     wxFileName fname = this->dmPictureImport_filePicker->GetFileName();
-    plugin->GenerateImage(fname);
+    plugin->OnGenerateImage(fname);
+}
+
+void Dlg::OnChartTypeChange(wxChoicebookEvent& WXUNUSED(event))
+{
+    plugin->OnChartTypeChange(GetSelectedChartOption());
+}
+
+void Dlg::OnColourSchemaChange(wxChoicebookEvent& WXUNUSED(event))
+{
+    plugin->OnColourSchemaChange(GetSelectedColourOption());
 }
 
 void Dlg::OnUserColourFileChange(wxFileDirPickerEvent& WXUNUSED(event))
@@ -97,20 +113,30 @@ void Dlg::OnAboutWxWidgets(wxCommandEvent& WXUNUSED(event))
     wxInfoMessageBox(this);
 }
 
-wxString Dlg::GetSelectedChartOption()
+int Dlg::GetSelectedChartOption()
 {
     wxChoice* choice = this->dmChartOptions_choicebook->GetChoiceCtrl();
     int acceptedSelection = choice->GetSelection();
     wxString chString = choice->GetString(acceptedSelection);
-    return chString;
+
+    if      (chString.Contains("illshade")) { return DM_viz_HILLSHADE;     }   // Hillshade
+    else if (chString.Contains("lain"))     { return DM_viz_NONE;          }   // Plain image
+    else if (chString.Contains("epth"))     { return DM_viz_COLOR_RELIEF;  }   // Depth model / color relief
+    else if (chString.Contains("elief"))    { return DM_viz_COLOR_RELIEF;  }   // Depth model / color relief
+    else                                    { return ERROR;                }   // No such option
 }
 
-wxString Dlg::GetSelectedColourOption()
+int Dlg::GetSelectedColourOption()
 {
     wxChoice* choice = this->dmColourOptions_choisebook->GetChoiceCtrl();
     int acceptedSelection = choice->GetSelection();
     wxString chString = choice->GetString(acceptedSelection);
-    return chString;
+
+    if      (chString.Contains("file"))   { return DM_viz_USER_FILE;         }   // Use user given file
+    else if (chString.Contains("ive"))    { return DM_viz_FIVE_DEPTH_RANGES; }   // Five depth ranges
+    else if (chString.Contains("liding")) { return DM_viz_SLIDING_COLOUR;    }   // Sliding colouring
+    else if (chString.Contains("Two"))    { return DM_viz_TWO_DEPTH_RANGES;  }   // Two depth ranges
+    else                                  { return ERROR;                    }   // No such option
 }
 
 void Dlg::SetCustomColor(int num, wxColour &col) {

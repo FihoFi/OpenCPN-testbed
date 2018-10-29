@@ -160,8 +160,6 @@ bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
 
         idealTopLeftLL = imageTopLeftLL;
         idealBotRightLL = imageBotRightLL;
-//        lastTopLeftLL = idealTopLeftLL;
- //       lastBotRightLL = idealBotRightLL;
         modelState = PROJECTION_OK;
     }
 
@@ -191,13 +189,13 @@ bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
             //        depthModelFileName.GetName().ToStdString());
             //    return false;
             //}
-            original = wxImage(newW, newH, raster->rgb, raster->alpha, false);
-            *originalFromGDAL = original.Scale(w, h, /*wxImageResizeQuality*/ wxIMAGE_QUALITY_NORMAL);
+            original = wxImage(newW, newH, raster->rgb, raster->alpha, true);
+            *originalFromGDAL = original.Scale(w, h, wxIMAGE_QUALITY_NORMAL);
 
         }
         else
         {
-            originalFromGDAL = new wxImage(w, h, raster->rgb, raster->alpha, false);
+            originalFromGDAL = new wxImage(w, h, raster->rgb, raster->alpha, true);
         }
         raster = NULL; // was freed by wxImage constructor
 
@@ -257,8 +255,8 @@ bool dmDepthModelDrawer::calculateCroppedWMProjectedImage()
     bool success = true;
 
     raster = dataset.getRasterData(
-        w, h, idealTopLeftLL, idealBotRightLL,
-        croppedImageTopLeftWM, croppedImageBotRightWM);
+        idealTopLeftLL, idealBotRightLL,
+        croppedImageTopLeftWM, croppedImageBotRightWM, w, h);
 
     if (success)
     {    modelState = CHART_AREA_OK;    }
@@ -288,8 +286,8 @@ bool dmDepthModelDrawer::needANewCropping()
 {
     if (!chartAreaKnown)
     {
-        wxLogMessage(_T("dmDepthModelDrawer::needANewCropping does not need the canvas extent: "));
-        throw (std::string("dmDepthModelDrawer::needANewCropping does not need the canvas extent"));
+        wxLogMessage(_T("dmDepthModelDrawer::needANewCropping does not know the canvas extent: "));
+        throw (std::string("dmDepthModelDrawer::needANewCropping does not know the canvas extent"));
     }
 
     if (raster==NULL)

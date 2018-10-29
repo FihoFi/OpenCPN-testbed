@@ -10,9 +10,13 @@ bool dmDataset::driversRegistered = false;
 dmDataset::dmDataset(dmLogWriter* logWriter) :
     dm_API(logWriter),
     _visScheme(HILLSHADE),
-    _srcDataset(NULL),
-    _dstDataset(NULL),
-    _dstWkt("PROJCS[\"WGS 84 / World Mercator\",GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\",SPHEROID[\"WGS 84\",6378137,298.257223563,AUTHORITY[\"EPSG\",\"7030\"]],AUTHORITY[\"EPSG\",\"6326\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.01745329251994328,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"4326\"]],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],PROJECTION[\"Mercator_1SP\"],PARAMETER[\"central_meridian\",0],PARAMETER[\"scale_factor\",1],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],AUTHORITY[\"EPSG\",\"3395\"],AXIS[\"Easting\",EAST],AXIS[\"Northing\",NORTH]]")
+    _srcDataset(nullptr),
+    _dstDataset(nullptr),
+    _dstWkt("PROJCS[\"WGS 84 / World Mercator\",GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\",SPHEROID[\"WGS 84\",6378137,298.257223563,AUTHORITY[\"EPSG\",\"7030\"]],AUTHORITY[\"EPSG\",\"6326\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.01745329251994328,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"4326\"]],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],PROJECTION[\"Mercator_1SP\"],PARAMETER[\"central_meridian\",0],PARAMETER[\"scale_factor\",1],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],AUTHORITY[\"EPSG\",\"3395\"],AXIS[\"Easting\",EAST],AXIS[\"Northing\",NORTH]]"),
+    _imgData(nullptr),
+    _hillshadeParamAzimuth(315.),
+    _hillshadeParamAltitude(45.),
+    _hillshadeParamMultidirectional(false)
 {
     dmDataset::registerGDALDrivers();
 }
@@ -107,7 +111,6 @@ dmRasterImgData * dmDataset::getRasterData(
 {
     int xSize, ySize, n;
     float *bandData;
-    dmRasterImgData *imgData;
 
     if (!_dstDataset)
         return NULL;
@@ -122,28 +125,24 @@ dmRasterImgData * dmDataset::getRasterData(
     xSize = bands[0]->GetXSize();
     ySize = bands[0]->GetYSize();
 
-    imgData = new dmRasterImgData();
-    imgData->rgb = new unsigned char[3 * xSize*ySize];
-    imgData->alpha = new unsigned char[xSize*ySize];
-
     n = 0;
 
     // read RGB channel
     while (n < 3)
     {
         if (_visScheme == HILLSHADE)
-            bands[0]->RasterIO(GF_Read, 0, 0, xSize, ySize, imgData->rgb + n, xSize, ySize, GDT_Byte, 3, 3 * xSize);
+            bands[0]->RasterIO(GF_Read, 0, 0, xSize, ySize, _imgData->rgb + n, xSize, ySize, GDT_Byte, 3, 3 * xSize);
         else if ((_visScheme == COLOR_RELIEF || _visScheme == NONE) && n < bands.size())
-            bands[n]->RasterIO(GF_Read, 0, 0, xSize, ySize, imgData->rgb + n, xSize, ySize, GDT_Byte, 3, 3*xSize);
+            bands[n]->RasterIO(GF_Read, 0, 0, xSize, ySize, _imgData->rgb + n, xSize, ySize, GDT_Byte, 3, 3*xSize);
 
         n++;
     }
 
     // read alpha channel (assumed to be the in the last raster band)
     if (bands.size() > 1)
-        bands[bands.size()-1]->RasterIO(GF_Read, 0, 0, xSize, ySize, imgData->alpha, xSize, ySize, GDT_Byte, 0, 0);
+        bands[bands.size()-1]->RasterIO(GF_Read, 0, 0, xSize, ySize, _imgData->alpha, xSize, ySize, GDT_Byte, 0, 0);
 
-    return imgData;
+    return _imgData;
 }
 
 dmRasterImgData * dmDataset::getRasterData(
@@ -153,7 +152,6 @@ dmRasterImgData * dmDataset::getRasterData(
 {
     int n;
     int imgOffsetX, imgOffsetY;
-    dmRasterImgData *imgData;
 
     getCropExtents(topLeftIn, botRightIn,
         topLeftOut, botRightOut,
@@ -166,10 +164,6 @@ dmRasterImgData * dmDataset::getRasterData(
     GDALDataset::Bands bands = _dstDataset->GetBands();
     if (bands.size() < 1)
         return NULL;
-    
-    imgData = new dmRasterImgData();
-    imgData->rgb = new unsigned char[3 * imgWidth*imgHeight];
-    imgData->alpha = new unsigned char[imgWidth*imgHeight];
 
     n = 0;
 
@@ -177,20 +171,18 @@ dmRasterImgData * dmDataset::getRasterData(
     while (n < 3)
     {
         if (_visScheme == HILLSHADE)
-            bands[0]->RasterIO(GF_Read, 0, 0, imgWidth, imgHeight, imgData->rgb + n, imgWidth, imgHeight, GDT_Byte, 3, 3 * imgWidth);
+            bands[0]->RasterIO(GF_Read, 0, 0, imgWidth, imgHeight, _imgData->rgb + n, imgWidth, imgHeight, GDT_Byte, 3, 3 * imgWidth);
         else if ((_visScheme == COLOR_RELIEF || _visScheme == NONE) && n < bands.size())
-            bands[n]->RasterIO(GF_Read, 0, 0, imgWidth, imgHeight, imgData->rgb + n, imgWidth, imgHeight, GDT_Byte, 3, 3 * imgWidth);
+            bands[n]->RasterIO(GF_Read, 0, 0, imgWidth, imgHeight, _imgData->rgb + n, imgWidth, imgHeight, GDT_Byte, 3, 3 * imgWidth);
 
         n++;
     }
 
     // read alpha channel (assumed to be the in the last raster band)
     if (bands.size() > 1)
-        bands[bands.size() - 1]->RasterIO(GF_Read, 0, 0, imgWidth, imgHeight, imgData->alpha, imgWidth, imgHeight, GDT_Byte, 0, 0);
+        bands[bands.size() - 1]->RasterIO(GF_Read, 0, 0, imgWidth, imgHeight, _imgData->alpha, imgWidth, imgHeight, GDT_Byte, 0, 0);
 
-    return imgData;
-
-    return NULL;
+    return _imgData;
 }
 
 bool dmDataset::openDataSet(const char * filename)
@@ -222,6 +214,12 @@ bool dmDataset::openDataSet(const char * filename)
         if (!_dstDataset)
             return false;
 
+        if (_visScheme == HILLSHADE)
+            applyHillshadeAlphaMask(_dstDataset);
+
+        if (!allocateImgDataMemory())
+            return false;
+
         _dstWkt = GDALGetProjectionRef(_dstDataset);
 
         return true;
@@ -230,6 +228,64 @@ bool dmDataset::openDataSet(const char * filename)
     return false;
 }
 
+void dmDataset::setSrcWkt(const char * wkt)
+{
+    _srcWkt = wkt;
+}
+
+void dmDataset::setDstWkt(const char * wkt)
+{
+    _dstWkt = wkt;
+}
+
+
+bool dmDataset::setHillshadeZFactor(double zFactor)
+{
+    _hillshadeParamZFactor = zFactor;
+
+    return true;
+}
+
+bool dmDataset::setHillshadeScale(double scale)
+{
+    _hillshadeParamScale = scale;
+
+    return true;
+}
+
+bool dmDataset::setHillshadeAzimuth(double azimuth)
+{
+    _hillshadeParamAzimuth = azimuth;
+
+    return true;
+}
+
+bool dmDataset::setHillshadeAltitude(double altitude)
+{
+    _hillshadeParamAltitude = altitude;
+
+    return true;
+}
+
+bool dmDataset::setHillshadeCombined(bool combined)
+{
+    _hillshadeParamCombined = combined;
+
+    return true;
+}
+
+bool dmDataset::setHillshadeMultidirectional(bool multidirectional)
+{
+    _hillshadeParamMultidirectional = multidirectional;
+
+    return true;
+}
+
+
+/* private */
+
+// static
+
 void dmDataset::registerGDALDrivers()
 {
     if (!driversRegistered)
@@ -237,6 +293,61 @@ void dmDataset::registerGDALDrivers()
         GDALAllRegister();
         driversRegistered = true;
     }
+}
+
+// non-static
+
+bool dmDataset::allocateImgDataMemory()
+{
+    if (_imgData)
+        delete _imgData;
+
+    if (!_dstDataset)
+        return false;
+
+    _imgData = new dmRasterImgData();
+
+    int xSize = _dstDataset->GetRasterXSize();
+    int ySize = _dstDataset->GetRasterYSize();
+
+    _imgData->rgb = new unsigned char[3 * xSize*ySize];
+    _imgData->alpha = new unsigned char[xSize*ySize];
+
+    return true;
+}
+
+bool dmDataset::applyHillshadeAlphaMask(GDALDataset * ds)
+{
+    unsigned char * alpha;
+    int xSize, ySize;
+    GDALRasterBand *band;
+
+    if (!ds)
+        return false;
+
+    GDALDataset::Bands bands = ds->GetBands();
+
+    if (bands.size() < 2)
+        return false;
+
+    band = bands[1];
+
+    xSize = band->GetXSize();
+    ySize = band->GetYSize();
+
+    alpha = new unsigned char[xSize*ySize];
+
+    band->RasterIO(GF_Read, 0, 0, xSize, ySize, alpha, xSize, ySize, GDT_Byte, 0, 0);
+
+    for (int i = 0; i < xSize*ySize; i++)
+    {
+        if (alpha[i] != 0) // skip transparent (no-value) pixels
+            alpha[i] = 128; // set reasonable transparency value (TODO: get from config/class variable?)
+    }
+
+    band->RasterIO(GF_Write, 0, 0, xSize, ySize, alpha, xSize, ySize, GDT_Byte, 0, 0);
+
+    delete[] alpha;
 }
 
 bool dmDataset::dstSrsToLatLon(double n, double e, coord &latLons)
@@ -346,6 +457,33 @@ bool dmDataset::getCropExtents(coord topLeftIn, coord botRightIn,
     return true;
 }
 
+
+std::vector<std::string> dmDataset::getGdaldemOptionsVec()
+{
+    std::vector<std::string> optionsVec;
+
+    switch (_visScheme)
+    {
+    case HILLSHADE:
+        optionsVec.push_back("-az");
+        optionsVec.push_back(std::to_string(_hillshadeParamAzimuth));
+        optionsVec.push_back("-alt");
+        optionsVec.push_back(std::to_string(_hillshadeParamAltitude));
+        if (_hillshadeParamMultidirectional)
+            optionsVec.push_back("-multidirectional");
+        break;
+    case COLOR_RELIEF:
+        optionsVec.push_back("-alpha");
+        optionsVec.push_back("-nearest_color_entry");
+        break;
+    case NONE:
+    default:
+        break;
+    }
+
+    return optionsVec;
+}
+
 GDALDataset * dmDataset::reprojectDataset(GDALDataset *dsToReproject)
 {
     if (dsToReproject)
@@ -379,13 +517,16 @@ GDALDataset * dmDataset::visualizeDataset(GDALDataset *dsToVisualize)
     int err = 0;
     GDALDataset *resultDs;
 
-    GDALDEMProcessingOptions * gdaldemOptions = GDALDEMProcessingOptionsNew(nullptr, nullptr);
+    // put gdaldem processing flags into a c string array
+    std::vector<std::string> optionsVec = getGdaldemOptionsVec();
+    char** optionsArr = new char*[optionsVec.size() + 1];
+    for (int i = 0; i<optionsVec.size(); i++)
+    {
+        optionsArr[i] = (char*)optionsVec[i].c_str();
+    }
+    optionsArr[optionsVec.size()] = nullptr;
 
-    char *colorReliefOptions[] = {
-        const_cast<char *>("-alpha"),
-        const_cast<char *>("-nearest_color_entry"),
-        nullptr };  // The last entry must be a nullptr
-    GDALDEMProcessingOptions * gdaldemOptionsColorRelief = GDALDEMProcessingOptionsNew(colorReliefOptions, nullptr);
+    GDALDEMProcessingOptions * gdaldemOptions = GDALDEMProcessingOptionsNew(optionsArr, nullptr);
 
     switch (_visScheme)
     {
@@ -394,7 +535,7 @@ GDALDataset * dmDataset::visualizeDataset(GDALDataset *dsToVisualize)
         break;
 
     case COLOR_RELIEF:
-        resultDs = (GDALDataset*)GDALDEMProcessing(".\\temp_ds.tif", dsToVisualize, "color-relief", _colorConfFilename.c_str(), gdaldemOptionsColorRelief, &err);
+        resultDs = (GDALDataset*)GDALDEMProcessing(".\\temp_ds.tif", dsToVisualize, "color-relief", _colorConfFilename.c_str(), gdaldemOptions, &err);
         break;
 
     case NONE:
@@ -405,20 +546,9 @@ GDALDataset * dmDataset::visualizeDataset(GDALDataset *dsToVisualize)
 
     // clean up
     GDALDEMProcessingOptionsFree(gdaldemOptions);
-    GDALDEMProcessingOptionsFree(gdaldemOptionsColorRelief);
 
     if (err)
         return NULL;
 
     return resultDs;
-}
-
-void dmDataset::setSrcWkt(const char * wkt)
-{
-    _srcWkt = wkt;
-}
-
-void dmDataset::setDstWkt(const char * wkt)
-{
-    _dstWkt  = wkt;
 }

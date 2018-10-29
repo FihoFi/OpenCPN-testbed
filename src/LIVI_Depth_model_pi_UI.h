@@ -34,8 +34,12 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #define DM_viz_COLOR_RELIEF 1000
-#define DM_viz_HILLSHADE 1001
-#define DM_viz_NONE 1002
+#define DM_viz_USER_FILE 1001
+#define DM_viz_FIVE_DEPTH_RANGES 1002
+#define DM_viz_SLIDING_COLOUR 1003
+#define DM_viz_TWO_DEPTH_RANGES 1004
+#define DM_viz_HILLSHADE 1005
+#define DM_viz_NONE 1006
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class LIVIDMUI_DLG
@@ -88,14 +92,14 @@ class LIVIDMUI_DLG : public wxDialog
 		wxPanel* dmColourOptionsSliding_Panel;
 		wxStaticText* dmEmpty_staticText3;
 		wxStaticText* dmEmpty_staticText31;
-		wxStaticText* dmColorOptionsSliding_DeepestLevelOfInterest_Label;
-		wxTextCtrl* dmColorOptionsSliding_DeepestLevelOfInterest_TextBox;
-		wxStaticText* dmColorOptionsSliding_ColorAtDeepestLevelOfInterest_Label;
-		wxColourPickerCtrl* dmColorOptionsSliding_ColorAtDeepestLevelOfInterest_ColorPicker;
-		wxStaticText* dmColorOptionsSliding_ShallowestLevelOfInterest_Label;
-		wxTextCtrl* dmColorOptionsSliding_ColorAtShallowestLevelOfInterest_TextBox;
-		wxStaticText* dmColorOptionsSliding_ColorAtShallowestLevelOfInterest_Label;
-		wxColourPickerCtrl* dmColorOptionsSliding_ShallowestLevelOfInterest_ColourPicker;
+		wxStaticText* dmColourOptionsSliding_ShallowestLevelOfInterest_Label;
+		wxSpinCtrlDouble* dmColourOptionsSliding_ColourAtShallowestLevelOfInterest_spinCtrlDouble;
+		wxStaticText* dmColourOptionsSliding_ColourAtShallowestLevelOfInterest_Label;
+		wxColourPickerCtrl* dmColourOptionsSliding_ShallowestLevelOfInterest_ColourPicker;
+		wxStaticText* dmColourOptionsSliding_DeepestLevelOfInterest_Label;
+		wxSpinCtrlDouble* dmColourOptionsSliding_DeepestLevelOfInterest_spinCtrlDouble;
+		wxStaticText* dmColourOptionsSliding_ColourAtDeepestLevelOfInterest_Label;
+		wxColourPickerCtrl* dmColourOptionsSliding_ColourAtDeepestLevelOfInterest_ColourPicker;
 		wxPanel* dmColourOptionsTwoColours_Panel;
 		wxStaticText* dmEmpty_staticText4;
 		wxStaticText* dmEmpty_staticText5;
@@ -132,7 +136,10 @@ class LIVIDMUI_DLG : public wxDialog
 		wxButton* dm_AboutWxWidgets_Button;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void OnImageFileChange( wxFileDirPickerEvent& event ) { event.Skip(); }
 		virtual void OnGenerateImage( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnChartTypeChange( wxChoicebookEvent& event ) { event.Skip(); }
+		virtual void OnColourSchemaChange( wxChoicebookEvent& event ) { event.Skip(); }
 		virtual void OnUserColourFileChange( wxFileDirPickerEvent& event ) { event.Skip(); }
 		virtual void OnAboutWxWidgets( wxCommandEvent& event ) { event.Skip(); }
 		
