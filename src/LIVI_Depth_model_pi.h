@@ -112,10 +112,14 @@ public:
     virtual wxString GetCopyright();
 
 
+    void OnImageFileChange(wxFileName fname);
+    void OnGenerateImage(wxFileName fullFileName);
+
+    void OnChartTypeChange      (int selectionId);
+    void OnColourSchemaChange   (int selectionId);
+
     void OnColorOptionsApply();
     void OnUserColourFileChange(wxFileName fullFileName);
-
-    void GenerateImage(wxFileName fullFileName);
 
 private:
 

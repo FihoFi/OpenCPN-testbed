@@ -66,8 +66,8 @@ public:
 
     virtual void SetAboutInfo();
 
-    wxString    GetSelectedChartOption();
-    wxString    GetSelectedColourOption();
+    int         GetSelectedChartOption();
+    int         GetSelectedColourOption();
     void        SetUserColourConfigurationFileName(wxFileName &fileName);
     wxFileName  GetUserColourConfigurationFileName();
 
@@ -96,7 +96,10 @@ private:
     virtual void OnColorOptionsApplyButtonClick( wxCommandEvent& WXUNUSED(event) );
     virtual void OnAboutWxWidgets              ( wxCommandEvent& WXUNUSED(event) );
     virtual void OnFileImportFileChange  ( wxFileDirPickerEvent& WXUNUSED(event) );
+    virtual void OnImageFileChange       ( wxFileDirPickerEvent& WXUNUSED(event) );
     virtual void OnGenerateImage               ( wxCommandEvent& WXUNUSED(event) );
+    virtual void OnChartTypeChange          ( wxChoicebookEvent& WXUNUSED(event) );
+    virtual void OnColourSchemaChange       ( wxChoicebookEvent& WXUNUSED(event) );
     virtual void OnUserColourFileChange  ( wxFileDirPickerEvent& WXUNUSED(event) );
 
  //     double lat1, lon1, lat2, lon2;

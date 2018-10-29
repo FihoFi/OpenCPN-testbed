@@ -34,8 +34,12 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #define DM_viz_COLOR_RELIEF 1000
-#define DM_viz_HILLSHADE 1001
-#define DM_viz_NONE 1002
+#define DM_viz_USER_FILE 1001
+#define DM_viz_FIVE_DEPTH_RANGES 1002
+#define DM_viz_SLIDING_COLOUR 1003
+#define DM_viz_TWO_DEPTH_RANGES 1004
+#define DM_viz_HILLSHADE 1005
+#define DM_viz_NONE 1006
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class LIVIDMUI_DLG
@@ -132,7 +136,10 @@ class LIVIDMUI_DLG : public wxDialog
 		wxButton* dm_AboutWxWidgets_Button;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void OnImageFileChange( wxFileDirPickerEvent& event ) { event.Skip(); }
 		virtual void OnGenerateImage( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnChartTypeChange( wxChoicebookEvent& event ) { event.Skip(); }
+		virtual void OnColourSchemaChange( wxChoicebookEvent& event ) { event.Skip(); }
 		virtual void OnUserColourFileChange( wxFileDirPickerEvent& event ) { event.Skip(); }
 		virtual void OnAboutWxWidgets( wxCommandEvent& event ) { event.Skip(); }
 		
