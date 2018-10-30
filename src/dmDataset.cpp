@@ -377,6 +377,7 @@ bool dmDataset::dstSrsToLatLon(double n, double e, coord &latLons)
     return true;
 }
 
+// TODO: wrap coordinates with extents type
 bool dmDataset::getCropExtents(coord topLeftIn, coord botRightIn,
     coord &topLeftOut, coord &botRightOut,
     int &imgOffsetX, int &imgOffsetY,
@@ -398,9 +399,9 @@ bool dmDataset::getCropExtents(coord topLeftIn, coord botRightIn,
 
     // requested rectangle is outside of raster extents
     if (topLeftIn.east > botRightRaster.east ||
-        topLeftIn.north > botRightRaster.north ||
+        topLeftIn.north < botRightRaster.north ||
         botRightIn.east < topLeftRaster.east ||
-        botRightIn.north < topLeftRaster.north)
+        botRightIn.north > topLeftRaster.north)
     {
         imgOffsetX = 0;
         imgOffsetY = 0;
@@ -421,15 +422,15 @@ bool dmDataset::getCropExtents(coord topLeftIn, coord botRightIn,
         topLeftOut.east = geoTransform[0] + imgOffsetX * geoTransform[1];
     }
 
-    if (topLeftIn.north < topLeftRaster.east)
+    if (topLeftIn.north > topLeftRaster.north)
     {
         imgOffsetY = 0;
         topLeftOut.north = topLeftRaster.north;
     }
     else
     {
-        imgOffsetY = std::floor((topLeftIn.north - topLeftRaster.north) / geoTransform[5]);
-        topLeftOut.north = geoTransform[3] + imgOffsetY * geoTransform[5];
+        imgOffsetY = std::floor((topLeftRaster.north - topLeftIn.north) / geoTransform[5]);
+        topLeftOut.north = geoTransform[3] - imgOffsetY * geoTransform[5];
     }
 
     if (botRightIn.east > botRightRaster.east)
@@ -443,15 +444,15 @@ bool dmDataset::getCropExtents(coord topLeftIn, coord botRightIn,
         botRightOut.east = topLeftOut.east + imgWidth*geoTransform[1];
     }
 
-    if (botRightIn.north > botRightRaster.north)
+    if (botRightIn.north < botRightRaster.north)
     {
         imgHeight = ySize - imgOffsetY;
         botRightOut.north = botRightRaster.north;
     }
     else
     {
-        imgHeight = std::ceil((botRightIn.north - topLeftRaster.north) / geoTransform[5]) - imgOffsetY;
-        botRightOut.north = topLeftOut.north + imgHeight * geoTransform[5];
+        imgHeight = std::ceil((topLeftRaster.north - botRightIn.north) / geoTransform[5]) - imgOffsetY;
+        botRightOut.north = topLeftOut.north - imgHeight * geoTransform[5];
     }
 
     return true;
