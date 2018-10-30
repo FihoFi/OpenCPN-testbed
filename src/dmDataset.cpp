@@ -451,8 +451,9 @@ bool dmDataset::getCropExtents(coord topLeftIn, coord botRightIn,
     }
     else
     {
-        imgHeight = std::ceil((topLeftRaster.north - botRightIn.north) / geoTransform[5]) - imgOffsetY;
-        botRightOut.north = topLeftOut.north - imgHeight * geoTransform[5];
+        // note: geoTransform[5] is negative
+        imgHeight = std::ceil((botRightIn.north - topLeftRaster.north) / geoTransform[5]) - imgOffsetY;
+        botRightOut.north = topLeftOut.north + imgHeight * geoTransform[5];
     }
 
     return true;
