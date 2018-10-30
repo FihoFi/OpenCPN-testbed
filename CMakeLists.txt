@@ -41,6 +41,8 @@ SET(SRC_LIVI_Depth_model
         src/LIVI_Depth_model_pi_UI_impl.cpp
         src/dm_API.h
         src/dm_API.cpp
+        src/dmColourfileHandler.h
+        src/dmColourfileHandler.cpp
         src/dmConfigHandler.h
         src/dmConfigHandler.cpp
         src/dmDataset.h
