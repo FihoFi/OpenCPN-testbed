@@ -59,8 +59,9 @@ private:
     dmRasterImgData * _imgData;
 
     DM_visualization _visScheme;
-    
+
     bool allocateImgDataMemory();
+    bool applyHillshadeAlphaMask(GDALDataset * ds);
     bool dstSrsToLatLon(double e, double n, coord &latLons);
     bool getCropExtents(coord topLeftIn, coord botRightIn,
         coord &topLeftOut, coord &botRightOut,

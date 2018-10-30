@@ -469,27 +469,30 @@ wxString LIVI_Depth_model_pi::GetCopyright() {
 bool LIVI_Depth_model_pi::SaveConfFileOfUISelection()
 {
     bool success = true;
-    wxString chOptStr = dialog->GetSelectedColourOption();
-
-    if      (chOptStr.Contains("your"))    {}
-    else if (chOptStr.Contains("Five"))    { success &= SaveFiveColorConfToFile();    }
-    else if (chOptStr.Contains("Sliding")) { success &= SaveSlidingColorConfToFile(); }
-    else if (chOptStr.Contains("Two"))     { success &= SaveTwoColorConfToFile();     }
-
+    int chOpt = dialog->GetSelectedColourOption();
+    switch (chOpt)
+    {
+        case DM_viz_USER_FILE:         { break;                                          }
+        case DM_viz_FIVE_DEPTH_RANGES: { success &= SaveFiveColorConfToFile();    break; }
+        case DM_viz_SLIDING_COLOUR:    { success &= SaveSlidingColorConfToFile(); break; }
+        case DM_viz_TWO_DEPTH_RANGES:  { success &= SaveTwoColorConfToFile();     break; }
+        default:                       { success = false;                         break; }
+    }
     return success;
 }
 
 wxFileName LIVI_Depth_model_pi::GetConfFileOfUISelection()
 {
-    bool success = true;
-    wxString chOptStr = dialog->GetSelectedColourOption();
+    int chOpt = dialog->GetSelectedColourOption();
 
-    if      (chOptStr.Contains("your"))    { return GetUsersColorConfFile(); }
-    else if (chOptStr.Contains("Five"))    { return fiveColoursFileName;     }
-    else if (chOptStr.Contains("Sliding")) { return slidingColoursFileName;  }
-    else if (chOptStr.Contains("Two"))     { return twoColoursFileName;      }
-
-    else return wxFileName("");
+    switch (chOpt)
+    {
+        case DM_viz_USER_FILE:          { return GetUsersColorConfFile();  break; }
+        case DM_viz_FIVE_DEPTH_RANGES:  { return fiveColoursFileName;      break; }
+        case DM_viz_SLIDING_COLOUR:     { return slidingColoursFileName;   break; }
+        case DM_viz_TWO_DEPTH_RANGES:   { return twoColoursFileName;       break; }
+        default:                        { return wxFileName("");           break; }
+    }
 }
 
 wxFileName LIVI_Depth_model_pi::GetUsersColorConfFile()
@@ -691,19 +694,12 @@ void LIVI_Depth_model_pi::OnDepthModelDialogClose()
 }
 
 // LIVI additions
-void LIVI_Depth_model_pi::OnColorOptionsApply()
+
+void LIVI_Depth_model_pi::OnImageFileChange(wxFileName fname)
 {
-    PullConfigFromUI();
-    m_pconf->SaveConfig();
 }
 
-void LIVI_Depth_model_pi::OnUserColourFileChange(wxFileName fullFileName)
-{
-    m_pconf->colour.userColourConfPath = fullFileName;
-    m_pconf->SaveConfig();
-}
-
-void LIVI_Depth_model_pi::GenerateImage(wxFileName fullFileName)
+void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
 {
     // Check existance of the file
     wxString path = fullFileName.GetFullPath();
@@ -724,20 +720,21 @@ void LIVI_Depth_model_pi::GenerateImage(wxFileName fullFileName)
     try {
         dialog->SetPictureImportErrorText(std::string("Setting chart image type options"));
 
-        wxString chOptStr = dialog->GetSelectedChartOption();
-
-        if   (chOptStr.Contains("illshade"))
-        {    success = dmDrawer->setChartDrawTypeHillshade();    }
-        else if (chOptStr.Contains("lain"))
-        {    success = dmDrawer->setChartDrawTypePlain();        }
-        else if (chOptStr.Contains("elief"))
+        int chOpt = dialog->GetSelectedChartOption();
+        switch (chOpt)
         {
-            dialog->SetPictureImportErrorText(std::string("Setting colouring options"));
+            case DM_viz_HILLSHADE:
+            {    success = dmDrawer->setChartDrawTypeHillshade();    break; }
+            case DM_viz_NONE:
+            {    success = dmDrawer->setChartDrawTypePlain();        break; }
+            case DM_viz_COLOR_RELIEF:
+            {
+                dialog->SetPictureImportErrorText(std::string("Setting colouring options"));
 
-            success &= SaveConfFileOfUISelection(); // Save, to get the current options in use
+                success &= SaveConfFileOfUISelection(); // Save, to get the current options in use
 
-            wxFileName colorFile = GetConfFileOfUISelection();
-            if (!colorFile.IsOk())
+                wxFileName colorFile = GetConfFileOfUISelection();
+                if (!colorFile.IsOk())
             {
                 dialog->SetPictureImportErrorText(std::string("Could not interpret the colour definitions."));
                 return;
@@ -746,13 +743,16 @@ void LIVI_Depth_model_pi::GenerateImage(wxFileName fullFileName)
             {
                 success &= dmDrawer->setChartDrawTypeRelief(colorFile);
             }
-        }
-        else // (chOptStr. ...)
-        {
-            dialog->SetPictureImportErrorText(std::string("Internal error. Erroneous chart type."));
-            return;
-        }
-
+                break;
+            }
+            default: // (chOptStr. ...)
+            {
+                success = false;
+                dialog->SetPictureImportErrorText(std::string("Internal error. Erroneous chart type."));
+                return;
+                break;
+            }
+        }   // switch
         if(!success) // dmDrawer->setChartDrawTypexxx
         {
             dialog->SetPictureImportErrorText(std::string("Internal error. Failure at instantiating the chart type."));
@@ -778,6 +778,26 @@ void LIVI_Depth_model_pi::GenerateImage(wxFileName fullFileName)
     m_pconf->fileImport.filePath = fullFileName;
     m_pconf->SaveConfig();
 
+}
+
+void LIVI_Depth_model_pi::OnChartTypeChange(int selectionId)
+{
+}
+
+void LIVI_Depth_model_pi::OnColourSchemaChange(int selectionId)
+{
+}
+
+void LIVI_Depth_model_pi::OnColorOptionsApply()
+{
+    PullConfigFromUI();
+    m_pconf->SaveConfig();
+}
+
+void LIVI_Depth_model_pi::OnUserColourFileChange(wxFileName fullFileName)
+{
+    m_pconf->colour.userColourConfPath = fullFileName;
+    m_pconf->SaveConfig();
 }
 
 /*

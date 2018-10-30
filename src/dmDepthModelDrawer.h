@@ -38,7 +38,7 @@ public:
 private:
     chartState  modelState;
     bool        chartAreaKnown;
-    bool datasetAvailable;
+    bool        datasetAvailable;
 
     wxFileName  depthModelFileName;
     dmDataset   dataset;
@@ -52,7 +52,7 @@ private:
 
 
     dmRasterImgData*  raster;
-    int w, h; // image width, and height
+    int             w, h; // image width, and height
     wxBitmap        bmp;
     wxPoint         bitmapTopLeftPositioningPoint;
 
