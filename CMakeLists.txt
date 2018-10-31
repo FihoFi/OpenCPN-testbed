@@ -49,6 +49,8 @@ SET(SRC_LIVI_Depth_model
         src/NavFunc.cpp
         src/dmDepthModelDrawer.h
         src/dmDepthModelDrawer.cpp
+        src/dmDrawingState.h
+        src/dmDrawingState.cpp
         src/dmExtent.h
         src/dmExtent.cpp
         src/ocpn_plugin.h

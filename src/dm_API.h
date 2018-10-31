@@ -64,11 +64,22 @@ struct dmRasterImgData
 
 enum DM_visualization
 {
-    NONE = 13579,  // Magic number much greater than 0, to avoid unintentionally accepted zeroes, and ones. Also More than wxID_HIGHEST = 5999, just in case the wxIDs could be used.
+    VISUALIZATION_UNDEFINED = 13579,  // Magic number much greater than 0, to avoid unintentionally accepted zeroes, and ones. Also More than wxID_HIGHEST = 5999, just in case the wxIDs could be used.
+
+    NONE,
     HILLSHADE,
-    COLOR_RELIEF
+    COLOR_RELIEF,
+
+    VISUALIZATION_MAX     // Not-to-be-used-in-code guardian value of the end of the enum range
 };
 
+bool dmVisualizationIsOk(DM_visualization viz)
+{
+    if (viz >= VISUALIZATION_UNDEFINED && viz < VISUALIZATION_MAX)
+        return true;
+    else
+        return false;
+}
 
 class /*DECL_EXP*/ dmLogWriter
 {
