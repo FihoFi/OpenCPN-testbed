@@ -473,6 +473,9 @@ wxString LIVI_Depth_model_pi::GetCopyright() {
 */
 void LIVI_Depth_model_pi::PushConfigToUI(void)
 {
+    dialog->SetDepthChartFileName(m_pconf->fileImport.filePath);
+    dialog->SetUserColourConfigurationFileName(m_pconf->colour.userColourConfPath);
+
     for (int i = 0; i < DM_NUM_CUSTOM_COL; i++) {
         dialog->SetCustomColor(i, m_pconf->colour.getColour(i));
     }
@@ -485,8 +488,6 @@ void LIVI_Depth_model_pi::PushConfigToUI(void)
     }
     dialog->SetDividingLevel(m_pconf->colour.getTwoColoursDepth());
 
-    dialog->SetUserColourConfigurationFileName(m_pconf->colour.userColourConfPath);
-    dialog->SetDepthChartFileName(m_pconf->fileImport.filePath);
 }
 
 /**
@@ -495,6 +496,9 @@ void LIVI_Depth_model_pi::PushConfigToUI(void)
 */
 void LIVI_Depth_model_pi::PullConfigFromUI(void)
 {
+    m_pconf->fileImport.filePath = dialog->GetDepthChartFileName();
+    m_pconf->colour.userColourConfPath = dialog->GetUserColourConfigurationFileName();
+
     for (int i = 0; i < DM_NUM_CUSTOM_COL; i++) {
         m_pconf->colour.setColour(i, dialog->GetCustomColor(i));
     }
@@ -506,10 +510,6 @@ void LIVI_Depth_model_pi::PullConfigFromUI(void)
         m_pconf->colour.setTwoColour(i, dialog->GetTwoColours(i));
     }
     m_pconf->colour.setTwoColoursDepth(dialog->GetDividingLevel());
-
-    m_pconf->colour.userColourConfPath = dialog->GetUserColourConfigurationFileName();
-    m_pconf->fileImport.filePath = dialog->GetDepthChartFileName();
-
 }
 
 DM_colourType LIVI_Depth_model_pi::to_dmColourType(int colouringChoiceId)

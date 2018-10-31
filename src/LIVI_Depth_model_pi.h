@@ -151,10 +151,6 @@ private:
     bool                m_ShowHelp,m_bCaptureCursor,m_bCaptureShip;
   //double              m_cursor_lon, m_cursor_lat;
 
-
-// LIVI additions
-
-
 };
 
 #endif _LIVI_DEPTH_MODEL_PI_H_
