@@ -3,7 +3,7 @@
 #ifndef _DM_API_
 #define _DM_API_
 
-enum DM_colourType
+typedef enum DM_colourType
 {
     COLOUR_UNDEFINED = 14703,  // Magic number much greater than 0, to avoid unintentionally accepted zeroes, and ones. Also More than wxID_HIGHEST = 5999, just in case the wxIDs could be used.
 
@@ -13,7 +13,7 @@ enum DM_colourType
     COLOUR_TWO_RANGES,
 
     COLOUR_MAX     // Not-to-be-used-in-code guardian value of the end of the enum range
-};
+} DM_colourType;
 bool dmColourTypeIsOk(DM_colourType col);
 
 
