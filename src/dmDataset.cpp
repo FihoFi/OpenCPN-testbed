@@ -109,40 +109,14 @@ bool dmDataset::setVisualizationScheme(DM_visualization visScheme)
 dmRasterImgData * dmDataset::getRasterData(
     coord &topLeftOut, coord &botRightOut)
 {
-    int xSize, ySize, n;
-    float *bandData;
+    int imgWidth, imgHeight;
+    coord topLeftRaster, botRightRaster;
 
-    if (!_dstDataset)
-        return NULL;
-    
-    GDALDataset::Bands bands = _dstDataset->GetBands();
-    if (bands.size() < 1)
+    if (!getDatasetExtents(topLeftRaster, botRightRaster))
         return NULL;
 
-    if (!getDatasetExtents(topLeftOut, botRightOut))
-        return NULL;
-
-    xSize = bands[0]->GetXSize();
-    ySize = bands[0]->GetYSize();
-
-    n = 0;
-
-    // read RGB channel
-    while (n < 3)
-    {
-        if (_visScheme == HILLSHADE)
-            bands[0]->RasterIO(GF_Read, 0, 0, xSize, ySize, _imgData->rgb + n, xSize, ySize, GDT_Byte, 3, 3 * xSize);
-        else if ((_visScheme == COLOR_RELIEF || _visScheme == NONE) && n < bands.size())
-            bands[n]->RasterIO(GF_Read, 0, 0, xSize, ySize, _imgData->rgb + n, xSize, ySize, GDT_Byte, 3, 3*xSize);
-
-        n++;
-    }
-
-    // read alpha channel (assumed to be the in the last raster band)
-    if (bands.size() > 1)
-        bands[bands.size()-1]->RasterIO(GF_Read, 0, 0, xSize, ySize, _imgData->alpha, xSize, ySize, GDT_Byte, 0, 0);
-
-    return _imgData;
+    return getRasterData(topLeftRaster, botRightRaster,
+        topLeftOut, botRightOut, imgWidth, imgHeight);
 }
 
 dmRasterImgData * dmDataset::getRasterData(
@@ -377,6 +351,7 @@ bool dmDataset::dstSrsToLatLon(double n, double e, coord &latLons)
     return true;
 }
 
+// TODO: wrap coordinates with extents type
 bool dmDataset::getCropExtents(coord topLeftIn, coord botRightIn,
     coord &topLeftOut, coord &botRightOut,
     int &imgOffsetX, int &imgOffsetY,
@@ -396,6 +371,20 @@ bool dmDataset::getCropExtents(coord topLeftIn, coord botRightIn,
     coord botRightRaster(geoTransform[3] + xSize * geoTransform[4] + ySize * geoTransform[5],
                          geoTransform[0] + xSize * geoTransform[1] + ySize * geoTransform[2]);
 
+    // requested rectangle is outside of raster extents
+    if (topLeftIn.east > botRightRaster.east ||
+        topLeftIn.north < botRightRaster.north ||
+        botRightIn.east < topLeftRaster.east ||
+        botRightIn.north > topLeftRaster.north)
+    {
+        imgOffsetX = 0;
+        imgOffsetY = 0;
+        imgWidth = 0;
+        imgHeight = 0;
+
+        return true;
+    }
+
     if (topLeftIn.east < topLeftRaster.east)
     {
         imgOffsetX = 0;
@@ -407,15 +396,15 @@ bool dmDataset::getCropExtents(coord topLeftIn, coord botRightIn,
         topLeftOut.east = geoTransform[0] + imgOffsetX * geoTransform[1];
     }
 
-    if (topLeftIn.north < topLeftRaster.east)
+    if (topLeftIn.north > topLeftRaster.north)
     {
         imgOffsetY = 0;
         topLeftOut.north = topLeftRaster.north;
     }
     else
     {
-        imgOffsetY = std::floor((topLeftIn.north - topLeftRaster.north) / geoTransform[5]);
-        topLeftOut.north = geoTransform[3] + imgOffsetY * geoTransform[5];
+        imgOffsetY = std::floor((topLeftRaster.north - topLeftIn.north) / geoTransform[5]);
+        topLeftOut.north = geoTransform[3] - imgOffsetY * geoTransform[5];
     }
 
     if (botRightIn.east > botRightRaster.east)
@@ -429,16 +418,19 @@ bool dmDataset::getCropExtents(coord topLeftIn, coord botRightIn,
         botRightOut.east = topLeftOut.east + imgWidth*geoTransform[1];
     }
 
-    if (botRightIn.north > botRightRaster.north)
+    if (botRightIn.north < botRightRaster.north)
     {
         imgHeight = ySize - imgOffsetY;
         botRightOut.north = botRightRaster.north;
     }
     else
     {
+        // note: geoTransform[5] is negative
         imgHeight = std::ceil((botRightIn.north - topLeftRaster.north) / geoTransform[5]) - imgOffsetY;
         botRightOut.north = topLeftOut.north + imgHeight * geoTransform[5];
     }
+
+    return true;
 }
 
 
