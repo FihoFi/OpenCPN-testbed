@@ -7,6 +7,7 @@
 
 class dmExtent
 {
+public:
     dmExtent();
     dmExtent(coord topLeft, coord botRight);
     dmExtent(double top, double left, double bot, double right);
@@ -44,6 +45,7 @@ class dmExtent
     */
     dmExtent const getMaxes(const dmExtent& other);
 
+private:
     coord topLeft;
     coord botRight;
 };
