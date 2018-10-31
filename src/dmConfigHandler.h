@@ -11,6 +11,7 @@
 #endif //precompiled headers
 
 #include <wx/filename.h>
+#include "dm_API.h" // DM_colourType, DM_visualization
 class Dlg;
 class wxFileConfig;
 
@@ -62,6 +63,8 @@ struct DMColorOptionConfig : dm_configAPI {
     DMColorOptionConfig(wxFileConfig* confFile)
     {   this->confFile = confFile;    }
 
+    DM_visualization    chartType;
+    DM_colourType       colouringType;
     // Filepath and filename of the user given colour conf file file
     wxFileName userColourConfPath;
 
@@ -79,6 +82,12 @@ struct DMColorOptionConfig : dm_configAPI {
     virtual bool load() override;
     virtual bool save() override;
 
+    DM_visualization    getChartType()                          { return chartType;      }
+    void                setChartType(DM_visualization chartType){ chartType = chartType; }
+
+    DM_colourType   getColouringType()                      { return colouringType;     }
+    void            setColouringType(DM_colourType colType) { colouringType = colType;  }
+
     wxColor getColour(int i)             { return m_customColours[i]; }
     void    setColour(int i, wxColor col){ m_customColours[i] = col;  }
 
@@ -90,6 +99,12 @@ struct DMColorOptionConfig : dm_configAPI {
 
     double  getTwoColoursDepth()             { return m_twoColoursDepth; }
     void    setTwoColoursDepth(double depth) { m_twoColoursDepth = depth; }
+
+private:
+    wxString            chartTypeToString(DM_visualization chartType);
+    DM_visualization    stringToChartType(wxString chartTypeString);
+    wxString        colouringTypeToString(DM_colourType colType);
+    DM_colourType   stringToColouringType(wxString colTypeString);
 };
 
 struct DMFileImportConfig : dm_configAPI {
