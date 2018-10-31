@@ -456,6 +456,9 @@ bool LIVI_Depth_model_pi::MouseEventHook(wxMouseEvent &event)
     return false; // not handled; event handling is continued after this function
 }
 
+
+//// LIVI additions ////
+
 wxString LIVI_Depth_model_pi::GetLongPluginVersionString() {
     std::string versionStr =
         PLUGIN_VERSION_MAJOR + '.' + PLUGIN_VERSION_MINOR +
@@ -465,63 +468,6 @@ wxString LIVI_Depth_model_pi::GetLongPluginVersionString() {
 
 wxString LIVI_Depth_model_pi::GetCopyright() {
     return _("@ 2018, LIVI & Sitowise");
-}
-
-/**
-* Sets the colouring information, as well as the limiting depths,
-* from the m_customColours of the m_conf to the UI.
-*/
-void LIVI_Depth_model_pi::PushConfigToUI(void)
-{
-    dialog->SetDepthChartFileName(m_pconf->fileImport.filePath);
-    dialog->SetUserColourConfigurationFileName(m_pconf->colour.userColourConfPath);
-
-    for (int i = 0; i < DM_NUM_CUSTOM_COL; i++) {
-        dialog->SetCustomColor(i, m_pconf->colour.getColour(i));
-    }
-    for (int i = 0; i < DM_NUM_CUSTOM_DEP; i++) {
-        dialog->SetCustomLevel(i, m_pconf->colour.getDepth(i));
-    }
-
-    for (int i = 0; i < 2; i++) {
-        dialog->SetTwoColours(i, m_pconf->colour.getTwoColour(i));
-    }
-    dialog->SetDividingLevel(m_pconf->colour.getTwoColoursDepth());
-
-}
-
-/**
-* Retrieves the colouring information, as well as the limiting depths,
-* from the UI to the m_customColours of the m_conf.
-*/
-void LIVI_Depth_model_pi::PullConfigFromUI(void)
-{
-    m_pconf->fileImport.filePath = dialog->GetDepthChartFileName();
-    m_pconf->colour.userColourConfPath = dialog->GetUserColourConfigurationFileName();
-
-    for (int i = 0; i < DM_NUM_CUSTOM_COL; i++) {
-        m_pconf->colour.setColour(i, dialog->GetCustomColor(i));
-    }
-    for (int i = 0; i < DM_NUM_CUSTOM_DEP; i++) {
-        m_pconf->colour.setDepth(i, dialog->GetCustomLevel(i));
-    }
-
-    for (int i = 0; i < 2; i++) {
-        m_pconf->colour.setTwoColour(i, dialog->GetTwoColours(i));
-    }
-    m_pconf->colour.setTwoColoursDepth(dialog->GetDividingLevel());
-}
-
-DM_colourType LIVI_Depth_model_pi::to_dmColourType(int colouringChoiceId)
-{
-    switch (colouringChoiceId)
-    {
-    case DM_viz_USER_FILE:          { return COLOUR_USER_FILE;   break; }
-    case DM_viz_FIVE_DEPTH_RANGES:  { return COLOUR_FIVE_RANGES; break; }
-    case DM_viz_SLIDING_COLOUR:     { return COLOUR_SLIDING;     break; }
-    case DM_viz_TWO_DEPTH_RANGES:   { return COLOUR_TWO_RANGES;  break; }
-    default:                        { return COLOUR_UNDEFINED;   break; }
-    }
 }
 
 void LIVI_Depth_model_pi::OnDepthModelDialogClose()
@@ -535,8 +481,6 @@ void LIVI_Depth_model_pi::OnDepthModelDialogClose()
 
     m_pconf->SaveConfig();
 }
-
-// LIVI additions
 
 void LIVI_Depth_model_pi::OnImageFileChange(wxFileName fname)
 {
@@ -645,6 +589,64 @@ void LIVI_Depth_model_pi::OnUserColourFileChange(wxFileName fullFileName)
     m_pconf->SaveConfig();
 }
 
+
+//// private ////
+
+/**
+* Sets the colouring information, as well as the limiting depths,
+* from the m_customColours of the m_conf to the UI.
+*/
+void LIVI_Depth_model_pi::PushConfigToUI(void)
+{
+    dialog->SetDepthChartFileName(m_pconf->fileImport.filePath);
+    dialog->SetUserColourConfigurationFileName(m_pconf->colour.userColourConfPath);
+
+    for (int i = 0; i < DM_NUM_CUSTOM_COL; i++) {
+        dialog->SetCustomColor(i, m_pconf->colour.getColour(i));
+    }
+    for (int i = 0; i < DM_NUM_CUSTOM_DEP; i++) {
+        dialog->SetCustomLevel(i, m_pconf->colour.getDepth(i));
+    }
+
+    for (int i = 0; i < 2; i++) {
+        dialog->SetTwoColours(i, m_pconf->colour.getTwoColour(i));
+    }
+    dialog->SetDividingLevel(m_pconf->colour.getTwoColoursDepth());
+}
+
+/**
+* Retrieves the colouring information, as well as the limiting depths,
+* from the UI to the m_customColours of the m_conf.
+*/
+void LIVI_Depth_model_pi::PullConfigFromUI(void)
+{
+    m_pconf->fileImport.filePath = dialog->GetDepthChartFileName();
+    m_pconf->colour.userColourConfPath = dialog->GetUserColourConfigurationFileName();
+
+    for (int i = 0; i < DM_NUM_CUSTOM_COL; i++) {
+        m_pconf->colour.setColour(i, dialog->GetCustomColor(i));
+    }
+    for (int i = 0; i < DM_NUM_CUSTOM_DEP; i++) {
+        m_pconf->colour.setDepth(i, dialog->GetCustomLevel(i));
+    }
+
+    for (int i = 0; i < 2; i++) {
+        m_pconf->colour.setTwoColour(i, dialog->GetTwoColours(i));
+    }
+    m_pconf->colour.setTwoColoursDepth(dialog->GetDividingLevel());
+}
+
+DM_colourType LIVI_Depth_model_pi::to_dmColourType(int colouringChoiceId)
+{
+    switch (colouringChoiceId)
+    {
+    case DM_viz_USER_FILE: { return COLOUR_USER_FILE;   break; }
+    case DM_viz_FIVE_DEPTH_RANGES: { return COLOUR_FIVE_RANGES; break; }
+    case DM_viz_SLIDING_COLOUR: { return COLOUR_SLIDING;     break; }
+    case DM_viz_TWO_DEPTH_RANGES: { return COLOUR_TWO_RANGES;  break; }
+    default: { return COLOUR_UNDEFINED;   break; }
+    }
+}
 /*
 wxString &LIVI_Depth_model_pi::GetConfigFileName()
 {

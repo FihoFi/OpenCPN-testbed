@@ -110,11 +110,11 @@ public:
     void OnDepthModelDialogClose();
 
 // LIVI additions
-// Additional functions for About dialog
+    // Additional functions for About dialog
     virtual wxString GetLongPluginVersionString();
     virtual wxString GetCopyright();
 
-
+    // reactions to UI changes
     void OnImageFileChange(wxFileName fname);
     void OnGenerateImage(wxFileName fullFileName);
 
