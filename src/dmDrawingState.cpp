@@ -5,13 +5,13 @@
 dmDrawingState::dmDrawingState()
     : currentChartFileName("")
     , currentChartType(VISUALIZATION_UNDEFINED)
-    , currentColourSchema(UNDEFINED_COLOURS)
+    , currentColourSchema(COLOUR_UNDEFINED)
     , currentUserColourFileName("")
     , currentChartExtent()
 
     , wantedChartFileName("")
     , wantedChartType(VISUALIZATION_UNDEFINED)
-    , wantedColourSchema(UNDEFINED_COLOURS)
+    , wantedColourSchema(COLOUR_UNDEFINED)
     , wantedUserColourFileName("")
     , wantedChartExtent()
 
@@ -41,7 +41,7 @@ bool dmDrawingState::SetCurrentChartType(DM_visualization imageType)
     }
 }
 
-bool dmDrawingState::SetCurrentColourSchema(colouringSchema colourSchema)
+bool dmDrawingState::SetCurrentColourSchema(DM_colourType colourSchema)
 {
     if (colouringSchemaIsOk(colourSchema))
     {
@@ -106,7 +106,7 @@ bool dmDrawingState::SetWantedChartType(DM_visualization imageType)
     }
 }
 
-bool dmDrawingState::SetWantedColourSchema(colouringSchema colourSchema)
+bool dmDrawingState::SetWantedColourSchema(DM_colourType colourSchema)
 {
     if (colouringSchemaIsOk(colourSchema))
     {
@@ -116,7 +116,7 @@ bool dmDrawingState::SetWantedColourSchema(colouringSchema colourSchema)
     }
     else
     {
-        wantedColourSchema = UNDEFINED_COLOURS;
+        wantedColourSchema = COLOUR_UNDEFINED;
         stateOfWantedImage = std::min(stateOfWantedImage, CHART_TYPE_CHANGED);
         return false;
     }
@@ -171,13 +171,13 @@ dmDrawingState::wantedChartState dmDrawingState::wantedChanges()
         return CHART_TYPE_CHANGED;
     }
 
-    if (currentChartType == COLOR_RELIEF /*DM_viz_COLOR_RELIEF*/)
+    if (currentChartType == COLOR_RELIEF)
     {
         if (wantedColourSchema != currentColourSchema)
         {
             return COLOURING_CHANGED;
         }
-        if (currentColourSchema == USER_FILE_COLOURS /*DM_viz_USER_FILE*/)
+        if (currentColourSchema == COLOUR_USER_FILE)
         {
             if (wantedUserColourFileName != wantedUserColourFileName)
             {
@@ -188,9 +188,9 @@ dmDrawingState::wantedChartState dmDrawingState::wantedChanges()
     return CHART_UP_TO_DATE;
 }
 
-bool dmDrawingState::colouringSchemaIsOk(colouringSchema schema)
+bool dmDrawingState::colouringSchemaIsOk(DM_colourType schema)
 {
-    if (schema >= UNDEFINED_COLOURS && schema < MAX_COLOURS)
+    if (schema >= COLOUR_UNDEFINED && schema < COLOUR_MAX)
         return true;
     else
         return false;
