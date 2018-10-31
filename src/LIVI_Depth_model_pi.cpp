@@ -640,11 +640,11 @@ DM_colourType LIVI_Depth_model_pi::to_dmColourType(int colouringChoiceId)
 {
     switch (colouringChoiceId)
     {
-    case DM_viz_USER_FILE: { return COLOUR_USER_FILE;   break; }
-    case DM_viz_FIVE_DEPTH_RANGES: { return COLOUR_FIVE_RANGES; break; }
-    case DM_viz_SLIDING_COLOUR: { return COLOUR_SLIDING;     break; }
-    case DM_viz_TWO_DEPTH_RANGES: { return COLOUR_TWO_RANGES;  break; }
-    default: { return COLOUR_UNDEFINED;   break; }
+    case DM_viz_USER_FILE:          { return COLOUR_USER_FILE;   break; }
+    case DM_viz_FIVE_DEPTH_RANGES:  { return COLOUR_FIVE_RANGES; break; }
+    case DM_viz_SLIDING_COLOUR:     { return COLOUR_SLIDING;     break; }
+    case DM_viz_TWO_DEPTH_RANGES:   { return COLOUR_TWO_RANGES;  break; }
+    default:                        { return COLOUR_UNDEFINED;   break; }
     }
 }
 /*
