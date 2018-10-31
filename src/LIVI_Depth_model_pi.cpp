@@ -39,9 +39,8 @@
 #include "LIVI_Depth_model_pi_UI.h"
 
 #include "dmConfigHandler.h"    // For handling config options
+#include "dmColourfileHandler.h" // For handling colour file access operations
 #include "dmDepthModelDrawer.h"
-
-class LIVI_Depth_model_pi;
 
 // the class factories, used to create and destroy instances of the PlugIn
 
@@ -75,6 +74,7 @@ LIVI_Depth_model_pi::LIVI_Depth_model_pi(void *ppimgr)
     , m_parent_window(NULL)
     , m_pconf(NULL)
     , dialog(NULL)
+    , colourfileHandler(NULL)
     , m_icon(NULL)
     , dmDrawer(NULL)
 {
@@ -117,6 +117,7 @@ int LIVI_Depth_model_pi::Init(void)
     dialog->SetAboutInfo();
 
     m_pconf = new dmConfigHandler(pFileConf, dialog);
+    colourfileHandler = new dmColourfileHandler(m_pconf, *GetpSharedDataLocation());
 
     bool success = m_pconf->LoadConfig(); // config related to this plugin.
     PushConfigToUI();
@@ -466,176 +467,6 @@ wxString LIVI_Depth_model_pi::GetCopyright() {
     return _("@ 2018, LIVI & Sitowise");
 }
 
-bool LIVI_Depth_model_pi::SaveConfFileOfUISelection()
-{
-    bool success = true;
-    int chOpt = dialog->GetSelectedColourOption();
-    switch (chOpt)
-    {
-        case DM_viz_USER_FILE:         { break;                                          }
-        case DM_viz_FIVE_DEPTH_RANGES: { success &= SaveFiveColorConfToFile();    break; }
-        case DM_viz_SLIDING_COLOUR:    { success &= SaveSlidingColorConfToFile(); break; }
-        case DM_viz_TWO_DEPTH_RANGES:  { success &= SaveTwoColorConfToFile();     break; }
-        default:                       { success = false;                         break; }
-    }
-    return success;
-}
-
-wxFileName LIVI_Depth_model_pi::GetConfFileOfUISelection()
-{
-    int chOpt = dialog->GetSelectedColourOption();
-
-    switch (chOpt)
-    {
-        case DM_viz_USER_FILE:          { return GetUsersColorConfFile();  break; }
-        case DM_viz_FIVE_DEPTH_RANGES:  { return fiveColoursFileName;      break; }
-        case DM_viz_SLIDING_COLOUR:     { return slidingColoursFileName;   break; }
-        case DM_viz_TWO_DEPTH_RANGES:   { return twoColoursFileName;       break; }
-        default:                        { return wxFileName("");           break; }
-    }
-}
-
-wxFileName LIVI_Depth_model_pi::GetUsersColorConfFile()
-{
-    return dialog->GetUserColourConfigurationFileName();
-}
-
-bool LIVI_Depth_model_pi::SaveFiveColorConfToFile()
-{
-    wxString confText = GetFiveColourDepthColourWks();
-    return SaveColorConfToFile(fiveColoursFileName, _T("five_colour_set.txt"), confText);
-}
-
-bool LIVI_Depth_model_pi::SaveSlidingColorConfToFile()
-{
-    wxString confText = GetSlidingColourDepthColourWks();
-    return SaveColorConfToFile(slidingColoursFileName, _T("sliding_colour_set.txt"), confText);
-}
-
-bool LIVI_Depth_model_pi::SaveTwoColorConfToFile()
-{
-    wxString confText = GetTwoColourDepthColourWks();
-    return SaveColorConfToFile(twoColoursFileName, _T("two_colour_set.txt"), confText);
-}
-
-bool LIVI_Depth_model_pi::SaveColorConfToFile(
-    wxFileName &confFile, const wxString confFileName, const wxString confText)
-{
-    // Normal case: we have a functioning path available. Just write there
-    wxString path = confFile.GetFullPath();
-
-    // Try opening the file in the path
-    wxFile file(path, wxFile::write);
-    if (!file.Exists(path))
-    {
-        // No such path, set up a path
-        wxFileName fn;
-        fn.SetPath(*GetpSharedDataLocation());
-        fn.AppendDir(_T("plugins"));
-        fn.AppendDir(_T("LIVI_Depth_model_pi"));
-        fn.AppendDir(_T("colour_files"));
-        fn.SetFullName(confFileName);
-
-        bool success = fn.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
-        if (success)
-            confFile = fn;
-        else
-            return false;   // Could not create the path. This is bad.
-    }
-    path = confFile.GetFullPath();
-
-    // Try opening the file again
-    file.Open(path, wxFile::write);
-    if (file.IsOpened())
-    {
-        bool success = file.Write(confText);
-        file.Close();
-
-        if (success)
-            return true;
-    }
-
-    return false;
-}
-
-/**
-* Generates a well known string (wks) about colour settings, telling
-* the colouring options for GDAL colour_relief.
-* Wks format is, for every row, like this:
-* <depth_value> <Red> <Green> <Blue> <Alpha>
-* We are going to use the nearest matching colour colouring option,
-* so we insert two colour definitions near each depth value, small depth
-* amount to each "side", so the nearest colour will be the wanted one
-* at any depth level.
-*/
-wxString LIVI_Depth_model_pi::GetFiveColourDepthColourWks()
-{
-    static double nci = 0.0001; // Nearest colour tweak. Number in meters.
-    static int opaque_list[5] = {128, 96, 64, 32, 16}; // Amount of opaqueness less for deeper water, values in [0...255]
-
-    wxString wks_ColourSettings;
-    wks_ColourSettings.append(wxString(_T("nv           0  0  0  0\r\n")));
-
-    for (int i = 0; i < DM_NUM_CUSTOM_DEP; i++) {
-        wks_ColourSettings.append(
-            wxString::Format(_T("%f %i %i %i %i\r\n"), 
-                m_pconf->colour.m_customDepths[i]+nci,
-                m_pconf->colour.m_customColours[i].Red(),
-                m_pconf->colour.m_customColours[i].Green(),
-                m_pconf->colour.m_customColours[i].Blue(),
-                opaque_list[i])
-        );
-        wks_ColourSettings.append(
-            wxString::Format(_T("%f %i %i %i %i\r\n"), 
-                m_pconf->colour.m_customDepths[i],
-                m_pconf->colour.m_customColours[i+1].Red(),
-                m_pconf->colour.m_customColours[i+1].Green(),
-                m_pconf->colour.m_customColours[i+1].Blue(),
-                opaque_list[i+1])
-        );
-    }
-
-    return wks_ColourSettings;
-}
-
-wxString LIVI_Depth_model_pi::GetSlidingColourDepthColourWks()
-{
-    wxString wks_ColourSettings;
-
-    //TODO
-    wks_ColourSettings.append(wxString(_T("nv           0  0  0  0\r\n")));
-
-    return wks_ColourSettings;
-}
-
-wxString LIVI_Depth_model_pi::GetTwoColourDepthColourWks()
-{
-    static double nci = 0.0001; // Nearest colour tweak. Number in meters.
-    static int opaque_level = 128;  // amount of opaqueness, value in [0...255]
-
-    wxString wks_ColourSettings;
-
-    wks_ColourSettings.append(wxString(_T("nv           0  0  0  0\r\n")));
-    wks_ColourSettings.append(
-        wxString::Format(_T("%f %i %i %i %i\r\n"),
-            m_pconf->colour.m_twoColoursDepth + nci,
-            m_pconf->colour.m_twoColours[0].Red(),
-            m_pconf->colour.m_twoColours[0].Green(),
-            m_pconf->colour.m_twoColours[0].Blue(),
-            m_pconf->colour.m_twoColours[0].Alpha())
-    );
-    wks_ColourSettings.append(
-        wxString::Format(_T("%f %i %i %i %i\r\n"),
-            m_pconf->colour.m_twoColoursDepth,
-            m_pconf->colour.m_twoColours[1].Red(),
-            m_pconf->colour.m_twoColours[1].Green(),
-            m_pconf->colour.m_twoColours[1].Blue(),
-            opaque_level)
-    );
-
-    return wks_ColourSettings;
-}
-
 /**
 * Sets the colouring information, as well as the limiting depths,
 * from the m_customColours of the m_conf to the UI.
@@ -679,6 +510,18 @@ void LIVI_Depth_model_pi::PullConfigFromUI(void)
     m_pconf->colour.userColourConfPath = dialog->GetUserColourConfigurationFileName();
     m_pconf->fileImport.filePath = dialog->GetDepthChartFileName();
 
+}
+
+DM_colourType LIVI_Depth_model_pi::to_dmColourType(int colouringChoiceId)
+{
+    switch (colouringChoiceId)
+    {
+    case DM_viz_USER_FILE:          { return COLOUR_USER_FILE;   break; }
+    case DM_viz_FIVE_DEPTH_RANGES:  { return COLOUR_FIVE_RANGES; break; }
+    case DM_viz_SLIDING_COLOUR:     { return COLOUR_SLIDING;     break; }
+    case DM_viz_TWO_DEPTH_RANGES:   { return COLOUR_TWO_RANGES;  break; }
+    default:                        { return COLOUR_UNDEFINED;   break; }
+    }
 }
 
 void LIVI_Depth_model_pi::OnDepthModelDialogClose()
@@ -731,9 +574,11 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
             {
                 dialog->SetPictureImportErrorText(std::string("Setting colouring options"));
 
-                success &= SaveConfFileOfUISelection(); // Save, to get the current options in use
+                success &= colourfileHandler->SaveConfFileOfUISelection(
+                    to_dmColourType(dialog->GetSelectedColourOption())); // Save, to get the current options in use
 
-                wxFileName colorFile = GetConfFileOfUISelection();
+                wxFileName colorFile = colourfileHandler->GetConfFileOfUISelection(
+                    to_dmColourType(dialog->GetSelectedColourOption()));
                 if (!colorFile.IsOk())
             {
                 dialog->SetPictureImportErrorText(std::string("Could not interpret the colour definitions."));

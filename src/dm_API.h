@@ -3,6 +3,19 @@
 #ifndef _DM_API_
 #define _DM_API_
 
+enum DM_colourType
+{
+    COLOUR_UNDEFINED = 14703,  // Magic number much greater than 0, to avoid unintentionally accepted zeroes, and ones. Also More than wxID_HIGHEST = 5999, just in case the wxIDs could be used.
+
+    COLOUR_USER_FILE,
+    COLOUR_FIVE_RANGES,
+    COLOUR_SLIDING,
+    COLOUR_TWO_RANGES,
+
+    COLOUR_MAX     // Not-to-be-used-in-code guardian value of the end of the enum range
+};
+bool dmColourTypeIsOk(DM_colourType col);
+
 
 struct coord {
     coord()
@@ -72,14 +85,8 @@ enum DM_visualization
 
     VISUALIZATION_MAX     // Not-to-be-used-in-code guardian value of the end of the enum range
 };
+bool dmVisualizationIsOk(DM_visualization viz);
 
-bool dmVisualizationIsOk(DM_visualization viz)
-{
-    if (viz >= VISUALIZATION_UNDEFINED && viz < VISUALIZATION_MAX)
-        return true;
-    else
-        return false;
-}
 
 class /*DECL_EXP*/ dmLogWriter
 {

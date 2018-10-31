@@ -35,7 +35,9 @@
   #include <wx/glcanvas.h>
 #endif //precompiled headers
 
-#include <wx/fileconf.h>
+//#include <wx/fileconf.h>    // wxFileName
+
+#include "dm_API.h" // DM_colourType
 
 #include "ocpn_plugin.h" //Required for OCPN plugin functions
 #include "LIVI_Depth_model_pi_UI_impl.h"
@@ -49,6 +51,7 @@
 
 class Dlg;
 class dmConfigHandler;
+class dmColourfileHandler;
 class dmDepthModelDrawer;
 
 //----------------------------------------------------------------------------------------------------------
@@ -132,6 +135,7 @@ private:
 
     dmConfigHandler     *m_pconf;
     Dlg                 *dialog;
+    dmColourfileHandler *colourfileHandler;
     /** Icon bitmap of this plugin as icon.Needed by about dialog. */
     wxIcon              *m_icon;
 
@@ -142,24 +146,7 @@ private:
   //bool                SaveConfig(void);
     void                PushConfigToUI(void);
     void                PullConfigFromUI(void);
-
-    bool                SaveConfFileOfUISelection();
-    wxFileName          GetConfFileOfUISelection();
-
-    wxFileName          GetUsersColorConfFile();
-    bool                SaveFiveColorConfToFile();
-    bool                SaveSlidingColorConfToFile();
-    bool                SaveTwoColorConfToFile();
-    bool                SaveColorConfToFile(wxFileName &confPath,
-                            const wxString fileName, const wxString confText);
-
-    wxString            GetFiveColourDepthColourWks();
-    wxString            GetSlidingColourDepthColourWks();
-    wxString            GetTwoColourDepthColourWks();
-
-    wxFileName          fiveColoursFileName;
-    wxFileName          slidingColoursFileName;
-    wxFileName          twoColoursFileName;
+    DM_colourType       to_dmColourType(int colouringChoiceId);
 
     bool                m_ShowHelp,m_bCaptureCursor,m_bCaptureShip;
   //double              m_cursor_lon, m_cursor_lat;
