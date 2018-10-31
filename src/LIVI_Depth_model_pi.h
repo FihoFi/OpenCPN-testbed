@@ -41,6 +41,7 @@
 
 #include "ocpn_plugin.h" //Required for OCPN plugin functions
 #include "LIVI_Depth_model_pi_UI_impl.h"
+#include "dmDrawingState.h"
 
 #include "version.h"
 
@@ -141,11 +142,13 @@ private:
 
     dmDepthModelDrawer  *dmDrawer;
   //wxFileName          pluginConfigPath;
+    dmDrawingState      drawingState;
 
     bool                LoadConfig(void);
   //bool                SaveConfig(void);
     void                PushConfigToUI(void);
     void                PullConfigFromUI(void);
+    DM_visualization    to_dmVisualizationType(int chartTypeId);
     DM_colourType       to_dmColourType(int colouringChoiceId);
 
     bool                m_ShowHelp,m_bCaptureCursor,m_bCaptureShip;

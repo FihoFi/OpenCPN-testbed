@@ -66,7 +66,7 @@ struct DMColorOptionConfig : dm_configAPI {
     DM_visualization    chartType;
     DM_colourType       colouringType;
     // Filepath and filename of the user given colour conf file file
-    wxFileName userColourConfPath;
+    wxFileName      userColourConfPath;
 
     wxColor m_customColours[DM_NUM_CUSTOM_COL]; // 0: col. for always too shallow, 4: col. for always deep enough
     double  m_customDepths[DM_NUM_CUSTOM_DEP]; // 0: level of too shallow, 3: level of always deep enough
