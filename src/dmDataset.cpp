@@ -324,7 +324,7 @@ bool dmDataset::applyHillshadeAlphaMask(GDALDataset * ds)
     delete[] alpha;
 }
 
-bool dmDataset::dstSrsToLatLon(double n, double e, coord &latLons)
+bool dmDataset::dstSrsToLatLon(coord dstSrsIn, coord &latLonOut)
 {
     PJ *projection;
     PJ_COORD from, to;
@@ -338,12 +338,12 @@ bool dmDataset::dstSrsToLatLon(double n, double e, coord &latLons)
     if (!projection)
         return false;
 
-    from = proj_coord(n, e, 0, 0);
+    from = proj_coord(dstSrsIn.north, dstSrsIn.east, 0, 0);
     
     to = proj_trans(projection, PJ_INV, from);
 
-    latLons.north = proj_todeg(to.enu.n);
-    latLons.east = proj_todeg(to.enu.e);
+    latLonOut.north = proj_todeg(to.enu.n);
+    latLonOut.east = proj_todeg(to.enu.e);
 
     /* Clean up */
     proj_destroy(projection);

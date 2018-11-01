@@ -62,7 +62,7 @@ private:
 
     bool allocateImgDataMemory();
     bool applyHillshadeAlphaMask(GDALDataset * ds);
-    bool dstSrsToLatLon(double e, double n, coord &latLons);
+    bool dstSrsToLatLon(coord dstSrsIn, coord &latLonOut);
     bool getCropExtents(coord topLeftIn, coord botRightIn,
         coord &topLeftOut, coord &botRightOut,
         int &pixOffsetX, int &pixOffsetY,
