@@ -4,6 +4,8 @@
 #define _DM_API_
 
 struct coord;
+struct dmExtent;
+
 typedef enum DM_colourType
 {
     COLOUR_UNDEFINED = 14703,  // Magic number much greater than 0, to avoid unintentionally accepted zeroes, and ones. Also More than wxID_HIGHEST = 5999, just in case the wxIDs could be used.
@@ -198,6 +200,7 @@ public:
     * @param[out] latLonOut transformed coordinates as latitude and longitude
     */
     virtual bool dstSrsToLatLon(coord dstSrsIn, coord &latLonOut) = 0;
+    virtual bool dstSrsToLatLon(dmExtent dstSrsIn, dmExtent &latLonOut) = 0;
 
     /**
     * Transforms input coordinates (given as latitude and longitude) into
@@ -207,6 +210,7 @@ public:
     * @param[out] dstSrsOut transformed coordinates in destination dataset SRS
     */
     virtual bool latLonToDstSrs(coord latLonIn, coord &dstSrsOut) = 0;
+    virtual bool latLonToDstSrs(dmExtent latLonIn, dmExtent &dstSrsOut) = 0;
 
 
     /* Setters for hillshade parameters */

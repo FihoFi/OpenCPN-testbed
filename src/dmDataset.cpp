@@ -353,6 +353,16 @@ bool dmDataset::dstSrsToLatLon(coord dstSrsIn, coord &latLonOut)
     return true;
 }
 
+bool dmDataset::dstSrsToLatLon(dmExtent dstSrsIn, dmExtent &latLonOut)
+{
+    bool success = true;
+
+    success &= dstSrsToLatLon(dstSrsIn.topLeft, latLonOut.topLeft);
+    success &= dstSrsToLatLon(dstSrsIn.botRight, latLonOut.botRight);
+
+    return success;
+}
+
 // TODO: wrap coordinates with extents type
 bool dmDataset::getCropExtents(coord topLeftIn, coord botRightIn,
     coord &topLeftOut, coord &botRightOut,
@@ -462,7 +472,6 @@ std::vector<std::string> dmDataset::getGdaldemOptionsVec()
     return optionsVec;
 }
 
-
 bool dmDataset::latLonToDstSrs(coord latLonIn, coord &dstSrsOut)
 {
     
@@ -480,7 +489,7 @@ bool dmDataset::latLonToDstSrs(coord latLonIn, coord &dstSrsOut)
 
     from = proj_coord(latLonIn.north, latLonIn.east, 0, 0);
     
-    to = proj_trans(projection, PJ_FWD, from); // TODO: change this to other direction (what should PJ_INV be changed to?)
+    to = proj_trans(projection, PJ_FWD, from);
 
     dstSrsOut.north = proj_todeg(to.enu.n);
     dstSrsOut.east = proj_todeg(to.enu.e);
@@ -489,6 +498,16 @@ bool dmDataset::latLonToDstSrs(coord latLonIn, coord &dstSrsOut)
     proj_destroy(projection);
 
     return true;
+}
+
+bool dmDataset::latLonToDstSrs(dmExtent latLonIn, dmExtent &dstSrsOut)
+{
+    bool success = true;
+    
+    success &= latLonToDstSrs(latLonIn.topLeft, dstSrsOut.topLeft);
+    success &= latLonToDstSrs(latLonIn.botRight, dstSrsOut.botRight);
+
+    return success;
 }
 
 GDALDataset * dmDataset::reprojectDataset(GDALDataset *dsToReproject)
