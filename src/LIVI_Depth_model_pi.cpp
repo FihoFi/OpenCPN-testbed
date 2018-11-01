@@ -41,6 +41,7 @@
 #include "dmConfigHandler.h"    // For handling config options
 #include "dmColourfileHandler.h" // For handling colour file access operations
 #include "dmDepthModelDrawer.h"
+#include "dmDrawingState.h"
 
 // the class factories, used to create and destroy instances of the PlugIn
 
@@ -484,6 +485,16 @@ void LIVI_Depth_model_pi::OnDepthModelDialogClose()
 
 void LIVI_Depth_model_pi::OnImageFileChange(wxFileName fname)
 {
+    bool success = drawingState.SetWantedChartFileName(fname);
+    if(success)
+    {
+        m_pconf->fileImport.filePath = fname;
+        m_pconf->SaveConfig();
+    }
+    else
+    {
+        dialog->SetPictureImportErrorText(std::string("Could not open the given chart image file."));
+    }
 }
 
 void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
@@ -571,10 +582,32 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
 
 void LIVI_Depth_model_pi::OnChartTypeChange(int selectionId)
 {
+    DM_visualization chartType = to_dmVisualizationType(selectionId);
+    bool success = drawingState.SetWantedChartType(chartType);
+    if (success)
+    {
+        m_pconf->colour.setChartType(chartType);
+        m_pconf->SaveConfig();
+    }
+    else
+    {
+        dialog->SetPictureImportErrorText(std::string("Undefined chart visualization type setting."));
+    }
 }
 
 void LIVI_Depth_model_pi::OnColourSchemaChange(int selectionId)
 {
+    DM_colourType colType = to_dmColourType(selectionId);
+    bool success = drawingState.SetWantedColourSchema(colType);
+    if (success)
+    {
+        m_pconf->colour.setColouringType(colType);
+        m_pconf->SaveConfig();
+    }
+    else
+    {
+        dialog->SetPictureImportErrorText(std::string("Undefined colouring type setting."));
+    }
 }
 
 void LIVI_Depth_model_pi::OnColorOptionsApply()
@@ -585,8 +618,16 @@ void LIVI_Depth_model_pi::OnColorOptionsApply()
 
 void LIVI_Depth_model_pi::OnUserColourFileChange(wxFileName fullFileName)
 {
-    m_pconf->colour.userColourConfPath = fullFileName;
-    m_pconf->SaveConfig();
+    bool success = drawingState.SetWantedUserColourFileName(fullFileName);
+    if (success)
+    {
+        m_pconf->colour.userColourConfPath = fullFileName;
+        m_pconf->SaveConfig();
+    }
+    else
+    {
+        dialog->SetPictureImportErrorText(std::string("Could not find the given user's colour definition file."));
+    }
 }
 
 
@@ -634,6 +675,17 @@ void LIVI_Depth_model_pi::PullConfigFromUI(void)
         m_pconf->colour.setTwoColour(i, dialog->GetTwoColours(i));
     }
     m_pconf->colour.setTwoColoursDepth(dialog->GetDividingLevel());
+}
+
+DM_visualization LIVI_Depth_model_pi::to_dmVisualizationType(int chartTypeId)
+{
+    switch (chartTypeId)
+    {
+    case DM_viz_HILLSHADE:      { return HILLSHADE;                 break; }
+    case DM_viz_NONE:           { return NONE;                      break; }
+    case DM_viz_COLOR_RELIEF:   { return COLOR_RELIEF;              break; }
+    default:                    { return VISUALIZATION_UNDEFINED;   break; }
+    }
 }
 
 DM_colourType LIVI_Depth_model_pi::to_dmColourType(int colouringChoiceId)

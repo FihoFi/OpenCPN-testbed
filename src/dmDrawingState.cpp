@@ -43,7 +43,7 @@ bool dmDrawingState::SetCurrentChartType(DM_visualization imageType)
 
 bool dmDrawingState::SetCurrentColourSchema(DM_colourType colourSchema)
 {
-    if (colouringSchemaIsOk(colourSchema))
+    if (dmColourTypeIsOk(colourSchema))
     {
         currentColourSchema = colourSchema;
         return true;
@@ -81,8 +81,11 @@ bool dmDrawingState::SetWantedChartFileName(wxFileName fname)
 {
     if (filePathAndReadIsOk(fname))
     {
-        wantedChartFileName = fname;
-        stateOfWantedImage = std::min(stateOfWantedImage, CHART_FILE_CHANGED);
+        if (!fname.SameAs(wantedChartFileName))
+        {
+            wantedChartFileName = fname;
+            stateOfWantedImage = std::min(stateOfWantedImage, CHART_FILE_CHANGED);
+        }
         return true;
     }
     else
@@ -108,7 +111,7 @@ bool dmDrawingState::SetWantedChartType(DM_visualization imageType)
 
 bool dmDrawingState::SetWantedColourSchema(DM_colourType colourSchema)
 {
-    if (colouringSchemaIsOk(colourSchema))
+    if (dmColourTypeIsOk(colourSchema))
     {
         wantedColourSchema = colourSchema;
         stateOfWantedImage = std::min(stateOfWantedImage, CHART_TYPE_UNDEFINED);
@@ -126,8 +129,11 @@ bool dmDrawingState::SetWantedUserColourFileName(wxFileName fname)
 {
     if (filePathAndReadIsOk(fname))
     {
-        wantedUserColourFileName = fname;
-        stateOfWantedImage = std::min(stateOfWantedImage, COLOURING_CHANGED);
+        if (!fname.SameAs(wantedUserColourFileName))
+        {
+            wantedUserColourFileName = fname;
+            stateOfWantedImage = std::min(stateOfWantedImage, COLOURING_CHANGED);
+        }
         return true;
     }
     else
