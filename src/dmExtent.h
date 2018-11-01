@@ -3,7 +3,38 @@
 #ifndef _DM_EXTENT_H_
 #define _DM_EXTENT_H_
 
-#include "dm_API.h" // coord sstruct
+struct coord {
+    coord()
+        : north(0), east(0)
+    {    }
+
+    coord(double north, double east)
+    {
+        this->north = north;
+        this->east = east;
+    }
+
+    bool operator=(const coord& other)
+    {
+        if (this != &other)
+        {
+            this->north = other.north;
+            this->east = other.east;
+        }
+        return this;
+    }
+
+    bool operator==(const coord& other)
+    {
+        if (this->north == other.north && this->east == other.east)
+            return true;
+        else
+            return false;
+    }
+
+    /*float*/double east; // mathematical x, longitude etc.
+    /*float*/double north; // mathematical y, latitude
+};
 
 class dmExtent
 {

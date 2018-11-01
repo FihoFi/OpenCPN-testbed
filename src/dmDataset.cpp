@@ -5,6 +5,8 @@
 #include "gdal_utils.h"
 #include "proj.h"
 
+#include "dmExtent.h"
+
 bool dmDataset::driversRegistered = false;
 
 dmDataset::dmDataset(dmLogWriter* logWriter) :
