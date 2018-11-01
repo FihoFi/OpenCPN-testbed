@@ -222,6 +222,15 @@ public:
         coord &topLeftOut, coord &botRightOut,
         int &imgWidth, int &imgHeight) = 0;
 
+    /**
+    * Transforms input coordinates (given in the SRS of the current destination
+    * dataset) into latitude and longitude values. 
+    *
+    * @param[in] dstSRsIn input coordinates in destination dataset SRS
+    * @param[out] latLonOut transformed coordinates as latitude and longitude
+    */
+    virtual bool dstSrsToLatLon(coord dstSrsIn, coord &latLonOut) = 0;
+
 
     /* Setters for hillshade parameters */
 

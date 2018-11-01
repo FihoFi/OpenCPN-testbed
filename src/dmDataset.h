@@ -30,6 +30,7 @@ public:
     bool openDataSet(const char* filename) override;
     void setSrcWkt(const char * wkt);
     void setDstWkt(const char * wkt);
+    bool dstSrsToLatLon(coord dstSrsIn, coord &latLonOut) override;
 
     // setters for hillshade parameters
     bool setHillshadeZFactor(double zFactor) override;
@@ -62,7 +63,6 @@ private:
 
     bool allocateImgDataMemory();
     bool applyHillshadeAlphaMask(GDALDataset * ds);
-    bool dstSrsToLatLon(coord dstSrsIn, coord &latLonOut);
     bool getCropExtents(coord topLeftIn, coord botRightIn,
         coord &topLeftOut, coord &botRightOut,
         int &pixOffsetX, int &pixOffsetY,
