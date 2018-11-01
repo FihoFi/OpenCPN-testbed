@@ -5,6 +5,8 @@
 #include "gdal_utils.h"
 #include "proj.h"
 
+#include "dmExtent.h"
+
 bool dmDataset::driversRegistered = false;
 
 dmDataset::dmDataset(dmLogWriter* logWriter) :
@@ -324,7 +326,7 @@ bool dmDataset::applyHillshadeAlphaMask(GDALDataset * ds)
     delete[] alpha;
 }
 
-bool dmDataset::dstSrsToLatLon(double n, double e, coord &latLons)
+bool dmDataset::dstSrsToLatLon(coord dstSrsIn, coord &latLonOut)
 {
     PJ *projection;
     PJ_COORD from, to;
@@ -338,17 +340,27 @@ bool dmDataset::dstSrsToLatLon(double n, double e, coord &latLons)
     if (!projection)
         return false;
 
-    from = proj_coord(n, e, 0, 0);
+    from = proj_coord(dstSrsIn.north, dstSrsIn.east, 0, 0);
     
     to = proj_trans(projection, PJ_INV, from);
 
-    latLons.north = proj_todeg(to.enu.n);
-    latLons.east = proj_todeg(to.enu.e);
+    latLonOut.north = proj_todeg(to.enu.n);
+    latLonOut.east = proj_todeg(to.enu.e);
 
     /* Clean up */
     proj_destroy(projection);
 
     return true;
+}
+
+bool dmDataset::dstSrsToLatLon(dmExtent dstSrsIn, dmExtent &latLonOut)
+{
+    bool success = true;
+
+    success &= dstSrsToLatLon(dstSrsIn.topLeft, latLonOut.topLeft);
+    success &= dstSrsToLatLon(dstSrsIn.botRight, latLonOut.botRight);
+
+    return success;
 }
 
 // TODO: wrap coordinates with extents type
@@ -458,6 +470,44 @@ std::vector<std::string> dmDataset::getGdaldemOptionsVec()
     }
 
     return optionsVec;
+}
+
+bool dmDataset::latLonToDstSrs(coord latLonIn, coord &dstSrsOut)
+{
+    
+    PJ *projection;
+    PJ_COORD from, to;
+    OGRSpatialReference osr(GDALGetProjectionRef(_dstDataset));
+    char *projStr;
+    osr.exportToProj4(&projStr);
+    projection = proj_create(PJ_DEFAULT_CTX, projStr);
+
+    CPLFree(projStr);
+    
+    if (!projection)
+        return false;
+
+    from = proj_coord(latLonIn.north, latLonIn.east, 0, 0);
+    
+    to = proj_trans(projection, PJ_FWD, from);
+
+    dstSrsOut.north = proj_todeg(to.enu.n);
+    dstSrsOut.east = proj_todeg(to.enu.e);
+
+    /* Clean up */
+    proj_destroy(projection);
+
+    return true;
+}
+
+bool dmDataset::latLonToDstSrs(dmExtent latLonIn, dmExtent &dstSrsOut)
+{
+    bool success = true;
+    
+    success &= latLonToDstSrs(latLonIn.topLeft, dstSrsOut.topLeft);
+    success &= latLonToDstSrs(latLonIn.botRight, dstSrsOut.botRight);
+
+    return success;
 }
 
 GDALDataset * dmDataset::reprojectDataset(GDALDataset *dsToReproject)

@@ -3,6 +3,9 @@
 #ifndef _DM_API_
 #define _DM_API_
 
+struct coord;
+struct dmExtent;
+
 typedef enum DM_colourType
 {
     COLOUR_UNDEFINED = 14703,  // Magic number much greater than 0, to avoid unintentionally accepted zeroes, and ones. Also More than wxID_HIGHEST = 5999, just in case the wxIDs could be used.
@@ -16,39 +19,6 @@ typedef enum DM_colourType
 } DM_colourType;
 bool dmColourTypeIsOk(DM_colourType col);
 
-
-struct coord {
-    coord()
-        : north(0), east(0)
-    {    }
-
-    coord(double north, double east)
-    {
-        this->north = north;
-        this->east = east;
-    }
-
-    bool operator=(const coord& other)
-    {
-        if (this != &other)
-        {
-            this->north = other.north;
-            this->east  = other.east;
-        }
-        return this;
-    }
-
-    bool operator==(const coord& other)
-    {
-        if (this->north == other.north && this->east == other.east)
-            return true;
-        else
-            return false;
-    }
-
-    /*float*/double east; // mathematical x, longitude etc.
-    /*float*/double north; // mathematical y, latitude
-};
 
 struct dmRasterImgData
 {
@@ -221,6 +191,26 @@ public:
         const coord topLeftIn, const coord botRightIn,
         coord &topLeftOut, coord &botRightOut,
         int &imgWidth, int &imgHeight) = 0;
+
+    /**
+    * Transforms input coordinates (given in the SRS of the current destination
+    * dataset) into latitude and longitude values. 
+    *
+    * @param[in] dstSRsIn input coordinates in destination dataset SRS
+    * @param[out] latLonOut transformed coordinates as latitude and longitude
+    */
+    virtual bool dstSrsToLatLon(coord dstSrsIn, coord &latLonOut) = 0;
+    virtual bool dstSrsToLatLon(dmExtent dstSrsIn, dmExtent &latLonOut) = 0;
+
+    /**
+    * Transforms input coordinates (given as latitude and longitude) into
+    * the SRS of the current destination dataset.
+    *
+    * @param[in] latLonIn input coordinates as latitude and longitude
+    * @param[out] dstSrsOut transformed coordinates in destination dataset SRS
+    */
+    virtual bool latLonToDstSrs(coord latLonIn, coord &dstSrsOut) = 0;
+    virtual bool latLonToDstSrs(dmExtent latLonIn, dmExtent &dstSrsOut) = 0;
 
 
     /* Setters for hillshade parameters */

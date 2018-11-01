@@ -6,6 +6,7 @@
 #include "wx/wxprec.h"      // contains wxDC
 #include "ocpn_plugin.h"    // containsPlugIn_ViewPort
 #include <wx/filename.h>    // wxFileName
+#include "dmExtent.h"
 #include "dmDataset.h"
 
 

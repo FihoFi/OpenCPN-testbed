@@ -3,11 +3,44 @@
 #ifndef _DM_EXTENT_H_
 #define _DM_EXTENT_H_
 
-#include "dm_API.h" // coord sstruct
+struct coord {
+    coord()
+        : north(0), east(0)
+    {    }
 
-class dmExtent
+    coord(double north, double east)
+    {
+        this->north = north;
+        this->east = east;
+    }
+
+    bool operator=(const coord& other)
+    {
+        if (this != &other)
+        {
+            this->north = other.north;
+            this->east = other.east;
+        }
+        return this;
+    }
+
+    bool operator==(const coord& other)
+    {
+        if (this->north == other.north && this->east == other.east)
+            return true;
+        else
+            return false;
+    }
+
+    /*float*/double east; // mathematical x, longitude etc.
+    /*float*/double north; // mathematical y, latitude
+};
+
+struct dmExtent
 {
-public:
+    coord topLeft;
+    coord botRight;
+
     dmExtent();
     dmExtent(coord topLeft, coord botRight);
     dmExtent(double top, double left, double bot, double right);
@@ -44,10 +77,6 @@ public:
     *           that span the maximal area.
     */
     dmExtent const getMaxes(const dmExtent& other);
-
-private:
-    coord topLeft;
-    coord botRight;
 };
 
 #endif _DM_EXTENT_H_
