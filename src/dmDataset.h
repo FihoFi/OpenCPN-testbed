@@ -31,6 +31,7 @@ public:
     void setSrcWkt(const char * wkt);
     void setDstWkt(const char * wkt);
     bool dstSrsToLatLon(coord dstSrsIn, coord &latLonOut) override;
+    bool latLonToDstSrs(coord latLonIn, coord &dstSrsOut) override;
 
     // setters for hillshade parameters
     bool setHillshadeZFactor(double zFactor) override;

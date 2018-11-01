@@ -460,6 +460,35 @@ std::vector<std::string> dmDataset::getGdaldemOptionsVec()
     return optionsVec;
 }
 
+
+bool dmDataset::latLonToDstSrs(coord latLonIn, coord &dstSrsOut)
+{
+    
+    PJ *projection;
+    PJ_COORD from, to;
+    OGRSpatialReference osr(GDALGetProjectionRef(_dstDataset));
+    char *projStr;
+    osr.exportToProj4(&projStr);
+    projection = proj_create(PJ_DEFAULT_CTX, projStr);
+
+    CPLFree(projStr);
+    
+    if (!projection)
+        return false;
+
+    from = proj_coord(latLonIn.north, latLonIn.east, 0, 0);
+    
+    to = proj_trans(projection, PJ_FWD, from); // TODO: change this to other direction (what should PJ_INV be changed to?)
+
+    dstSrsOut.north = proj_todeg(to.enu.n);
+    dstSrsOut.east = proj_todeg(to.enu.e);
+
+    /* Clean up */
+    proj_destroy(projection);
+
+    return true;
+}
+
 GDALDataset * dmDataset::reprojectDataset(GDALDataset *dsToReproject)
 {
     if (dsToReproject)

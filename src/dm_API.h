@@ -231,6 +231,15 @@ public:
     */
     virtual bool dstSrsToLatLon(coord dstSrsIn, coord &latLonOut) = 0;
 
+    /**
+    * Transforms input coordinates (given as latitude and longitude) into
+    * the SRS of the current destination dataset.
+    *
+    * @param[in] latLonIn input coordinates as latitude and longitude
+    * @param[out] dstSrsOut transformed coordinates in destination dataset SRS
+    */
+    virtual bool latLonToDstSrs(coord latLonIn, coord &dstSrsOut) = 0;
+
 
     /* Setters for hillshade parameters */
 
