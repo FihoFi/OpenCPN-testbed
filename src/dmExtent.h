@@ -36,9 +36,11 @@ struct coord {
     /*float*/double north; // mathematical y, latitude
 };
 
-class dmExtent
+struct dmExtent
 {
-public:
+    coord topLeft;
+    coord botRight;
+
     dmExtent();
     dmExtent(coord topLeft, coord botRight);
     dmExtent(double top, double left, double bot, double right);
@@ -75,10 +77,6 @@ public:
     *           that span the maximal area.
     */
     dmExtent const getMaxes(const dmExtent& other);
-
-private:
-    coord topLeft;
-    coord botRight;
 };
 
 #endif _DM_EXTENT_H_
