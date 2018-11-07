@@ -9,11 +9,11 @@
 #include "dmExtent.h"
 #include "dmDataset.h"
 
+#include "dmDrawingState.h"
 
 class dmDepthModelDrawer : public dmLogWriter
 {
 public:
-    typedef enum chartState { UNSET, FILE_SET, PROJECTION_OK, CHART_AREA_OK, BITMAP_AVAILABLE } chartState;
     typedef enum crdSystem { UTM35N, WORLD_MERCATOR} crdSystem;
 
     dmDepthModelDrawer();
@@ -37,7 +37,6 @@ public:
 
 
 private:
-    chartState  modelState;
     bool        chartAreaKnown;
     bool        datasetAvailable;
 
@@ -45,6 +44,7 @@ private:
     dmDataset   dataset;
     coord       wholeImageTopLeftWM,  wholeImageBotRightWM;
     coord       croppedImageTopLeftWM, croppedImageBotRightWM;
+    dmDrawingState  drawingState;
 
     coord       imageTopLeftLL,  imageBotRightLL;
     coord       chartTopLeftLL,  chartBotRightLL;

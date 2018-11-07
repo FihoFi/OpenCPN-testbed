@@ -5,9 +5,9 @@
 #include <proj_api.h>
 #include "dm_API.h"
 #include "dmDataset.h"
+#include "dmDrawingState.h"
 
 dmDepthModelDrawer::dmDepthModelDrawer() :
-    modelState(UNSET), 
     chartAreaKnown(false), datasetAvailable(false), depthModelFileName(),
     dataset(this), raster(NULL), w(0), h(0)
 {    }
@@ -69,7 +69,6 @@ bool dmDepthModelDrawer::setDepthModelDataset(const wxFileName &fileName)
     {
         depthModelFileName = fileNameCharPtr;
         datasetAvailable = true;
-        modelState = FILE_SET;
     }
     else
     {
@@ -88,8 +87,6 @@ bool dmDepthModelDrawer::hasDataset()
 */
 bool dmDepthModelDrawer::applyChartArea(coord chartTopLeftLL, coord chartBotRightLL)
 {
-    if (modelState < FILE_SET/*PROJECTION_OK*/) { return false; }
-
     this->chartTopLeftLL  = chartTopLeftLL;
     this->chartBotRightLL = chartBotRightLL;
     this->chartAreaKnown = true;
@@ -106,7 +103,6 @@ bool dmDepthModelDrawer::applyChartArea(PlugIn_ViewPort &vp)
 
 bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
 {
-    //if (modelState < CHART_AREA_OK/*BITMAP_AVAILABLE*/) { return false; }
 
     bool success = reCalculateDepthModelBitmap(vp);
 
@@ -119,8 +115,6 @@ bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
 
 bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
 {
-    if (modelState < FILE_SET) { return false; }
-
     bool isNewLoad = false;
 
     applyChartArea(vp);
@@ -161,7 +155,6 @@ bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
 
         idealTopLeftLL = imageTopLeftLL;
         idealBotRightLL = imageBotRightLL;
-        modelState = PROJECTION_OK;
     }
 
     // Get min, and max coordinates where the bitmap is to be drawn
@@ -223,7 +216,6 @@ bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
             wxString::Format(_T("%i"), w) + "," + wxString::Format(_T("%i"), h));
     }
 
-    modelState = BITMAP_AVAILABLE;
     return true;
 }
 
@@ -234,10 +226,6 @@ bool dmDepthModelDrawer::calculateWholeWMProjectedImage()
     raster = dataset.getRasterData(wholeImageTopLeftWM, wholeImageBotRightWM);
     success &= (raster != NULL);
 
-    if (success)
-    {    modelState = CHART_AREA_OK;    }
-    else
-    {    return success;                }
 
     success &= dataset.getDatasetExtents(wholeImageTopLeftWM, wholeImageBotRightWM);
     if (success)
@@ -258,11 +246,6 @@ bool dmDepthModelDrawer::calculateCroppedWMProjectedImage()
     raster = dataset.getRasterData(
         idealTopLeftLL, idealBotRightLL,
         croppedImageTopLeftWM, croppedImageBotRightWM, w, h);
-
-    if (success)
-    {    modelState = CHART_AREA_OK;    }
-    else
-    {    return success;                }
 
     success &= dataset.getDatasetExtents(croppedImageTopLeftWM, croppedImageBotRightWM);
     if (success)
