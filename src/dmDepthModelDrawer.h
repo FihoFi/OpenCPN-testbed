@@ -37,6 +37,8 @@ public:
     DM_colourType    getColourSchema();
     bool             setColourSchema(DM_colourType colourSchema);
     bool             setColourConfigurationFile(const wxFileName &fileNamePath);
+    bool             setDataset(const wxFileName &fileName);
+    bool             openDataset(const wxFileName &fileName);
 
 private:
     bool        chartAreaKnown;

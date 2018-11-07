@@ -100,6 +100,43 @@ bool dmDepthModelDrawer::hasDataset()
 }
 
 /**
+* Asks dmDataset to open the dataset in the file <i>fileName</i>, and queries
+* the (World Mercator) extents of the dataset.
+*/
+bool dmDepthModelDrawer::setDataset(const wxFileName &fileName)
+{
+    bool success = drawingState.SetWantedChartFileName(fileName);
+    // TODO set to dataset?
+    return success;
+}
+
+bool dmDepthModelDrawer::openDataset(const wxFileName &fileName)
+{
+    wxString    fileNameWxStr = fileName.GetFullPath();
+    std::string fileNameStr = fileNameWxStr.ToStdString();
+
+    if (!fileName.SameAs(drawingState.GetWantedChartFileName()))
+    {
+        wxLogMessage(_T("dmDepthModelDrawer::openDataset failed, the chart file "
+                        "is not set: ") + fileNameStr);
+        return false;
+    }
+
+    const char* fileNameCharPtr = fileNameStr.c_str();
+    bool success = dataset.openDataSet(fileNameCharPtr);
+    datasetAvailable = success;
+    if (!success)
+    {
+        wxLogMessage(_T("dmDepthModelDrawer::openDataset openDataSet failed: ") + fileNameStr);
+        return false;
+    }
+
+    success = dataset.getDatasetExtents(wholeImageWM.topLeft, wholeImageWM.botRight);
+
+    return success;
+}
+
+/**
 * Saves extent of the current canvas area we are drawing to.
 */
 bool dmDepthModelDrawer::applyChartArea(coord chartTopLeftLL, coord chartBotRightLL)

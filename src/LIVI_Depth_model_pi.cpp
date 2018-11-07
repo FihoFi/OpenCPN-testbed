@@ -122,6 +122,7 @@ int LIVI_Depth_model_pi::Init(void)
 
     bool success = m_pconf->LoadConfig(); // config related to this plugin.
     PushConfigToUI();
+    dmDrawer->setDataset(m_pconf->fileImport.filePath);
     dmDrawer->setChartDrawType(m_pconf->colour.getChartType());
     dmDrawer->setColourSchema(m_pconf->colour.getColouringType());
     dmDrawer->setColourConfigurationFile(m_pconf->colour.userColourConfPath);
@@ -490,7 +491,7 @@ void LIVI_Depth_model_pi::OnDepthModelDialogClose()
 
 void LIVI_Depth_model_pi::OnImageFileChange(wxFileName fname)
 {
-    bool success = drawingState.SetWantedChartFileName(fname);
+    bool success = dmDrawer->setDataset(fname);
     if(success)
     {
         m_pconf->fileImport.filePath = fname;
@@ -542,10 +543,10 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
                 return;
             }
 
-        success &= dmDrawer->setDepthModelDataset(fullFileName);
         }   // if
 
         setInfoToUI("Reading and projecting chart image to World Mercator");
+        success &= dmDrawer->openDataset(fullFileName);
         if (!success)
         {
             setErrorToUI("Could not load the file as a chart image.");
