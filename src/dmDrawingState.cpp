@@ -96,21 +96,17 @@ bool dmDrawingState::SetWantedUserColourFileName(wxFileName fname)
 
 }
 
-bool dmDrawingState::SetWantedDrawingAreaLL(dmExtent extentLL)
+void dmDrawingState::SetWantedDrawingAreaLL(dmExtent extentLL)
 {
     wantedDrawingAreaLL = extentLL;
 
     if (extentLL == dmExtent())
     {
         stateOfWantedImage = std::min(stateOfWantedImage, CHART_EXTENTS_UNDEFINED);
-
-        throw(std::string("Undefined extents sent to SetWantedChartExtent."));
-        return false;
     }
     else
     {
         stateOfWantedImage = std::min(stateOfWantedImage, CHART_EXTENTS_CHANGED);
-        return true;
     }
 }
 

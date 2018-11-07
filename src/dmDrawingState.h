@@ -40,7 +40,7 @@ public:
     bool                SetWantedChartType      (DM_visualization imageType);
     bool                SetWantedColourSchema   (DM_colourType colourSchema);
     bool                SetWantedUserColourFileName(wxFileName fname);
-    bool                SetWantedDrawingAreaLL  (dmExtent extentLL);
+    void                SetWantedDrawingAreaLL  (dmExtent extentLL);
 
     wxFileName          GetWantedChartFileName()        {   return wantedChartFileName;         }
     DM_visualization    GetWantedChartType()            {   return wantedChartType;             }
