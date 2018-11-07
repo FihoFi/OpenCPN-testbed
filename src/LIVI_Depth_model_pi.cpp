@@ -506,7 +506,6 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
 
     setInfoToUI("Setting chart image type options");
 
-    bool exception = false;
     bool success = true;
     try {
         if(dmDrawer->getChartDrawType() == COLOR_RELIEF)
@@ -546,7 +545,6 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
     catch (std::string exStr)
     {
         setInfoToUI(exStr);
-        exception = true;
     }
 
     RequestRefresh(m_parent_window); // refresh main window
