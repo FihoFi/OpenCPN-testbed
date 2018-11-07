@@ -148,6 +148,8 @@ private:
   //bool                SaveConfig(void);
     void                PushConfigToUI(void);
     void                PullConfigFromUI(void);
+    void                setInfoToUI(std::string str);
+    void                setErrorToUI(std::string str);
     DM_visualization    to_dmVisualizationType(int chartTypeId);
     DM_colourType       to_dmColourType(int colouringChoiceId);
 
