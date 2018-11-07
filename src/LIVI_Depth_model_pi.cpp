@@ -546,11 +546,7 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
         setInfoToUI(exStr);
     }
 
-    RequestRefresh(m_parent_window); // refresh main window
-
-    m_pconf->fileImport.filePath = fullFileName;
-    m_pconf->SaveConfig();
-
+    RequestRefresh(m_parent_window); // request refresh of the main window -> call to RenderOverlay
 }
 
 void LIVI_Depth_model_pi::OnChartTypeChange(int selectionId)
