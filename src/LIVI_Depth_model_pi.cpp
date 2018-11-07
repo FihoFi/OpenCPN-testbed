@@ -364,8 +364,7 @@ wxArrayString LIVI_Depth_model_pi::GetDynamicChartClassNameArray(void)
 */
 bool LIVI_Depth_model_pi::RenderOverlay(wxDC& dc, PlugIn_ViewPort* vp)
 {
-    bool success = true;
-    //success = dmDrawer->reCalculateDepthModelBitmap(*vp);
+    bool success = false;
 
     try
     {
