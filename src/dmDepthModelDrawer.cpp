@@ -7,8 +7,9 @@
 #include "dmDataset.h"
 #include "dmDrawingState.h"
 
-dmDepthModelDrawer::dmDepthModelDrawer() :
-    chartAreaKnown(false), datasetAvailable(false), depthModelFileName(),
+dmDepthModelDrawer::dmDepthModelDrawer()
+    : drawingState()
+    , chartAreaKnown(false), datasetAvailable(false), depthModelFileName(),
     dataset(this), raster(NULL), w(0), h(0)
 {    }
 
@@ -46,6 +47,44 @@ bool dmDepthModelDrawer::setChartDrawTypeHillshade()
 bool dmDepthModelDrawer::setChartDrawTypePlain()
 {
     return dataset.setVisualizationScheme(DM_visualization::NONE);
+}
+
+DM_visualization dmDepthModelDrawer::getChartDrawType()
+{
+    return drawingState.GetWantedChartType();
+}
+
+
+bool dmDepthModelDrawer::setChartDrawType(DM_visualization chartType)
+{
+    bool success = drawingState.SetWantedChartType(chartType);
+    success &= dataset.setVisualizationScheme(chartType);
+    return success;
+}
+
+
+DM_colourType dmDepthModelDrawer::getColourSchema()
+{
+    return drawingState.GetWantedColourSchema();
+}
+
+bool dmDepthModelDrawer::setColourSchema(DM_colourType colourSchema)
+{
+    bool success = drawingState.SetWantedColourSchema(colourSchema);
+    // TODO set to dataset?
+    return success;
+}
+
+bool dmDepthModelDrawer::setColourConfigurationFile(const wxFileName &fileNamePath)
+{
+    bool success = drawingState.SetWantedUserColourFileName(fileNamePath);
+
+    wxString    fileNameWxStr = fileNamePath.GetFullPath();
+    std::string fileNameStr = fileNameWxStr.ToStdString();
+    const char* fileNameCharPtr = fileNameStr.c_str();
+
+    success &= dataset.setColourConfigurationFile(fileNameCharPtr, false);
+    return success;
 }
 
 /**
