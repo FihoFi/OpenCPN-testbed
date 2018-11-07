@@ -244,9 +244,23 @@ wxFileName    Dlg::GetDepthChartFileName()
 void    Dlg::SetDepthChartFileName(wxFileName &fileName)
 {    this->dmPictureImport_filePicker->SetFileName(fileName);   }
 
+void Dlg::SetCurrentOptionsText(std::string str)
+{
+    this->dmPictureImport_staticText->SetLabel(str);
+}
+
+void Dlg::SetPictureImportInfoText(std::string infoStr)
+{
+    this->dmPictureImportError_staticText->SetLabel(infoStr);
+    this->dmPictureImportError_staticText->SetForegroundColour(*wxBLACK);
+    this->dmPictureImportError_staticText->Refresh();
+}
+
 void Dlg::SetPictureImportErrorText(std::string errStr)
 {
     this->dmPictureImportError_staticText->SetLabel(errStr);
+    this->dmPictureImportError_staticText->SetForegroundColour(*wxRED);
+    this->dmPictureImportError_staticText->Refresh();
 }
 
 //void Dlg::Addpoint(TiXmlElement* Route, wxString ptlat, wxString ptlon, wxString ptname, wxString ptsym, wxString pttype){
