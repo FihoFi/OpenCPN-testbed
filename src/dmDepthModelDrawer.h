@@ -19,8 +19,6 @@ public:
     dmDepthModelDrawer();
     ~dmDepthModelDrawer();
 
-    bool applyChartArea(coord chartTopLeft, coord chartBotRight);
-    bool applyChartArea(PlugIn_ViewPort &vp);
     bool drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp);
     bool reCalculateDepthModelBitmap(PlugIn_ViewPort &vp);
 
@@ -37,6 +35,7 @@ public:
     bool             setColourConfigurationFile(const wxFileName &fileNamePath);
     bool             setDataset(const wxFileName &fileName);
     bool             openDataset(const wxFileName &fileName);
+    dmExtent         applyViewPortArea(/*const*/ PlugIn_ViewPort &vp);
 
 private:
     bool        chartAreaKnown;
