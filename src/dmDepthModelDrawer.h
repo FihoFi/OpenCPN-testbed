@@ -59,11 +59,10 @@ private:
     wxBitmap        bmp;
     wxPoint         bitmapTopLeftPositioningPoint;
 
+    void WMtoLL(const dmExtent& WMin, dmExtent& LLout);
 
     bool calculateWholeWMProjectedImage();
     bool calculateCroppedWMProjectedImage();
-    void WMtoLL(const coord& topLeftWMin, const coord& botRightWMin,
-                coord& topLeftLLout, coord& botRightLLout);
     bool needANewCropping();
     void calculateIdealImageCroppingLL();
     bool gimmeLatLons(crdSystem crdSys, /*transformation tr,*/

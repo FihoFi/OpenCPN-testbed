@@ -358,21 +358,17 @@ void dmDepthModelDrawer::calculateIdealImageCroppingLL()
         idealBotRightLL.east = idealTopLeftLL.east;
 }
 
+/**
+* Returns LatLon extent corresponding to given WMin World Mercator extent.
+*/
+void dmDepthModelDrawer::WMtoLL(const dmExtent& WMin, dmExtent& LLout)
+{
+    dataset.dstSrsToLatLon(WMin, LLout);
+}
 
 /**
-* Returns LatLon coordinates corresponding to given topLeftWMin, and botRightWMin
-* World Mercator coordinates.
 */
-void dmDepthModelDrawer::WMtoLL(const coord& topLeftWMin, const coord& botRightWMin,
-                                coord& topLeftLLout, coord& botRightLLout)
 {
-    double crds[4];
-    crds[0] = topLeftWMin.east;   // lon (World mercator)
-    crds[1] = botRightWMin.north; // lat
-    crds[2] = botRightWMin.east;  // lon
-    crds[3] = topLeftWMin.north;  // lat
-    gimmeLatLons(WORLD_MERCATOR, crds[0], crds[3], crds[2], crds[1],
-        topLeftLLout.north, topLeftLLout.east, botRightLLout.north, botRightLLout.east);
 }
 
 /** 
