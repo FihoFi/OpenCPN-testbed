@@ -264,6 +264,9 @@ void LIVI_Depth_model_pi::SetCursorLatLon(double lat, double lon)
 void LIVI_Depth_model_pi::SetCurrentViewPort(PlugIn_ViewPort &vp)
 {
     /*dmExtent extent =*/ dmDrawer->applyViewPortArea(vp);
+
+    // TODO Ask for refresh only instead? (Or even do nothing?)
+    //RequestRefresh(m_parent_window); // refresh main window
 }
 
 /**
