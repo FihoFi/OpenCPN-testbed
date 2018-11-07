@@ -32,14 +32,12 @@ DM_visualization dmDepthModelDrawer::getChartDrawType()
     return drawingState.GetWantedChartType();
 }
 
-
 bool dmDepthModelDrawer::setChartDrawType(DM_visualization chartType)
 {
     bool success = drawingState.SetWantedChartType(chartType);
     success &= dataset.setVisualizationScheme(chartType);
     return success;
 }
-
 
 DM_colourType dmDepthModelDrawer::getColourSchema()
 {
@@ -63,40 +61,6 @@ bool dmDepthModelDrawer::setColourConfigurationFile(const wxFileName &fileNamePa
 
     success &= dataset.setColourConfigurationFile(fileNameCharPtr, false);
     return success;
-}
-
-/**
-* Asks dmDataset to open the dataset in the file <i>fileName</i>, and queries
-* the World Mercator extents of the dataset.
-*/
-bool dmDepthModelDrawer::setDepthModelDataset(const wxFileName &fileName)
-{
-    wxString    fileNameWxStr   = fileName.GetFullPath();
-    std::string fileNameStr     = fileNameWxStr.ToStdString();
-    const char* fileNameCharPtr = fileNameStr.c_str();
-
-    if (raster)
-    {
-        delete(raster);
-        raster = NULL;
-    }
-
-    bool success = dataset.openDataSet(fileNameCharPtr);
-    if (success)
-    {
-        depthModelFileName = fileNameCharPtr;
-        datasetAvailable = true;
-    }
-    else
-    {
-        wxLogMessage(_T("dmDepthModelDrawer::setDepthModelDataset openDataSet failed: ")+ fileNameStr);
-    }
-    return success;
-}
-
-bool dmDepthModelDrawer::hasDataset()
-{
-    return datasetAvailable;
 }
 
 /**

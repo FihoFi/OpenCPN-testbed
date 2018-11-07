@@ -19,8 +19,6 @@ public:
     dmDepthModelDrawer();
     ~dmDepthModelDrawer();
 
-    bool setDepthModelDataset(const wxFileName &fileName);
-    bool hasDataset();
     bool applyChartArea(coord chartTopLeft, coord chartBotRight);
     bool applyChartArea(PlugIn_ViewPort &vp);
     bool drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp);

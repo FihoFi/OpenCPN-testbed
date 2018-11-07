@@ -374,10 +374,7 @@ bool LIVI_Depth_model_pi::RenderOverlay(wxDC& dc, PlugIn_ViewPort* vp)
     bool exception = false;
     try
     {
-        if (dmDrawer->hasDataset())
-            success &= dmDrawer->drawDepthChart(dc, *vp);
-        else
-            success = false;
+        success = dmDrawer->drawDepthChart(dc, *vp);
     }
     catch (std::string ex)
     {
