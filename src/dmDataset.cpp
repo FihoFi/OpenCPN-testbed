@@ -339,8 +339,8 @@ bool dmDataset::dstSrsToLatLon(coord dstSrsIn, coord &latLonOut)
     
     if (!projection)
         return false;
-
-    from = proj_coord(dstSrsIn.north, dstSrsIn.east, 0, 0);
+    }
+    from = proj_coord(dstSrsIn.east, dstSrsIn.north, 0, 0);
     
     to = proj_trans(projection, PJ_INV, from);
 
@@ -415,7 +415,7 @@ bool dmDataset::getCropExtents(coord topLeftIn, coord botRightIn,
     }
     else
     {
-        imgOffsetY = std::floor((topLeftRaster.north - topLeftIn.north) / geoTransform[5]);
+        imgOffsetY = std::floor((topLeftIn.north - topLeftRaster.north) / geoTransform[5]);
         topLeftOut.north = geoTransform[3] - imgOffsetY * geoTransform[5];
     }
 
@@ -474,7 +474,6 @@ std::vector<std::string> dmDataset::getGdaldemOptionsVec()
 
 bool dmDataset::latLonToDstSrs(coord latLonIn, coord &dstSrsOut)
 {
-    
     PJ *projection;
     PJ_COORD from, to;
     OGRSpatialReference osr(GDALGetProjectionRef(_dstDataset));
@@ -486,13 +485,13 @@ bool dmDataset::latLonToDstSrs(coord latLonIn, coord &dstSrsOut)
     
     if (!projection)
         return false;
+    }
+    from = proj_coord(proj_torad(latLonIn.east), proj_torad(latLonIn.north), 0, 0);
 
-    from = proj_coord(latLonIn.north, latLonIn.east, 0, 0);
-    
     to = proj_trans(projection, PJ_FWD, from);
 
-    dstSrsOut.north = proj_todeg(to.enu.n);
-    dstSrsOut.east = proj_todeg(to.enu.e);
+    dstSrsOut.north = to.enu.n;
+    dstSrsOut.east  = to.enu.e;
 
     /* Clean up */
     proj_destroy(projection);
