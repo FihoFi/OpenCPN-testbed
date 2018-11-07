@@ -68,7 +68,7 @@ private:
     void calculateIdealImageCroppingLL();
     bool gimmeLatLons(crdSystem crdSys, /*transformation tr,*/
         double x1, double y1, double x2, double y2,
-        double& lat1Out, double& lon1Out, double& lat2Out, double& lon2Out);
+        coord& Out1, coord& Out2);
 
     void readAFile();
 };

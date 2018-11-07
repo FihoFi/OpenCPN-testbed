@@ -382,7 +382,7 @@ void dmDepthModelDrawer::LLtoWM(const dmExtent& LLin, dmExtent& WMout)
 */
 bool dmDepthModelDrawer::gimmeLatLons(crdSystem crdSys, /*transformation tr,*/
     double x1, double y1, double x2, double y2,
-    double& lat1Out, double& lon1Out, double& lat2Out, double& lon2Out)
+    coord& Out1, coord& Out2)
 {
     //if (tr < 0 || tr > 3)
     //    return false; // invalid transformation
@@ -412,10 +412,10 @@ bool dmDepthModelDrawer::gimmeLatLons(crdSystem crdSys, /*transformation tr,*/
             double  x[2] = { x1, x2 },
                     y[2] = { y1, y2 };
             bool success = pj_transform(source, target, 2, 1, x, y, NULL);
-            lon1Out = x[0] * RAD_TO_DEG;
-            lat1Out = y[0] * RAD_TO_DEG;
-            lon2Out = x[1] * RAD_TO_DEG;
-            lat2Out = y[1] * RAD_TO_DEG;
+            Out1.east  = x[0] * RAD_TO_DEG;
+            Out1.north = y[0] * RAD_TO_DEG;
+            Out2.east  = x[1] * RAD_TO_DEG;
+            Out2.north = y[1] * RAD_TO_DEG;
 
             return true;
             //cout << success << endl << x << endl << y << endl;
