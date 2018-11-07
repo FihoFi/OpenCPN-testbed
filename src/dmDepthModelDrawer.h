@@ -19,9 +19,6 @@ public:
     dmDepthModelDrawer();
     ~dmDepthModelDrawer();
 
-    bool setChartDrawTypeRelief(const wxFileName &fileNamePath);
-    bool setChartDrawTypeHillshade();
-    bool setChartDrawTypePlain();
     bool setDepthModelDataset(const wxFileName &fileName);
     bool hasDataset();
     bool applyChartArea(coord chartTopLeft, coord chartBotRight);

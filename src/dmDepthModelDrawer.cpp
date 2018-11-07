@@ -27,28 +27,6 @@ void dmDepthModelDrawer::logMessage(const std::string message)
 void dmDepthModelDrawer::logInfo(const std::string message)
 {    wxLogInfo(wxString(message));          DBOUT("Info: " + message + "\n");  }
 
-
-bool dmDepthModelDrawer::setChartDrawTypeRelief(const wxFileName &fileNamePath)
-{
-    wxString    fileNameWxStr = fileNamePath.GetFullPath();
-    std::string fileNameStr = fileNameWxStr.ToStdString();
-    const char* fileNameCharPtr = fileNameStr.c_str();
-
-    bool success = dataset.setColourConfigurationFile(fileNameCharPtr, false);
-    success &= dataset.setVisualizationScheme(DM_visualization::COLOR_RELIEF);
-    return success;
-}
-
-bool dmDepthModelDrawer::setChartDrawTypeHillshade()
-{
-    return dataset.setVisualizationScheme(DM_visualization::HILLSHADE);
-}
-
-bool dmDepthModelDrawer::setChartDrawTypePlain()
-{
-    return dataset.setVisualizationScheme(DM_visualization::NONE);
-}
-
 DM_visualization dmDepthModelDrawer::getChartDrawType()
 {
     return drawingState.GetWantedChartType();
