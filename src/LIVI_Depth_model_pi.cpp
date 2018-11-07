@@ -367,20 +367,16 @@ bool LIVI_Depth_model_pi::RenderOverlay(wxDC& dc, PlugIn_ViewPort* vp)
     bool success = true;
     //success = dmDrawer->reCalculateDepthModelBitmap(*vp);
 
-    bool exception = false;
     try
     {
         success = dmDrawer->drawDepthChart(dc, *vp);
     }
     catch (std::string ex)
     {
-        exception = true;
         setErrorToUI("Problem in drawing the picture.\n"
                      "Look for the details in the OCPN log.");
         success = false;
     }
-    if (exception)
-        dialog->SetPictureImportErrorText("Problem in drawing the picture.");
 
     return success;
 }
