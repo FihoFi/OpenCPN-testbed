@@ -599,7 +599,7 @@ void LIVI_Depth_model_pi::OnColourSchemaChange(int selectionId)
 
 void LIVI_Depth_model_pi::OnUserColourFileChange(wxFileName fullFileName)
 {
-    bool success = drawingState.SetWantedUserColourFileName(fullFileName);
+    bool success = dmDrawer->setColourConfigurationFile(fullFileName);
     if (success)
     {
         m_pconf->colour.userColourConfPath = fullFileName;
