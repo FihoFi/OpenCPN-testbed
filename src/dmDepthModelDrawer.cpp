@@ -15,16 +15,17 @@ dmDepthModelDrawer::dmDepthModelDrawer() :
 dmDepthModelDrawer::~dmDepthModelDrawer()
 {    delete raster;    }
 
-void dmDepthModelDrawer::logFatalError(const char* message)
-{    wxLogFatalError(wxString(message));    }
-void dmDepthModelDrawer::logError(const char* message)
-{    wxLogError(wxString(message));         }
-void dmDepthModelDrawer::logWarning(const char* message)
-{    wxLogWarning(wxString(message));       }
-void dmDepthModelDrawer::logMessage(const char* message)
-{    wxLogMessage(wxString(message));       }
-void dmDepthModelDrawer::logInfo(const char* message)
-{    wxLogInfo(wxString(message));          }
+void dmDepthModelDrawer::logFatalError(const std::string message)
+{    wxLogFatalError(wxString(message));    DBOUT("FatalError: "+message+"\n");  }
+void dmDepthModelDrawer::logError(const std::string message)
+{    wxLogError(wxString(message));         DBOUT("Error: " + message + "\n"); }
+void dmDepthModelDrawer::logWarning(const std::string message)
+{    wxLogWarning(wxString(message));       DBOUT("Warning: " + message + "\n");}
+void dmDepthModelDrawer::logMessage(const std::string message)
+{    wxLogMessage(wxString(message));       DBOUT("Message: " + message + "\n");}
+void dmDepthModelDrawer::logInfo(const std::string message)
+{    wxLogInfo(wxString(message));          DBOUT("Info: " + message + "\n");  }
+
 
 bool dmDepthModelDrawer::setChartDrawTypeRelief(const wxFileName &fileNamePath)
 {

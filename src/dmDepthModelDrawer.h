@@ -19,12 +19,6 @@ public:
     dmDepthModelDrawer();
     ~dmDepthModelDrawer();
 
-    virtual void logFatalError(const char* message) override;
-    virtual void logError     (const char* message) override;
-    virtual void logWarning   (const char* message) override;
-    virtual void logMessage   (const char* message) override;
-    virtual void logInfo      (const char* message) override;
-
     bool setChartDrawTypeRelief(const wxFileName &fileNamePath);
     bool setChartDrawTypeHillshade();
     bool setChartDrawTypePlain();
@@ -34,6 +28,12 @@ public:
     bool applyChartArea(PlugIn_ViewPort &vp);
     bool drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp);
     bool reCalculateDepthModelBitmap(PlugIn_ViewPort &vp);
+
+    virtual void logFatalError(const std::string message) override;
+    virtual void logError     (const std::string message) override;
+    virtual void logWarning   (const std::string message) override;
+    virtual void logMessage   (const std::string message) override;
+    virtual void logInfo      (const std::string message) override;
 
 
 private:
