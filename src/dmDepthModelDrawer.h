@@ -58,6 +58,7 @@ private:
     int             w, h; // image width, and height
     wxBitmap        bmp;
     wxPoint         bitmapTopLeftPositioningPoint;
+    dmExtent    calculateIdealCroppingLL(dmExtent viewPortLL);
 
     void WMtoLL(const dmExtent& WMin, dmExtent& LLout);
     void LLtoWM(const dmExtent& LLin, dmExtent& WMout);
@@ -65,7 +66,6 @@ private:
     bool calculateWholeWMProjectedImage();
     bool calculateCroppedWMProjectedImage();
     bool needANewCropping();
-    void calculateIdealImageCroppingLL();
     bool gimmeLatLons(crdSystem crdSys, /*transformation tr,*/
         double x1, double y1, double x2, double y2,
         coord& Out1, coord& Out2);
