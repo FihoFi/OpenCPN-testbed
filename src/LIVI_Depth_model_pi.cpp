@@ -117,8 +117,10 @@ int LIVI_Depth_model_pi::Init(void)
     m_pconf = new dmConfigHandler(pFileConf, dialog);
     colourfileHandler = new dmColourfileHandler(m_pconf, *GetpSharedDataLocation());
 
-    bool success = m_pconf->LoadConfig(); // config related to this plugin.
-    PushConfigToUI();
+    bool success = m_pconf->LoadConfig(); // config variables related to this plugin.
+    this->PushConfigToUI();
+    this->setCurrentOptionsTextToUI();
+
     dmDrawer = new dmDepthModelDrawer();
     dmDrawer->setDataset(m_pconf->fileImport.filePath);
     dmDrawer->setChartDrawType(m_pconf->colour.getChartType());
