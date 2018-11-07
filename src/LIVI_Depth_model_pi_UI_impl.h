@@ -84,6 +84,8 @@ public:
     void        SetDepthChartFileName(wxFileName &fileName);
     wxFileName  GetDepthChartFileName();
 
+    void        SetCurrentOptionsText(std::string errStr);
+    void        SetPictureImportInfoText(std::string errStr);
     void        SetPictureImportErrorText(std::string errStr);
 
     LIVI_Depth_model_pi *plugin; // for callbacks at UI events
