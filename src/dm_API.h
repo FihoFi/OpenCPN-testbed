@@ -153,7 +153,7 @@ public:
     * coordinate system, unscaled.
     * The coordinate span of the returned dataset, is returned in the
     * xxXxOut parameters, in World Mercator coordinates.
-    * The ownership of the returned pointer is handed to the caller.
+    * The ownership of the returned pointer stays in the implementing class.
     *
     * @param[out] topLeftOut  The top-left coordinate corner of the returned
     *                       image, in World Mercator coordinates.
@@ -171,7 +171,7 @@ public:
     * coordinate system, unscaled, spanned by the two given xxXxIn WM coordinate pairs.
     * The coordinate span of the returned dataset part is returned
     * in the xxXxOut parameters, in World Mercator coordinates.
-    * The ownership of the returned pointer is handed to the caller.
+    * The ownership of the returned pointer stays in the implementing class.
     * The xxXxOut coordinates are set to nearest whole pixels of the whole
     * dataset, that are outside the cropping area, defined by the xxXxIn coordinates
     *
