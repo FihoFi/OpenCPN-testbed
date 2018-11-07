@@ -102,8 +102,6 @@ int LIVI_Depth_model_pi::Init(void)
 {
     AddLocaleCatalog( _T("LIVI_Depth_model_pi") ); // ocpn_plugin.h
 
-    dmDrawer = new dmDepthModelDrawer();
-
     wxFileConfig* pFileConf = GetOCPNConfigObject(); // ocpn_plugin.h, configuration file
     // opencpn canvas pointer, to be the parent for UI dialog
     m_parent_window = GetOCPNCanvasWindow(); // ocpn_plugin.h
@@ -121,6 +119,7 @@ int LIVI_Depth_model_pi::Init(void)
 
     bool success = m_pconf->LoadConfig(); // config related to this plugin.
     PushConfigToUI();
+    dmDrawer = new dmDepthModelDrawer();
     dmDrawer->setDataset(m_pconf->fileImport.filePath);
     dmDrawer->setChartDrawType(m_pconf->colour.getChartType());
     dmDrawer->setColourSchema(m_pconf->colour.getColouringType());
@@ -179,7 +178,13 @@ bool LIVI_Depth_model_pi::DeInit(void)
 
     RequestRefresh(m_parent_window); // refresh main window, to hide the dataset pic
 
-    delete dmDrawer;
+    if (colourfileHandler) {
+        delete colourfileHandler; colourfileHandler = NULL;
+    }
+    if (m_pconf)  { delete m_pconf;  m_pconf  = NULL; }
+    if (dialog)   { delete dialog;   dialog   = NULL; }
+    if (m_icon)   { delete m_icon;   m_icon   = NULL; }
+    if (dmDrawer) { delete dmDrawer; dmDrawer = NULL; }
 
     return true;
 }
