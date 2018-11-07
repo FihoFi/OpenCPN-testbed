@@ -7,13 +7,13 @@ dmDrawingState::dmDrawingState()
     , currentChartType(VISUALIZATION_UNDEFINED)
     , currentColourSchema(COLOUR_UNDEFINED)
     , currentUserColourFileName("")
-    , currentChartExtent()
+    , currentDrawingAreaLL()
 
     , wantedChartFileName("")
     , wantedChartType(VISUALIZATION_UNDEFINED)
     , wantedColourSchema(COLOUR_UNDEFINED)
     , wantedUserColourFileName("")
-    , wantedChartExtent()
+    , wantedDrawingAreaLL()
 
     , stateOfWantedImage(CHART_FILE_UNDEFINED)
 {
@@ -63,16 +63,16 @@ bool dmDrawingState::SetCurrentUserColourFileName(wxFileName fname)
     return true;
 }
 
-bool dmDrawingState::SetCurrentChartExtent(dmExtent extent)
+bool dmDrawingState::SetCurrentDrawingAreaLL(dmExtent extentLL)
 {
-    if (extent == dmExtent())
+    if (extentLL == dmExtent())
     {
         throw(std::string("There should be no zero valued dmExtent sent to SetCurrentChartExtent"));
         return false;
     }
     else
     {
-        currentChartExtent = extent;
+        currentDrawingAreaLL = extentLL;
         return true;
     }
 }
@@ -145,11 +145,12 @@ bool dmDrawingState::SetWantedUserColourFileName(wxFileName fname)
 
 }
 
-bool dmDrawingState::SetWantedChartExtent(dmExtent extent)
+bool dmDrawingState::SetWantedDrawingAreaLL(dmExtent extentLL)
 {
-    if (extent == dmExtent())
+    wantedDrawingAreaLL = extentLL;
+
+    if (extentLL == dmExtent())
     {
-        wantedChartExtent = extent;
         stateOfWantedImage = std::min(stateOfWantedImage, CHART_EXTENTS_UNDEFINED);
 
         throw(std::string("Undefined extents sent to SetWantedChartExtent."));
@@ -157,7 +158,6 @@ bool dmDrawingState::SetWantedChartExtent(dmExtent extent)
     }
     else
     {
-        wantedChartExtent = extent;
         stateOfWantedImage = std::min(stateOfWantedImage, CHART_EXTENTS_CHANGED);
         return true;
     }
