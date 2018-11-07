@@ -120,14 +120,14 @@ bool DMColorOptionConfig::load(void)
         confFile->SetPath(_T("/Settings/LIVI_Depth_model_pi/Colour"));
 
         std::string strCh = confFile->Read(_T("ChartType"));
-        if (strCh.length() == 0)
-            chartType = VISUALIZATION_UNDEFINED;
         chartType = stringToChartType(strCh);
+        if (chartType == VISUALIZATION_UNDEFINED)
+            chartType = COLOR_RELIEF;
 
         std::string strCol = confFile->Read(_T("ColouringType"));
-        if (strCol.length() == 0)
-            colouringType = COLOUR_UNDEFINED;
         colouringType = stringToColouringType(strCol);
+        if (colouringType == COLOUR_UNDEFINED)
+            colouringType = COLOUR_FIVE_RANGES;
 
         for (int i = 0; i < DM_NUM_CUSTOM_COL; i++) {
             std::string colour = confFile->Read(_T("CustomColour") + std::to_string(i));
