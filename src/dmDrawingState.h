@@ -45,6 +45,12 @@ public:
     bool                SetWantedUserColourFileName(wxFileName fname);
     bool                SetWantedChartExtent    (dmExtent extent);
 
+    wxFileName          GetWantedChartFileName()        {   return wantedChartFileName;         }
+    DM_visualization    GetWantedChartType()            {   return wantedChartType;             }
+    DM_colourType       GetWantedColourSchema()         {   return wantedColourSchema;          }
+    wxFileName          GetWantedUserColourFileName()   {   return wantedUserColourFileName;    }
+    dmExtent            GetWantedAreaLL()               {   return wantedDrawingAreaLL;         }
+
     wantedChartState    wantedChanges();
 
 private:
