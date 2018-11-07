@@ -163,8 +163,6 @@ bool dmDrawingState::SetWantedChartExtent(dmExtent extent)
     }
 }
 
-
-
 dmDrawingState::wantedChartState dmDrawingState::wantedChanges()
 {
     if (wantedChartFileName != currentChartFileName)
@@ -192,14 +190,6 @@ dmDrawingState::wantedChartState dmDrawingState::wantedChanges()
         }
     }
     return CHART_UP_TO_DATE;
-}
-
-bool dmDrawingState::colouringSchemaIsOk(DM_colourType schema)
-{
-    if (schema >= COLOUR_UNDEFINED && schema < COLOUR_MAX)
-        return true;
-    else
-        return false;
 }
 
 bool dmDrawingState::filePathAndReadIsOk(wxFileName fname)

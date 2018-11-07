@@ -66,9 +66,9 @@ dmExtent const dmExtent::getSectionWith(const dmExtent &other)
     dmExtent section;
 
     section.topLeft.north = std::min(this->topLeft.north, other.topLeft.north);
-    section.topLeft.east = std::max(this->topLeft.east, other.topLeft.east);
+    section.topLeft.east  = std::max(this->topLeft.east,  other.topLeft.east);
     section.botRight.north = std::max(this->botRight.north, other.botRight.north);
-    section.botRight.east = std::min(this->botRight.east, other.botRight.east);
+    section.botRight.east  = std::min(this->botRight.east,  other.botRight.east);
 
     if (section.topLeft.north < section.botRight.north)
         return dmExtent();

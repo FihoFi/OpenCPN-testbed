@@ -48,7 +48,6 @@ public:
     wantedChartState    wantedChanges();
 
 private:
-    bool colouringSchemaIsOk(DM_colourType schema);
     bool filePathAndReadIsOk(wxFileName fname);
 
     // Current variables are to be set at the time of drawing

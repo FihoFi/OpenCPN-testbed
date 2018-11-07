@@ -106,7 +106,7 @@ int LIVI_Depth_model_pi::Init(void)
     dmDrawer = new dmDepthModelDrawer();
 
     wxFileConfig* pFileConf = GetOCPNConfigObject(); // ocpn_plugin.h, configuration file
-    // opencpn canvas pointer, to be the parent for UI dialog, ...
+    // opencpn canvas pointer, to be the parent for UI dialog
     m_parent_window = GetOCPNCanvasWindow(); // ocpn_plugin.h
 
     // Save the icon bitmap of this plugin as icon. About dialog needs this.
@@ -132,7 +132,7 @@ int LIVI_Depth_model_pi::Init(void)
             LIVI_DEPTH_MODEL_TOOL_POSITION, 0, this);
     }
 
-    // Display size info is used to position the
+    // Display size info is used to position the windoww
     int display_w, display_h;
     ::wxDisplaySize(&display_w, &display_h);
     m_pconf->general.SaveDispaySize(display_w, display_h);
@@ -247,7 +247,6 @@ void LIVI_Depth_model_pi::SetCursorLatLon(double lat, double lon)
 }
 
 /**
-* @TODO NOT IMPLEMENTED yet.
 * Passes the current viewport of the main program to this plugin.
 * Save it to be able to use it, e.g. to refresh/ load again the maps
 * that should be currently visible, or something.
@@ -364,7 +363,7 @@ wxArrayString LIVI_Depth_model_pi::GetDynamicChartClassNameArray(void)
 * This is called, if this plugin has stated it WANTS_OVERLAY_CALLBACK
 * in its capabilities return value.
 */
-bool LIVI_Depth_model_pi::RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp)
+bool LIVI_Depth_model_pi::RenderOverlay(wxDC& dc, PlugIn_ViewPort* vp)
 {
     bool success = true;
     //success = dmDrawer->reCalculateDepthModelBitmap(*vp);
@@ -511,10 +510,8 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
         return;
     }
     else if(file.IsOpened())
-        file.Close();
+    {   file.Close();    }
 
-    // Save whatever colour settings the user has chosen.
-    OnColorOptionsApply();
     setInfoToUI("Setting chart image type options");
 
     bool exception = false;
@@ -611,12 +608,6 @@ void LIVI_Depth_model_pi::OnColourSchemaChange(int selectionId)
     {
         setErrorToUI("Undefined colouring type setting.");
     }
-}
-
-void LIVI_Depth_model_pi::OnColorOptionsApply()
-{
-    PullConfigFromUI();
-    m_pconf->SaveConfig();
 }
 
 void LIVI_Depth_model_pi::OnUserColourFileChange(wxFileName fullFileName)
