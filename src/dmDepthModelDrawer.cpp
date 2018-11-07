@@ -367,8 +367,11 @@ void dmDepthModelDrawer::WMtoLL(const dmExtent& WMin, dmExtent& LLout)
 }
 
 /**
+* Returns World Mercator extent corresponding to given LLin LatLon  extent.
 */
+void dmDepthModelDrawer::LLtoWM(const dmExtent& LLin, dmExtent& WMout)
 {
+    dataset.latLonToDstSrs(LLin, WMout);
 }
 
 /** 

@@ -60,6 +60,7 @@ private:
     wxPoint         bitmapTopLeftPositioningPoint;
 
     void WMtoLL(const dmExtent& WMin, dmExtent& LLout);
+    void LLtoWM(const dmExtent& LLin, dmExtent& WMout);
 
     bool calculateWholeWMProjectedImage();
     bool calculateCroppedWMProjectedImage();
