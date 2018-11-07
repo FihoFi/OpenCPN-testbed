@@ -32,18 +32,21 @@ public:
     dmDrawingState();
 
     // Current variables are to be set at the time of drawing
-    bool                SetCurrentChartFileName (wxFileName fname);
-    bool                SetCurrentChartType     (DM_visualization imageType);
-    bool                SetCurrentColourSchema  (DM_colourType colourSchema);
-    bool                SetCurrentUserColourFileName(wxFileName fname);
-    bool                SetCurrentChartExtent   (dmExtent extent);
+    void                SetCurrentAsWanted();
+
 
     // Wanted variables are to be set when the UI informs about changes
     bool                SetWantedChartFileName  (wxFileName fname);
     bool                SetWantedChartType      (DM_visualization imageType);
     bool                SetWantedColourSchema   (DM_colourType colourSchema);
     bool                SetWantedUserColourFileName(wxFileName fname);
-    bool                SetWantedChartExtent    (dmExtent extent);
+    void                SetWantedDrawingAreaLL  (dmExtent extentLL);
+
+    wxFileName          GetWantedChartFileName()        {   return wantedChartFileName;         }
+    DM_visualization    GetWantedChartType()            {   return wantedChartType;             }
+    DM_colourType       GetWantedColourSchema()         {   return wantedColourSchema;          }
+    wxFileName          GetWantedUserColourFileName()   {   return wantedUserColourFileName;    }
+    dmExtent            GetWantedDrawingAreaLL()        {   return wantedDrawingAreaLL;         }
 
     wantedChartState    wantedChanges();
 
@@ -55,14 +58,14 @@ private:
     DM_visualization    currentChartType;
     DM_colourType       currentColourSchema;
     wxFileName          currentUserColourFileName;
-    dmExtent            currentChartExtent;
+    dmExtent            currentDrawingAreaLL;
 
     // Wanted variables are to be set when the UI informs about changes
     wxFileName          wantedChartFileName;
     DM_visualization    wantedChartType;
     DM_colourType       wantedColourSchema;
     wxFileName          wantedUserColourFileName;
-    dmExtent            wantedChartExtent;
+    dmExtent            wantedDrawingAreaLL;
 
     wantedChartState    stateOfWantedImage;
 };
