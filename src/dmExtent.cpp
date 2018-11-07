@@ -1,5 +1,11 @@
 #include "dmExtent.h"
 #include <algorithm>
+#include <string>
+
+std::string coord::to_string() const
+{
+    return std::string("coord(n: " + std::to_string(north) + ",e:" + std::to_string(east) + ")");
+}
 
 dmExtent::dmExtent()
     : topLeft(), botRight()
@@ -84,3 +90,14 @@ dmExtent const dmExtent::getMaxes(const dmExtent &other)
     return maxes;
 }
 
+double const dmExtent::height(){   return (this->topLeft.north - this->botRight.north);    }
+
+double const dmExtent::width() {   return (this->botRight.east - this->topLeft.east);      }
+
+std::string dmExtent::to_string()
+{
+    return std::string("dmExtent( topleft(top:" + std::to_string(topLeft.north) +
+                                       ",left:" + std::to_string(topLeft.east)  +
+                              "),botRight(bot:" + std::to_string(botRight.north)+
+                                      ",right:" + std::to_string(botRight.east) +"))");
+}
