@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #ifndef _DM_EXTENT_H_
 #define _DM_EXTENT_H_
 
@@ -31,6 +33,8 @@ struct coord {
         else
             return false;
     }
+
+    std::string to_string() const;
 
     /*float*/double east; // mathematical x, longitude etc.
     /*float*/double north; // mathematical y, latitude
@@ -77,6 +81,11 @@ struct dmExtent
     *           that span the maximal area.
     */
     dmExtent const getMaxes(const dmExtent& other);
+
+    double const height();
+    double const width();
+
+    std::string to_string();
 };
 
 #endif _DM_EXTENT_H_
