@@ -95,7 +95,6 @@ public:
 
 private:
     virtual void OnClose                       ( wxCloseEvent&   WXUNUSED(event) );
-    virtual void OnColorOptionsApplyButtonClick( wxCommandEvent& WXUNUSED(event) );
     virtual void OnAboutWxWidgets              ( wxCommandEvent& WXUNUSED(event) );
     virtual void OnFileImportFileChange  ( wxFileDirPickerEvent& WXUNUSED(event) );
     virtual void OnImageFileChange       ( wxFileDirPickerEvent& WXUNUSED(event) );

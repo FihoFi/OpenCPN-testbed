@@ -513,8 +513,6 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
     else if(file.IsOpened())
         file.Close();
 
-    // Save whatever colour settings the user has chosen.
-    OnColorOptionsApply();
     setInfoToUI("Setting chart image type options");
 
     bool exception = false;
@@ -611,12 +609,6 @@ void LIVI_Depth_model_pi::OnColourSchemaChange(int selectionId)
     {
         setErrorToUI("Undefined colouring type setting.");
     }
-}
-
-void LIVI_Depth_model_pi::OnColorOptionsApply()
-{
-    PullConfigFromUI();
-    m_pconf->SaveConfig();
 }
 
 void LIVI_Depth_model_pi::OnUserColourFileChange(wxFileName fullFileName)

@@ -122,7 +122,6 @@ public:
     void OnChartTypeChange      (int selectionId);
     void OnColourSchemaChange   (int selectionId);
 
-    void OnColorOptionsApply();
     void OnUserColourFileChange(wxFileName fullFileName);
 
 private:

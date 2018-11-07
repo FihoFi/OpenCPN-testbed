@@ -82,11 +82,6 @@ void Dlg::OnUserColourFileChange(wxFileDirPickerEvent& WXUNUSED(event))
     plugin->OnUserColourFileChange(fname);
 }
 
-void Dlg::OnColorOptionsApplyButtonClick(wxCommandEvent& event)
-{
-    plugin->OnColorOptionsApply();
-}
-
 void Dlg::SetAboutInfo()
 {
     this->dmAbout_icon_bitmap->SetIcon(plugin->GetIcon());
