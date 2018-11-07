@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #ifndef _DM_API_
 #define _DM_API_
 
@@ -65,11 +67,11 @@ public:
     /** Destructor making this class abstract. */
     virtual ~dmLogWriter() = 0;
 
-    virtual void logFatalError(const char* message) = 0;
-    virtual void logError(const char* message) = 0;
-    virtual void logWarning(const char* message) = 0;
-    virtual void logMessage(const char* message) = 0;
-    virtual void logInfo(const char* message) = 0;
+    virtual void logFatalError(const std::string message) = 0;
+    virtual void logError     (const std::string message) = 0;
+    virtual void logWarning   (const std::string message) = 0;
+    virtual void logMessage   (const std::string message) = 0;
+    virtual void logInfo      (const std::string message) = 0;
 };
 
 class /*DECL_EXP*/ dm_API
