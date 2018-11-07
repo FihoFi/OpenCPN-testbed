@@ -32,11 +32,7 @@ public:
     dmDrawingState();
 
     // Current variables are to be set at the time of drawing
-    bool                SetCurrentChartFileName (wxFileName fname);
-    bool                SetCurrentChartType     (DM_visualization imageType);
-    bool                SetCurrentColourSchema  (DM_colourType colourSchema);
-    bool                SetCurrentUserColourFileName(wxFileName fname);
-    bool                SetCurrentDrawingAreaLL (dmExtent extentLL);
+    void                SetCurrentAsWanted();
 
 
     // Wanted variables are to be set when the UI informs about changes

@@ -19,62 +19,13 @@ dmDrawingState::dmDrawingState()
 {
 }
 
-bool dmDrawingState::SetCurrentChartFileName(wxFileName fname)
+void dmDrawingState::SetCurrentAsWanted()
 {
-    if (!filePathAndReadIsOk(fname))
-    {    return false;   }
-
-    currentChartFileName = fname;
-    return true;
-}
-
-bool dmDrawingState::SetCurrentChartType(DM_visualization imageType)
-{
-    if(dmVisualizationIsOk(imageType))
-    {
-        currentChartType = imageType;
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-bool dmDrawingState::SetCurrentColourSchema(DM_colourType colourSchema)
-{
-    if (dmColourTypeIsOk(colourSchema))
-    {
-        currentColourSchema = colourSchema;
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-bool dmDrawingState::SetCurrentUserColourFileName(wxFileName fname)
-{
-    if (!filePathAndReadIsOk(fname))
-    {    return false;    }
-
-    currentUserColourFileName = fname;
-    return true;
-}
-
-bool dmDrawingState::SetCurrentDrawingAreaLL(dmExtent extentLL)
-{
-    if (extentLL == dmExtent())
-    {
-        throw(std::string("There should be no zero valued dmExtent sent to SetCurrentChartExtent"));
-        return false;
-    }
-    else
-    {
-        currentDrawingAreaLL = extentLL;
-        return true;
-    }
+    currentChartFileName      = wantedChartFileName;
+    currentChartType          = wantedChartType;
+    currentColourSchema       = wantedColourSchema;
+    currentUserColourFileName = wantedUserColourFileName;
+    currentDrawingAreaLL      = wantedDrawingAreaLL;
 }
 
 bool dmDrawingState::SetWantedChartFileName(wxFileName fname)
