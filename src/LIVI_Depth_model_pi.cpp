@@ -41,7 +41,6 @@
 #include "dmConfigHandler.h"    // For handling config options
 #include "dmColourfileHandler.h" // For handling colour file access operations
 #include "dmDepthModelDrawer.h"
-#include "dmDrawingState.h"
 
 // the class factories, used to create and destroy instances of the PlugIn
 
