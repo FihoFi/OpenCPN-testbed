@@ -9,21 +9,16 @@
 #include "dmExtent.h"
 #include "dmDataset.h"
 
+#include "dmDrawingState.h"
 
 class dmDepthModelDrawer : public dmLogWriter
 {
 public:
-    typedef enum chartState { UNSET, FILE_SET, PROJECTION_OK, CHART_AREA_OK, BITMAP_AVAILABLE } chartState;
     typedef enum crdSystem { UTM35N, WORLD_MERCATOR} crdSystem;
 
     dmDepthModelDrawer();
     ~dmDepthModelDrawer();
 
-    bool setChartDrawTypeRelief(const wxFileName &fileNamePath);
-    bool setChartDrawTypeHillshade();
-    bool setChartDrawTypePlain();
-    bool setDepthModelDataset(const wxFileName &fileName);
-    bool hasDataset();
     bool applyChartArea(coord chartTopLeft, coord chartBotRight);
     bool applyChartArea(PlugIn_ViewPort &vp);
     bool drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp);
@@ -35,9 +30,15 @@ public:
     virtual void logMessage   (const std::string message) override;
     virtual void logInfo      (const std::string message) override;
 
+    DM_visualization getChartDrawType();
+    bool             setChartDrawType(DM_visualization chartType);
+    DM_colourType    getColourSchema();
+    bool             setColourSchema(DM_colourType colourSchema);
+    bool             setColourConfigurationFile(const wxFileName &fileNamePath);
+    bool             setDataset(const wxFileName &fileName);
+    bool             openDataset(const wxFileName &fileName);
 
 private:
-    chartState  modelState;
     bool        chartAreaKnown;
     bool        datasetAvailable;
 
@@ -45,6 +46,7 @@ private:
     dmDataset   dataset;
     coord       wholeImageTopLeftWM,  wholeImageBotRightWM;
     coord       croppedImageTopLeftWM, croppedImageBotRightWM;
+    dmDrawingState  drawingState;
 
     coord       imageTopLeftLL,  imageBotRightLL;
     coord       chartTopLeftLL,  chartBotRightLL;

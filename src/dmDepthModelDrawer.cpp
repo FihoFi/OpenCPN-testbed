@@ -5,10 +5,11 @@
 #include <proj_api.h>
 #include "dm_API.h"
 #include "dmDataset.h"
+#include "dmDrawingState.h"
 
-dmDepthModelDrawer::dmDepthModelDrawer() :
-    modelState(UNSET), 
-    chartAreaKnown(false), datasetAvailable(false), depthModelFileName(),
+dmDepthModelDrawer::dmDepthModelDrawer()
+    : drawingState()
+    , chartAreaKnown(false), datasetAvailable(false), depthModelFileName(),
     dataset(this), raster(NULL), w(0), h(0)
 {    }
 
@@ -26,61 +27,77 @@ void dmDepthModelDrawer::logMessage(const std::string message)
 void dmDepthModelDrawer::logInfo(const std::string message)
 {    wxLogInfo(wxString(message));          DBOUT("Info: " + message + "\n");  }
 
-
-bool dmDepthModelDrawer::setChartDrawTypeRelief(const wxFileName &fileNamePath)
+DM_visualization dmDepthModelDrawer::getChartDrawType()
 {
+    return drawingState.GetWantedChartType();
+}
+
+bool dmDepthModelDrawer::setChartDrawType(DM_visualization chartType)
+{
+    bool success = drawingState.SetWantedChartType(chartType);
+    success &= dataset.setVisualizationScheme(chartType);
+    return success;
+}
+
+DM_colourType dmDepthModelDrawer::getColourSchema()
+{
+    return drawingState.GetWantedColourSchema();
+}
+
+bool dmDepthModelDrawer::setColourSchema(DM_colourType colourSchema)
+{
+    bool success = drawingState.SetWantedColourSchema(colourSchema);
+    // TODO set to dataset?
+    return success;
+}
+
+bool dmDepthModelDrawer::setColourConfigurationFile(const wxFileName &fileNamePath)
+{
+    bool success = drawingState.SetWantedUserColourFileName(fileNamePath);
+
     wxString    fileNameWxStr = fileNamePath.GetFullPath();
     std::string fileNameStr = fileNameWxStr.ToStdString();
     const char* fileNameCharPtr = fileNameStr.c_str();
 
-    bool success = dataset.setColourConfigurationFile(fileNameCharPtr, false);
-    success &= dataset.setVisualizationScheme(DM_visualization::COLOR_RELIEF);
+    success &= dataset.setColourConfigurationFile(fileNameCharPtr, false);
     return success;
-}
-
-bool dmDepthModelDrawer::setChartDrawTypeHillshade()
-{
-    return dataset.setVisualizationScheme(DM_visualization::HILLSHADE);
-}
-
-bool dmDepthModelDrawer::setChartDrawTypePlain()
-{
-    return dataset.setVisualizationScheme(DM_visualization::NONE);
 }
 
 /**
 * Asks dmDataset to open the dataset in the file <i>fileName</i>, and queries
-* the World Mercator extents of the dataset.
+* the (World Mercator) extents of the dataset.
 */
-bool dmDepthModelDrawer::setDepthModelDataset(const wxFileName &fileName)
+bool dmDepthModelDrawer::setDataset(const wxFileName &fileName)
 {
-    wxString    fileNameWxStr   = fileName.GetFullPath();
-    std::string fileNameStr     = fileNameWxStr.ToStdString();
-    const char* fileNameCharPtr = fileNameStr.c_str();
-
-    if (raster)
-    {
-        delete(raster);
-        raster = NULL;
-    }
-
-    bool success = dataset.openDataSet(fileNameCharPtr);
-    if (success)
-    {
-        depthModelFileName = fileNameCharPtr;
-        datasetAvailable = true;
-        modelState = FILE_SET;
-    }
-    else
-    {
-        wxLogMessage(_T("dmDepthModelDrawer::setDepthModelDataset openDataSet failed: ")+ fileNameStr);
-    }
+    bool success = drawingState.SetWantedChartFileName(fileName);
+    // TODO set to dataset?
     return success;
 }
 
-bool dmDepthModelDrawer::hasDataset()
+bool dmDepthModelDrawer::openDataset(const wxFileName &fileName)
 {
-    return datasetAvailable;
+    wxString    fileNameWxStr = fileName.GetFullPath();
+    std::string fileNameStr = fileNameWxStr.ToStdString();
+
+    if (!fileName.SameAs(drawingState.GetWantedChartFileName()))
+    {
+        wxLogMessage(_T("dmDepthModelDrawer::openDataset failed, the chart file "
+                        "is not set: ") + fileNameStr);
+        return false;
+    }
+
+    const char* fileNameCharPtr = fileNameStr.c_str();
+    bool success = dataset.openDataSet(fileNameCharPtr);
+    datasetAvailable = success;
+    if (!success)
+    {
+        wxLogMessage(_T("dmDepthModelDrawer::openDataset openDataSet failed: ") + fileNameStr);
+        return false;
+    }
+
+    success = dataset.getDatasetExtents(wholeImageWM.topLeft, wholeImageWM.botRight);
+
+    return success;
 }
 
 /**
@@ -88,8 +105,6 @@ bool dmDepthModelDrawer::hasDataset()
 */
 bool dmDepthModelDrawer::applyChartArea(coord chartTopLeftLL, coord chartBotRightLL)
 {
-    if (modelState < FILE_SET/*PROJECTION_OK*/) { return false; }
-
     this->chartTopLeftLL  = chartTopLeftLL;
     this->chartBotRightLL = chartBotRightLL;
     this->chartAreaKnown = true;
@@ -106,7 +121,6 @@ bool dmDepthModelDrawer::applyChartArea(PlugIn_ViewPort &vp)
 
 bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
 {
-    //if (modelState < CHART_AREA_OK/*BITMAP_AVAILABLE*/) { return false; }
 
     bool success = reCalculateDepthModelBitmap(vp);
 
@@ -119,8 +133,6 @@ bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
 
 bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
 {
-    if (modelState < FILE_SET) { return false; }
-
     bool isNewLoad = false;
 
     applyChartArea(vp);
@@ -161,7 +173,6 @@ bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
 
         idealTopLeftLL = imageTopLeftLL;
         idealBotRightLL = imageBotRightLL;
-        modelState = PROJECTION_OK;
     }
 
     // Get min, and max coordinates where the bitmap is to be drawn
@@ -223,7 +234,6 @@ bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
             wxString::Format(_T("%i"), w) + "," + wxString::Format(_T("%i"), h));
     }
 
-    modelState = BITMAP_AVAILABLE;
     return true;
 }
 
@@ -234,10 +244,6 @@ bool dmDepthModelDrawer::calculateWholeWMProjectedImage()
     raster = dataset.getRasterData(wholeImageTopLeftWM, wholeImageBotRightWM);
     success &= (raster != NULL);
 
-    if (success)
-    {    modelState = CHART_AREA_OK;    }
-    else
-    {    return success;                }
 
     success &= dataset.getDatasetExtents(wholeImageTopLeftWM, wholeImageBotRightWM);
     if (success)
@@ -258,11 +264,6 @@ bool dmDepthModelDrawer::calculateCroppedWMProjectedImage()
     raster = dataset.getRasterData(
         idealTopLeftLL, idealBotRightLL,
         croppedImageTopLeftWM, croppedImageBotRightWM, w, h);
-
-    if (success)
-    {    modelState = CHART_AREA_OK;    }
-    else
-    {    return success;                }
 
     success &= dataset.getDatasetExtents(croppedImageTopLeftWM, croppedImageBotRightWM);
     if (success)

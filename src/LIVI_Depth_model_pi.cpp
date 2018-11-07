@@ -41,7 +41,6 @@
 #include "dmConfigHandler.h"    // For handling config options
 #include "dmColourfileHandler.h" // For handling colour file access operations
 #include "dmDepthModelDrawer.h"
-#include "dmDrawingState.h"
 
 // the class factories, used to create and destroy instances of the PlugIn
 
@@ -122,6 +121,10 @@ int LIVI_Depth_model_pi::Init(void)
 
     bool success = m_pconf->LoadConfig(); // config related to this plugin.
     PushConfigToUI();
+    dmDrawer->setDataset(m_pconf->fileImport.filePath);
+    dmDrawer->setChartDrawType(m_pconf->colour.getChartType());
+    dmDrawer->setColourSchema(m_pconf->colour.getColouringType());
+    dmDrawer->setColourConfigurationFile(m_pconf->colour.userColourConfPath);
 
     //    This PlugIn needs a toolbar icon, so request its insertion
     if (m_pconf->general.m_bLIVI_Depth_modelShowIcon)
@@ -371,10 +374,7 @@ bool LIVI_Depth_model_pi::RenderOverlay(wxDC& dc, PlugIn_ViewPort* vp)
     bool exception = false;
     try
     {
-        if (dmDrawer->hasDataset())
-            success &= dmDrawer->drawDepthChart(dc, *vp);
-        else
-            success = false;
+        success = dmDrawer->drawDepthChart(dc, *vp);
     }
     catch (std::string ex)
     {
@@ -487,7 +487,7 @@ void LIVI_Depth_model_pi::OnDepthModelDialogClose()
 
 void LIVI_Depth_model_pi::OnImageFileChange(wxFileName fname)
 {
-    bool success = drawingState.SetWantedChartFileName(fname);
+    bool success = dmDrawer->setDataset(fname);
     if(success)
     {
         m_pconf->fileImport.filePath = fname;
@@ -517,53 +517,37 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
     bool exception = false;
     bool success = true;
     try {
-        int chOpt = dialog->GetSelectedChartOption();
-        switch (chOpt)
+        if(dmDrawer->getChartDrawType() == COLOR_RELIEF)
         {
-            case DM_viz_HILLSHADE:
-            {    success = dmDrawer->setChartDrawTypeHillshade();    break; }
-            case DM_viz_NONE:
-            {    success = dmDrawer->setChartDrawTypePlain();        break; }
-            case DM_viz_COLOR_RELIEF:
-            {
             setInfoToUI("Setting colouring options");
 
-                success &= colourfileHandler->SaveConfFileOfUISelection(
-                    to_dmColourType(dialog->GetSelectedColourOption())); // Save, to get the current options in use
+            DM_colourType colouringType = dmDrawer->getColourSchema();
+            success = colourfileHandler->SaveConfFileOfUISelection(
+                colouringType); // Save, to get the current options in use
 
-                wxFileName colorFile = colourfileHandler->GetConfFileOfUISelection(
-                    to_dmColourType(dialog->GetSelectedColourOption()));
-                if (!colorFile.IsOk())
+            wxFileName colorFile = colourfileHandler->GetConfFileOfUISelection(colouringType);
+            if (!colorFile.IsOk())
             {
                 setErrorToUI("Could not retrieve the colour definitions.");
                 return;
             }
-            else
-            {
-                success &= dmDrawer->setChartDrawTypeRelief(colorFile);
-            }
-                break;
-            }
-            default: // (chOptStr. ...)
-            {
-                success = false;
-                dialog->SetPictureImportErrorText(std::string("Internal error. Erroneous chart type."));
-                return;
-                break;
-            }
-        }   // switch
-        if(!success) // dmDrawer->setChartDrawTypexxx
-        {
-            dialog->SetPictureImportErrorText(std::string("Internal error. Failure at instantiating the chart type."));
-        }
 
-        success &= dmDrawer->setDepthModelDataset(fullFileName);
+            success = dmDrawer->setColourConfigurationFile(colorFile);
+            if (!success)
+            {
+                setErrorToUI("Failure at instantiating the colour configuration.");
+                return;
+            }
+
+        }   // if
+
         setInfoToUI("Reading and projecting chart image to World Mercator");
+        success &= dmDrawer->openDataset(fullFileName);
         if (!success)
         {
             setErrorToUI("Could not load the file as a chart image.");
+            return;
         }
-        else
 
         setInfoToUI("Chart image successfully opened.");
     }
@@ -583,7 +567,7 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
 void LIVI_Depth_model_pi::OnChartTypeChange(int selectionId)
 {
     DM_visualization chartType = to_dmVisualizationType(selectionId);
-    bool success = drawingState.SetWantedChartType(chartType);
+    bool success = dmDrawer->setChartDrawType(chartType);
     if (success)
     {
         m_pconf->colour.setChartType(chartType);
@@ -598,7 +582,7 @@ void LIVI_Depth_model_pi::OnChartTypeChange(int selectionId)
 void LIVI_Depth_model_pi::OnColourSchemaChange(int selectionId)
 {
     DM_colourType colType = to_dmColourType(selectionId);
-    bool success = drawingState.SetWantedColourSchema(colType);
+    bool success = dmDrawer->setColourSchema(colType);
     if (success)
     {
         m_pconf->colour.setColouringType(colType);
@@ -612,7 +596,7 @@ void LIVI_Depth_model_pi::OnColourSchemaChange(int selectionId)
 
 void LIVI_Depth_model_pi::OnUserColourFileChange(wxFileName fullFileName)
 {
-    bool success = drawingState.SetWantedUserColourFileName(fullFileName);
+    bool success = dmDrawer->setColourConfigurationFile(fullFileName);
     if (success)
     {
         m_pconf->colour.userColourConfPath = fullFileName;
