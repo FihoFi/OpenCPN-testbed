@@ -380,6 +380,9 @@ bool LIVI_Depth_model_pi::RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp)
     catch (std::string ex)
     {
         exception = true;
+        setErrorToUI("Problem in drawing the picture.\n"
+                     "Look for the details in the OCPN log.");
+        success = false;
     }
     if (exception)
         dialog->SetPictureImportErrorText("Problem in drawing the picture.");
@@ -493,7 +496,7 @@ void LIVI_Depth_model_pi::OnImageFileChange(wxFileName fname)
     }
     else
     {
-        dialog->SetPictureImportErrorText(std::string("Could not open the given chart image file."));
+        setErrorToUI("Could not open the given chart image file.");
     }
 }
 
@@ -504,7 +507,7 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
     wxFile file(path, wxFile::read); // also opens the file, if it exists!
     if (!file.Exists(path))
     {
-        dialog->SetPictureImportErrorText(std::string("The given file cannot be found"));
+        setErrorToUI("The chart image file cannot be found");
         return;
     }
     else if(file.IsOpened())
@@ -512,12 +515,11 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
 
     // Save whatever colour settings the user has chosen.
     OnColorOptionsApply();
+    setInfoToUI("Setting chart image type options");
 
     bool exception = false;
     bool success = true;
     try {
-        dialog->SetPictureImportErrorText(std::string("Setting chart image type options"));
-
         int chOpt = dialog->GetSelectedChartOption();
         switch (chOpt)
         {
@@ -527,7 +529,7 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
             {    success = dmDrawer->setChartDrawTypePlain();        break; }
             case DM_viz_COLOR_RELIEF:
             {
-                dialog->SetPictureImportErrorText(std::string("Setting colouring options"));
+            setInfoToUI("Setting colouring options");
 
                 success &= colourfileHandler->SaveConfFileOfUISelection(
                     to_dmColourType(dialog->GetSelectedColourOption())); // Save, to get the current options in use
@@ -536,7 +538,7 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
                     to_dmColourType(dialog->GetSelectedColourOption()));
                 if (!colorFile.IsOk())
             {
-                dialog->SetPictureImportErrorText(std::string("Could not interpret the colour definitions."));
+                setErrorToUI("Could not retrieve the colour definitions.");
                 return;
             }
             else
@@ -558,18 +560,19 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
             dialog->SetPictureImportErrorText(std::string("Internal error. Failure at instantiating the chart type."));
         }
 
-        dialog->SetPictureImportErrorText(std::string("Reading and projecting chart image to World Mercator"));
         success &= dmDrawer->setDepthModelDataset(fullFileName);
+        setInfoToUI("Reading and projecting chart image to World Mercator");
         if (!success)
         {
-            dialog->SetPictureImportErrorText(std::string("Could not load the file as a chart image."));
+            setErrorToUI("Could not load the file as a chart image.");
         }
         else
-            dialog->SetPictureImportErrorText(std::string("Chart image successfully opened."));
+
+        setInfoToUI("Chart image successfully opened.");
     }
     catch (std::string exStr)
     {
-        dialog->SetPictureImportErrorText(exStr);
+        setInfoToUI(exStr);
         exception = true;
     }
 
@@ -591,7 +594,7 @@ void LIVI_Depth_model_pi::OnChartTypeChange(int selectionId)
     }
     else
     {
-        dialog->SetPictureImportErrorText(std::string("Undefined chart visualization type setting."));
+        setErrorToUI("Undefined chart visualization type setting.");
     }
 }
 
@@ -606,7 +609,7 @@ void LIVI_Depth_model_pi::OnColourSchemaChange(int selectionId)
     }
     else
     {
-        dialog->SetPictureImportErrorText(std::string("Undefined colouring type setting."));
+        setErrorToUI("Undefined colouring type setting.");
     }
 }
 
@@ -626,7 +629,7 @@ void LIVI_Depth_model_pi::OnUserColourFileChange(wxFileName fullFileName)
     }
     else
     {
-        dialog->SetPictureImportErrorText(std::string("Could not find the given user's colour definition file."));
+        setErrorToUI("Could not find the given user's colour definition file.");
     }
 }
 
@@ -675,6 +678,16 @@ void LIVI_Depth_model_pi::PullConfigFromUI(void)
         m_pconf->colour.setTwoColour(i, dialog->GetTwoColours(i));
     }
     m_pconf->colour.setTwoColoursDepth(dialog->GetDividingLevel());
+}
+
+void LIVI_Depth_model_pi::setInfoToUI(std::string str)
+{
+    dialog->SetPictureImportInfoText(str);
+}
+
+void LIVI_Depth_model_pi::setErrorToUI(std::string str)
+{
+    dialog->SetPictureImportErrorText(str);
 }
 
 DM_visualization LIVI_Depth_model_pi::to_dmVisualizationType(int chartTypeId)
