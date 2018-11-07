@@ -258,16 +258,7 @@ void LIVI_Depth_model_pi::SetCursorLatLon(double lat, double lon)
 */
 void LIVI_Depth_model_pi::SetCurrentViewPort(PlugIn_ViewPort &vp)
 {
-    coord topLeft (vp.lat_max, vp.lon_min);
-    coord botRight(vp.lat_min, vp.lon_max);
- 
-    try{
-        bool success = dmDrawer->applyChartArea(topLeft, botRight);
-    }
-    catch (std::string exStr)
-    {
-        dialog->SetPictureImportErrorText(exStr);
-    }
+    /*dmExtent extent =*/ dmDrawer->applyViewPortArea(vp);
 }
 
 /**
