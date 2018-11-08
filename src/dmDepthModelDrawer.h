@@ -20,7 +20,6 @@ public:
     ~dmDepthModelDrawer();
 
     bool drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp);
-    bool reCalculateDepthModelBitmap(PlugIn_ViewPort &vp);
 
     virtual void logFatalError(const std::string message) override;
     virtual void logError     (const std::string message) override;

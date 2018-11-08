@@ -166,60 +166,6 @@ wxPoint dmDepthModelDrawer::reCalculateTopLeftLocation(/*const*/PlugIn_ViewPort 
     return r1;
 }
 
-bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
-{
-    // Get min, and max coordinates where the bitmap is to be drawn
-    wxPoint r1, r2;
-    GetCanvasPixLL(&vp, &r1, idealTopLeftLL.north,  idealTopLeftLL.east);   // up-left
-    GetCanvasPixLL(&vp, &r2, idealBotRightLL.north, idealBotRightLL.east);  // low-right
-
-    // Calculate dimensions of the picture
-    w = r2.x - r1.x; // max-min
-    h = r2.y - r1.y; // max-min
-
-    if ((w > 10 && h > 10) && (w < 10000 && h < 10000))
-    {
-        // Generate the image with Dataset/GDAL
-        wxImage scaled;
-
-        int newW, newH;
-        dataset.getDatasetPixelDimensions(newW, newH);
-        wxImage original;
-        //bool loadSuccess = original.LoadFile(drawingState.GetWantedChartFileName()..GetName());
-        //if (!loadSuccess)
-        //{
-        //    wxLogMessage(_T("dmDepthModelDrawer::calculateDepthModelBitmap - LoadFile failed: ") +
-        //        drawingState.GetWantedChartFileName().GetName().ToStdString());
-        //    return false;
-        //}
-        original = wxImage(newW, newH, raster->rgb, raster->alpha, true);
-        scaled = original.Scale(w, h, wxIMAGE_QUALITY_NORMAL);
-
-        raster = NULL; // was freed by wxImage constructor
-
-        if (!(scaled).IsOk())
-        {
-            wxLogMessage(_T("dmDepthModelDrawer::calculateDepthModelBitmap - Scale failed: ") +
-                drawingState.GetWantedChartFileName().GetName().ToStdString());
-            return false;
-        }
-
-        bmpTopLeftLL = r1;
-        bmp = wxBitmap(*scaled);
-        //bmp.SetMask(new wxMask(bmp, wxColour(255, 255, 255)));
-
-        drawingState.SetCurrentAsWanted();
-    }
-    else
-    {
-        bmp = wxBitmap();
-        wxLogMessage(_T("dmDepthModelDrawer::calculateDepthModelBitmap - dimension fail: w,h: ") +
-            wxString::Format(_T("%i"), w) + "," + wxString::Format(_T("%i"), h));
-    }
-
-    return true;
-}
-
 bool dmDepthModelDrawer::reCalculateBitmap(/*const*/PlugIn_ViewPort &vp,
     const dmRasterImgData* raster, dmExtent croppedImageLL,
     wxBitmap& bmp, int& wBmp, int& hBmp, wxPoint& bmpTopLeftLL)
