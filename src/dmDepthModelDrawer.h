@@ -19,8 +19,6 @@ public:
     dmDepthModelDrawer();
     ~dmDepthModelDrawer();
 
-    bool drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp);
-
     virtual void logFatalError(const std::string message) override;
     virtual void logError     (const std::string message) override;
     virtual void logWarning   (const std::string message) override;
@@ -35,6 +33,7 @@ public:
     bool             setDataset(const wxFileName &fileName);
     bool             openDataset(const wxFileName &fileName);
     dmExtent         applyViewPortArea(/*const*/ PlugIn_ViewPort &vp);
+    bool             drawDepthChart(/*const*/ wxDC &dc, /*const*/ PlugIn_ViewPort &vp);
 
 private:
     dmDrawingState  drawingState;
@@ -43,9 +42,9 @@ private:
     dmExtent        wholeImageWM;   // extent (in WM) of the whole image available in the dataset
 
     dmExtent        croppedImageLL;
+    wxBitmap*       bmp;
     wxPoint         bmpTopLeftLL;
 
-    wxBitmap        bmp;
     bool        needNewCropping         (dmExtent viewPortLL);
     dmExtent    calculateIdealCroppingLL(dmExtent viewPortLL) const;
     bool        cropImage               (dmExtent wantedCropExtentLL,

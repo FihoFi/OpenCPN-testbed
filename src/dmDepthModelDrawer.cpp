@@ -20,11 +20,14 @@
 
 dmDepthModelDrawer::dmDepthModelDrawer()
     : drawingState()
-{    }
     , dataset(this)
+{
+    bmp = NULL;
+}
 
 dmDepthModelDrawer::~dmDepthModelDrawer()
 {
+    if (bmp) { delete bmp; bmp = NULL; }
 }
 
 void dmDepthModelDrawer::logFatalError(const std::string message)
@@ -132,11 +135,11 @@ bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
 {
     dmExtent vpExtentLL = applyViewPortArea(vp);
     bool success;
-    if (needNewCropping(vpExtentLL))
     dmRasterImgData* raster;
     int             w, h;
     raster = NULL;
 
+    if (bmp == NULL || needNewCropping(vpExtentLL))
     {
         dmExtent idealCroppingLL = calculateIdealCroppingLL(vpExtentLL);
         success = cropImage(idealCroppingLL, &raster, croppedImageLL, w,h);
@@ -147,19 +150,23 @@ bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
             return false;
         }
 
+        if (bmp == NULL) { bmp = new wxBitmap(); }
         success = reCalculateBitmap(vp, raster, croppedImageLL,
                                     *bmp, w, h, bmpTopLeftLL);
-        success = reCalculateDepthModelBitmap(vp);
-
+        if (!success)
+        {
+            wxLogMessage(_T("dmDepthModelDrawer::drawDepthChart - Bitmap reCalculation failed: ") +
+                drawingState.GetWantedChartFileName().GetName().ToStdString());
+            bmp = NULL;
+            return false;
+        }
     }
     else
     {
         bmpTopLeftLL = reCalculateTopLeftLocation(vp, croppedImageLL);
     }
-
     //wxString  fname = "C:\\OPENCPN_DATA\\UkiImg_wm.png";
-    if(success)
-        dc.DrawBitmap(bmp, bmpTopLeftLL, true);
+    dc.DrawBitmap(*bmp, bmpTopLeftLL, true);
 
     return true;
 }
