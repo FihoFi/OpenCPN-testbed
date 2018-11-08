@@ -240,6 +240,35 @@ bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
     return true;
 }
 
+
+/**
+* Compares chartXxxYyyLL, and lastXxxYyyLL coordinates, to see if the
+* image extent should be calculated again, or if there is no need to.
+*
+* @return true, if the area spanned by lastXxxYyyLL falls inside of the
+*         area spanned by chartXxxYyyLL in any direction, false else.
+*/
+bool dmDepthModelDrawer::needNewCropping(dmExtent viewPortLL)
+{
+    if (viewPortLL==dmExtent())
+    {
+        wxLogMessage(_T("dmDepthModelDrawer::needNewCropping does not know the canvas extent: "));
+        throw (std::string("dmDepthModelDrawer::needNewCropping does not know the canvas extent"));
+    }
+
+    dmExtent lastDrawnLL = drawingState.GetCurrentDrawingAreaLL();
+    bool stillFits = viewPortLL.isWithin(lastDrawnLL);
+
+    bool lastDrawnIsTooWide = false;
+    lastDrawnIsTooWide |= lastDrawnLL.height() / viewPortLL.height() > 2.0;
+    lastDrawnIsTooWide |= lastDrawnLL.width()  / viewPortLL.width()  > 2.0;
+
+    if (stillFits && !lastDrawnIsTooWide)
+    {   return false;   }
+    else
+    {   return true;    }
+}
+
 /**
 * @return Ideal cropping calculated from the current viewport extents.
 */
@@ -315,34 +344,6 @@ bool dmDepthModelDrawer::cropImage(dmExtent wantedCropExtentLL,
     }
 
     return success;
-}
-
-/**
-* Compares chartXxxYyyLL, and lastXxxYyyLL coordinates, to see if the
-* image extent should be calculated again, or if there is no need to.
-*
-* @return true, if the area spanned by lastXxxYyyLL falls inside of the
-*         area spanned by chartXxxYyyLL in any direction, false else.
-*/
-bool dmDepthModelDrawer::needNewCropping(dmExtent viewPortLL)
-{
-    if (viewPortLL==dmExtent())
-    {
-        wxLogMessage(_T("dmDepthModelDrawer::needNewCropping does not know the canvas extent: "));
-        throw (std::string("dmDepthModelDrawer::needNewCropping does not know the canvas extent"));
-    }
-
-    dmExtent lastDrawnLL = drawingState.GetCurrentDrawingAreaLL();
-    bool stillFits = viewPortLL.isWithin(lastDrawnLL);
-
-    bool lastDrawnIsTooWide = false;
-    lastDrawnIsTooWide |= lastDrawnLL.height() / viewPortLL.height() > 2.0;
-    lastDrawnIsTooWide |= lastDrawnLL.width()  / viewPortLL.width()  > 2.0;
-
-    if (stillFits && !lastDrawnIsTooWide)
-    {   return false;   }
-    else
-    {   return true;    }
 }
 
 /**
