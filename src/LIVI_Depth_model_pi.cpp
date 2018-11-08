@@ -563,6 +563,7 @@ void LIVI_Depth_model_pi::OnChartTypeChange(int selectionId)
     {
         m_pconf->colour.setChartType(chartType);
         m_pconf->SaveConfig();
+        this->setCurrentOptionsTextToUI();
     }
     else
     {
@@ -578,6 +579,7 @@ void LIVI_Depth_model_pi::OnColourSchemaChange(int selectionId)
     {
         m_pconf->colour.setColouringType(colType);
         m_pconf->SaveConfig();
+        this->setCurrentOptionsTextToUI();
     }
     else
     {
@@ -644,6 +646,15 @@ void LIVI_Depth_model_pi::PullConfigFromUI(void)
         m_pconf->colour.setTwoColour(i, dialog->GetTwoColours(i));
     }
     m_pconf->colour.setTwoColoursDepth(dialog->GetDividingLevel());
+}
+
+void LIVI_Depth_model_pi::setCurrentOptionsTextToUI()
+{
+    std::string str =
+        "Current drawing options:\n" +
+        m_pconf->colour.chartTypeToString(m_pconf->colour.getChartType()) + "\n" +
+        m_pconf->colour.colouringTypeToString(m_pconf->colour.getColouringType());
+    dialog->SetCurrentOptionsText(str);
 }
 
 void LIVI_Depth_model_pi::setInfoToUI(std::string str)
