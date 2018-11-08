@@ -362,28 +362,24 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmWaterLevel_Panel->Enable( false );
 	dmWaterLevel_Panel->Hide();
 	
-	wxGridSizer* gSizer7;
-	gSizer7 = new wxGridSizer( 0, 2, 0, 0 );
+	wxFlexGridSizer* dmWaterLevel_Sizer;
+	dmWaterLevel_Sizer = new wxFlexGridSizer( 0, 2, 0, 0 );
+	dmWaterLevel_Sizer->SetFlexibleDirection( wxBOTH );
+	dmWaterLevel_Sizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
 	dmEmpty = new wxStaticText( dmWaterLevel_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	dmEmpty->Wrap( -1 );
-	gSizer7->Add( dmEmpty, 0, wxALL, 5 );
+	dmWaterLevel_Sizer->Add( dmEmpty, 0, wxALL, 5 );
 	
 	dmEmpty1 = new wxStaticText( dmWaterLevel_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	dmEmpty1->Wrap( -1 );
-	gSizer7->Add( dmEmpty1, 0, wxALL, 5 );
-	
-	dmWaterLevel_Label = new wxStaticText( dmWaterLevel_Panel, wxID_ANY, wxT("Set current water level\ncompared to normal"), wxDefaultPosition, wxDefaultSize, 0 );
-	dmWaterLevel_Label->Wrap( -1 );
-	gSizer7->Add( dmWaterLevel_Label, 0, wxALL, 5 );
-	
-	dmWaterLevel_textCtrl = new wxTextCtrl( dmWaterLevel_Panel, wxID_ANY, wxT("0"), wxDefaultPosition, wxDefaultSize, 0 );
-	gSizer7->Add( dmWaterLevel_textCtrl, 0, wxALL, 5 );
+	dmWaterLevel_Sizer->Add( dmEmpty1, 0, wxALL, 5 );
 	
 	
-	dmWaterLevel_Panel->SetSizer( gSizer7 );
+	
+	dmWaterLevel_Panel->SetSizer( dmWaterLevel_Sizer );
 	dmWaterLevel_Panel->Layout();
-	gSizer7->Fit( dmWaterLevel_Panel );
+	dmWaterLevel_Sizer->Fit( dmWaterLevel_Panel );
 	dmTabChooser->AddPage( dmWaterLevel_Panel, wxT("Water level"), false );
 	dmAbout_Panel = new wxPanel( dmTabChooser, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* dmAbout_Sizer;
