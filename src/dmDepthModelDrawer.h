@@ -38,10 +38,10 @@ public:
     dmExtent         applyViewPortArea(/*const*/ PlugIn_ViewPort &vp);
 
 private:
-    dmDataset   dataset;
     dmDrawingState  drawingState;
 
     coord       idealTopLeftLL,  idealBotRightLL;
+    dmDataset       dataset;
 
 
     dmRasterImgData*  raster;
