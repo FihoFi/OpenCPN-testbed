@@ -20,8 +20,7 @@
 
 dmDepthModelDrawer::dmDepthModelDrawer()
     : drawingState()
-    , chartAreaKnown(false), datasetAvailable(false), depthModelFileName(),
-    dataset(this), raster(NULL), w(0), h(0)
+    , dataset(this), raster(NULL), w(0), h(0)
 {    }
 
 dmDepthModelDrawer::~dmDepthModelDrawer()
@@ -99,7 +98,6 @@ bool dmDepthModelDrawer::openDataset(const wxFileName &fileName)
 
     const char* fileNameCharPtr = fileNameStr.c_str();
     bool success = dataset.openDataSet(fileNameCharPtr);
-    datasetAvailable = success;
     if (!success)
     {
         wxLogMessage(_T("dmDepthModelDrawer::openDataset openDataSet failed: ") + fileNameStr);
@@ -175,8 +173,6 @@ bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
             }
         }
 
-        idealTopLeftLL = imageTopLeftLL;
-        idealBotRightLL = imageBotRightLL;
     }
 
     // Get min, and max coordinates where the bitmap is to be drawn
@@ -198,11 +194,11 @@ bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
             dataset.getDatasetPixelDimensions(newW, newH);
             originalFromGDAL = new wxImage();
             wxImage original;
-            //bool loadSuccess = original.LoadFile(depthModelFileName.GetName());
+            //bool loadSuccess = original.LoadFile(drawingState.GetWantedChartFileName()..GetName());
             //if (!loadSuccess)
             //{
             //    wxLogMessage(_T("dmDepthModelDrawer::calculateDepthModelBitmap - LoadFile failed: ") +
-            //        depthModelFileName.GetName().ToStdString());
+            //        drawingState.GetWantedChartFileName()..GetName().ToStdString());
             //    return false;
             //}
             original = wxImage(newW, newH, raster->rgb, raster->alpha, true);
@@ -218,7 +214,7 @@ bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
         if (!(*originalFromGDAL).IsOk())
         {
             wxLogMessage(_T("dmDepthModelDrawer::calculateDepthModelBitmap - Scale failed: ") +
-                depthModelFileName.GetName().ToStdString());
+                drawingState.GetWantedChartFileName().GetName().ToStdString());
             return false;
         }
 
@@ -228,8 +224,7 @@ bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
         //bmp.SetMask(new wxMask(bmp, wxColour(255, 255, 255)));
         delete originalFromGDAL;
 
-        lastTopLeftLL = idealTopLeftLL;
-        lastBotRightLL = idealBotRightLL;
+        drawingState.SetCurrentAsWanted();
     }
     else
     {

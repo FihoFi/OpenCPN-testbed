@@ -38,19 +38,12 @@ public:
     dmExtent         applyViewPortArea(/*const*/ PlugIn_ViewPort &vp);
 
 private:
-    bool        chartAreaKnown;
-    bool        datasetAvailable;
-
-    wxFileName  depthModelFileName;
     dmDataset   dataset;
     coord       wholeImageTopLeftWM,  wholeImageBotRightWM;
     coord       croppedImageTopLeftWM, croppedImageBotRightWM;
     dmDrawingState  drawingState;
 
-    coord       imageTopLeftLL,  imageBotRightLL;
-    coord       chartTopLeftLL,  chartBotRightLL;
     coord       idealTopLeftLL,  idealBotRightLL;
-    coord       lastTopLeftLL,   lastBotRightLL;
 
 
     dmRasterImgData*  raster;
