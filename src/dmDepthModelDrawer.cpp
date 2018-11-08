@@ -4,27 +4,30 @@
 
 #include <proj_api.h>
 #include "dmExtent.h"
-#include "dm_API.h"
 #include "dmDataset.h"
 #include "dmDrawingState.h"
 
 
 #include <iostream>
 #include <sstream>
-
 // This allows you to say things like : 
 // DBOUT("The value of x is " << x);
 // to output window.
 #define DBOUT( s ) \
 { std::wostringstream os_;  os_ << s; OutputDebugString( os_.str().c_str() ); }
 
+
 dmDepthModelDrawer::dmDepthModelDrawer()
     : drawingState()
-    , dataset(this), raster(NULL), w(0), h(0)
-{    }
+    , dataset(this)
+{
+    bmp = NULL;
+}
 
 dmDepthModelDrawer::~dmDepthModelDrawer()
-{    delete raster;    }
+{
+    if (bmp) { delete bmp; bmp = NULL; }
+}
 
 void dmDepthModelDrawer::logFatalError(const std::string message)
 {    wxLogFatalError(wxString(message));    DBOUT("FatalError: "+message+"\n");  }
@@ -129,86 +132,82 @@ dmExtent dmDepthModelDrawer::applyViewPortArea(PlugIn_ViewPort &vp)
 
 bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
 {
+    dmExtent vpExtentLL = applyViewPortArea(vp);
+    bool success;
+    dmRasterImgData* raster;
+    int             w, h;
+    raster = NULL;
 
-    bool success = reCalculateDepthModelBitmap(vp);
+    if (bmp == NULL || needNewCropping(vpExtentLL))
+    {
+        dmExtent idealCroppingLL = calculateIdealCroppingLL(vpExtentLL);
+        success = cropImage(idealCroppingLL, &raster, croppedImageLL, w,h);
+        if(!success)
+        {
+            wxLogMessage(_T("dmDepthModelDrawer::drawDepthChart - Crop failed: ") +
+                drawingState.GetWantedChartFileName().GetName().ToStdString());
+            return false;
+        }
 
+        if (bmp == NULL) { bmp = new wxBitmap(); }
+        success = reCalculateBitmap(vp, raster, croppedImageLL,
+                                    *bmp, w, h, bmpTopLeftLL);
+        if (!success)
+        {
+            wxLogMessage(_T("dmDepthModelDrawer::drawDepthChart - Bitmap reCalculation failed: ") +
+                drawingState.GetWantedChartFileName().GetName().ToStdString());
+            bmp = NULL;
+            return false;
+        }
+    }
+    else
+    {
+        bmpTopLeftLL = reCalculateTopLeftLocation(vp, croppedImageLL);
+    }
     //wxString  fname = "C:\\OPENCPN_DATA\\UkiImg_wm.png";
-    if(success)
-        dc.DrawBitmap(bmp, bmpTopLeftLL, true);
+    dc.DrawBitmap(*bmp, bmpTopLeftLL, true);
 
     return true;
 }
 
-bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
+wxPoint dmDepthModelDrawer::reCalculateTopLeftLocation(/*const*/PlugIn_ViewPort &vp, dmExtent croppedImageLL)
 {
-    bool isNewLoad = false;
+    wxPoint r1;
+    GetCanvasPixLL(&vp, &r1, croppedImageLL.topLeft.north, croppedImageLL.topLeft.east);   // up-left
+    return r1;
+}
 
-    applyChartArea(vp);
-    if (needNewCropping())
-    {
-        try
-        {
-            if (raster)
-            {
-                isNewLoad = false;
-                calculateIdealCroppingLL();
-            }
-        }
-        catch (const std::exception& const ex) {
-            throw std::string(ex.what());
-        }
-        catch (const std::string& const ex) {
-            throw ex;
-        }
-        catch (...)
-        {
-            std::exception_ptr currExc = std::current_exception();
-            try {
-                if (currExc) {
-                    std::rethrow_exception(currExc);
-                }
-            }
-            catch (const std::exception& e) {
-                throw e.what();
-            }
-        }
-
-    }
+bool dmDepthModelDrawer::reCalculateBitmap(/*const*/PlugIn_ViewPort &vp,
+    const dmRasterImgData* raster, dmExtent croppedImageLL,
+    wxBitmap& bmp, int& wBmp, int& hBmp, wxPoint& bmpTopLeftLL)
+{
+    if (wBmp < 1 && hBmp < 1)
+        bmp = wxBitmap();
 
     // Get min, and max coordinates where the bitmap is to be drawn
     wxPoint r1, r2;
-    GetCanvasPixLL(&vp, &r1, idealTopLeftLL.north,  idealTopLeftLL.east);   // up-left
-    GetCanvasPixLL(&vp, &r2, idealBotRightLL.north, idealBotRightLL.east);  // low-right
+    GetCanvasPixLL(&vp, &r1, croppedImageLL.topLeft.north,  croppedImageLL.topLeft.east);   // up-left
+    GetCanvasPixLL(&vp, &r2, croppedImageLL.botRight.north, croppedImageLL.botRight.east);  // low-right
 
     // Calculate dimensions of the picture
-    w = r2.x - r1.x; // max-min
-    h = r2.y - r1.y; // max-min
+   int w = r2.x - r1.x; // max-min
+   int h = r2.y - r1.y; // max-min
+   bmpTopLeftLL = r1;
 
-    if ((w > 10 && h > 10) && (w < 10000 && h < 10000))
+    //if ((w > 10 && h > 10) && (w < 10000 && h < 10000))
     {
-        // Generate the image with Dataset/GDAL
+        wxImage original;
         wxImage scaled;
-        if (isNewLoad)
-        {
-            int newW, newH;
-            dataset.getDatasetPixelDimensions(newW, newH);
-            wxImage original;
-            //bool loadSuccess = original.LoadFile(drawingState.GetWantedChartFileName()..GetName());
-            //if (!loadSuccess)
-            //{
-            //    wxLogMessage(_T("dmDepthModelDrawer::calculateDepthModelBitmap - LoadFile failed: ") +
-            //        drawingState.GetWantedChartFileName()..GetName().ToStdString());
-            //    return false;
-            //}
-            original = wxImage(newW, newH, raster->rgb, raster->alpha, true);
-            scaled = original.Scale(w, h, wxIMAGE_QUALITY_NORMAL);
 
-        }
-        else
-        {
-            scaled = wxImage(w, h, raster->rgb, raster->alpha, true);
-        }
-        raster = NULL; // was freed by wxImage constructor
+        //bool loadSuccess = original.LoadFile(drawingState.GetWantedChartFileName()..GetName());
+        //if (!loadSuccess)
+        //{
+        //    wxLogMessage(_T("dmDepthModelDrawer::calculateDepthModelBitmap - LoadFile failed: ") +
+        //        drawingState.GetWantedChartFileName().GetName().ToStdString());
+        //    return false;
+        //}
+        original = wxImage(wBmp, hBmp, raster->rgb, raster->alpha, true);
+        scaled = original.Scale(w, h, wxIMAGE_QUALITY_NORMAL);
 
         if (!(scaled).IsOk())
         {
@@ -217,22 +216,20 @@ bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
             return false;
         }
 
-        bmpTopLeftLL = r1;
-        bmp = wxBitmap(*scaled);
-        //bmp.SetMask(new wxMask(bmp, wxColour(255, 255, 255)));
+
+        bmp = wxBitmap(scaled);
 
         drawingState.SetCurrentAsWanted();
     }
-    else
-    {
-        bmp = wxBitmap();
-        wxLogMessage(_T("dmDepthModelDrawer::calculateDepthModelBitmap - dimension fail: w,h: ") +
-            wxString::Format(_T("%i"), w) + "," + wxString::Format(_T("%i"), h));
-    }
+    //else
+    //{
+    //    bmp = wxBitmap();
+    //    wxLogMessage(_T("dmDepthModelDrawer::calculateDepthModelBitmap - dimension fail: w,h: ") +
+    //        wxString::Format(_T("%i"), w) + "," + wxString::Format(_T("%i"), h));
+    //}
 
     return true;
 }
-
 
 /**
 * Compares chartXxxYyyLL, and lastXxxYyyLL coordinates, to see if the

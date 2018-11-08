@@ -4,11 +4,11 @@
 #define _DM_DEPTH_MODEL_DRAWER_
 
 #include "wx/wxprec.h"      // contains wxDC
-#include "ocpn_plugin.h"    // containsPlugIn_ViewPort
+#include "ocpn_plugin.h"    // contains PlugIn_ViewPort
 #include <wx/filename.h>    // wxFileName
+
 #include "dmExtent.h"
 #include "dmDataset.h"
-
 #include "dmDrawingState.h"
 
 class dmDepthModelDrawer : public dmLogWriter
@@ -18,9 +18,6 @@ public:
 
     dmDepthModelDrawer();
     ~dmDepthModelDrawer();
-
-    bool drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp);
-    bool reCalculateDepthModelBitmap(PlugIn_ViewPort &vp);
 
     virtual void logFatalError(const std::string message) override;
     virtual void logError     (const std::string message) override;
@@ -36,22 +33,25 @@ public:
     bool             setDataset(const wxFileName &fileName);
     bool             openDataset(const wxFileName &fileName);
     dmExtent         applyViewPortArea(/*const*/ PlugIn_ViewPort &vp);
+    bool             drawDepthChart(/*const*/ wxDC &dc, /*const*/ PlugIn_ViewPort &vp);
 
 private:
     dmDrawingState  drawingState;
 
-    coord       idealTopLeftLL,  idealBotRightLL;
     dmDataset       dataset;
+    dmExtent        wholeImageWM;   // extent (in WM) of the whole image available in the dataset
 
+    dmExtent        croppedImageLL;
+    wxBitmap*       bmp;
     wxPoint         bmpTopLeftLL;
 
-    dmRasterImgData*  raster;
-    int             w, h; // image width, and height
-    wxBitmap        bmp;
     bool        needNewCropping         (dmExtent viewPortLL);
     dmExtent    calculateIdealCroppingLL(dmExtent viewPortLL) const;
     bool        cropImage               (dmExtent wantedCropExtentLL,
                                          dmRasterImgData** rasterOut, dmExtent& croppedImageLL, int& w, int& h);
+    wxPoint     reCalculateTopLeftLocation(/*const*/PlugIn_ViewPort &vp, dmExtent croppedImageLL);
+    bool        reCalculateBitmap(/*const*/ PlugIn_ViewPort &vp, const dmRasterImgData* raster,
+                                   dmExtent croppedImageLL, wxBitmap& bmp, int& w, int& h, wxPoint& bmpTopLeftLL);
 
     void WMtoLL(const dmExtent& WMin, dmExtent& LLout);
     void LLtoWM(const dmExtent& LLin, dmExtent& WMout);
