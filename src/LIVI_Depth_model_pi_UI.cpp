@@ -384,6 +384,16 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	
 	dmWaterLevel_Sizer->Add( dmWaterLevel_VerticalReferenceSystemOffset_spinCtrlDouble, 0, wxALL, 5 );
 	
+	dmWaterLevel_CurrentWaterLevel_Label = new wxStaticText( dmWaterLevel_Panel, wxID_ANY, wxT("Current water level"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmWaterLevel_CurrentWaterLevel_Label->Wrap( -1 );
+	dmWaterLevel_Sizer->Add( dmWaterLevel_CurrentWaterLevel_Label, 0, wxALL, 5 );
+	
+	dmWaterLevel_CurrentWaterLevel_spinCtrlDouble = new wxSpinCtrlDouble( dmWaterLevel_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -10, 10, 0, 0.5 );
+	dmWaterLevel_CurrentWaterLevel_spinCtrlDouble->SetMaxSize( wxSize( 100,-1 ) );
+	
+	dmWaterLevel_Sizer->Add( dmWaterLevel_CurrentWaterLevel_spinCtrlDouble, 0, wxALL, 5 );
+	
+	
 	dmWaterLevel_Panel->SetSizer( dmWaterLevel_Sizer );
 	dmWaterLevel_Panel->Layout();
 	dmWaterLevel_Sizer->Fit( dmWaterLevel_Panel );
