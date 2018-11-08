@@ -295,6 +295,58 @@ dmExtent dmDepthModelDrawer::calculateIdealCroppingLL(dmExtent viewPortLL)
     return viewPortWithPaddingLL;
 }
 
+bool dmDepthModelDrawer::cropImage(dmExtent wantedCropExtentLL, 
+    dmRasterImgData** rasterOut, dmExtent& croppedImageLL, int& w, int& h)
+{
+    bool success = true;
+    dmExtent tempWM;
+    LLtoWM(wantedCropExtentLL, tempWM);
+
+    try
+    {
+        dmExtent croppedImageWM; // extent (in WM) of the cropped image returned by getRasterData last time called
+        *rasterOut = dataset.getRasterData(tempWM.topLeft, tempWM.botRight,
+            croppedImageWM.topLeft, croppedImageWM.botRight, w, h);
+        if (!rasterOut)
+        {
+            wxLogMessage(_T("dmDepthModelDrawer::cropImage - Loading the image failed: ") +
+                drawingState.GetWantedChartFileName().GetName().ToStdString());
+            return false;
+        }
+        drawingState.SetWantedDrawingAreaLL(wantedCropExtentLL);
+
+        success = dataset.getDatasetExtents(croppedImageWM.topLeft, croppedImageWM.botRight);
+        if (!success)
+        {
+            wxLogMessage(_T("dmDepthModelDrawer::cropImage - Retrieving the image extents failed: ") +
+                drawingState.GetWantedChartFileName().GetName().ToStdString());
+            return false;
+        }
+        WMtoLL(croppedImageWM, croppedImageLL);
+
+    }
+    catch (const std::exception& const ex) {
+        throw std::string(ex.what());
+    }
+    catch (const std::string& const ex) {
+        throw ex;
+    }
+    catch (...)
+    {
+        std::exception_ptr currExc = std::current_exception();
+        try {
+            if (currExc) {
+                std::rethrow_exception(currExc);
+            }
+        }
+        catch (const std::exception& e) {
+            throw e.what();
+        }
+    }
+
+    return success;
+}
+
 /**
 * Returns LatLon extent corresponding to given WMin World Mercator extent.
 */

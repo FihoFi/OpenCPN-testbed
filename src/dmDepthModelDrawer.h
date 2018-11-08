@@ -58,6 +58,8 @@ private:
     wxBitmap        bmp;
     wxPoint         bitmapTopLeftPositioningPoint;
     dmExtent    calculateIdealCroppingLL(dmExtent viewPortLL);
+    bool        cropImage               (dmExtent wantedCropExtentLL,
+                                         dmRasterImgData** rasterOut, dmExtent& croppedImageLL, int& w, int& h);
 
     void WMtoLL(const dmExtent& WMin, dmExtent& LLout);
     void LLtoWM(const dmExtent& LLin, dmExtent& WMout);
