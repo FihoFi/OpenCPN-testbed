@@ -152,7 +152,7 @@ bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
             if (raster)
             {
                 isNewLoad = false;
-                calculateIdealImageCroppingLL();
+                calculateIdealCroppingLL();
             }
         }
         catch (const std::exception& const ex) {
@@ -272,7 +272,7 @@ bool dmDepthModelDrawer::needNewCropping(dmExtent viewPortLL)
 /**
 * @return Ideal cropping calculated from the current viewport extents.
 */
-dmExtent dmDepthModelDrawer::calculateIdealCroppingLL(dmExtent viewPortLL)
+dmExtent dmDepthModelDrawer::calculateIdealCroppingLL(dmExtent viewPortLL)  const
 {
     if (viewPortLL == dmExtent())
     {

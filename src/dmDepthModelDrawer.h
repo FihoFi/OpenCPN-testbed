@@ -57,8 +57,8 @@ private:
     int             w, h; // image width, and height
     wxBitmap        bmp;
     wxPoint         bitmapTopLeftPositioningPoint;
-    dmExtent    calculateIdealCroppingLL(dmExtent viewPortLL);
     bool        needNewCropping         (dmExtent viewPortLL);
+    dmExtent    calculateIdealCroppingLL(dmExtent viewPortLL) const;
     bool        cropImage               (dmExtent wantedCropExtentLL,
                                          dmRasterImgData** rasterOut, dmExtent& croppedImageLL, int& w, int& h);
 
