@@ -145,12 +145,23 @@ bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
         success = reCalculateDepthModelBitmap(vp);
 
     }
+    else
+    {
+        bmpTopLeftLL = reCalculateTopLeftLocation(vp, croppedImageLL);
+    }
 
     //wxString  fname = "C:\\OPENCPN_DATA\\UkiImg_wm.png";
     if(success)
         dc.DrawBitmap(bmp, bmpTopLeftLL, true);
 
     return true;
+}
+
+wxPoint dmDepthModelDrawer::reCalculateTopLeftLocation(/*const*/PlugIn_ViewPort &vp, dmExtent croppedImageLL)
+{
+    wxPoint r1;
+    GetCanvasPixLL(&vp, &r1, croppedImageLL.topLeft.north, croppedImageLL.topLeft.east);   // up-left
+    return r1;
 }
 
 bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
