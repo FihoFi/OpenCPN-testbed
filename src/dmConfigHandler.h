@@ -100,10 +100,12 @@ struct DMColorOptionConfig : dm_configAPI {
     double  getTwoColoursDepth()             { return m_twoColoursDepth; }
     void    setTwoColoursDepth(double depth) { m_twoColoursDepth = depth; }
 
-private:
+
     wxString            chartTypeToString(DM_visualization chartType);
-    DM_visualization    stringToChartType(wxString chartTypeString);
     wxString        colouringTypeToString(DM_colourType colType);
+
+private:
+    DM_visualization    stringToChartType(wxString chartTypeString);
     DM_colourType   stringToColouringType(wxString colTypeString);
 };
 
