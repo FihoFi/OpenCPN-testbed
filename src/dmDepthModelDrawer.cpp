@@ -142,6 +142,8 @@ bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
             return false;
         }
 
+        success = reCalculateBitmap(vp, raster, croppedImageLL,
+                                    *bmp, w, h, bmpTopLeftLL);
         success = reCalculateDepthModelBitmap(vp);
 
     }
@@ -218,6 +220,59 @@ bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
     return true;
 }
 
+bool dmDepthModelDrawer::reCalculateBitmap(/*const*/PlugIn_ViewPort &vp,
+    const dmRasterImgData* raster, dmExtent croppedImageLL,
+    wxBitmap& bmp, int& wBmp, int& hBmp, wxPoint& bmpTopLeftLL)
+{
+    if (wBmp < 1 && hBmp < 1)
+        bmp = wxBitmap();
+
+    // Get min, and max coordinates where the bitmap is to be drawn
+    wxPoint r1, r2;
+    GetCanvasPixLL(&vp, &r1, croppedImageLL.topLeft.north,  croppedImageLL.topLeft.east);   // up-left
+    GetCanvasPixLL(&vp, &r2, croppedImageLL.botRight.north, croppedImageLL.botRight.east);  // low-right
+
+    // Calculate dimensions of the picture
+   int w = r2.x - r1.x; // max-min
+   int h = r2.y - r1.y; // max-min
+   bmpTopLeftLL = r1;
+
+    //if ((w > 10 && h > 10) && (w < 10000 && h < 10000))
+    {
+        wxImage original;
+        wxImage scaled;
+
+        //bool loadSuccess = original.LoadFile(drawingState.GetWantedChartFileName()..GetName());
+        //if (!loadSuccess)
+        //{
+        //    wxLogMessage(_T("dmDepthModelDrawer::calculateDepthModelBitmap - LoadFile failed: ") +
+        //        drawingState.GetWantedChartFileName().GetName().ToStdString());
+        //    return false;
+        //}
+        original = wxImage(wBmp, hBmp, raster->rgb, raster->alpha, true);
+        scaled = original.Scale(w, h, wxIMAGE_QUALITY_NORMAL);
+
+        if (!(scaled).IsOk())
+        {
+            wxLogMessage(_T("dmDepthModelDrawer::calculateDepthModelBitmap - Scale failed: ") +
+                drawingState.GetWantedChartFileName().GetName().ToStdString());
+            return false;
+        }
+
+
+        bmp = wxBitmap(scaled);
+
+        drawingState.SetCurrentAsWanted();
+    }
+    //else
+    //{
+    //    bmp = wxBitmap();
+    //    wxLogMessage(_T("dmDepthModelDrawer::calculateDepthModelBitmap - dimension fail: w,h: ") +
+    //        wxString::Format(_T("%i"), w) + "," + wxString::Format(_T("%i"), h));
+    //}
+
+    return true;
+}
 
 /**
 * Compares chartXxxYyyLL, and lastXxxYyyLL coordinates, to see if the
