@@ -318,44 +318,28 @@ bool dmDepthModelDrawer::needANewCropping()
 }
 
 /**
-* Sets idealXxxYyyLL coordinates to the minimums of canvas with some padding,
-* and image coordinates. In case the canvas, and image areas do not overlap,
-* the coordinate pairs are set to be the same.
-*
-* @todo TODO Think, would the (0,0) be better than (top,left) coordinates, in case
-*       of a null common area?
+* @return Ideal cropping calculated from the current viewport extents.
 */
-void dmDepthModelDrawer::calculateIdealImageCroppingLL()
+dmExtent dmDepthModelDrawer::calculateIdealCroppingLL(dmExtent viewPortLL)
 {
-    if (!chartAreaKnown)
+    if (viewPortLL == dmExtent())
     {
-        wxLogMessage(_T("dmDepthModelDrawer::calculateIdealImageCroppingLL does not need the canvas extent: "));
-        throw (std::string("dmDepthModelDrawer::calculateIdealImageCroppingLL does not need the canvas extent"));
+        wxLogMessage(_T("dmDepthModelDrawer::calculateIdealCroppingLL does not know the canvas extent: "));
+        throw (std::string("dmDepthModelDrawer::calculateIdealCroppingLL does not know the canvas extent"));
     }
 
-    // TODO The "excess" part of image is now set to be an 8th part of canvas extent.
-    //      The better would be a sensible length value.
-    double eightOfCanvasNorthLL  = (chartTopLeftLL.north - chartBotRightLL.north) /8;
-    double eightOfCanvasEastLL   = (chartBotRightLL.east - chartTopLeftLL.east)   /8;
+    // The "excess" part of image is now set to be an 8th part of the viewport extent.
+    // Probably a better would be setting it to a sensible length value.
+    double eightOfViewPortNorthLL = (viewPortLL.topLeft.north - viewPortLL.botRight.north) / 8;
+    double eightOfViewPortEastLL = (viewPortLL.botRight.east - viewPortLL.topLeft.east) / 8;
 
-    coord chartAndBordersTopLeftLL( chartTopLeftLL.north + eightOfCanvasNorthLL,
-                                    chartTopLeftLL.east  + eightOfCanvasEastLL);
-    coord chartAndBordersBotRightLL(chartBotRightLL.north - eightOfCanvasNorthLL,
-                                    chartBotRightLL.east  - eightOfCanvasEastLL);
+    coord topLeftLL(viewPortLL.topLeft.north + eightOfViewPortNorthLL,
+        viewPortLL.topLeft.east - eightOfViewPortEastLL);
+    coord botRightLL(viewPortLL.botRight.north - eightOfViewPortNorthLL,
+        viewPortLL.botRight.east + eightOfViewPortEastLL);
+    dmExtent viewPortWithPaddingLL(topLeftLL, botRightLL);
 
-    // Select the coordinates that minimize the size of the image to be asked,
-    // also taking care that we do not ask from dataset anything outside the image coordinates.
-    idealTopLeftLL.north  = (imageTopLeftLL.north  < chartAndBordersTopLeftLL.north ) ? imageTopLeftLL.north  : chartAndBordersTopLeftLL.north;
-    idealTopLeftLL.east   = (imageTopLeftLL.east   > chartAndBordersTopLeftLL.east  ) ? imageTopLeftLL.east   : chartAndBordersTopLeftLL.east;
-    idealBotRightLL.north = (imageBotRightLL.north > chartAndBordersBotRightLL.north) ? imageBotRightLL.north : chartAndBordersBotRightLL.north;
-    idealBotRightLL.east  = (imageBotRightLL.east  < chartAndBordersBotRightLL.east ) ? imageBotRightLL.east  : chartAndBordersBotRightLL.east;
-
-    // If the canvas, and image do not have common points, shrink the area to 0 size, 
-    // instead of having coordinates the wrong way around, "negative area".
-    if (idealTopLeftLL.north < idealBotRightLL.north)
-        idealBotRightLL.north = idealTopLeftLL.north;
-    if (idealTopLeftLL.east > idealBotRightLL.east)
-        idealBotRightLL.east = idealTopLeftLL.east;
+    return viewPortWithPaddingLL;
 }
 
 /**
