@@ -148,35 +148,6 @@ bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
 
 bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
 {
-
-    {
-        try
-        {
-            if (raster)
-            {
-            }
-        }
-        catch (const std::exception& const ex) {
-            throw std::string(ex.what());
-        }
-        catch (const std::string& const ex) {
-            throw ex;
-        }
-        catch (...)
-        {
-            std::exception_ptr currExc = std::current_exception();
-            try {
-                if (currExc) {
-                    std::rethrow_exception(currExc);
-                }
-            }
-            catch (const std::exception& e) {
-                throw e.what();
-            }
-        }
-
-    }
-
     // Get min, and max coordinates where the bitmap is to be drawn
     wxPoint r1, r2;
     GetCanvasPixLL(&vp, &r1, idealTopLeftLL.north,  idealTopLeftLL.east);   // up-left
