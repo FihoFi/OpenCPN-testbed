@@ -3,6 +3,7 @@
 #include "dmDepthModelDrawer.h"
 
 #include <proj_api.h>
+#include "dmExtent.h"
 #include "dm_API.h"
 #include "dmDataset.h"
 #include "dmDrawingState.h"
