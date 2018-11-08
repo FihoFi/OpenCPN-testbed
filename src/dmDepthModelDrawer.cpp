@@ -134,7 +134,7 @@ bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
 
     //wxString  fname = "C:\\OPENCPN_DATA\\UkiImg_wm.png";
     if(success)
-        dc.DrawBitmap(bmp, bitmapTopLeftPositioningPoint, true);
+        dc.DrawBitmap(bmp, bmpTopLeftLL, true);
 
     return true;
 }
@@ -217,7 +217,7 @@ bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
             return false;
         }
 
-        bitmapTopLeftPositioningPoint = r1;
+        bmpTopLeftLL = r1;
         bmp = wxBitmap(*scaled);
         //bmp.SetMask(new wxMask(bmp, wxColour(255, 255, 255)));
 

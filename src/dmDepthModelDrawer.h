@@ -43,11 +43,11 @@ private:
     coord       idealTopLeftLL,  idealBotRightLL;
     dmDataset       dataset;
 
+    wxPoint         bmpTopLeftLL;
 
     dmRasterImgData*  raster;
     int             w, h; // image width, and height
     wxBitmap        bmp;
-    wxPoint         bitmapTopLeftPositioningPoint;
     bool        needNewCropping         (dmExtent viewPortLL);
     dmExtent    calculateIdealCroppingLL(dmExtent viewPortLL) const;
     bool        cropImage               (dmExtent wantedCropExtentLL,
