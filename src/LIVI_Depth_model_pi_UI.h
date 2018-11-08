@@ -122,8 +122,8 @@ class LIVIDMUI_DLG : public wxDialog
 		wxPanel* dmWaterLevel_Panel;
 		wxStaticText* dmEmpty;
 		wxStaticText* dmEmpty1;
-		wxStaticText* dmWaterLevel_Label;
-		wxTextCtrl* dmWaterLevel_textCtrl;
+		wxStaticText* dmWaterLevel_VerticalReferenceSystemOffset_Label;
+		wxSpinCtrlDouble* dmWaterLevel_VerticalReferenceSystemOffset_spinCtrlDouble;
 		wxPanel* dmAbout_Panel;
 		wxPanel* dmAbout_Icon_Panel;
 		wxStaticBitmap* dmAbout_icon_bitmap;
