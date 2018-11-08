@@ -152,13 +152,7 @@ bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
             if (raster)
             {
                 isNewLoad = false;
-                calculateCroppedWMProjectedImage();
                 calculateIdealImageCroppingLL();
-            }
-            else
-            {
-                isNewLoad = true;
-                calculateWholeWMProjectedImage();
             }
         }
         catch (const std::exception& const ex) {
@@ -244,46 +238,6 @@ bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
     }
 
     return true;
-}
-
-bool dmDepthModelDrawer::calculateWholeWMProjectedImage()
-{
-    bool success = true;
-
-    raster = dataset.getRasterData(wholeImageTopLeftWM, wholeImageBotRightWM);
-    success &= (raster != NULL);
-
-
-    success &= dataset.getDatasetExtents(wholeImageTopLeftWM, wholeImageBotRightWM);
-    if (success)
-    {
-        WMtoLL(wholeImageTopLeftWM, wholeImageBotRightWM, imageTopLeftLL, imageBotRightLL);
-    }
-    else
-    {
-        wxLogMessage(_T("dmDepthModelDrawer::calculateWholeWMProjectedImage - LoadFile failed: ") +
-            depthModelFileName.GetName().ToStdString());
-    }
-}
-
-bool dmDepthModelDrawer::calculateCroppedWMProjectedImage()
-{
-    bool success = true;
-
-    raster = dataset.getRasterData(
-        idealTopLeftLL, idealBotRightLL,
-        croppedImageTopLeftWM, croppedImageBotRightWM, w, h);
-
-    success &= dataset.getDatasetExtents(croppedImageTopLeftWM, croppedImageBotRightWM);
-    if (success)
-    {
-        WMtoLL(croppedImageTopLeftWM, croppedImageBotRightWM, imageTopLeftLL, imageBotRightLL);
-    }
-    else
-    {
-        wxLogMessage(_T("dmDepthModelDrawer::calculateCroppedWMProjectedImage - LoadFile failed: ") +
-            depthModelFileName.GetName().ToStdString());
-    }
 }
 
 /**
