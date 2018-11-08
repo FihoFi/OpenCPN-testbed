@@ -40,7 +40,9 @@ private:
     dmDrawingState  drawingState;
 
     dmDataset       dataset;
+    dmExtent        wholeImageWM;   // extent (in WM) of the whole image available in the dataset
 
+    dmExtent        croppedImageLL;
     wxPoint         bmpTopLeftLL;
 
     wxBitmap        bmp;
