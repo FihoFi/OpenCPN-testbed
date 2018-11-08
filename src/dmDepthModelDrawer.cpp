@@ -134,6 +134,13 @@ bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
     if (needNewCropping(vpExtentLL))
     {
         dmExtent idealCroppingLL = calculateIdealCroppingLL(vpExtentLL);
+        success = cropImage(idealCroppingLL, &raster, croppedImageLL, w,h);
+        if(!success)
+        {
+            wxLogMessage(_T("dmDepthModelDrawer::drawDepthChart - Crop failed: ") +
+                drawingState.GetWantedChartFileName().GetName().ToStdString());
+            return false;
+        }
 
         success = reCalculateDepthModelBitmap(vp);
 
