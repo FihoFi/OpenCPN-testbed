@@ -168,26 +168,20 @@ bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
     {
         // Generate the image with Dataset/GDAL
         wxImage scaled;
-        if (isNewLoad)
-        {
-            int newW, newH;
-            dataset.getDatasetPixelDimensions(newW, newH);
-            wxImage original;
-            //bool loadSuccess = original.LoadFile(drawingState.GetWantedChartFileName()..GetName());
-            //if (!loadSuccess)
-            //{
-            //    wxLogMessage(_T("dmDepthModelDrawer::calculateDepthModelBitmap - LoadFile failed: ") +
-            //        drawingState.GetWantedChartFileName()..GetName().ToStdString());
-            //    return false;
-            //}
-            original = wxImage(newW, newH, raster->rgb, raster->alpha, true);
-            scaled = original.Scale(w, h, wxIMAGE_QUALITY_NORMAL);
 
-        }
-        else
-        {
-            scaled = wxImage(w, h, raster->rgb, raster->alpha, true);
-        }
+        int newW, newH;
+        dataset.getDatasetPixelDimensions(newW, newH);
+        wxImage original;
+        //bool loadSuccess = original.LoadFile(drawingState.GetWantedChartFileName()..GetName());
+        //if (!loadSuccess)
+        //{
+        //    wxLogMessage(_T("dmDepthModelDrawer::calculateDepthModelBitmap - LoadFile failed: ") +
+        //        drawingState.GetWantedChartFileName().GetName().ToStdString());
+        //    return false;
+        //}
+        original = wxImage(newW, newH, raster->rgb, raster->alpha, true);
+        scaled = original.Scale(w, h, wxIMAGE_QUALITY_NORMAL);
+
         raster = NULL; // was freed by wxImage constructor
 
         if (!(scaled).IsOk())
