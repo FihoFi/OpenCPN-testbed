@@ -38,25 +38,16 @@ public:
     dmExtent         applyViewPortArea(/*const*/ PlugIn_ViewPort &vp);
 
 private:
-    bool        chartAreaKnown;
-    bool        datasetAvailable;
-
-    wxFileName  depthModelFileName;
-    dmDataset   dataset;
-    coord       wholeImageTopLeftWM,  wholeImageBotRightWM;
-    coord       croppedImageTopLeftWM, croppedImageBotRightWM;
     dmDrawingState  drawingState;
 
-    coord       imageTopLeftLL,  imageBotRightLL;
-    coord       chartTopLeftLL,  chartBotRightLL;
     coord       idealTopLeftLL,  idealBotRightLL;
-    coord       lastTopLeftLL,   lastBotRightLL;
+    dmDataset       dataset;
 
+    wxPoint         bmpTopLeftLL;
 
     dmRasterImgData*  raster;
     int             w, h; // image width, and height
     wxBitmap        bmp;
-    wxPoint         bitmapTopLeftPositioningPoint;
     bool        needNewCropping         (dmExtent viewPortLL);
     dmExtent    calculateIdealCroppingLL(dmExtent viewPortLL) const;
     bool        cropImage               (dmExtent wantedCropExtentLL,

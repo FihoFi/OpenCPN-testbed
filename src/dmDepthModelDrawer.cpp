@@ -20,8 +20,7 @@
 
 dmDepthModelDrawer::dmDepthModelDrawer()
     : drawingState()
-    , chartAreaKnown(false), datasetAvailable(false), depthModelFileName(),
-    dataset(this), raster(NULL), w(0), h(0)
+    , dataset(this), raster(NULL), w(0), h(0)
 {    }
 
 dmDepthModelDrawer::~dmDepthModelDrawer()
@@ -99,7 +98,6 @@ bool dmDepthModelDrawer::openDataset(const wxFileName &fileName)
 
     const char* fileNameCharPtr = fileNameStr.c_str();
     bool success = dataset.openDataSet(fileNameCharPtr);
-    datasetAvailable = success;
     if (!success)
     {
         wxLogMessage(_T("dmDepthModelDrawer::openDataset openDataSet failed: ") + fileNameStr);
@@ -136,7 +134,7 @@ bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
 
     //wxString  fname = "C:\\OPENCPN_DATA\\UkiImg_wm.png";
     if(success)
-        dc.DrawBitmap(bmp, bitmapTopLeftPositioningPoint, true);
+        dc.DrawBitmap(bmp, bmpTopLeftLL, true);
 
     return true;
 }
@@ -175,8 +173,6 @@ bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
             }
         }
 
-        idealTopLeftLL = imageTopLeftLL;
-        idealBotRightLL = imageBotRightLL;
     }
 
     // Get min, and max coordinates where the bitmap is to be drawn
@@ -191,45 +187,41 @@ bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
     if ((w > 10 && h > 10) && (w < 10000 && h < 10000))
     {
         // Generate the image with Dataset/GDAL
-        wxImage* originalFromGDAL;
+        wxImage scaled;
         if (isNewLoad)
         {
             int newW, newH;
             dataset.getDatasetPixelDimensions(newW, newH);
-            originalFromGDAL = new wxImage();
             wxImage original;
-            //bool loadSuccess = original.LoadFile(depthModelFileName.GetName());
+            //bool loadSuccess = original.LoadFile(drawingState.GetWantedChartFileName()..GetName());
             //if (!loadSuccess)
             //{
             //    wxLogMessage(_T("dmDepthModelDrawer::calculateDepthModelBitmap - LoadFile failed: ") +
-            //        depthModelFileName.GetName().ToStdString());
+            //        drawingState.GetWantedChartFileName()..GetName().ToStdString());
             //    return false;
             //}
             original = wxImage(newW, newH, raster->rgb, raster->alpha, true);
-            *originalFromGDAL = original.Scale(w, h, wxIMAGE_QUALITY_NORMAL);
+            scaled = original.Scale(w, h, wxIMAGE_QUALITY_NORMAL);
 
         }
         else
         {
-            originalFromGDAL = new wxImage(w, h, raster->rgb, raster->alpha, true);
+            scaled = wxImage(w, h, raster->rgb, raster->alpha, true);
         }
         raster = NULL; // was freed by wxImage constructor
 
-        if (!(*originalFromGDAL).IsOk())
+        if (!(scaled).IsOk())
         {
             wxLogMessage(_T("dmDepthModelDrawer::calculateDepthModelBitmap - Scale failed: ") +
-                depthModelFileName.GetName().ToStdString());
+                drawingState.GetWantedChartFileName().GetName().ToStdString());
             return false;
         }
 
-
-        bitmapTopLeftPositioningPoint = r1;
-        bmp = wxBitmap(*originalFromGDAL);
+        bmpTopLeftLL = r1;
+        bmp = wxBitmap(*scaled);
         //bmp.SetMask(new wxMask(bmp, wxColour(255, 255, 255)));
-        delete originalFromGDAL;
 
-        lastTopLeftLL = idealTopLeftLL;
-        lastBotRightLL = idealBotRightLL;
+        drawingState.SetCurrentAsWanted();
     }
     else
     {
