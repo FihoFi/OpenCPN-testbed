@@ -187,12 +187,11 @@ bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
     if ((w > 10 && h > 10) && (w < 10000 && h < 10000))
     {
         // Generate the image with Dataset/GDAL
-        wxImage* originalFromGDAL;
+        wxImage scaled;
         if (isNewLoad)
         {
             int newW, newH;
             dataset.getDatasetPixelDimensions(newW, newH);
-            originalFromGDAL = new wxImage();
             wxImage original;
             //bool loadSuccess = original.LoadFile(drawingState.GetWantedChartFileName()..GetName());
             //if (!loadSuccess)
@@ -202,27 +201,25 @@ bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
             //    return false;
             //}
             original = wxImage(newW, newH, raster->rgb, raster->alpha, true);
-            *originalFromGDAL = original.Scale(w, h, wxIMAGE_QUALITY_NORMAL);
+            scaled = original.Scale(w, h, wxIMAGE_QUALITY_NORMAL);
 
         }
         else
         {
-            originalFromGDAL = new wxImage(w, h, raster->rgb, raster->alpha, true);
+            scaled = wxImage(w, h, raster->rgb, raster->alpha, true);
         }
         raster = NULL; // was freed by wxImage constructor
 
-        if (!(*originalFromGDAL).IsOk())
+        if (!(scaled).IsOk())
         {
             wxLogMessage(_T("dmDepthModelDrawer::calculateDepthModelBitmap - Scale failed: ") +
                 drawingState.GetWantedChartFileName().GetName().ToStdString());
             return false;
         }
 
-
         bitmapTopLeftPositioningPoint = r1;
-        bmp = wxBitmap(*originalFromGDAL);
+        bmp = wxBitmap(*scaled);
         //bmp.SetMask(new wxMask(bmp, wxColour(255, 255, 255)));
-        delete originalFromGDAL;
 
         drawingState.SetCurrentAsWanted();
     }
