@@ -129,8 +129,15 @@ dmExtent dmDepthModelDrawer::applyViewPortArea(PlugIn_ViewPort &vp)
 
 bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
 {
+    dmExtent vpExtentLL = applyViewPortArea(vp);
+    bool success;
+    if (needNewCropping(vpExtentLL))
+    {
+        dmExtent idealCroppingLL = calculateIdealCroppingLL(vpExtentLL);
 
-    bool success = reCalculateDepthModelBitmap(vp);
+        success = reCalculateDepthModelBitmap(vp);
+
+    }
 
     //wxString  fname = "C:\\OPENCPN_DATA\\UkiImg_wm.png";
     if(success)
@@ -141,17 +148,12 @@ bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
 
 bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
 {
-    bool isNewLoad = false;
 
-    applyChartArea(vp);
-    if (needNewCropping())
     {
         try
         {
             if (raster)
             {
-                isNewLoad = false;
-                calculateIdealCroppingLL();
             }
         }
         catch (const std::exception& const ex) {
