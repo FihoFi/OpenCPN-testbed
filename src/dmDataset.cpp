@@ -166,10 +166,16 @@ bool dmDataset::openDataSet(const char * filename)
     GDALDataset *reprojectedDs;
 
     if (_srcDataset)
+    {
         GDALClose(_srcDataset);
+        _srcDataset = NULL;
+    }
 
     if (_dstDataset)
+    {
         GDALClose(_dstDataset);
+        _dstDataset = NULL;
+    }
 
     _srcDataset = (GDALDataset *)GDALOpen(filename, GA_ReadOnly);
 
@@ -276,7 +282,10 @@ void dmDataset::registerGDALDrivers()
 bool dmDataset::allocateImgDataMemory()
 {
     if (_imgData)
+    {
         delete _imgData;
+        _imgData = NULL;
+    }
 
     if (!_dstDataset)
         return false;
