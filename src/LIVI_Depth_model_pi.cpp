@@ -117,8 +117,10 @@ int LIVI_Depth_model_pi::Init(void)
     m_pconf = new dmConfigHandler(pFileConf, dialog);
     colourfileHandler = new dmColourfileHandler(m_pconf, *GetpSharedDataLocation());
 
-    bool success = m_pconf->LoadConfig(); // config related to this plugin.
-    PushConfigToUI();
+    bool success = m_pconf->LoadConfig(); // config variables related to this plugin.
+    this->PushConfigToUI();
+    this->setCurrentOptionsTextToUI();
+
     dmDrawer = new dmDepthModelDrawer();
     dmDrawer->setDataset(m_pconf->fileImport.filePath);
     dmDrawer->setChartDrawType(m_pconf->colour.getChartType());
@@ -264,6 +266,9 @@ void LIVI_Depth_model_pi::SetCursorLatLon(double lat, double lon)
 void LIVI_Depth_model_pi::SetCurrentViewPort(PlugIn_ViewPort &vp)
 {
     /*dmExtent extent =*/ dmDrawer->applyViewPortArea(vp);
+
+    // TODO Ask for refresh only instead? (Or even do nothing?)
+    //RequestRefresh(m_parent_window); // refresh main window
 }
 
 /**
@@ -364,23 +369,18 @@ wxArrayString LIVI_Depth_model_pi::GetDynamicChartClassNameArray(void)
 */
 bool LIVI_Depth_model_pi::RenderOverlay(wxDC& dc, PlugIn_ViewPort* vp)
 {
-    bool success = true;
-    //success = dmDrawer->reCalculateDepthModelBitmap(*vp);
+    bool success = false;
 
-    bool exception = false;
     try
     {
         success = dmDrawer->drawDepthChart(dc, *vp);
     }
     catch (std::string ex)
     {
-        exception = true;
         setErrorToUI("Problem in drawing the picture.\n"
                      "Look for the details in the OCPN log.");
         success = false;
     }
-    if (exception)
-        dialog->SetPictureImportErrorText("Problem in drawing the picture.");
 
     return success;
 }
@@ -510,7 +510,6 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
 
     setInfoToUI("Setting chart image type options");
 
-    bool exception = false;
     bool success = true;
     try {
         if(dmDrawer->getChartDrawType() == COLOR_RELIEF)
@@ -550,14 +549,9 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
     catch (std::string exStr)
     {
         setInfoToUI(exStr);
-        exception = true;
     }
 
-    RequestRefresh(m_parent_window); // refresh main window
-
-    m_pconf->fileImport.filePath = fullFileName;
-    m_pconf->SaveConfig();
-
+    RequestRefresh(m_parent_window); // request refresh of the main window -> call to RenderOverlay
 }
 
 void LIVI_Depth_model_pi::OnChartTypeChange(int selectionId)
