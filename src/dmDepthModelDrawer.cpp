@@ -145,7 +145,7 @@ bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
     bool isNewLoad = false;
 
     applyChartArea(vp);
-    if (needANewCropping())
+    if (needNewCropping())
     {
         try
         {
@@ -241,36 +241,6 @@ bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
 }
 
 /**
-* Compares chartXxxYyyLL, and lastXxxYyyLL coordinates, to see if the
-* image extent should be calculated again, or if there is no need to.
-*
-* @return true, if the area spanned by lastXxxYyyLL falls inside of the
-*         area spanned by chartXxxYyyLL in any direction, false else.
-*/
-bool dmDepthModelDrawer::needANewCropping()
-{
-    if (!chartAreaKnown)
-    {
-        wxLogMessage(_T("dmDepthModelDrawer::needANewCropping does not know the canvas extent: "));
-        throw (std::string("dmDepthModelDrawer::needANewCropping does not know the canvas extent"));
-    }
-
-    if (raster==NULL)
-    {
-        return true;
-    }
-
-    bool needNew = true;
-
-    needNew |= (chartTopLeftLL.north  >= lastTopLeftLL.north);
-    needNew |= (chartTopLeftLL.east   <= lastTopLeftLL.east);
-    needNew |= (chartBotRightLL.north <= lastBotRightLL.north);
-    needNew |= (chartBotRightLL.east  >= lastBotRightLL.east);
-
-    return needNew;
-}
-
-/**
 * @return Ideal cropping calculated from the current viewport extents.
 */
 dmExtent dmDepthModelDrawer::calculateIdealCroppingLL(dmExtent viewPortLL)
@@ -345,6 +315,34 @@ bool dmDepthModelDrawer::cropImage(dmExtent wantedCropExtentLL,
     }
 
     return success;
+}
+
+/**
+* Compares chartXxxYyyLL, and lastXxxYyyLL coordinates, to see if the
+* image extent should be calculated again, or if there is no need to.
+*
+* @return true, if the area spanned by lastXxxYyyLL falls inside of the
+*         area spanned by chartXxxYyyLL in any direction, false else.
+*/
+bool dmDepthModelDrawer::needNewCropping(dmExtent viewPortLL)
+{
+    if (viewPortLL==dmExtent())
+    {
+        wxLogMessage(_T("dmDepthModelDrawer::needNewCropping does not know the canvas extent: "));
+        throw (std::string("dmDepthModelDrawer::needNewCropping does not know the canvas extent"));
+    }
+
+    dmExtent lastDrawnLL = drawingState.GetCurrentDrawingAreaLL();
+    bool stillFits = viewPortLL.isWithin(lastDrawnLL);
+
+    bool lastDrawnIsTooWide = false;
+    lastDrawnIsTooWide |= lastDrawnLL.height() / viewPortLL.height() > 2.0;
+    lastDrawnIsTooWide |= lastDrawnLL.width()  / viewPortLL.width()  > 2.0;
+
+    if (stillFits && !lastDrawnIsTooWide)
+    {   return false;   }
+    else
+    {   return true;    }
 }
 
 /**
