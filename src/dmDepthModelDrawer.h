@@ -39,8 +39,6 @@ public:
 
 private:
     dmDataset   dataset;
-    coord       wholeImageTopLeftWM,  wholeImageBotRightWM;
-    coord       croppedImageTopLeftWM, croppedImageBotRightWM;
     dmDrawingState  drawingState;
 
     coord       idealTopLeftLL,  idealBotRightLL;
