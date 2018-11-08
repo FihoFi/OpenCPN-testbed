@@ -152,13 +152,7 @@ bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
             if (raster)
             {
                 isNewLoad = false;
-                calculateCroppedWMProjectedImage();
                 calculateIdealImageCroppingLL();
-            }
-            else
-            {
-                isNewLoad = true;
-                calculateWholeWMProjectedImage();
             }
         }
         catch (const std::exception& const ex) {
@@ -246,46 +240,6 @@ bool dmDepthModelDrawer::reCalculateDepthModelBitmap(PlugIn_ViewPort &vp)
     return true;
 }
 
-bool dmDepthModelDrawer::calculateWholeWMProjectedImage()
-{
-    bool success = true;
-
-    raster = dataset.getRasterData(wholeImageTopLeftWM, wholeImageBotRightWM);
-    success &= (raster != NULL);
-
-
-    success &= dataset.getDatasetExtents(wholeImageTopLeftWM, wholeImageBotRightWM);
-    if (success)
-    {
-        WMtoLL(wholeImageTopLeftWM, wholeImageBotRightWM, imageTopLeftLL, imageBotRightLL);
-    }
-    else
-    {
-        wxLogMessage(_T("dmDepthModelDrawer::calculateWholeWMProjectedImage - LoadFile failed: ") +
-            depthModelFileName.GetName().ToStdString());
-    }
-}
-
-bool dmDepthModelDrawer::calculateCroppedWMProjectedImage()
-{
-    bool success = true;
-
-    raster = dataset.getRasterData(
-        idealTopLeftLL, idealBotRightLL,
-        croppedImageTopLeftWM, croppedImageBotRightWM, w, h);
-
-    success &= dataset.getDatasetExtents(croppedImageTopLeftWM, croppedImageBotRightWM);
-    if (success)
-    {
-        WMtoLL(croppedImageTopLeftWM, croppedImageBotRightWM, imageTopLeftLL, imageBotRightLL);
-    }
-    else
-    {
-        wxLogMessage(_T("dmDepthModelDrawer::calculateCroppedWMProjectedImage - LoadFile failed: ") +
-            depthModelFileName.GetName().ToStdString());
-    }
-}
-
 /**
 * Compares chartXxxYyyLL, and lastXxxYyyLL coordinates, to see if the
 * image extent should be calculated again, or if there is no need to.
@@ -339,6 +293,58 @@ dmExtent dmDepthModelDrawer::calculateIdealCroppingLL(dmExtent viewPortLL)
     dmExtent viewPortWithPaddingLL(topLeftLL, botRightLL);
 
     return viewPortWithPaddingLL;
+}
+
+bool dmDepthModelDrawer::cropImage(dmExtent wantedCropExtentLL, 
+    dmRasterImgData** rasterOut, dmExtent& croppedImageLL, int& w, int& h)
+{
+    bool success = true;
+    dmExtent tempWM;
+    LLtoWM(wantedCropExtentLL, tempWM);
+
+    try
+    {
+        dmExtent croppedImageWM; // extent (in WM) of the cropped image returned by getRasterData last time called
+        *rasterOut = dataset.getRasterData(tempWM.topLeft, tempWM.botRight,
+            croppedImageWM.topLeft, croppedImageWM.botRight, w, h);
+        if (!*rasterOut)
+        {
+            wxLogMessage(_T("dmDepthModelDrawer::cropImage - Loading the image failed: ") +
+                drawingState.GetWantedChartFileName().GetName().ToStdString());
+            return false;
+        }
+        drawingState.SetWantedDrawingAreaLL(wantedCropExtentLL);
+
+        success = dataset.getDatasetExtents(croppedImageWM.topLeft, croppedImageWM.botRight);
+        if (!success)
+        {
+            wxLogMessage(_T("dmDepthModelDrawer::cropImage - Retrieving the image extents failed: ") +
+                drawingState.GetWantedChartFileName().GetName().ToStdString());
+            return false;
+        }
+        WMtoLL(croppedImageWM, croppedImageLL);
+
+    }
+    catch (const std::exception& const ex) {
+        throw std::string(ex.what());
+    }
+    catch (const std::string& const ex) {
+        throw ex;
+    }
+    catch (...)
+    {
+        std::exception_ptr currExc = std::current_exception();
+        try {
+            if (currExc) {
+                std::rethrow_exception(currExc);
+            }
+        }
+        catch (const std::exception& e) {
+            throw e.what();
+        }
+    }
+
+    return success;
 }
 
 /**
