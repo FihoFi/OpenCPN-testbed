@@ -129,13 +129,13 @@ dmRasterImgData * dmDataset::getRasterData(
     int n;
     int imgOffsetX, imgOffsetY;
 
+    if (!_dstDataset)
+        return NULL;
+
     getCropExtents(topLeftIn, botRightIn,
         topLeftOut, botRightOut,
         imgOffsetX, imgOffsetY,
         imgWidth, imgHeight);
-
-    if (!_dstDataset)
-        return NULL;
 
     GDALDataset::Bands bands = _dstDataset->GetBands();
     if (bands.size() < 1)
@@ -369,6 +369,9 @@ bool dmDataset::getCropExtents(coord topLeftIn, coord botRightIn,
     int &imgOffsetX, int &imgOffsetY,
     int &imgWidth, int &imgHeight)
 {
+    if (!_dstDataset)
+        return false;
+
     int xSize = _dstDataset->GetRasterXSize();
     int ySize = _dstDataset->GetRasterYSize();
     double geoTransform[6];
