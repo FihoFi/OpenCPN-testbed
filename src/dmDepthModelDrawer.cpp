@@ -111,22 +111,21 @@ bool dmDepthModelDrawer::openDataset(const wxFileName &fileName)
 }
 
 /**
-* Saves extent of the current canvas area we are drawing to.
+* Applies the extent of the vp area we want to draw to,
+* causing an update to the wanted drawn area.
+*
+* @return The dmExtent of <i>vp</i> in LatLons.
 */
-bool dmDepthModelDrawer::applyChartArea(coord chartTopLeftLL, coord chartBotRightLL)
-{
-    this->chartTopLeftLL  = chartTopLeftLL;
-    this->chartBotRightLL = chartBotRightLL;
-    this->chartAreaKnown = true;
-
-    return true;
-}
-
-bool dmDepthModelDrawer::applyChartArea(PlugIn_ViewPort &vp)
+dmExtent dmDepthModelDrawer::applyViewPortArea(PlugIn_ViewPort &vp)
 {
     coord topLeftLL(vp.lat_max, vp.lon_min);
     coord botRightLL(vp.lat_min, vp.lon_max);
-    return applyChartArea(topLeftLL, botRightLL);
+    dmExtent vpLL(topLeftLL, botRightLL);
+
+    dmExtent wantedDrawingArea = calculateIdealCroppingLL(vpLL);
+    drawingState.SetWantedDrawingAreaLL(wantedDrawingArea);
+
+    return vpLL;
 }
 
 bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
