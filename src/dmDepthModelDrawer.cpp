@@ -20,11 +20,12 @@
 
 dmDepthModelDrawer::dmDepthModelDrawer()
     : drawingState()
-    , dataset(this), raster(NULL), w(0), h(0)
 {    }
+    , dataset(this)
 
 dmDepthModelDrawer::~dmDepthModelDrawer()
-{    delete raster;    }
+{
+}
 
 void dmDepthModelDrawer::logFatalError(const std::string message)
 {    wxLogFatalError(wxString(message));    DBOUT("FatalError: "+message+"\n");  }
@@ -132,6 +133,10 @@ bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
     dmExtent vpExtentLL = applyViewPortArea(vp);
     bool success;
     if (needNewCropping(vpExtentLL))
+    dmRasterImgData* raster;
+    int             w, h;
+    raster = NULL;
+
     {
         dmExtent idealCroppingLL = calculateIdealCroppingLL(vpExtentLL);
         success = cropImage(idealCroppingLL, &raster, croppedImageLL, w,h);

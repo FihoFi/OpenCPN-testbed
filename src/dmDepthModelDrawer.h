@@ -39,13 +39,10 @@ public:
 private:
     dmDrawingState  drawingState;
 
-    coord       idealTopLeftLL,  idealBotRightLL;
     dmDataset       dataset;
 
     wxPoint         bmpTopLeftLL;
 
-    dmRasterImgData*  raster;
-    int             w, h; // image width, and height
     wxBitmap        bmp;
     bool        needNewCropping         (dmExtent viewPortLL);
     dmExtent    calculateIdealCroppingLL(dmExtent viewPortLL) const;
