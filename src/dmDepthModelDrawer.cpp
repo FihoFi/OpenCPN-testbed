@@ -307,7 +307,7 @@ bool dmDepthModelDrawer::cropImage(dmExtent wantedCropExtentLL,
         dmExtent croppedImageWM; // extent (in WM) of the cropped image returned by getRasterData last time called
         *rasterOut = dataset.getRasterData(tempWM.topLeft, tempWM.botRight,
             croppedImageWM.topLeft, croppedImageWM.botRight, w, h);
-        if (!rasterOut)
+        if (!*rasterOut)
         {
             wxLogMessage(_T("dmDepthModelDrawer::cropImage - Loading the image failed: ") +
                 drawingState.GetWantedChartFileName().GetName().ToStdString());
