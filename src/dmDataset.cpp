@@ -348,7 +348,7 @@ bool dmDataset::dstSrsToLatLon(coord dstSrsIn, coord &latLonOut)
     
     if (!projection)
         return false;
-    }
+
     from = proj_coord(dstSrsIn.east, dstSrsIn.north, 0, 0);
     
     to = proj_trans(projection, PJ_INV, from);
@@ -497,7 +497,7 @@ bool dmDataset::latLonToDstSrs(coord latLonIn, coord &dstSrsOut)
     
     if (!projection)
         return false;
-    }
+
     from = proj_coord(proj_torad(latLonIn.east), proj_torad(latLonIn.north), 0, 0);
 
     to = proj_trans(projection, PJ_FWD, from);
