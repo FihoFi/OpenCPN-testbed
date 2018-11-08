@@ -4,19 +4,18 @@
 
 #include <proj_api.h>
 #include "dmExtent.h"
-#include "dm_API.h"
 #include "dmDataset.h"
 #include "dmDrawingState.h"
 
 
 #include <iostream>
 #include <sstream>
-
 // This allows you to say things like : 
 // DBOUT("The value of x is " << x);
 // to output window.
 #define DBOUT( s ) \
 { std::wostringstream os_;  os_ << s; OutputDebugString( os_.str().c_str() ); }
+
 
 dmDepthModelDrawer::dmDepthModelDrawer()
     : drawingState()

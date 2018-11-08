@@ -4,11 +4,11 @@
 #define _DM_DEPTH_MODEL_DRAWER_
 
 #include "wx/wxprec.h"      // contains wxDC
-#include "ocpn_plugin.h"    // containsPlugIn_ViewPort
+#include "ocpn_plugin.h"    // contains PlugIn_ViewPort
 #include <wx/filename.h>    // wxFileName
+
 #include "dmExtent.h"
 #include "dmDataset.h"
-
 #include "dmDrawingState.h"
 
 class dmDepthModelDrawer : public dmLogWriter
