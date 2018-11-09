@@ -148,6 +148,10 @@ bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
                 drawingState.GetWantedChartFileName().GetName().ToStdString());
             return false;
         }
+        if (w < 1 || h < 1)
+        {
+            return true;    // the picture of Nothing drawn.
+        }
 
         if (bmp == NULL) { bmp = new wxBitmap(); }
         success = reCalculateBitmap(vp, raster, croppedImageLL,
@@ -156,7 +160,12 @@ bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
         {
             wxLogMessage(_T("dmDepthModelDrawer::drawDepthChart - Bitmap reCalculation failed: ") +
                 drawingState.GetWantedChartFileName().GetName().ToStdString());
-            bmp = NULL;
+            if (bmp)
+            {
+                delete bmp;
+                bmp = NULL;
+            }
+            
             return false;
         }
     }
@@ -165,7 +174,11 @@ bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
         bmpTopLeftLL = reCalculateTopLeftLocation(vp, croppedImageLL);
     }
     //wxString  fname = "C:\\OPENCPN_DATA\\UkiImg_wm.png";
-    dc.DrawBitmap(*bmp, bmpTopLeftLL, true);
+
+    if (bmp)
+    {
+        dc.DrawBitmap(*bmp, bmpTopLeftLL, true);
+    }
 
     return true;
 }
