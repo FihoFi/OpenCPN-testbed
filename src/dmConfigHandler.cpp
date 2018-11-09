@@ -236,6 +236,7 @@ bool DMWaterLevelConfig::save(void)
         confFile->SetPath(_T("/Settings/LIVI_Depth_model_pi/Levels"));
 
         success &= confFile->Write(_T("CurrentWaterLevel"), m_currentWaterLevel);
+        success &= confFile->Write(_T("VerticalRefSystemZ"), m_verticalReferenceSystemOffset);
         return success;
     }
     else
