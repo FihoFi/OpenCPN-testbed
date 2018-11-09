@@ -20,6 +20,7 @@ bool dmConfigHandler::LoadConfig(void)
     success &= general.load();
     success &= colour.load();
     success &= fileImport.load();
+    success &= waterLevel.load();
 
     return success;
 }
@@ -36,6 +37,7 @@ bool dmConfigHandler::SaveConfig(void)
     success &= general.save();
     success &= colour.save();
     success &= fileImport.save();
+    success &= waterLevel.save();
 
     return success;
 
@@ -197,7 +199,32 @@ bool DMColorOptionConfig::save(void)
 
         success &= confFile->Write(_T("UserColourConfPath"), userColourConfPath.GetFullPath());
 
+        return success;
+    }
+    else
+        return false;
+}
+
+bool DMWaterLevelConfig::load(void)
+{
+    //bool success = true;    // TODO success of Read functions has not been checked
+    if (confFile)
+    {
+        confFile->SetPath(_T("/Settings/LIVI_Depth_model_pi/Levels"));
+
         return true;
+    }
+    else
+        return false;
+}
+
+bool DMWaterLevelConfig::save(void)
+{
+    bool success = true;
+    if (confFile)
+    {
+        confFile->SetPath(_T("/Settings/LIVI_Depth_model_pi/Levels"));
+
     }
     else
         return false;
