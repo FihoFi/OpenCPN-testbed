@@ -304,7 +304,6 @@ bool dmDepthModelDrawer::cropImage(dmExtent wantedCropExtentLL,
         }
         drawingState.SetWantedDrawingAreaLL(wantedCropExtentLL);
 
-        success = dataset.getDatasetExtents(croppedImageWM.topLeft, croppedImageWM.botRight);
         if (!success)
         {
             wxLogMessage(_T("dmDepthModelDrawer::cropImage - Retrieving the image extents failed: ") +
