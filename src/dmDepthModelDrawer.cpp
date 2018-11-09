@@ -194,9 +194,11 @@ bool dmDepthModelDrawer::reCalculateBitmap(/*const*/PlugIn_ViewPort &vp,
     const dmRasterImgData* raster, dmExtent croppedImageLL,
     wxBitmap& bmp, int& wBmp, int& hBmp, wxPoint& bmpTopLeftLL)
 {
-    if (wBmp < 1 && hBmp < 1)
+    if (wBmp < 1 || hBmp < 1)
+    {
         bmp = wxBitmap();
-
+        return true;    // here is nothing to calculate
+    }
     // Get min, and max coordinates where the bitmap is to be drawn
     wxPoint r1, r2;
     GetCanvasPixLL(&vp, &r1, croppedImageLL.topLeft.north,  croppedImageLL.topLeft.east);   // up-left
