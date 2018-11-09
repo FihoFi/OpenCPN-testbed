@@ -147,16 +147,16 @@ dmRasterImgData * dmDataset::getRasterData(
     while (n < 3)
     {
         if (_visScheme == HILLSHADE)
-            bands[0]->RasterIO(GF_Read, 0, 0, imgWidth, imgHeight, _imgData->rgb + n, imgWidth, imgHeight, GDT_Byte, 3, 3 * imgWidth);
+            bands[0]->RasterIO(GF_Read, imgOffsetX, imgOffsetY, imgWidth, imgHeight, _imgData->rgb + n, imgWidth, imgHeight, GDT_Byte, 3, 3 * imgWidth);
         else if ((_visScheme == COLOR_RELIEF || _visScheme == NONE) && n < bands.size())
-            bands[n]->RasterIO(GF_Read, 0, 0, imgWidth, imgHeight, _imgData->rgb + n, imgWidth, imgHeight, GDT_Byte, 3, 3 * imgWidth);
+            bands[n]->RasterIO(GF_Read, imgOffsetX, imgOffsetY, imgWidth, imgHeight, _imgData->rgb + n, imgWidth, imgHeight, GDT_Byte, 3, 3 * imgWidth);
 
         n++;
     }
 
     // read alpha channel (assumed to be the in the last raster band)
     if (bands.size() > 1)
-        bands[bands.size() - 1]->RasterIO(GF_Read, 0, 0, imgWidth, imgHeight, _imgData->alpha, imgWidth, imgHeight, GDT_Byte, 0, 0);
+        bands[bands.size() - 1]->RasterIO(GF_Read, imgOffsetX, imgOffsetY, imgWidth, imgHeight, _imgData->alpha, imgWidth, imgHeight, GDT_Byte, 0, 0);
 
     return _imgData;
 }
