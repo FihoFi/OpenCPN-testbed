@@ -212,6 +212,11 @@ bool DMWaterLevelConfig::load(void)
     {
         confFile->SetPath(_T("/Settings/LIVI_Depth_model_pi/Levels"));
 
+        std::string str = confFile->Read(_T("CurrentWaterLevel"));
+        if (str.length() == 0)
+            str = std::to_string(0); // default 0m if no level found
+        m_currentWaterLevel = std::stoi(str);
+
         return true;
     }
     else
@@ -225,6 +230,8 @@ bool DMWaterLevelConfig::save(void)
     {
         confFile->SetPath(_T("/Settings/LIVI_Depth_model_pi/Levels"));
 
+        success &= confFile->Write(_T("CurrentWaterLevel"), m_currentWaterLevel);
+        return success;
     }
     else
         return false;

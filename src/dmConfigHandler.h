@@ -131,9 +131,12 @@ struct DMWaterLevelConfig : dm_configAPI
     DMWaterLevelConfig(wxFileConfig* confFile)
     {    this->confFile = confFile;    }
 
+    double  m_currentWaterLevel;
     virtual bool load() override;
     virtual bool save() override;
 
+    double  getCurrentWaterLevel() { return m_currentWaterLevel; }
+    void    setCurrentWaterLevel(double levelInM) { m_currentWaterLevel = levelInM; }
 };
 
 class dmConfigHandler
