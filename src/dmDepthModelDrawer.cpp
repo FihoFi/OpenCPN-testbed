@@ -173,7 +173,6 @@ bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
     {
         bmpTopLeftLL = reCalculateTopLeftLocation(vp, croppedImageLL);
     }
-    //wxString  fname = "C:\\OPENCPN_DATA\\UkiImg_wm.png";
 
     if (bmp)
     {
@@ -226,7 +225,7 @@ bool dmDepthModelDrawer::reCalculateBitmap(/*const*/PlugIn_ViewPort &vp,
 
         if (!(scaled).IsOk())
         {
-            wxLogMessage(_T("dmDepthModelDrawer::calculateDepthModelBitmap - Scale failed: ") +
+            wxLogMessage(_T("dmDepthModelDrawer::reCalculateBitmap - Scale failed: ") +
                 drawingState.GetWantedChartFileName().GetName().ToStdString());
             return false;
         }
@@ -364,68 +363,6 @@ void dmDepthModelDrawer::WMtoLL(const dmExtent& WMin, dmExtent& LLout)
 void dmDepthModelDrawer::LLtoWM(const dmExtent& LLin, dmExtent& WMout)
 {
     dataset.latLonToDstSrs(LLin, WMout);
-}
-
-/** 
-* Transforms the given two World Mercator coordinate pairs x1...y2 to 
-* two WGS84 latlon coordinate pairs with PROJ(4)
-* <!--openCPN transformstion functions from_XX_Plugin,-->
-* according to given tr.
-*/
-bool dmDepthModelDrawer::gimmeLatLons(crdSystem crdSys, /*transformation tr,*/
-    double x1, double y1, double x2, double y2,
-    coord& Out1, coord& Out2)
-{
-    //if (tr < 0 || tr > 3)
-    //    return false; // invalid transformation
-    //
-    //double x1_o = x1 - offsets[tr][0]; // lon
-    //double y1_o = y1 - offsets[tr][1]; // lat
-    //double x2_o = x2 - offsets[tr][0]; // 
-    //double y2_o = y2 - offsets[tr][1]; //
-
-    //if (tr == PROJ) {
-        static char *EPSG32635_UTMzone35N = "+proj=utm +zone=35 +datum=WGS84 +units=m +no_defs";
-        static char *EPSG3395_WorldMercator = "+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs";
-
-        projPJ source;
-        if(crdSys==UTM35N)
-            source = pj_init_plus(EPSG32635_UTMzone35N);
-        else //if (World Mercator)
-            source = pj_init_plus(EPSG3395_WorldMercator);
-
-        char *EPSG4326_WGS84 = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs";
-        projPJ target = pj_init_plus(EPSG4326_WGS84);
-
-        if (source == NULL || target == NULL)
-            return false;   // invalid transformation description
-        else
-        {
-            double  x[2] = { x1, x2 },
-                    y[2] = { y1, y2 };
-            bool success = pj_transform(source, target, 2, 1, x, y, NULL);
-            Out1.east  = x[0] * RAD_TO_DEG;
-            Out1.north = y[0] * RAD_TO_DEG;
-            Out2.east  = x[1] * RAD_TO_DEG;
-            Out2.north = y[1] * RAD_TO_DEG;
-
-            return true;
-            //cout << success << endl << x << endl << y << endl;
-        }
-    //}
-    //else if (tr == TM) {
-    //    fromTM_Plugin(x1_o, y1_o, offsets[tr][2], offsets[tr][3], &lat1Out, &lon1Out);
-    //    fromTM_Plugin(x2_o, y2_o, offsets[tr][2], offsets[tr][3], &lat2Out, &lon2Out);
-    //}
-    //else if (tr == SM) {
-    //    fromSM_Plugin(x1_o, y1_o, offsets[tr][2], offsets[tr][3], &lat1Out, &lon1Out);
-    //    fromSM_Plugin(x2_o, y2_o, offsets[tr][2], offsets[tr][3], &lat2Out, &lon2Out);
-    //}
-    //else if (tr == SM_ECC) {
-    //    fromSM_ECC_Plugin(x1_o, y1_o, offsets[tr][2], offsets[tr][3], &lat1Out, &lon1Out);
-    //    fromSM_ECC_Plugin(x2_o, y2_o, offsets[tr][2], offsets[tr][3], &lat2Out, &lon2Out);
-    //}
-
 }
 
 void dmDepthModelDrawer::readAFile()
