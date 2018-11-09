@@ -427,8 +427,9 @@ bool dmDataset::getCropExtents(coord topLeftIn, coord botRightIn,
     }
     else
     {
+        // note: geoTransform[5] is negative
         imgOffsetY = std::floor((topLeftIn.north - topLeftRaster.north) / geoTransform[5]);
-        topLeftOut.north = geoTransform[3] - imgOffsetY * geoTransform[5];
+        topLeftOut.north = geoTransform[3] + imgOffsetY * geoTransform[5];
     }
 
     if (botRightIn.east > botRightRaster.east)
