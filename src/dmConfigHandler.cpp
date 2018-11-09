@@ -217,6 +217,11 @@ bool DMWaterLevelConfig::load(void)
             str = std::to_string(0); // default 0m if no level found
         m_currentWaterLevel = std::stoi(str);
 
+        str = confFile->Read(_T("VerticalRefSystemZ"));
+        if (str.length() == 0)
+            str = std::to_string(0); // default 0m if no refZ found
+        m_verticalReferenceSystemOffset = std::stoi(str);
+
         return true;
     }
     else

@@ -132,11 +132,18 @@ struct DMWaterLevelConfig : dm_configAPI
     {    this->confFile = confFile;    }
 
     double  m_currentWaterLevel;
+    double  m_verticalReferenceSystemOffset;
+
     virtual bool load() override;
     virtual bool save() override;
 
     double  getCurrentWaterLevel() { return m_currentWaterLevel; }
     void    setCurrentWaterLevel(double levelInM) { m_currentWaterLevel = levelInM; }
+
+    double  getVerticalReferenceSystemOffset()
+    {   return m_verticalReferenceSystemOffset;             }
+    void    setVerticalReferenceSystemOffset(double vrsOffsetInM)
+    {   m_verticalReferenceSystemOffset = vrsOffsetInM;     }
 };
 
 class dmConfigHandler
