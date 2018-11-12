@@ -127,6 +127,8 @@ int LIVI_Depth_model_pi::Init(void)
     dmDrawer->setColourSchema(m_pconf->colour.getColouringType());
     dmDrawer->setColourConfigurationFile(m_pconf->colour.userColourConfPath);
 
+    createDMPluginDataPath();
+
     //    This PlugIn needs a toolbar icon, so request its insertion
     if (m_pconf->general.m_bLIVI_Depth_modelShowIcon)
     {
@@ -654,6 +656,34 @@ void LIVI_Depth_model_pi::setCurrentOptionsTextToUI()
         m_pconf->colour.chartTypeToString(m_pconf->colour.getChartType()) + "\n" +
         m_pconf->colour.colouringTypeToString(m_pconf->colour.getColouringType());
     dialog->SetCurrentOptionsText(str);
+}
+
+bool LIVI_Depth_model_pi::createDMPluginDataPath()
+{
+    wxFileName fileName;
+
+    // TODO directory path, get e.g. from env var or OCPN func?
+    wxString root = "C:";
+    fileName.SetPath(root);
+    fileName.AppendDir(_T("plugins"));
+    fileName.AppendDir(_T("LIVI_Depth_model_pi"));
+    fileName.AppendDir(_T("data_folder"));
+    fileName.SetFullName("test.txt");
+
+    wxString path = fileName.GetFullPath();
+    wxFile file(path, wxFile::write);
+    if (!file.Exists(path))
+    {
+        // TODO replace  wxPATH_MKDIR_FULL with other flag that reports errors
+        bool success = fileName.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
+        if (!success)
+        {
+            // Could not create the path. This is bad.
+            setErrorToUI("FATAL! Could not create a directory for the dm plugin temporary files!\n"+
+                         std::string("Try running OpenCPN with administrator priviledges"));
+        }
+        return success;
+    }
 }
 
 void LIVI_Depth_model_pi::setInfoToUI(std::string str)
