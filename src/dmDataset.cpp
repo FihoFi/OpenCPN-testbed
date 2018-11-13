@@ -9,12 +9,16 @@
 
 bool dmDataset::driversRegistered = false;
 
+const std::string visFileName = "visualized_ds.tif";
+const std::string warpedFileName = "warped_ds.tif";
+
 dmDataset::dmDataset(dmLogWriter* logWriter) :
     dm_API(logWriter),
     _visScheme(HILLSHADE),
     _srcDataset(nullptr),
     _dstDataset(nullptr),
     _dstWkt("PROJCS[\"WGS 84 / World Mercator\",GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\",SPHEROID[\"WGS 84\",6378137,298.257223563,AUTHORITY[\"EPSG\",\"7030\"]],AUTHORITY[\"EPSG\",\"6326\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.01745329251994328,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"4326\"]],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],PROJECTION[\"Mercator_1SP\"],PARAMETER[\"central_meridian\",0],PARAMETER[\"scale_factor\",1],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],AUTHORITY[\"EPSG\",\"3395\"],AXIS[\"Easting\",EAST],AXIS[\"Northing\",NORTH]]"),
+    _tempFolderPath(".\\"),
     _imgData(nullptr),
     _hillshadeParamAzimuth(315.),
     _hillshadeParamAltitude(45.),
@@ -32,8 +36,8 @@ dmDataset::~dmDataset()
     if (_dstDataset)
         GDALClose(_dstDataset);
 
-    remove(".\\warped_ds.tif");
-    remove(".\\temp_ds.tif");
+    remove((_tempFolderPath + visFileName).c_str());
+    remove((_tempFolderPath + warpedFileName).c_str());
 }
 
 bool dmDataset::getDatasetPixelDimensions(int &width, int &height)
@@ -68,6 +72,16 @@ bool dmDataset::getDatasetExtents(coord &topLeft, coord &botRight)
 
 }
 
+void dmDataset::setSrcWkt(const char * wkt)
+{
+    _srcWkt = wkt;
+}
+
+void dmDataset::setDstWkt(const char * wkt)
+{
+    _dstWkt = wkt;
+}
+
 bool dmDataset::setColourConfigurationFile(const char* filename, bool giveOwnership)
 {
     if (filename)
@@ -97,6 +111,11 @@ bool dmDataset::setColourConfiguration(const char* fileContents, bool giveOwners
         }
     }
     return false;
+}
+
+void dmDataset::setTempFolderPath(std::string tempFolderPath)
+{
+    _tempFolderPath = tempFolderPath + "\\";
 }
 
 bool dmDataset::setVisualizationScheme(DM_visualization visScheme)
@@ -208,16 +227,6 @@ bool dmDataset::openDataSet(const char * filename)
     }
 
     return false;
-}
-
-void dmDataset::setSrcWkt(const char * wkt)
-{
-    _srcWkt = wkt;
-}
-
-void dmDataset::setDstWkt(const char * wkt)
-{
-    _dstWkt = wkt;
 }
 
 
@@ -536,7 +545,7 @@ GDALDataset * dmDataset::reprojectDataset(GDALDataset *dsToReproject)
 
         // coordinate system reprojection
         GDALWarpAppOptions *psWarpOptions = GDALWarpAppOptionsNew(warpOpts, NULL);
-        warpedDS = (GDALDataset*)GDALWarp(".\\warped_ds.tif", NULL, 1, (GDALDatasetH*)&dsToReproject, psWarpOptions, &err);
+        warpedDS = (GDALDataset*)GDALWarp((_tempFolderPath + warpedFileName).c_str(), NULL, 1, (GDALDatasetH*)&dsToReproject, psWarpOptions, &err);
 
         // clean up
         GDALWarpAppOptionsFree(psWarpOptions);
@@ -569,11 +578,11 @@ GDALDataset * dmDataset::visualizeDataset(GDALDataset *dsToVisualize)
     switch (_visScheme)
     {
     case HILLSHADE:
-        resultDs = (GDALDataset*)GDALDEMProcessing(".\\temp_ds.tif", dsToVisualize, "hillshade", NULL, gdaldemOptions, &err);
+        resultDs = (GDALDataset*)GDALDEMProcessing((_tempFolderPath + visFileName).c_str(), dsToVisualize, "hillshade", NULL, gdaldemOptions, &err);
         break;
 
     case COLOR_RELIEF:
-        resultDs = (GDALDataset*)GDALDEMProcessing(".\\temp_ds.tif", dsToVisualize, "color-relief", _colorConfFilename.c_str(), gdaldemOptions, &err);
+        resultDs = (GDALDataset*)GDALDEMProcessing((_tempFolderPath + visFileName).c_str(), dsToVisualize, "color-relief", _colorConfFilename.c_str(), gdaldemOptions, &err);
         break;
 
     case NONE:
