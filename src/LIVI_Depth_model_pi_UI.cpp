@@ -25,7 +25,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmDepthModelFile_staticText->Wrap( -1 );
 	dmFileImport_bSizer->Add( dmDepthModelFile_staticText, 0, wxALL, 5 );
 	
-	dmPictureImport_filePicker = new wxFilePickerCtrl( dmFileImport_Panel, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("Tif/Tiff  image file(*.tif;*.tiff)|*.tif;*.tiff|BAG file (*.bag)|*.bag|Any file (*.*)|*.*"), wxDefaultPosition, wxSize( 380,-1 ), wxFLP_DEFAULT_STYLE );
+	dmPictureImport_filePicker = new wxFilePickerCtrl( dmFileImport_Panel, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("Tif/Tiff  image file(*.tif;*.tiff)|*.tif;*.tiff|BAG file (*.bag)|*.bag|PNG (*.png)|*.png|Any file (*.*)|*.*"), wxDefaultPosition, wxSize( 380,-1 ), wxFLP_DEFAULT_STYLE );
 	dmFileImport_bSizer->Add( dmPictureImport_filePicker, 0, wxALL, 5 );
 	
 	dmPictureImportError_staticText = new wxStaticText( dmFileImport_Panel, wxID_ANY, wxT("(everything ok)"), wxDefaultPosition, wxDefaultSize, 0 );
