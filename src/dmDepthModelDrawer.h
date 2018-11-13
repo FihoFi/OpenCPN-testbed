@@ -30,6 +30,7 @@ public:
     DM_colourType    getColourSchema();
     bool             setColourSchema(DM_colourType colourSchema);
     bool             setColourConfigurationFile(const wxFileName &fileNamePath);
+    void             setTempFileFolder(wxFileName &fileName);
     bool             setDataset(const wxFileName &fileName);
     bool             openDataset(const wxFileName &fileName);
     dmExtent         applyViewPortArea(/*const*/ PlugIn_ViewPort &vp);

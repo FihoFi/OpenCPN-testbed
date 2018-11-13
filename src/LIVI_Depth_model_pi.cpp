@@ -127,6 +127,10 @@ int LIVI_Depth_model_pi::Init(void)
     dmDrawer->setChartDrawType(m_pconf->colour.getChartType());
     dmDrawer->setColourSchema(m_pconf->colour.getColouringType());
     dmDrawer->setColourConfigurationFile(m_pconf->colour.userColourConfPath);
+    if (createDMPluginDataPath())
+    {
+        dmDrawer->setTempFileFolder(pluginDataPath);
+    } // some error state on failure?
 
     createDMPluginDataPath();
 
