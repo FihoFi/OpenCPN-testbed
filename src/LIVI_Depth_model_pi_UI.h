@@ -56,6 +56,7 @@ class LIVIDMUI_DLG : public wxDialog
 		wxStaticText* dmPictureImportError_staticText;
 		wxStaticText* dmPictureImport_staticText;
 		wxButton* dmPictureImport_GenerateImage_button;
+		wxButton* dmPictureImport_ClearImage_button;
 		wxPanel* dmChartOptions_Panel;
 		wxStaticText* dmChartOptions_staticText;
 		wxChoicebook* dmChartOptions_choicebook;
@@ -140,6 +141,7 @@ class LIVIDMUI_DLG : public wxDialog
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnImageFileChange( wxFileDirPickerEvent& event ) { event.Skip(); }
 		virtual void OnGenerateImage( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnClearImage( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnChartTypeChange( wxChoicebookEvent& event ) { event.Skip(); }
 		virtual void OnColourSchemaChange( wxChoicebookEvent& event ) { event.Skip(); }
 		virtual void OnUserColourFileChange( wxFileDirPickerEvent& event ) { event.Skip(); }

@@ -41,8 +41,20 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmPictureImport_staticText->Wrap( -1 );
 	dmPictureImport_fgSizer->Add( dmPictureImport_staticText, 0, wxALL, 5 );
 	
+	wxWrapSizer* dmPictureImport_buttons_wSizer;
+	dmPictureImport_buttons_wSizer = new wxWrapSizer( wxHORIZONTAL, wxWRAPSIZER_DEFAULT_FLAGS );
+	
+	dmPictureImport_buttons_wSizer->SetMinSize( wxSize( 215,-1 ) ); 
 	dmPictureImport_GenerateImage_button = new wxButton( dmFileImport_Panel, wxID_ANY, wxT("Generate image"), wxDefaultPosition, wxDefaultSize, 0 );
-	dmPictureImport_fgSizer->Add( dmPictureImport_GenerateImage_button, 0, wxALL, 5 );
+	dmPictureImport_buttons_wSizer->Add( dmPictureImport_GenerateImage_button, 0, wxALL, 5 );
+	
+	dmPictureImport_ClearImage_button = new wxButton( dmFileImport_Panel, wxID_ANY, wxT("Clear image"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmPictureImport_buttons_wSizer->Add( dmPictureImport_ClearImage_button, 0, wxALL, 5 );
+	
+	
+	dmPictureImport_fgSizer->Add( dmPictureImport_buttons_wSizer, 1, wxEXPAND, 5 );
+	
+	
 	dmFileImport_bSizer->Add( dmPictureImport_fgSizer, 1, wxEXPAND, 5 );
 	
 	
@@ -468,6 +480,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	// Connect Events
 	dmPictureImport_filePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( LIVIDMUI_DLG::OnImageFileChange ), NULL, this );
 	dmPictureImport_GenerateImage_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnGenerateImage ), NULL, this );
+	dmPictureImport_ClearImage_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnClearImage ), NULL, this );
 	dmChartOptions_choicebook->Connect( wxEVT_COMMAND_CHOICEBOOK_PAGE_CHANGED, wxChoicebookEventHandler( LIVIDMUI_DLG::OnChartTypeChange ), NULL, this );
 	dmColourOptions_choisebook->Connect( wxEVT_COMMAND_CHOICEBOOK_PAGE_CHANGED, wxChoicebookEventHandler( LIVIDMUI_DLG::OnColourSchemaChange ), NULL, this );
 	dmColourOptionsUserFile_filePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( LIVIDMUI_DLG::OnUserColourFileChange ), NULL, this );
@@ -479,6 +492,7 @@ LIVIDMUI_DLG::~LIVIDMUI_DLG()
 	// Disconnect Events
 	dmPictureImport_filePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( LIVIDMUI_DLG::OnImageFileChange ), NULL, this );
 	dmPictureImport_GenerateImage_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnGenerateImage ), NULL, this );
+	dmPictureImport_ClearImage_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnClearImage ), NULL, this );
 	dmChartOptions_choicebook->Disconnect( wxEVT_COMMAND_CHOICEBOOK_PAGE_CHANGED, wxChoicebookEventHandler( LIVIDMUI_DLG::OnChartTypeChange ), NULL, this );
 	dmColourOptions_choisebook->Disconnect( wxEVT_COMMAND_CHOICEBOOK_PAGE_CHANGED, wxChoicebookEventHandler( LIVIDMUI_DLG::OnColourSchemaChange ), NULL, this );
 	dmColourOptionsUserFile_filePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( LIVIDMUI_DLG::OnUserColourFileChange ), NULL, this );

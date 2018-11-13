@@ -568,6 +568,10 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
     RequestRefresh(m_parent_window); // request refresh of the main window -> call to RenderOverlay
 }
 
+void LIVI_Depth_model_pi::OnClearImage()
+{
+}
+
 void LIVI_Depth_model_pi::OnChartTypeChange(int selectionId)
 {
     DM_visualization chartType = to_dmVisualizationType(selectionId);
