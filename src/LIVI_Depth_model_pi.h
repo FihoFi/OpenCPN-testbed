@@ -143,7 +143,7 @@ private:
   //wxFileName          pluginConfigPath;
 
     bool                LoadConfig(void);
-  //bool                SaveConfig(void);
+    void                SaveUiToConfig(void);
     void                PushConfigToUI(void);
     void                PullConfigFromUI(void);
     void                setCurrentOptionsTextToUI();

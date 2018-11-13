@@ -172,14 +172,14 @@ int LIVI_Depth_model_pi::Init(void)
 bool LIVI_Depth_model_pi::DeInit(void)
 {
     dmDrawer->logInfo("Depth model: UNinitializing plugin.");
+    SaveUiToConfig();   // TODO, do we want this here, or only at OnGenerateImage?
+
     bool success = m_pconf->closeNDestroyDialog();
     if (success) { dialog = NULL; }
 
     bool newPluginState = false;
     m_pconf->SetPluginToolState(newPluginState);
     SetToolbarItemState(pluginToolId, newPluginState);
-
-    m_pconf->SaveConfig();
 
     RequestRefresh(m_parent_window); // refresh main window, to hide the dataset pic
 
@@ -512,7 +512,7 @@ void LIVI_Depth_model_pi::OnDepthModelDialogClose()
 
     RequestRefresh(m_parent_window); // refresh main window
 
-    m_pconf->SaveConfig();
+    SaveUiToConfig();   // TODO, do we want this here, or only at OnGenerateImage?
     dmDrawer->logInfo("Depth model: dialog closed.");
 }
 
@@ -590,6 +590,8 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
         }
 
         dmDrawer->setRenderingOn();
+        SaveUiToConfig();
+
         setInfoToUI("Chart image successfully opened.");
         dmDrawer->logInfo("Depth model: Image generated successfully.");
     }
@@ -667,6 +669,17 @@ void LIVI_Depth_model_pi::OnUserColourFileChange(wxFileName fullFileName)
 
 //// private ////
 
+
+void   LIVI_Depth_model_pi::SaveUiToConfig(void)
+{
+    dmDrawer->logInfo("Depth model: Saving UI to config.");
+    PullConfigFromUI();
+    bool success = m_pconf->SaveConfig();
+    if(!success)
+        dmDrawer->logError("Depth model: Errors in saving stuff to config.");
+    dmDrawer->logInfo("Depth model: Saved UI to config.");
+}
+
 /**
 * Sets the colouring information, as well as the limiting depths,
 * from the m_customColours of the m_conf to the UI.
@@ -695,6 +708,12 @@ void LIVI_Depth_model_pi::PushConfigToUI(void)
 */
 void LIVI_Depth_model_pi::PullConfigFromUI(void)
 {
+    if (!dialog)
+    {
+        dmDrawer->logError("Depth model: cannot PullConfigFromUI: no dialog.");
+        return;
+    }
+
     m_pconf->fileImport.filePath = dialog->GetDepthChartFileName();
     m_pconf->colour.userColourConfPath = dialog->GetUserColourConfigurationFileName();
 
