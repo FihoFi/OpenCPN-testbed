@@ -105,7 +105,7 @@ bool DMGeneralConfig::save(void)
         confFile->Write(_T("DialogPosX"), dialogXY.x);
         confFile->Write(_T("DialogPosY"), dialogXY.y);
 
-        confFile->Write(wxT("ShowLIVI_Depth_modelIcon"), m_bLIVI_Depth_modelShowIcon);
+        confFile->Write(_T("ShowLIVI_Depth_modelIcon"), m_bLIVI_Depth_modelShowIcon);
         return true;
     }
     return false;

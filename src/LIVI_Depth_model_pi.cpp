@@ -136,7 +136,7 @@ int LIVI_Depth_model_pi::Init(void)
             LIVI_DEPTH_MODEL_TOOL_POSITION, 0, this);
     }
 
-    // Display size info is used to position the windoww
+    // Display size info is used to position the window
     int display_w, display_h;
     ::wxDisplaySize(&display_w, &display_h);
     m_pconf->general.SaveDispaySize(display_w, display_h);
@@ -337,7 +337,7 @@ void LIVI_Depth_model_pi::OnToolbarToolCallback(int id)
     if(pluginShown)
     {
         dialog->Move(m_pconf->general.dialogXY);
-        dialog->Fit(); 
+        dialog->Fit();
         dialog->Show();
         dmDrawer->logInfo("Depth model: UI visible.");
     }
@@ -537,7 +537,7 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
 {
     // Check existance of the file
     wxString path = fullFileName.GetFullPath();
-    dmDrawer->logInfo("Depth model: Generating image from file" + std::string(path.c_str()));
+    dmDrawer->logInfo("Depth model: Generating image from file " + std::string(path.c_str()));
 
     wxFile file(path, wxFile::read); // also opens the file, if it exists!
     if (!file.Exists(path))
@@ -559,7 +559,6 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
             DM_colourType colouringType = dmDrawer->getColourSchema();
             success = colourfileHandler->SaveConfFileOfUISelection(
                 colouringType); // Save, to get the current options in use
-
             if (!success)
             {
                 dmDrawer->logError("Depth model: Generating image. Failed to save colouring file of" + std::string(m_pconf->colour.colouringTypeToString(colouringType)));
