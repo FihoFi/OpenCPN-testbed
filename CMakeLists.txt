@@ -15,9 +15,11 @@ SET(TITLE_NAME Depth_model)
 SET(CPACK_PACKAGE_CONTACT "LIVI - Liikennevirasto")
 
 SET(VERSION_MAJOR "0")
-SET(VERSION_MINOR "05")
-SET(VERSION_PATCH "55e1a8f")
-SET(VERSION_DATE "2018-10-22")
+SET(VERSION_MINOR "06")
+# Version release notes: 0.06 aim was in cropping chart, and stabilizing the package
+SET(VERSION_PATCH "94104a5")
+SET(VERSION_DATE "2018-11-09")
+
 SET(GDAL_VERSION "2.3.1") # Just telling aloud the used GDAL version. No package-retrieval system here for now.
 SET(PROJ_VERSION "5.1.0") # Just telling aloud the used PROJ version. No package-retrieval system here for now.
 SET(HDF5_VERSION "1.10.3") # Just telling aloud the used HDF5 version. No package-retrieval system here for now.

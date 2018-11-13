@@ -375,13 +375,27 @@ bool LIVI_Depth_model_pi::RenderOverlay(wxDC& dc, PlugIn_ViewPort* vp)
     {
         success = dmDrawer->drawDepthChart(dc, *vp);
     }
-    catch (std::string ex)
+    catch (const std::string& const ex)
     {
         setErrorToUI("Problem in drawing the picture.\n"
                      "Look for the details in the OCPN log.");
         success = false;
     }
-
+    catch (const std::exception& const ex) {
+        throw std::string(ex.what());
+    }
+    catch (...)
+    {
+        std::exception_ptr currExc = std::current_exception();
+        try {
+            if (currExc) {
+                std::rethrow_exception(currExc);
+            }
+        }
+        catch (const std::exception& e) {
+            throw e.what();
+        }
+    }
     return success;
 }
 

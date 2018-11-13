@@ -56,10 +56,6 @@ private:
     void WMtoLL(const dmExtent& WMin, dmExtent& LLout);
     void LLtoWM(const dmExtent& LLin, dmExtent& WMout);
 
-    bool gimmeLatLons(crdSystem crdSys, /*transformation tr,*/
-        double x1, double y1, double x2, double y2,
-        coord& Out1, coord& Out2);
-
     void readAFile();
 };
 
