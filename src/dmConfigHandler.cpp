@@ -37,9 +37,11 @@ bool dmConfigHandler::SaveConfig(void)
     success &= colour.save();
     success &= fileImport.save();
 
-    return success;
+    m_pconfig->Flush();
 
+    return success;
 }
+
 Dlg* dmConfigHandler::getDialog()
 {    return m_pDialog;    }
 
