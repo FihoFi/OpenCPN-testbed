@@ -37,7 +37,6 @@
 
 #include "LIVI_Depth_model_pi.h"
 #include "LIVI_Depth_model_pi_UI_impl.h"
-#include "LIVI_Depth_model_pi_UI.h"
 
 #include "dmConfigHandler.h"    // For handling config options
 #include "dmColourfileHandler.h" // For handling colour file access operations
