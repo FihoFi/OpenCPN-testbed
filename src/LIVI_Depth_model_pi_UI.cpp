@@ -312,6 +312,9 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmChartOptions_ColorRelief_Sizer->Fit( dmChartOptions_ColorRelief_panel );
 	dmChartOptions_choicebook->AddPage( dmChartOptions_ColorRelief_panel, wxT("(default) Draw a Depth model  (\"Color relief\") chart"), true );
 	dmChartOptions_Hillshade_panel = new wxPanel( dmChartOptions_choicebook, DM_viz_HILLSHADE, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	dmChartOptions_Hillshade_panel->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_GRAYTEXT ) );
+	dmChartOptions_Hillshade_panel->Enable( false );
+	
 	wxFlexGridSizer* dmChartOptions_Hillshade_Sizer;
 	dmChartOptions_Hillshade_Sizer = new wxFlexGridSizer( 0, 2, 0, 0 );
 	dmChartOptions_Hillshade_Sizer->SetFlexibleDirection( wxBOTH );
