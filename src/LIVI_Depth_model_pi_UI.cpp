@@ -30,6 +30,8 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	
 	dmPictureImportError_staticText = new wxStaticText( dmFileImport_Panel, wxID_ANY, wxT("(everything ok)"), wxDefaultPosition, wxDefaultSize, 0 );
 	dmPictureImportError_staticText->Wrap( -1 );
+	dmPictureImportError_staticText->SetMinSize( wxSize( -1,50 ) );
+	
 	dmFileImport_bSizer->Add( dmPictureImportError_staticText, 0, wxALL, 5 );
 	
 	wxFlexGridSizer* dmPictureImport_fgSizer;
