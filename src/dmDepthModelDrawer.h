@@ -36,10 +36,12 @@ public:
 
     void             setRenderingOn();
     void             setRenderingOff();
+    void             forceNewImage();
     bool             drawDepthChart(/*const*/ wxDC &dc, /*const*/ PlugIn_ViewPort &vp);
 
 private:
     bool            renderingDmChart;
+    bool            mustGetNewBmp;
     dmDrawingState  drawingState;
 
     dmDataset       dataset;

@@ -141,6 +141,11 @@ void dmDepthModelDrawer::setRenderingOff()
     renderingDmChart = false;
 }
 
+void dmDepthModelDrawer::forceNewImage()
+{
+    mustGetNewBmp = true;
+}
+
 bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
 {
     if (!renderingDmChart)
@@ -152,7 +157,8 @@ bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
     int             w, h;
     raster = NULL;
 
-    if (bmp == NULL || needNewCropping(vpExtentLL))
+
+    if (bmp == NULL || needNewCropping(vpExtentLL) || mustGetNewBmp)
     {
         dmExtent idealCroppingLL = calculateIdealCroppingLL(vpExtentLL);
         success = cropImage(idealCroppingLL, &raster, croppedImageLL, w,h);
@@ -181,6 +187,10 @@ bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
             }
             
             return false;
+        }
+        else
+        {
+            mustGetNewBmp = false;  // new bmp retrieved; clear the flag
         }
     }
     else
