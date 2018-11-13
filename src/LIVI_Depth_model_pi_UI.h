@@ -21,10 +21,10 @@
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
+#include <wx/wrapsizer.h>
 #include <wx/clrpicker.h>
 #include <wx/spinctrl.h>
 #include <wx/sizer.h>
-#include <wx/textctrl.h>
 #include <wx/choicebk.h>
 #include <wx/button.h>
 #include <wx/statbmp.h>
