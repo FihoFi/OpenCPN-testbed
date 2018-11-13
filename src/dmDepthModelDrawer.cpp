@@ -20,6 +20,7 @@
 dmDepthModelDrawer::dmDepthModelDrawer()
     : drawingState()
     , dataset(this)
+    , renderingDmChart(false)
 {
     bmp = NULL;
 }
@@ -130,8 +131,21 @@ dmExtent dmDepthModelDrawer::applyViewPortArea(PlugIn_ViewPort &vp)
     return vpLL;
 }
 
+void dmDepthModelDrawer::setRenderingOn()
+{
+    renderingDmChart = true;
+}
+
+void dmDepthModelDrawer::setRenderingOff()
+{
+    renderingDmChart = false;
+}
+
 bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
 {
+    if (!renderingDmChart)
+        return true;
+
     dmExtent vpExtentLL = applyViewPortArea(vp);
     bool success;
     dmRasterImgData* raster;

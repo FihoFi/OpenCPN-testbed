@@ -33,9 +33,13 @@ public:
     bool             setDataset(const wxFileName &fileName);
     bool             openDataset(const wxFileName &fileName);
     dmExtent         applyViewPortArea(/*const*/ PlugIn_ViewPort &vp);
+
+    void             setRenderingOn();
+    void             setRenderingOff();
     bool             drawDepthChart(/*const*/ wxDC &dc, /*const*/ PlugIn_ViewPort &vp);
 
 private:
+    bool            renderingDmChart;
     dmDrawingState  drawingState;
 
     dmDataset       dataset;

@@ -558,6 +558,7 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
             return;
         }
 
+        dmDrawer->setRenderingOn();
         setInfoToUI("Chart image successfully opened.");
     }
     catch (std::string exStr)
@@ -570,6 +571,8 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
 
 void LIVI_Depth_model_pi::OnClearImage()
 {
+    dmDrawer->setRenderingOff();
+    RequestRefresh(m_parent_window); // request refresh of the main window -> call to RenderOverlay
 }
 
 void LIVI_Depth_model_pi::OnChartTypeChange(int selectionId)
