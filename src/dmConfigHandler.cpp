@@ -90,7 +90,7 @@ bool DMGeneralConfig::load(void)
        dialogXY.x = confFile->Read(_T("DialogPosX"), 20L);
        dialogXY.y = confFile->Read(_T("DialogPosY"), 20L);
 
-        confFile->Write(wxT("ShowLIVI_Depth_modelIcon"), m_bLIVI_Depth_modelShowIcon);
+        confFile->Read(_T("ShowLIVI_Depth_modelIcon"), m_bLIVI_Depth_modelShowIcon);
         return true;
     }
     return false;
