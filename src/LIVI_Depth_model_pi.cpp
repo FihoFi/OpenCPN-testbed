@@ -28,6 +28,7 @@
  ***************************************************************************
  */
 
+#include "wx/stdpaths.h"
 #include "wx/wxprec.h"
 
 #ifndef  WX_PRECOMP
@@ -660,30 +661,18 @@ void LIVI_Depth_model_pi::setCurrentOptionsTextToUI()
 
 bool LIVI_Depth_model_pi::createDMPluginDataPath()
 {
-    wxFileName fileName;
+    wxString userDataDir = wxStandardPaths::Get().GetUserDataDir();
+    
+    pluginDataPath.SetPath(userDataDir);
+    pluginDataPath.AppendDir("LIVI_Depth_model_pi");
 
-    // TODO directory path, get e.g. from env var or OCPN func?
-    wxString root = "C:";
-    fileName.SetPath(root);
-    fileName.AppendDir(_T("plugins"));
-    fileName.AppendDir(_T("LIVI_Depth_model_pi"));
-    fileName.AppendDir(_T("data_folder"));
-    fileName.SetFullName("test.txt");
-
-    wxString path = fileName.GetFullPath();
-    wxFile file(path, wxFile::write);
-    if (!file.Exists(path))
+    if (!pluginDataPath.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL))
     {
-        // TODO replace  wxPATH_MKDIR_FULL with other flag that reports errors
-        bool success = fileName.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
-        if (!success)
-        {
-            // Could not create the path. This is bad.
-            setErrorToUI("FATAL! Could not create a directory for the dm plugin temporary files!\n"+
-                         std::string("Try running OpenCPN with administrator priviledges"));
-        }
-        return success;
+        setErrorToUI("FATAL! Could not create a directory for the dm plugin temporary files!\n");
+        return false;
     }
+
+    return true;
 }
 
 void LIVI_Depth_model_pi::setInfoToUI(std::string str)

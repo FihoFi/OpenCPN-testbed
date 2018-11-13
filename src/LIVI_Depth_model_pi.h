@@ -28,6 +28,7 @@
 #ifndef _LIVI_DEPTH_MODEL_PI_H_
 #define _LIVI_DEPTH_MODEL_PI_H_
 
+#include "wx/filename.h"
 #include "wx/wxprec.h"
 
 #ifndef  WX_PRECOMP
@@ -35,12 +36,10 @@
   #include <wx/glcanvas.h>
 #endif //precompiled headers
 
-//#include <wx/fileconf.h>    // wxFileName
 
 #include "dm_API.h" // DM_colourType
 
 #include "ocpn_plugin.h" //Required for OCPN plugin functions
-#include "LIVI_Depth_model_pi_UI_impl.h"
 
 #include "version.h"
 
@@ -140,6 +139,7 @@ private:
 
     dmDepthModelDrawer  *dmDrawer;
   //wxFileName          pluginConfigPath;
+    wxFileName          pluginDataPath;
 
     bool                LoadConfig(void);
   //bool                SaveConfig(void);
