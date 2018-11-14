@@ -98,6 +98,7 @@ private:
     virtual void OnFileImportFileChange  ( wxFileDirPickerEvent& WXUNUSED(event) );
     virtual void OnImageFileChange       ( wxFileDirPickerEvent& WXUNUSED(event) );
     virtual void OnGenerateImage               ( wxCommandEvent& WXUNUSED(event) );
+    virtual void OnClearImage                  ( wxCommandEvent& WXUNUSED(event) );
     virtual void OnChartTypeChange          ( wxChoicebookEvent& WXUNUSED(event) );
     virtual void OnColourSchemaChange       ( wxChoicebookEvent& WXUNUSED(event) );
     virtual void OnUserColourFileChange  ( wxFileDirPickerEvent& WXUNUSED(event) );

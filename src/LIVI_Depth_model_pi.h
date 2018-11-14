@@ -116,6 +116,7 @@ public:
     // reactions to UI changes
     void OnImageFileChange(wxFileName fname);
     void OnGenerateImage(wxFileName fullFileName);
+    void OnClearImage();
 
     void OnChartTypeChange      (int selectionId);
     void OnColourSchemaChange   (int selectionId);
@@ -142,7 +143,7 @@ private:
     wxFileName          pluginDataPath;
 
     bool                LoadConfig(void);
-  //bool                SaveConfig(void);
+    void                SaveUiToConfig(void);
     void                PushConfigToUI(void);
     void                PullConfigFromUI(void);
     void                setCurrentOptionsTextToUI();

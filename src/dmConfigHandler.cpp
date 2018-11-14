@@ -37,9 +37,11 @@ bool dmConfigHandler::SaveConfig(void)
     success &= colour.save();
     success &= fileImport.save();
 
-    return success;
+    m_pconfig->Flush();
 
+    return success;
 }
+
 Dlg* dmConfigHandler::getDialog()
 {    return m_pDialog;    }
 
@@ -90,7 +92,7 @@ bool DMGeneralConfig::load(void)
        dialogXY.x = confFile->Read(_T("DialogPosX"), 20L);
        dialogXY.y = confFile->Read(_T("DialogPosY"), 20L);
 
-        confFile->Write(wxT("ShowLIVI_Depth_modelIcon"), m_bLIVI_Depth_modelShowIcon);
+        confFile->Read(_T("ShowLIVI_Depth_modelIcon"), m_bLIVI_Depth_modelShowIcon);
         return true;
     }
     return false;
@@ -105,7 +107,7 @@ bool DMGeneralConfig::save(void)
         confFile->Write(_T("DialogPosX"), dialogXY.x);
         confFile->Write(_T("DialogPosY"), dialogXY.y);
 
-        confFile->Write(wxT("ShowLIVI_Depth_modelIcon"), m_bLIVI_Depth_modelShowIcon);
+        confFile->Write(_T("ShowLIVI_Depth_modelIcon"), m_bLIVI_Depth_modelShowIcon);
         return true;
     }
     return false;

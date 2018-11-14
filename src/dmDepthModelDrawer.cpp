@@ -20,6 +20,7 @@
 dmDepthModelDrawer::dmDepthModelDrawer()
     : drawingState()
     , dataset(this)
+    , renderingDmChart(false)
 {
     bmp = NULL;
 }
@@ -135,15 +136,34 @@ dmExtent dmDepthModelDrawer::applyViewPortArea(PlugIn_ViewPort &vp)
     return vpLL;
 }
 
+void dmDepthModelDrawer::setRenderingOn()
+{
+    renderingDmChart = true;
+}
+
+void dmDepthModelDrawer::setRenderingOff()
+{
+    renderingDmChart = false;
+}
+
+void dmDepthModelDrawer::forceNewImage()
+{
+    mustGetNewBmp = true;
+}
+
 bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
 {
+    if (!renderingDmChart)
+        return true;
+
     dmExtent vpExtentLL = applyViewPortArea(vp);
     bool success;
     dmRasterImgData* raster;
     int             w, h;
     raster = NULL;
 
-    if (bmp == NULL || needNewCropping(vpExtentLL))
+
+    if (bmp == NULL || needNewCropping(vpExtentLL) || mustGetNewBmp)
     {
         dmExtent idealCroppingLL = calculateIdealCroppingLL(vpExtentLL);
         success = cropImage(idealCroppingLL, &raster, croppedImageLL, w,h);
@@ -172,6 +192,10 @@ bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
             }
             
             return false;
+        }
+        else
+        {
+            mustGetNewBmp = false;  // new bmp retrieved; clear the flag
         }
     }
     else
