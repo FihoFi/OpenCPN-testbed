@@ -140,7 +140,7 @@ private:
 
     dmDepthModelDrawer  *dmDrawer;
   //wxFileName          pluginConfigPath;
-    wxFileName          pluginDataPath;
+    wxFileName          pluginDataDir;
 
     bool                LoadConfig(void);
     void                SaveUiToConfig(void);
