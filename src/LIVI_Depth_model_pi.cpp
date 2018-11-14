@@ -128,7 +128,7 @@ int LIVI_Depth_model_pi::Init(void)
     dmDrawer->setColourConfigurationFile(m_pconf->colour.userColourConfPath);
     if (createDMPluginDataPath())
     {
-        dmDrawer->setTempFileFolder(pluginDataPath);
+        dmDrawer->setTempFileFolder(pluginDataDir);
     } // some error state on failure?
 
     createDMPluginDataPath();
@@ -664,12 +664,14 @@ void LIVI_Depth_model_pi::setCurrentOptionsTextToUI()
 
 bool LIVI_Depth_model_pi::createDMPluginDataPath()
 {
-    wxString userDataDir = wxStandardPaths::Get().GetUserDataDir();
+    wxString ocpnDirPath = *GetpSharedDataLocation();
     
-    pluginDataPath.SetPath(userDataDir);
-    pluginDataPath.AppendDir("LIVI_Depth_model_pi");
+    pluginDataDir.SetPath(ocpnDirPath);
+    pluginDataDir.AppendDir("plugins");
+    pluginDataDir.AppendDir("LIVI_Depth_model_pi");
+    pluginDataDir.AppendDir("data");
 
-    if (!pluginDataPath.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL))
+    if (!pluginDataDir.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL))
     {
         setErrorToUI("FATAL! Could not create a directory for the dm plugin temporary files!");
         dmDrawer->logFatalError("Could not create a directory for the dm plugin temporary files.");
