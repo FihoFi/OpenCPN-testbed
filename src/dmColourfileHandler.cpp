@@ -128,7 +128,10 @@ bool dmColourfileHandler::SaveColorConfToFile(
 wxString dmColourfileHandler::GetFiveColourDepthColourWks()
 {
     static double nci = 0.0001; // Nearest colour tweak. Number in meters.
-    static int opaque_list[5] = { 128, 96, 64, 32, 16 }; // Amount of opaqueness less for deeper water, values in [0...255]
+
+    // Default opaqueness values for each depth range. Less opaqueness = more
+    // transparency for deeper water = smaller values. Values in [0...255]
+    static int opaque_list[5] = { 128, 96, 64, 48, 32 };
 
     wxString wks_ColourSettings;
     wks_ColourSettings.append(wxString(_T("nv           0  0  0  0\r\n")));
@@ -168,7 +171,7 @@ wxString dmColourfileHandler::GetSlidingColourDepthColourWks()
 wxString dmColourfileHandler::GetTwoColourDepthColourWks()
 {
     static double nci = 0.0001; // Nearest colour tweak. Number in meters.
-    static int opaque_level = 128;  // amount of opaqueness, value in [0...255]
+    static int opaque_level = 128;  // default opaqueness if no transparency at all, range [0...255]
 
     wxString wks_ColourSettings;
 
