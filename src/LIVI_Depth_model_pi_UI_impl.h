@@ -33,7 +33,6 @@
 #endif
 
 #include "LIVI_Depth_model_pi_UI.h"
-#include "LIVI_Depth_model_pi.h"
 //#include "NavFunc.h"  // from original DR_pi plugin
 #include "tinyxml.h"
 

@@ -28,6 +28,7 @@
  ***************************************************************************
  */
 
+#include "wx/stdpaths.h"
 #include "wx/wxprec.h"
 
 #ifndef  WX_PRECOMP
@@ -36,7 +37,6 @@
 
 #include "LIVI_Depth_model_pi.h"
 #include "LIVI_Depth_model_pi_UI_impl.h"
-#include "LIVI_Depth_model_pi_UI.h"
 
 #include "dmConfigHandler.h"    // For handling config options
 #include "dmColourfileHandler.h" // For handling colour file access operations
@@ -126,6 +126,12 @@ int LIVI_Depth_model_pi::Init(void)
     dmDrawer->setChartDrawType(m_pconf->colour.getChartType());
     dmDrawer->setColourSchema(m_pconf->colour.getColouringType());
     dmDrawer->setColourConfigurationFile(m_pconf->colour.userColourConfPath);
+    if (createDMPluginDataPath())
+    {
+        dmDrawer->setTempFileFolder(pluginDataPath);
+    } // some error state on failure?
+
+    createDMPluginDataPath();
 
     //    This PlugIn needs a toolbar icon, so request its insertion
     if (m_pconf->general.m_bLIVI_Depth_modelShowIcon)
@@ -668,6 +674,23 @@ void LIVI_Depth_model_pi::setCurrentOptionsTextToUI()
         m_pconf->colour.chartTypeToString(m_pconf->colour.getChartType()) + "\n" +
         m_pconf->colour.colouringTypeToString(m_pconf->colour.getColouringType());
     dialog->SetCurrentOptionsText(str);
+}
+
+bool LIVI_Depth_model_pi::createDMPluginDataPath()
+{
+    wxString userDataDir = wxStandardPaths::Get().GetUserDataDir();
+    
+    pluginDataPath.SetPath(userDataDir);
+    pluginDataPath.AppendDir("LIVI_Depth_model_pi");
+
+    if (!pluginDataPath.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL))
+    {
+        setErrorToUI("FATAL! Could not create a directory for the dm plugin temporary files!");
+        dmDrawer->logFatalError("Could not create a directory for the dm plugin temporary files.");
+        return false;
+    }
+
+    return true;
 }
 
 void LIVI_Depth_model_pi::setInfoToUI(std::string str)

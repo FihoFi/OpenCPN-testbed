@@ -76,6 +76,11 @@ bool dmDepthModelDrawer::setColourConfigurationFile(const wxFileName &fileNamePa
     return success;
 }
 
+void dmDepthModelDrawer::setTempFileFolder(wxFileName &fileName)
+{
+    dataset.setTempFolderPath(fileName.GetPath().ToStdString());
+}
+
 /**
 * Asks dmDataset to open the dataset in the file <i>fileName</i>, and queries
 * the (World Mercator) extents of the dataset.
