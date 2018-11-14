@@ -671,7 +671,8 @@ bool LIVI_Depth_model_pi::createDMPluginDataPath()
 
     if (!pluginDataPath.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL))
     {
-        setErrorToUI("FATAL! Could not create a directory for the dm plugin temporary files!\n");
+        setErrorToUI("FATAL! Could not create a directory for the dm plugin temporary files!");
+        dmDrawer->logFatalError("Could not create a directory for the dm plugin temporary files.");
         return false;
     }
 
