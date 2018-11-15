@@ -87,9 +87,6 @@ bool dmColourfileHandler::SaveColorConfToFile(
         // No such path, set up a path
         wxFileName fn;
         fn.SetPath(tempDataDirectoryPath);
-        fn.AppendDir(_T("plugins"));
-        fn.AppendDir(_T("LIVI_Depth_model_pi"));
-        fn.AppendDir(_T("colour_files"));
         fn.SetFullName(confFileName);
 
         bool success = fn.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);

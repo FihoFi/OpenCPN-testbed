@@ -115,7 +115,7 @@ int LIVI_Depth_model_pi::Init(void)
     dialog->SetAboutInfo();
 
     m_pconf = new dmConfigHandler(pFileConf, dialog);
-    colourfileHandler = new dmColourfileHandler(m_pconf, *GetpSharedDataLocation());
+
 
     bool success = m_pconf->LoadConfig(); // config variables related to this plugin.
     this->PushConfigToUI();
@@ -131,7 +131,7 @@ int LIVI_Depth_model_pi::Init(void)
         dmDrawer->setTempFileFolder(pluginDataDir);
     } // some error state on failure?
 
-    createDMPluginDataPath();
+    colourfileHandler = new dmColourfileHandler(m_pconf, pluginDataDir.GetPath());
 
     //    This PlugIn needs a toolbar icon, so request its insertion
     if (m_pconf->general.m_bLIVI_Depth_modelShowIcon)
@@ -746,9 +746,7 @@ void LIVI_Depth_model_pi::setCurrentOptionsTextToUI()
 
 bool LIVI_Depth_model_pi::createDMPluginDataPath()
 {
-    wxString ocpnDirPath = *GetpSharedDataLocation();
-    
-    pluginDataDir.SetPath(ocpnDirPath);
+    pluginDataDir.SetPath(wxStandardPaths::Get().GetUserDataDir());
     pluginDataDir.AppendDir("plugins");
     pluginDataDir.AppendDir("LIVI_Depth_model_pi");
     pluginDataDir.AppendDir("data");
