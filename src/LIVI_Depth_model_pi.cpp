@@ -664,9 +664,7 @@ void LIVI_Depth_model_pi::setCurrentOptionsTextToUI()
 
 bool LIVI_Depth_model_pi::createDMPluginDataPath()
 {
-    wxString ocpnDirPath = *GetpSharedDataLocation();
-    
-    pluginDataDir.SetPath(ocpnDirPath);
+    pluginDataDir.SetPath(wxStandardPaths::Get().GetUserDataDir());
     pluginDataDir.AppendDir("plugins");
     pluginDataDir.AppendDir("LIVI_Depth_model_pi");
     pluginDataDir.AppendDir("data");
