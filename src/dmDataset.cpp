@@ -221,7 +221,7 @@ bool dmDataset::openDataSet(const char * filename)
 
         _dstDataset = visualizeDataset(reprojectedDs);
 
-        if (_visScheme == NONE && reprojectedDs)
+        if (_visScheme != NONE && reprojectedDs)
             GDALClose(reprojectedDs);
 
         if (!_dstDataset)
