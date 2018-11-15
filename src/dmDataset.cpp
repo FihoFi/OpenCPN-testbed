@@ -175,15 +175,17 @@ dmRasterImgData * dmDataset::getRasterData(
     }
 
     // read alpha channel (assumed to be the in the last raster band)
-
     bands[bands.size() - 1]->RasterIO(GF_Read, imgOffsetX, imgOffsetY, imgWidth, imgHeight, _imgData->alpha, imgWidth, imgHeight, GDT_Byte, 0, 0);
 
+    // this is for e.g. hillshade; there is no alpha band in the raster after
+    // gdaldem hillshade, so it has to be deduced from the image data
     if (bands.size() == 1)
     {
         std::transform(_imgData->alpha, _imgData->alpha + imgWidth*imgHeight, _imgData->alpha,
             [=](auto pixel) {
-            if (pixel != 0)
-                return _hillshadeAlpha;
+                if (pixel != 0)
+                    return _hillshadeAlpha;
+                return pixel;
         });
     }
 
