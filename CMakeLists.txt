@@ -28,6 +28,7 @@ SET(VERSION_DATE "2018-11-15")
 #       intermediate colours outside of what the user has fed anymore.
 #   Fixed Colour changes in UI kicking in only after second click of "Generate image".
 #   Fixed failure/crash at generating a chart with Plain visualization type.
+#   Second shot at fixing weird problem, where the plugin icon was randomly shown or not shown at OCPN toolbar.
 #   (Leading zero removed from the minor version number, as the number was interpreted as octal, and thus there could be no 08.)
 #   
 # 0.07
