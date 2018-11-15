@@ -556,6 +556,8 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
 
     setInfoToUI("Setting chart image type options");
 
+    SaveUiToConfig();
+
     bool success = true;
     try {
         if(dmDrawer->getChartDrawType() == COLOR_RELIEF)
@@ -595,7 +597,6 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
         }
 
         dmDrawer->setRenderingOn();
-        SaveUiToConfig();
 
         setInfoToUI("Chart image successfully opened.");
         dmDrawer->logInfo("Depth model: Image generated successfully.");
