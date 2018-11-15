@@ -55,6 +55,7 @@ private:
     double _hillshadeParamAltitude;
     bool _hillshadeParamCombined;
     bool _hillshadeParamMultidirectional;
+    unsigned char _hillshadeAlpha;
 
     std::string _srcWkt;
     std::string _dstWkt;

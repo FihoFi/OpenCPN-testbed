@@ -22,7 +22,8 @@ dmDataset::dmDataset(dmLogWriter* logWriter) :
     _imgData(nullptr),
     _hillshadeParamAzimuth(315.),
     _hillshadeParamAltitude(45.),
-    _hillshadeParamMultidirectional(false)
+    _hillshadeParamMultidirectional(false),
+    _hillshadeAlpha(128)
 {
     dmDataset::registerGDALDrivers();
 }
@@ -180,9 +181,9 @@ dmRasterImgData * dmDataset::getRasterData(
     if (bands.size() == 1)
     {
         std::transform(_imgData->alpha, _imgData->alpha + imgWidth*imgHeight, _imgData->alpha,
-            [](auto pixel) {
+            [=](auto pixel) {
             if (pixel != 0)
-                return 128;
+                return _hillshadeAlpha;
         });
     }
 
