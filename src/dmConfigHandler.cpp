@@ -89,10 +89,10 @@ bool DMGeneralConfig::load(void)
     {
         confFile->SetPath(wxT("/Settings/LIVI_Depth_model_pi"));
 
-       dialogXY.x = confFile->Read(_T("DialogPosX"), 20L);
-       dialogXY.y = confFile->Read(_T("DialogPosY"), 20L);
+       dialogXY.x = confFile->ReadLong(_T("DialogPosX"), 20L);
+       dialogXY.y = confFile->ReadLong(_T("DialogPosY"), 20L);
 
-        confFile->Read(_T("ShowLIVI_Depth_modelIcon"), m_bLIVI_Depth_modelShowIcon);
+       m_bLIVI_Depth_modelShowIcon = confFile->ReadBool(_T("ShowLIVI_Depth_modelIcon"), false);
         return true;
     }
     return false;
