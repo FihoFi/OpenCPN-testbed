@@ -15,10 +15,21 @@ SET(TITLE_NAME Depth_model)
 SET(CPACK_PACKAGE_CONTACT "LIVI - Liikennevirasto")
 
 SET(VERSION_MAJOR "0")
-SET(VERSION_MINOR "07")
-SET(VERSION_PATCH "5f5a025")
-SET(VERSION_DATE "2018-11-14")
+SET(VERSION_MINOR "8")
+SET(VERSION_PATCH "61151b5")
+SET(VERSION_DATE "2018-11-15")
 # Version release notes:
+# 0.(0)8
+#   Fixed requirement of running OpenCPN as administrator, in order to use Depth model.
+#       The changing files are now saved under wxStandardPaths::Get().GetUserDataDir(), 
+#       which is platform-independent. In Win10 we end up with 
+#       C:\Users\YOURUSERNAME\AppData\Roaming\opencpn\plugins\LIVI_Depth_model_pi\data
+#   Fixed "yellow stripes". That is, corrected gdal usage, so that there will be no faulty 
+#       intermediate colours outside of what the user has fed anymore.
+#   Fixed Colour changes in UI kicking in only after second click of "Generate image".
+#   Fixed failure/crash at generating a chart with Plain visualization type.
+#   (Leading zero removed from the minor version number, as the number was interpreted as octal, and thus there could be no 08.)
+#   
 # 0.07
 #    Fixed weird problem, where the plugin icon was randomly shown or not shown at OCPN toolbar.
 #    Fixed colour config values not getting saved.
