@@ -22,7 +22,8 @@ dmDataset::dmDataset(dmLogWriter* logWriter) :
     _imgData(nullptr),
     _hillshadeParamAzimuth(315.),
     _hillshadeParamAltitude(45.),
-    _hillshadeParamMultidirectional(false)
+    _hillshadeParamMultidirectional(false),
+    _hillshadeAlpha(128)
 {
     dmDataset::registerGDALDrivers();
 }
@@ -174,8 +175,19 @@ dmRasterImgData * dmDataset::getRasterData(
     }
 
     // read alpha channel (assumed to be the in the last raster band)
-    if (bands.size() > 1)
-        bands[bands.size() - 1]->RasterIO(GF_Read, imgOffsetX, imgOffsetY, imgWidth, imgHeight, _imgData->alpha, imgWidth, imgHeight, GDT_Byte, 0, 0);
+    bands[bands.size() - 1]->RasterIO(GF_Read, imgOffsetX, imgOffsetY, imgWidth, imgHeight, _imgData->alpha, imgWidth, imgHeight, GDT_Byte, 0, 0);
+
+    // this is for e.g. hillshade; there is no alpha band in the raster after
+    // gdaldem hillshade, so it has to be deduced from the image data
+    if (bands.size() == 1)
+    {
+        std::transform(_imgData->alpha, _imgData->alpha + imgWidth*imgHeight, _imgData->alpha,
+            [=](auto pixel) {
+                if (pixel != 0)
+                    return _hillshadeAlpha;
+                return pixel;
+        });
+    }
 
     return _imgData;
 }
@@ -202,21 +214,18 @@ bool dmDataset::openDataSet(const char * filename)
     {
         _srcWkt = GDALGetProjectionRef(_srcDataset);
 
-        reprojectedDs = visualizeDataset(_srcDataset);
+        reprojectedDs = reprojectDataset(_srcDataset);
 
         if (!reprojectedDs)
             return false;
 
-        _dstDataset = reprojectDataset(reprojectedDs);
+        _dstDataset = visualizeDataset(reprojectedDs);
 
         if (reprojectedDs)
             GDALClose(reprojectedDs);
 
         if (!_dstDataset)
             return false;
-
-        if (_visScheme == HILLSHADE)
-            applyHillshadeAlphaMask(_dstDataset);
 
         if (!allocateImgDataMemory())
             return false;
@@ -308,40 +317,6 @@ bool dmDataset::allocateImgDataMemory()
     _imgData->alpha = new unsigned char[xSize*ySize];
 
     return true;
-}
-
-bool dmDataset::applyHillshadeAlphaMask(GDALDataset * ds)
-{
-    unsigned char * alpha;
-    int xSize, ySize;
-    GDALRasterBand *band;
-
-    if (!ds)
-        return false;
-
-    GDALDataset::Bands bands = ds->GetBands();
-
-    if (bands.size() < 2)
-        return false;
-
-    band = bands[1];
-
-    xSize = band->GetXSize();
-    ySize = band->GetYSize();
-
-    alpha = new unsigned char[xSize*ySize];
-
-    band->RasterIO(GF_Read, 0, 0, xSize, ySize, alpha, xSize, ySize, GDT_Byte, 0, 0);
-
-    for (int i = 0; i < xSize*ySize; i++)
-    {
-        if (alpha[i] != 0) // skip transparent (no-value) pixels
-            alpha[i] = 128; // set reasonable transparency value (TODO: get from config/class variable?)
-    }
-
-    band->RasterIO(GF_Write, 0, 0, xSize, ySize, alpha, xSize, ySize, GDT_Byte, 0, 0);
-
-    delete[] alpha;
 }
 
 bool dmDataset::dstSrsToLatLon(coord dstSrsIn, coord &latLonOut)
@@ -540,7 +515,7 @@ GDALDataset * dmDataset::reprojectDataset(GDALDataset *dsToReproject)
 
         char *warpOpts[] = { (char*)"-t_srs", (char *)_dstWkt.c_str(),
                              (char*)"-r",     (char*)"max",
-                             (_visScheme == HILLSHADE) ? ((char*)"-dstalpha") : ((char*)"-nosrcalpha"),
+                             (char*)"-nosrcalpha",
                              NULL };
 
         // coordinate system reprojection
