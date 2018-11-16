@@ -87,6 +87,16 @@ void Dlg::OnUserColourFileChange(wxFileDirPickerEvent& WXUNUSED(event))
     plugin->OnUserColourFileChange(fname);
 }
 
+void Dlg::OnCurrentWaterLevelChange(wxSpinDoubleEvent& WXUNUSED(event))
+{
+    double cwl = this->dmWaterLevel_CurrentWaterLevel_spinCtrlDouble->GetValue();
+}
+
+void Dlg::OnVerticalReferenceSystemOffsetChange(wxSpinDoubleEvent& WXUNUSED(event))
+{
+    double vrso = this->dmWaterLevel_VerticalReferenceSystemOffset_spinCtrlDouble->GetValue();
+}
+
 void Dlg::SetAboutInfo()
 {
     this->dmAbout_icon_bitmap->SetIcon(plugin->GetIcon());
@@ -233,9 +243,29 @@ void Dlg::SetDividingLevel(int level)
 
 double Dlg::GetDividingLevel()
 {
+    return this->dmColourOptionsTwoColours_DividingDepth_spinCtrlDouble->GetValue();
+}
+
+void Dlg::SetCurrentWaterLevel(int level)
+{
+    this->dmWaterLevel_CurrentWaterLevel_spinCtrlDouble->SetValue(level);
+}
+
+double Dlg::GetCurrentWaterLevel()
+{
     wxSpinCtrlDouble* spinCtrl;
-    spinCtrl = this->dmColourOptionsTwoColours_DividingDepth_spinCtrlDouble;
+    spinCtrl = this->dmWaterLevel_CurrentWaterLevel_spinCtrlDouble;
     return spinCtrl->GetValue();
+}
+
+void Dlg::SetVerticalReferenceSystemOffsetLevel(int level)
+{
+    this->dmWaterLevel_VerticalReferenceSystemOffset_spinCtrlDouble->SetValue(level);
+}
+
+double Dlg::GetVerticalReferenceSystemOffsetLevel()
+{
+    return this->dmWaterLevel_VerticalReferenceSystemOffset_spinCtrlDouble->GetValue();
 }
 
 wxFileName    Dlg::GetDepthChartFileName()
