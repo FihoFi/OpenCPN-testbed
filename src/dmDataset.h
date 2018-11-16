@@ -18,8 +18,11 @@ public:
 
     bool getDatasetPixelDimensions(int &width, int &height) override;
     bool getDatasetExtents(coord &topLeft, coord &botRight) override;
+    void setSrcWkt(const char * wkt);
+    void setDstWkt(const char * wkt);
     bool setColourConfigurationFile(const char* filename, bool giveOwnership) override;
     bool setColourConfiguration(const char* fileContents, bool giveOwnership) override;
+    void setTempFolderPath(std::string tempFolderPath);
     bool setVisualizationScheme(DM_visualization visScheme) override;
     dmRasterImgData * getRasterData(
         coord &topLeftOut, coord &botRightOut) override;
@@ -28,8 +31,6 @@ public:
         coord &topLeftOut, coord &botRightOut,
         int &imgWidth, int &imgHeight) override;
     bool openDataSet(const char* filename) override;
-    void setSrcWkt(const char * wkt);
-    void setDstWkt(const char * wkt);
     bool dstSrsToLatLon(coord dstSrsIn, coord &latLonOut) override;
     bool dstSrsToLatLon(dmExtent dstSrsIn, dmExtent &latLonOut) override;
     bool latLonToDstSrs(coord latLonIn, coord &dstSrsOut) override;
@@ -54,10 +55,12 @@ private:
     double _hillshadeParamAltitude;
     bool _hillshadeParamCombined;
     bool _hillshadeParamMultidirectional;
+    unsigned char _hillshadeAlpha;
 
     std::string _srcWkt;
     std::string _dstWkt;
     std::string _colorConfFilename;
+    std::string _tempFolderPath;
     GDALDataset * _srcDataset;
     GDALDataset * _dstDataset;
     dmRasterImgData * _imgData;

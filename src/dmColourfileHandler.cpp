@@ -87,9 +87,6 @@ bool dmColourfileHandler::SaveColorConfToFile(
         // No such path, set up a path
         wxFileName fn;
         fn.SetPath(tempDataDirectoryPath);
-        fn.AppendDir(_T("plugins"));
-        fn.AppendDir(_T("LIVI_Depth_model_pi"));
-        fn.AppendDir(_T("colour_files"));
         fn.SetFullName(confFileName);
 
         bool success = fn.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
@@ -128,27 +125,35 @@ bool dmColourfileHandler::SaveColorConfToFile(
 wxString dmColourfileHandler::GetFiveColourDepthColourWks()
 {
     static double nci = 0.0001; // Nearest colour tweak. Number in meters.
-    static int opaque_list[5] = { 128, 96, 64, 32, 16 }; // Amount of opaqueness less for deeper water, values in [0...255]
+
+    // Default opaqueness values for each depth range. Less opaqueness = more
+    // transparency for deeper water = smaller values. Values in [0...255]
+    static int opaque_list[5] = { 128, 96, 64, 48, 32 };
 
     wxString wks_ColourSettings;
     wks_ColourSettings.append(wxString(_T("nv           0  0  0  0\r\n")));
 
+    unsigned char alpha0, alpha1;
     for (int i = 0; i < DM_NUM_CUSTOM_DEP; i++) {
+        alpha0 = m_pconf->colour.m_customColours[ i ].Alpha();
+        alpha1 = m_pconf->colour.m_customColours[i+1].Alpha();
+
         wks_ColourSettings.append(
             wxString::Format(_T("%f %i %i %i %i\r\n"),
                 m_pconf->colour.m_customDepths[i] + nci,
                 m_pconf->colour.m_customColours[i].Red(),
                 m_pconf->colour.m_customColours[i].Green(),
                 m_pconf->colour.m_customColours[i].Blue(),
-                opaque_list[i])
+                (int)(alpha0 == wxALPHA_OPAQUE ? opaque_list[i] : alpha0))
         );
+
         wks_ColourSettings.append(
             wxString::Format(_T("%f %i %i %i %i\r\n"),
                 m_pconf->colour.m_customDepths[i],
                 m_pconf->colour.m_customColours[i + 1].Red(),
                 m_pconf->colour.m_customColours[i + 1].Green(),
                 m_pconf->colour.m_customColours[i + 1].Blue(),
-                opaque_list[i + 1])
+                (int)(alpha1 == wxALPHA_OPAQUE ? opaque_list[i+1] : alpha1))
         );
     }
 
@@ -168,26 +173,30 @@ wxString dmColourfileHandler::GetSlidingColourDepthColourWks()
 wxString dmColourfileHandler::GetTwoColourDepthColourWks()
 {
     static double nci = 0.0001; // Nearest colour tweak. Number in meters.
-    static int opaque_level = 128;  // amount of opaqueness, value in [0...255]
+    static int opaque_level = 128;  // default opaqueness if no transparency at all, range [0...255]
+    unsigned char alpha0 = m_pconf->colour.m_twoColours[0].Alpha();
+    unsigned char alpha1 = m_pconf->colour.m_twoColours[1].Alpha();
 
     wxString wks_ColourSettings;
 
     wks_ColourSettings.append(wxString(_T("nv           0  0  0  0\r\n")));
+
     wks_ColourSettings.append(
         wxString::Format(_T("%f %i %i %i %i\r\n"),
             m_pconf->colour.m_twoColoursDepth + nci,
             m_pconf->colour.m_twoColours[0].Red(),
             m_pconf->colour.m_twoColours[0].Green(),
             m_pconf->colour.m_twoColours[0].Blue(),
-            m_pconf->colour.m_twoColours[0].Alpha())
+            (int) (alpha0==wxALPHA_OPAQUE ? opaque_level : alpha0))
     );
+
     wks_ColourSettings.append(
-        wxString::Format(_T("%f %i %i %i %i\r\n"),
+    wxString::Format(_T("%f %i %i %i %i\r\n"),
             m_pconf->colour.m_twoColoursDepth,
             m_pconf->colour.m_twoColours[1].Red(),
             m_pconf->colour.m_twoColours[1].Green(),
             m_pconf->colour.m_twoColours[1].Blue(),
-            opaque_level)
+            (int) (alpha1 == wxALPHA_OPAQUE ? opaque_level : alpha1))
     );
 
     return wks_ColourSettings;

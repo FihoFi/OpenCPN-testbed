@@ -15,9 +15,41 @@ SET(TITLE_NAME Depth_model)
 SET(CPACK_PACKAGE_CONTACT "LIVI - Liikennevirasto")
 
 SET(VERSION_MAJOR "0")
-SET(VERSION_MINOR "05")
-SET(VERSION_PATCH "55e1a8f")
-SET(VERSION_DATE "2018-10-22")
+SET(VERSION_MINOR "8")
+SET(VERSION_PATCH "61151b5")
+SET(VERSION_DATE "2018-11-15")
+# Version release notes:
+# 0.(0)8
+#   Fixed requirement of running OpenCPN as administrator, in order to use Depth model.
+#       The changing files are now saved under wxStandardPaths::Get().GetUserDataDir(), 
+#       which is platform-independent. In Win10 we end up with 
+#       C:\Users\YOURUSERNAME\AppData\Roaming\opencpn\plugins\LIVI_Depth_model_pi\data
+#   Fixed "yellow stripes". That is, corrected gdal usage, so that there will be no faulty 
+#       intermediate colours outside of what the user has fed anymore.
+#   Fixed Colour changes in UI kicking in only after second click of "Generate image".
+#   Fixed failure/crash at generating a chart with Plain visualization type.
+#   Second shot at fixing weird problem, where the plugin icon was randomly shown or not shown at OCPN toolbar.
+#   (Leading zero removed from the minor version number, as the number was interpreted as octal, and thus there could be no 08.)
+#   
+# 0.07
+#    Fixed weird problem, where the plugin icon was randomly shown or not shown at OCPN toolbar.
+#    Fixed colour config values not getting saved.
+#    Fixed the chart image not updating at "Generate image" click.
+#    Fixed colour configuration values not propagating further from the UI.
+#    Fixed opaqueness of "two colours/too shallow". Now has half transparency insteaf of being fully opaque.
+#    Fixed Too transparent "five colours/deep enough" colouring. Opaqueness value changed from 16 to 32.
+#    Added ini file writing at "Generate Image" click.
+#    Added "Clear image" button, to switch depth model chart drawing off.
+#    Added *.png to chart file filters.
+#    Added some logging.
+#    Disabled Hillshade tab fields, as they currently are not taken to the backend.
+# 0.06
+#    Cropping, and stabilizing.
+#    The drawn chart is now cropped nicely.
+#    No more memory related crashings on zoom in, or crash on zoom out of the chart.
+# 0.05
+#
+#
 SET(GDAL_VERSION "2.3.1") # Just telling aloud the used GDAL version. No package-retrieval system here for now.
 SET(PROJ_VERSION "5.1.0") # Just telling aloud the used PROJ version. No package-retrieval system here for now.
 SET(HDF5_VERSION "1.10.3") # Just telling aloud the used HDF5 version. No package-retrieval system here for now.

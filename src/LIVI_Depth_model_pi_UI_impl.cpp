@@ -66,6 +66,11 @@ void Dlg::OnGenerateImage(wxCommandEvent& WXUNUSED(event))
     plugin->OnGenerateImage(fname);
 }
 
+void Dlg::OnClearImage(wxCommandEvent& WXUNUSED(event))
+{
+    plugin->OnClearImage();
+}
+
 void Dlg::OnChartTypeChange(wxChoicebookEvent& WXUNUSED(event))
 {
     plugin->OnChartTypeChange(GetSelectedChartOption());
