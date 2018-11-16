@@ -80,6 +80,9 @@ public:
     void        SetDividingLevel(int level);
     double      GetDividingLevel();
 
+    void        SetCurrentWaterLevel(int level);
+    double      GetCurrentWaterLevel();
+
     void        SetDepthChartFileName(wxFileName &fileName);
     wxFileName  GetDepthChartFileName();
 
@@ -102,6 +105,7 @@ private:
     virtual void OnChartTypeChange          ( wxChoicebookEvent& WXUNUSED(event) );
     virtual void OnColourSchemaChange       ( wxChoicebookEvent& WXUNUSED(event) );
     virtual void OnUserColourFileChange  ( wxFileDirPickerEvent& WXUNUSED(event) );
+    virtual void OnCurrentWaterLevelChange  ( wxSpinDoubleEvent& WXUNUSED(event) );
 
  //     double lat1, lon1, lat2, lon2;
  //     bool error_found;
