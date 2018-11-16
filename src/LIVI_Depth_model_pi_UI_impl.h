@@ -82,6 +82,8 @@ public:
 
     void        SetCurrentWaterLevel(int level);
     double      GetCurrentWaterLevel();
+    void        SetVerticalReferenceSystemOffsetLevel(int level);
+    double      GetVerticalReferenceSystemOffsetLevel();
 
     void        SetDepthChartFileName(wxFileName &fileName);
     wxFileName  GetDepthChartFileName();
@@ -106,6 +108,7 @@ private:
     virtual void OnColourSchemaChange       ( wxChoicebookEvent& WXUNUSED(event) );
     virtual void OnUserColourFileChange  ( wxFileDirPickerEvent& WXUNUSED(event) );
     virtual void OnCurrentWaterLevelChange  ( wxSpinDoubleEvent& WXUNUSED(event) );
+    virtual void OnVerticalReferenceSystemOffsetChange( wxSpinDoubleEvent& WXUNUSED(event) );
 
  //     double lat1, lon1, lat2, lon2;
  //     bool error_found;
