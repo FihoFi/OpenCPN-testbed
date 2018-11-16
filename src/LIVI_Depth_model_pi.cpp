@@ -672,6 +672,18 @@ void LIVI_Depth_model_pi::OnUserColourFileChange(wxFileName fullFileName)
     }
 }
 
+void LIVI_Depth_model_pi::OnCurrentWaterLevelChange(double cwl)
+{
+    dmDrawer->logInfo("Depth model: Current water level changing to " + std::to_string(cwl));
+
+    m_pconf->waterLevel.setCurrentWaterLevel(cwl);
+    bool success = m_pconf->SaveConfig();
+    if (!success)
+    {
+        setErrorToUI("Setting current water level: Error in saving the congifuration.");
+        dmDrawer->logError("Depth model: current water level:  Error in saving the congifuration");
+    }
+}
 
 //// private ////
 

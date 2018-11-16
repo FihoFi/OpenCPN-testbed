@@ -90,6 +90,7 @@ void Dlg::OnUserColourFileChange(wxFileDirPickerEvent& WXUNUSED(event))
 void Dlg::OnCurrentWaterLevelChange(wxSpinDoubleEvent& WXUNUSED(event))
 {
     double cwl = this->dmWaterLevel_CurrentWaterLevel_spinCtrlDouble->GetValue();
+    plugin->OnCurrentWaterLevelChange(cwl);
 }
 
 void Dlg::OnVerticalReferenceSystemOffsetChange(wxSpinDoubleEvent& WXUNUSED(event))

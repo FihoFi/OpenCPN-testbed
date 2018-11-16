@@ -123,6 +123,8 @@ public:
 
     void OnUserColourFileChange(wxFileName fullFileName);
 
+    void OnCurrentWaterLevelChange(double cwl);
+
 private:
 
     void OnClose( wxCloseEvent& event );
