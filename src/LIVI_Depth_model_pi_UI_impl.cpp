@@ -92,6 +92,11 @@ void Dlg::OnCurrentWaterLevelChange(wxSpinDoubleEvent& WXUNUSED(event))
     double cwl = this->dmWaterLevel_CurrentWaterLevel_spinCtrlDouble->GetValue();
 }
 
+void Dlg::OnVerticalReferenceSystemOffsetChange(wxSpinDoubleEvent& WXUNUSED(event))
+{
+    double vrso = this->dmWaterLevel_VerticalReferenceSystemOffset_spinCtrlDouble->GetValue();
+}
+
 void Dlg::SetAboutInfo()
 {
     this->dmAbout_icon_bitmap->SetIcon(plugin->GetIcon());
@@ -251,6 +256,16 @@ double Dlg::GetCurrentWaterLevel()
     wxSpinCtrlDouble* spinCtrl;
     spinCtrl = this->dmWaterLevel_CurrentWaterLevel_spinCtrlDouble;
     return spinCtrl->GetValue();
+}
+
+void Dlg::SetVerticalReferenceSystemOffsetLevel(int level)
+{
+    this->dmWaterLevel_VerticalReferenceSystemOffset_spinCtrlDouble->SetValue(level);
+}
+
+double Dlg::GetVerticalReferenceSystemOffsetLevel()
+{
+    return this->dmWaterLevel_VerticalReferenceSystemOffset_spinCtrlDouble->GetValue();
 }
 
 wxFileName    Dlg::GetDepthChartFileName()

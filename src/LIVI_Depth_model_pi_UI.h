@@ -123,10 +123,12 @@ class LIVIDMUI_DLG : public wxDialog
 		wxPanel* dmWaterLevel_Panel;
 		wxStaticText* dmEmpty;
 		wxStaticText* dmEmpty1;
-		wxStaticText* dmWaterLevel_VerticalReferenceSystemOffset_Label;
-		wxSpinCtrlDouble* dmWaterLevel_VerticalReferenceSystemOffset_spinCtrlDouble;
 		wxStaticText* dmWaterLevel_CurrentWaterLevel_Label;
 		wxSpinCtrlDouble* dmWaterLevel_CurrentWaterLevel_spinCtrlDouble;
+		wxStaticText* dmEmpty2;
+		wxStaticText* dmEmpty3;
+		wxStaticText* dmWaterLevel_VerticalReferenceSystemOffset_Label;
+		wxSpinCtrlDouble* dmWaterLevel_VerticalReferenceSystemOffset_spinCtrlDouble;
 		wxPanel* dmAbout_Panel;
 		wxPanel* dmAbout_Icon_Panel;
 		wxStaticBitmap* dmAbout_icon_bitmap;
@@ -146,6 +148,7 @@ class LIVIDMUI_DLG : public wxDialog
 		virtual void OnColourSchemaChange( wxChoicebookEvent& event ) { event.Skip(); }
 		virtual void OnUserColourFileChange( wxFileDirPickerEvent& event ) { event.Skip(); }
 		virtual void OnCurrentWaterLevelChange( wxSpinDoubleEvent& event ) { event.Skip(); }
+		virtual void OnVerticalReferenceSystemOffsetChange( wxSpinDoubleEvent& event ) { event.Skip(); }
 		virtual void OnAboutWxWidgets( wxCommandEvent& event ) { event.Skip(); }
 		
 	

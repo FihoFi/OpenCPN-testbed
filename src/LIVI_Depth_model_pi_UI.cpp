@@ -401,6 +401,14 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	
 	dmWaterLevel_Sizer->Add( dmWaterLevel_CurrentWaterLevel_spinCtrlDouble, 0, wxALL, 5 );
 	
+	dmEmpty2 = new wxStaticText( dmWaterLevel_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	dmEmpty2->Wrap( -1 );
+	dmWaterLevel_Sizer->Add( dmEmpty2, 0, wxALL, 5 );
+	
+	dmEmpty3 = new wxStaticText( dmWaterLevel_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	dmEmpty3->Wrap( -1 );
+	dmWaterLevel_Sizer->Add( dmEmpty3, 0, wxALL, 5 );
+	
 	dmWaterLevel_VerticalReferenceSystemOffset_Label = new wxStaticText( dmWaterLevel_Panel, wxID_ANY, wxT("Vertical reference system offset"), wxDefaultPosition, wxDefaultSize, 0 );
 	dmWaterLevel_VerticalReferenceSystemOffset_Label->Wrap( -1 );
 	dmWaterLevel_Sizer->Add( dmWaterLevel_VerticalReferenceSystemOffset_Label, 0, wxALL, 5 );
@@ -490,6 +498,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColourOptions_choisebook->Connect( wxEVT_COMMAND_CHOICEBOOK_PAGE_CHANGED, wxChoicebookEventHandler( LIVIDMUI_DLG::OnColourSchemaChange ), NULL, this );
 	dmColourOptionsUserFile_filePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( LIVIDMUI_DLG::OnUserColourFileChange ), NULL, this );
 	dmWaterLevel_CurrentWaterLevel_spinCtrlDouble->Connect( wxEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, wxSpinDoubleEventHandler( LIVIDMUI_DLG::OnCurrentWaterLevelChange ), NULL, this );
+	dmWaterLevel_VerticalReferenceSystemOffset_spinCtrlDouble->Connect( wxEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, wxSpinDoubleEventHandler( LIVIDMUI_DLG::OnVerticalReferenceSystemOffsetChange ), NULL, this );
 	dm_AboutWxWidgets_Button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnAboutWxWidgets ), NULL, this );
 }
 
@@ -503,6 +512,7 @@ LIVIDMUI_DLG::~LIVIDMUI_DLG()
 	dmColourOptions_choisebook->Disconnect( wxEVT_COMMAND_CHOICEBOOK_PAGE_CHANGED, wxChoicebookEventHandler( LIVIDMUI_DLG::OnColourSchemaChange ), NULL, this );
 	dmColourOptionsUserFile_filePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( LIVIDMUI_DLG::OnUserColourFileChange ), NULL, this );
 	dmWaterLevel_CurrentWaterLevel_spinCtrlDouble->Disconnect( wxEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, wxSpinDoubleEventHandler( LIVIDMUI_DLG::OnCurrentWaterLevelChange ), NULL, this );
+	dmWaterLevel_VerticalReferenceSystemOffset_spinCtrlDouble->Disconnect( wxEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, wxSpinDoubleEventHandler( LIVIDMUI_DLG::OnVerticalReferenceSystemOffsetChange ), NULL, this );
 	dm_AboutWxWidgets_Button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnAboutWxWidgets ), NULL, this );
 	
 }
