@@ -63,6 +63,7 @@ private:
     std::string _tempFolderPath;
     GDALDataset * _srcDataset;
     GDALDataset * _dstDataset;
+    double _geoTransform[6];
     dmRasterImgData * _imgData;
 
     DM_visualization _visScheme;
@@ -72,6 +73,8 @@ private:
         coord &topLeftOut, coord &botRightOut,
         int &pixOffsetX, int &pixOffsetY,
         int &imgWidth, int &imgHeight);
+    std::pair<int, int> dmDataset::getRasterPixelOffsetAt(coord point, bool pixelTopLeftCorner = true);
+    dmExtent getRasterExtent(void);
     std::vector<std::string> getGdaldemOptionsVec();
     GDALDataset * reprojectDataset(GDALDataset *dsToReproject);
     GDALDataset * visualizeDataset(GDALDataset *dsToVisualize);

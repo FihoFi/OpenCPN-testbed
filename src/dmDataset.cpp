@@ -212,7 +212,7 @@ bool dmDataset::openDataSet(const char * filename)
 
     if (_srcDataset)
     {
-        _srcWkt = GDALGetProjectionRef(_srcDataset);
+        _srcWkt = _srcDataset->GetProjectionRef();
 
         reprojectedDs = reprojectDataset(_srcDataset);
 
@@ -230,7 +230,10 @@ bool dmDataset::openDataSet(const char * filename)
         if (!allocateImgDataMemory())
             return false;
 
-        _dstWkt = GDALGetProjectionRef(_dstDataset);
+        if (_dstDataset->GetGeoTransform(_geoTransform) != CE_None)
+            return false;
+
+        _dstWkt = _dstDataset->GetProjectionRef();
 
         return true;
     }
@@ -319,6 +322,48 @@ bool dmDataset::allocateImgDataMemory()
     return true;
 }
 
+std::pair<int, int> dmDataset::getRasterPixelOffsetAt(coord point, bool pixelTopLeftCorner)
+{
+    double croppedEast, croppedNorth;
+    dmExtent rasterExtent = getRasterExtent();
+    double offsetX, offsetY;
+    int pxOffsetX, pxOffsetY;
+
+    croppedEast = std::max(point.east, rasterExtent.topLeft.east);
+    croppedEast = std::min(croppedEast, rasterExtent.botRight.east);
+    croppedNorth = std::min(point.north, rasterExtent.topLeft.north);
+    croppedNorth = std::max(croppedNorth, rasterExtent.botRight.north);
+
+    offsetX = std::abs((croppedEast - rasterExtent.topLeft.east) / _geoTransform[1]);
+    offsetY = std::abs((croppedNorth - rasterExtent.topLeft.north) / _geoTransform[5]);
+
+    if (pixelTopLeftCorner)
+    {
+        pxOffsetX = std::floor(offsetX);
+        pxOffsetY = std::floor(offsetY);
+    }
+    else
+    {
+        pxOffsetX = std::ceil(offsetX);
+        pxOffsetY = std::ceil(offsetY);
+    }
+
+    return std::pair<int, int>(pxOffsetX, pxOffsetY);
+}
+
+dmExtent dmDataset::getRasterExtent(void)
+{
+    int xSize = _dstDataset->GetRasterXSize();
+    int ySize = _dstDataset->GetRasterYSize();
+
+    coord topLeftRaster(_geoTransform[3],
+        _geoTransform[0]);
+    coord botRightRaster(_geoTransform[3] + xSize * _geoTransform[4] + ySize * _geoTransform[5],
+        _geoTransform[0] + xSize * _geoTransform[1] + ySize * _geoTransform[2]);
+
+    return dmExtent(topLeftRaster, botRightRaster);
+}
+
 bool dmDataset::dstSrsToLatLon(coord dstSrsIn, coord &latLonOut)
 {
     PJ *projection;
@@ -356,34 +401,17 @@ bool dmDataset::dstSrsToLatLon(dmExtent dstSrsIn, dmExtent &latLonOut)
     return success;
 }
 
-// TODO: wrap coordinates with extents type
 bool dmDataset::getCropExtents(coord topLeftIn, coord botRightIn,
     coord &topLeftOut, coord &botRightOut,
     int &imgOffsetX, int &imgOffsetY,
     int &imgWidth, int &imgHeight)
 {
+    std::pair<int, int> topLeftOffsets, botRightOffsets;
+
     if (!_dstDataset)
         return false;
 
-    int xSize = _dstDataset->GetRasterXSize();
-    int ySize = _dstDataset->GetRasterYSize();
-    double geoTransform[6];
-
-    if (_dstDataset->GetGeoTransform(geoTransform) != CE_None)
-    {
-        return false;
-    }
-
-    coord topLeftRaster(geoTransform[3],
-                        geoTransform[0]);
-    coord botRightRaster(geoTransform[3] + xSize * geoTransform[4] + ySize * geoTransform[5],
-                         geoTransform[0] + xSize * geoTransform[1] + ySize * geoTransform[2]);
-
-    // requested rectangle is outside of raster extents
-    if (topLeftIn.east > botRightRaster.east ||
-        topLeftIn.north < botRightRaster.north ||
-        botRightIn.east < topLeftRaster.east ||
-        botRightIn.north > topLeftRaster.north)
+    if (!dmExtent(topLeftIn, botRightIn).overlaps(getRasterExtent()))
     {
         imgOffsetX = 0;
         imgOffsetY = 0;
@@ -393,51 +421,18 @@ bool dmDataset::getCropExtents(coord topLeftIn, coord botRightIn,
         return true;
     }
 
-    if (topLeftIn.east < topLeftRaster.east)
-    {
-        imgOffsetX = 0;
-        topLeftOut.east = topLeftRaster.east;
-    }
-    else
-    {
-        imgOffsetX = std::floor((topLeftIn.east - topLeftRaster.east) / geoTransform[1]);
-        topLeftOut.east = geoTransform[0] + imgOffsetX * geoTransform[1];
-    }
+    topLeftOffsets = getRasterPixelOffsetAt(topLeftIn);
+    botRightOffsets = getRasterPixelOffsetAt(botRightIn, false);
 
-    if (topLeftIn.north > topLeftRaster.north)
-    {
-        imgOffsetY = 0;
-        topLeftOut.north = topLeftRaster.north;
-    }
-    else
-    {
-        // note: geoTransform[5] is negative
-        imgOffsetY = std::floor((topLeftIn.north - topLeftRaster.north) / geoTransform[5]);
-        topLeftOut.north = geoTransform[3] + imgOffsetY * geoTransform[5];
-    }
+    imgOffsetX = topLeftOffsets.first;
+    imgOffsetY = topLeftOffsets.second;
+    imgWidth = botRightOffsets.first - imgOffsetX;
+    imgHeight = botRightOffsets.second - imgOffsetY;
 
-    if (botRightIn.east > botRightRaster.east)
-    {
-        imgWidth = xSize - imgOffsetX;
-        botRightOut.east = botRightRaster.east;
-    }
-    else
-    {
-        imgWidth = std::ceil((botRightIn.east - topLeftRaster.east) / geoTransform[1]) - imgOffsetX;
-        botRightOut.east = topLeftOut.east + imgWidth*geoTransform[1];
-    }
-
-    if (botRightIn.north < botRightRaster.north)
-    {
-        imgHeight = ySize - imgOffsetY;
-        botRightOut.north = botRightRaster.north;
-    }
-    else
-    {
-        // note: geoTransform[5] is negative
-        imgHeight = std::ceil((botRightIn.north - topLeftRaster.north) / geoTransform[5]) - imgOffsetY;
-        botRightOut.north = topLeftOut.north + imgHeight * geoTransform[5];
-    }
+    topLeftOut.east = _geoTransform[0] + imgOffsetX * _geoTransform[1];
+    topLeftOut.north = _geoTransform[3] + imgOffsetY * _geoTransform[5];
+    botRightOut.east = topLeftOut.east + imgWidth * _geoTransform[1];
+    botRightOut.north = topLeftOut.north + imgHeight * _geoTransform[5];
 
     return true;
 }
