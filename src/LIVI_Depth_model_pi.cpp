@@ -699,6 +699,7 @@ void LIVI_Depth_model_pi::OnVerticalReferenceSystemOffsetChange(double vrso)
         setErrorToUI("Setting ref. system offset: Error in saving the congifuration.");
         dmDrawer->logError("Depth model: ref. system offset:  Error in saving the congifuration");
     }
+    this->setCurrentOptionsTextToUI();
 }
 
 //// private ////
@@ -767,12 +768,14 @@ void LIVI_Depth_model_pi::PullConfigFromUI(void)
 void LIVI_Depth_model_pi::setCurrentOptionsTextToUI()
 {
     double wl = m_pconf->waterLevel.getCurrentWaterLevel();
+    double vrso = m_pconf->waterLevel.getVerticalReferenceSystemOffset();
 
     std::string str =
         "Current drawing options:\n" +
         m_pconf->colour.chartTypeToString(m_pconf->colour.getChartType()) + "\n" +
         m_pconf->colour.colouringTypeToString(m_pconf->colour.getColouringType()) + "\n" +
-        "Water level:" + (wl > 0 ? "+"+ std::to_string(wl) : std::to_string(wl));
+        "Water level: " + (wl > 0 ? "+"+std::to_string(wl)   : std::to_string(wl)) + "\n" + 
+        "System offset: "+(vrso>0 ? "+"+std::to_string(vrso) : std::to_string(vrso));
     dialog->SetCurrentOptionsText(str);
 }
 
