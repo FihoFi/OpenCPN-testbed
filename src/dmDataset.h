@@ -68,7 +68,6 @@ private:
     DM_visualization _visScheme;
 
     bool allocateImgDataMemory();
-    bool applyHillshadeAlphaMask(GDALDataset * ds);
     bool getCropExtents(coord topLeftIn, coord botRightIn,
         coord &topLeftOut, coord &botRightOut,
         int &pixOffsetX, int &pixOffsetY,
