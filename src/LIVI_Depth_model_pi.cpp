@@ -687,6 +687,20 @@ void LIVI_Depth_model_pi::OnCurrentWaterLevelChange(double cwl)
     this->setCurrentOptionsTextToUI();
 }
 
+void LIVI_Depth_model_pi::OnVerticalReferenceSystemOffsetChange(double vrso)
+{
+    dmDrawer->logInfo("Depth model: Vertical reference systsem offset changing to " + std::to_string(vrso));
+
+    dmDrawer->setVerticalReferenceSystemOffset(vrso);
+    m_pconf->waterLevel.setVerticalReferenceSystemOffset(vrso);
+    bool success = m_pconf->SaveConfig();
+    if (!success)
+    {
+        setErrorToUI("Setting ref. system offset: Error in saving the congifuration.");
+        dmDrawer->logError("Depth model: ref. system offset:  Error in saving the congifuration");
+    }
+}
+
 //// private ////
 
 

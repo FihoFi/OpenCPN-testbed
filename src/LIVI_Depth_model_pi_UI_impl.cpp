@@ -96,6 +96,7 @@ void Dlg::OnCurrentWaterLevelChange(wxSpinDoubleEvent& WXUNUSED(event))
 void Dlg::OnVerticalReferenceSystemOffsetChange(wxSpinDoubleEvent& WXUNUSED(event))
 {
     double vrso = this->dmWaterLevel_VerticalReferenceSystemOffset_spinCtrlDouble->GetValue();
+    plugin->OnVerticalReferenceSystemOffsetChange(vrso);
 }
 
 void Dlg::SetAboutInfo()

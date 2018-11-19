@@ -124,6 +124,7 @@ public:
     void OnUserColourFileChange(wxFileName fullFileName);
 
     void OnCurrentWaterLevelChange(double cwl);
+    void OnVerticalReferenceSystemOffsetChange(double vrso);
 
 private:
 
