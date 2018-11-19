@@ -130,9 +130,6 @@ dmExtent dmDepthModelDrawer::applyViewPortArea(PlugIn_ViewPort &vp)
     coord botRightLL(vp.lat_min, vp.lon_max);
     dmExtent vpLL(topLeftLL, botRightLL);
 
-    dmExtent wantedDrawingArea = calculateIdealCroppingLL(vpLL);
-    drawingState.SetWantedDrawingAreaLL(wantedDrawingArea);
-
     return vpLL;
 }
 
@@ -289,7 +286,7 @@ bool dmDepthModelDrawer::needNewCropping(dmExtent viewPortLL)
         throw (std::string("dmDepthModelDrawer::needNewCropping does not know the canvas extent"));
     }
 
-    dmExtent lastDrawnLL = drawingState.GetCurrentDrawingAreaLL();
+    dmExtent lastDrawnLL = croppedImageLL;
     bool stillFits = viewPortLL.isWithin(lastDrawnLL);
 
     bool lastDrawnIsTooWide = false;
@@ -345,7 +342,6 @@ bool dmDepthModelDrawer::cropImage(dmExtent wantedCropExtentLL,
                 drawingState.GetWantedChartFileName().GetName().ToStdString());
             return false;
         }
-        drawingState.SetWantedDrawingAreaLL(wantedCropExtentLL);
 
         if (!success)
         {
