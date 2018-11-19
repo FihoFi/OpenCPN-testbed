@@ -37,11 +37,13 @@ public:
     bool                SetWantedChartType      (DM_visualization imageType);
     bool                SetWantedColourSchema   (DM_colourType colourSchema);
     bool                SetWantedUserColourFileName(wxFileName fname);
+    void                SetWantedCurrentWaterLevel              (double cwl);
 
     wxFileName          GetWantedChartFileName()        {   return wantedChartFileName;         }
     DM_visualization    GetWantedChartType()            {   return wantedChartType;             }
     DM_colourType       GetWantedColourSchema()         {   return wantedColourSchema;          }
     wxFileName          GetWantedUserColourFileName()   {   return wantedUserColourFileName;    }
+    double              GetWantedCurrentWaterLevel()    {   return wantedCurrentWaterLevel;     }
 
     wantedChartState    wantedChanges();
 
@@ -53,12 +55,14 @@ private:
     DM_visualization    currentChartType;
     DM_colourType       currentColourSchema;
     wxFileName          currentUserColourFileName;
+    double              currentCurrentWaterLevel;
 
     // Wanted variables are to be set when the UI informs about changes
     wxFileName          wantedChartFileName;
     DM_visualization    wantedChartType;
     DM_colourType       wantedColourSchema;
     wxFileName          wantedUserColourFileName;
+    double              wantedCurrentWaterLevel;
 
     wantedChartState    stateOfWantedImage;
 };

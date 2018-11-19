@@ -7,11 +7,13 @@ dmDrawingState::dmDrawingState()
     , currentChartType(VISUALIZATION_UNDEFINED)
     , currentColourSchema(COLOUR_UNDEFINED)
     , currentUserColourFileName("")
+    , currentCurrentWaterLevel(0)
 
     , wantedChartFileName("")
     , wantedChartType(VISUALIZATION_UNDEFINED)
     , wantedColourSchema(COLOUR_UNDEFINED)
     , wantedUserColourFileName("")
+    , wantedCurrentWaterLevel(0)
 
     , stateOfWantedImage(CHART_FILE_UNDEFINED)
 {
@@ -23,6 +25,7 @@ void dmDrawingState::SetCurrentAsWanted()
     currentChartType          = wantedChartType;
     currentColourSchema       = wantedColourSchema;
     currentUserColourFileName = wantedUserColourFileName;
+    currentCurrentWaterLevel  = wantedCurrentWaterLevel;
 }
 
 bool dmDrawingState::SetWantedChartFileName(wxFileName fname)
@@ -92,6 +95,11 @@ bool dmDrawingState::SetWantedUserColourFileName(wxFileName fname)
     }
 }
 
+void dmDrawingState::SetWantedCurrentWaterLevel(double cwl)
+{
+    wantedCurrentWaterLevel = cwl;
+    stateOfWantedImage = std::min(stateOfWantedImage, COLOURING_CHANGED);
+}
 
 dmDrawingState::wantedChartState dmDrawingState::wantedChanges()
 {
