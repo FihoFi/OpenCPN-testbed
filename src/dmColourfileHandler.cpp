@@ -134,13 +134,17 @@ wxString dmColourfileHandler::GetFiveColourDepthColourWks()
     wks_ColourSettings.append(wxString(_T("nv           0  0  0  0\r\n")));
 
     unsigned char alpha0, alpha1;
+    double depth;
     for (int i = 0; i < DM_NUM_CUSTOM_DEP; i++) {
         alpha0 = m_pconf->colour.m_customColours[ i ].Alpha();
         alpha1 = m_pconf->colour.m_customColours[i+1].Alpha();
 
+        depth =  m_pconf->colour.m_customDepths[i] +
+                 m_pconf->waterLevel.m_currentWaterLevel;
+
         wks_ColourSettings.append(
             wxString::Format(_T("%f %i %i %i %i\r\n"),
-                m_pconf->colour.m_customDepths[i] + nci,
+                depth + nci,
                 m_pconf->colour.m_customColours[i].Red(),
                 m_pconf->colour.m_customColours[i].Green(),
                 m_pconf->colour.m_customColours[i].Blue(),
@@ -149,7 +153,7 @@ wxString dmColourfileHandler::GetFiveColourDepthColourWks()
 
         wks_ColourSettings.append(
             wxString::Format(_T("%f %i %i %i %i\r\n"),
-                m_pconf->colour.m_customDepths[i],
+                depth,
                 m_pconf->colour.m_customColours[i + 1].Red(),
                 m_pconf->colour.m_customColours[i + 1].Green(),
                 m_pconf->colour.m_customColours[i + 1].Blue(),
@@ -176,6 +180,8 @@ wxString dmColourfileHandler::GetTwoColourDepthColourWks()
     static int opaque_level = 128;  // default opaqueness if no transparency at all, range [0...255]
     unsigned char alpha0 = m_pconf->colour.m_twoColours[0].Alpha();
     unsigned char alpha1 = m_pconf->colour.m_twoColours[1].Alpha();
+    double depth = m_pconf->colour.m_twoColoursDepth +
+                   m_pconf->waterLevel.m_currentWaterLevel;
 
     wxString wks_ColourSettings;
 
@@ -183,7 +189,7 @@ wxString dmColourfileHandler::GetTwoColourDepthColourWks()
 
     wks_ColourSettings.append(
         wxString::Format(_T("%f %i %i %i %i\r\n"),
-            m_pconf->colour.m_twoColoursDepth + nci,
+            depth + nci,
             m_pconf->colour.m_twoColours[0].Red(),
             m_pconf->colour.m_twoColours[0].Green(),
             m_pconf->colour.m_twoColours[0].Blue(),
@@ -191,8 +197,8 @@ wxString dmColourfileHandler::GetTwoColourDepthColourWks()
     );
 
     wks_ColourSettings.append(
-    wxString::Format(_T("%f %i %i %i %i\r\n"),
-            m_pconf->colour.m_twoColoursDepth,
+        wxString::Format(_T("%f %i %i %i %i\r\n"),
+            depth,
             m_pconf->colour.m_twoColours[1].Red(),
             m_pconf->colour.m_twoColours[1].Green(),
             m_pconf->colour.m_twoColours[1].Blue(),

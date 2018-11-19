@@ -20,6 +20,7 @@ bool dmConfigHandler::LoadConfig(void)
     success &= general.load();
     success &= colour.load();
     success &= fileImport.load();
+    success &= waterLevel.load();
 
     return success;
 }
@@ -36,6 +37,7 @@ bool dmConfigHandler::SaveConfig(void)
     success &= general.save();
     success &= colour.save();
     success &= fileImport.save();
+    success &= waterLevel.save();
 
     m_pconfig->Flush();
 
@@ -200,7 +202,39 @@ bool DMColorOptionConfig::save(void)
 
         success &= confFile->Write(_T("UserColourConfPath"), userColourConfPath.GetFullPath());
 
+        return success;
+    }
+    else
+        return false;
+}
+
+bool DMWaterLevelConfig::load(void)
+{
+    //bool success = true;    // TODO success of Read functions has not been checked
+    if (confFile)
+    {
+        confFile->SetPath(_T("/Settings/LIVI_Depth_model_pi/Levels"));
+
+        std::string str = confFile->Read(_T("CurrentWaterLevel"));
+        if (str.length() == 0)
+            str = std::to_string(0); // default 0m if no level found
+        m_currentWaterLevel = std::stoi(str);
+
         return true;
+    }
+    else
+        return false;
+}
+
+bool DMWaterLevelConfig::save(void)
+{
+    bool success = true;
+    if (confFile)
+    {
+        confFile->SetPath(_T("/Settings/LIVI_Depth_model_pi/Levels"));
+
+        success &= confFile->Write(_T("CurrentWaterLevel"), m_currentWaterLevel);
+        return success;
     }
     else
         return false;

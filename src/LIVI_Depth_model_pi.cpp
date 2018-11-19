@@ -672,6 +672,20 @@ void LIVI_Depth_model_pi::OnUserColourFileChange(wxFileName fullFileName)
     }
 }
 
+void LIVI_Depth_model_pi::OnCurrentWaterLevelChange(double cwl)
+{
+    dmDrawer->logInfo("Depth model: Current water level changing to " + std::to_string(cwl));
+
+    dmDrawer->setCurrentWaterLevel(cwl);
+    m_pconf->waterLevel.setCurrentWaterLevel(cwl);
+    bool success = m_pconf->SaveConfig();
+    if (!success)
+    {
+        setErrorToUI("Setting current water level: Error in saving the congifuration.");
+        dmDrawer->logError("Depth model: current water level:  Error in saving the congifuration");
+    }
+    this->setCurrentOptionsTextToUI();
+}
 
 //// private ////
 
@@ -738,10 +752,13 @@ void LIVI_Depth_model_pi::PullConfigFromUI(void)
 
 void LIVI_Depth_model_pi::setCurrentOptionsTextToUI()
 {
+    double wl = m_pconf->waterLevel.getCurrentWaterLevel();
+
     std::string str =
         "Current drawing options:\n" +
         m_pconf->colour.chartTypeToString(m_pconf->colour.getChartType()) + "\n" +
-        m_pconf->colour.colouringTypeToString(m_pconf->colour.getColouringType());
+        m_pconf->colour.colouringTypeToString(m_pconf->colour.getColouringType()) + "\n" +
+        "Water level:" + (wl > 0 ? "+"+ std::to_string(wl) : std::to_string(wl));
     dialog->SetCurrentOptionsText(str);
 }
 

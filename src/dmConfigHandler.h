@@ -125,6 +125,20 @@ struct DMFileImportConfig : dm_configAPI {
     virtual bool save() override;
 };
 
+struct DMWaterLevelConfig : dm_configAPI
+{
+
+    DMWaterLevelConfig(wxFileConfig* confFile)
+    {    this->confFile = confFile;    }
+
+    double  m_currentWaterLevel;
+    virtual bool load() override;
+    virtual bool save() override;
+
+    double  getCurrentWaterLevel() { return m_currentWaterLevel; }
+    void    setCurrentWaterLevel(double levelInM) { m_currentWaterLevel = levelInM; }
+};
+
 class dmConfigHandler
 {
 public:
@@ -132,7 +146,7 @@ public:
         wxFileConfig* confFile, // change this to reference, to avoid accidentally deleting, 
         Dlg* pluginDialog=NULL)
       : m_pconfig(confFile), m_pDialog(pluginDialog),
-        general(confFile),colour(confFile), fileImport(confFile),
+        general(confFile),colour(confFile), fileImport(confFile), waterLevel(confFile),
         showDepthModel(false)
     { 
         /*if debug */assert(confFile);
@@ -157,6 +171,7 @@ public:
     DMGeneralConfig     general;
     DMColorOptionConfig colour;
     DMFileImportConfig  fileImport;
+    DMWaterLevelConfig  waterLevel;
     Dlg*                m_pDialog;
 
 private:
