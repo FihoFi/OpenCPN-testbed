@@ -190,7 +190,8 @@ bool DMColorOptionConfig::save(void)
                 m_customColours[i].GetAsString(wxC2S_HTML_SYNTAX));
         }
         for (int i = 0; i < DM_NUM_CUSTOM_DEP; i++) {
-            success &= confFile->Write(_T("CustomDepth" + std::to_string(i)), m_customDepths[i]);
+            success &= confFile->Write(_T("CustomDepth" + std::to_string(i)),
+                m_customDepths[i]);
         }
 
         for (int i = 0; i < 2; i++) {
