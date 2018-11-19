@@ -140,7 +140,8 @@ wxString dmColourfileHandler::GetFiveColourDepthColourWks()
         alpha1 = m_pconf->colour.m_customColours[i+1].Alpha();
 
         depth =  m_pconf->colour.m_customDepths[i] +
-                 m_pconf->waterLevel.m_currentWaterLevel;
+                 m_pconf->waterLevel.m_currentWaterLevel+
+                 m_pconf->waterLevel.m_verticalReferenceSystemOffset;
 
         wks_ColourSettings.append(
             wxString::Format(_T("%f %i %i %i %i\r\n"),
@@ -181,7 +182,8 @@ wxString dmColourfileHandler::GetTwoColourDepthColourWks()
     unsigned char alpha0 = m_pconf->colour.m_twoColours[0].Alpha();
     unsigned char alpha1 = m_pconf->colour.m_twoColours[1].Alpha();
     double depth = m_pconf->colour.m_twoColoursDepth +
-                   m_pconf->waterLevel.m_currentWaterLevel;
+                   m_pconf->waterLevel.m_currentWaterLevel +
+                   m_pconf->waterLevel.m_verticalReferenceSystemOffset;
 
     wxString wks_ColourSettings;
 
