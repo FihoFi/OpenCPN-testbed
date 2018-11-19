@@ -220,6 +220,11 @@ bool DMWaterLevelConfig::load(void)
             str = std::to_string(0); // default 0m if no level found
         m_currentWaterLevel = std::stoi(str);
 
+        str = confFile->Read(_T("VerticalRefSystemZ"));
+        if (str.length() == 0)
+            str = std::to_string(0); // default 0m if no refZ found
+        m_verticalReferenceSystemOffset = std::stoi(str);
+
         return true;
     }
     else
@@ -234,6 +239,7 @@ bool DMWaterLevelConfig::save(void)
         confFile->SetPath(_T("/Settings/LIVI_Depth_model_pi/Levels"));
 
         success &= confFile->Write(_T("CurrentWaterLevel"), m_currentWaterLevel);
+        success &= confFile->Write(_T("VerticalRefSystemZ"), m_verticalReferenceSystemOffset);
         return success;
     }
     else

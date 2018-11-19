@@ -38,12 +38,15 @@ public:
     bool                SetWantedColourSchema   (DM_colourType colourSchema);
     bool                SetWantedUserColourFileName(wxFileName fname);
     void                SetWantedCurrentWaterLevel              (double cwl);
+    void                SetWantedVerticalReferenceSystemOffset  (double vrso);
 
     wxFileName          GetWantedChartFileName()        {   return wantedChartFileName;         }
     DM_visualization    GetWantedChartType()            {   return wantedChartType;             }
     DM_colourType       GetWantedColourSchema()         {   return wantedColourSchema;          }
     wxFileName          GetWantedUserColourFileName()   {   return wantedUserColourFileName;    }
     double              GetWantedCurrentWaterLevel()    {   return wantedCurrentWaterLevel;     }
+    double              GetWantedVerticalReferenceSystemOffset()
+    {   return wantedVertRefSystOffset;    }
 
     wantedChartState    wantedChanges();
 
@@ -56,6 +59,7 @@ private:
     DM_colourType       currentColourSchema;
     wxFileName          currentUserColourFileName;
     double              currentCurrentWaterLevel;
+    double              currentVertRefSystOffset;
 
     // Wanted variables are to be set when the UI informs about changes
     wxFileName          wantedChartFileName;
@@ -63,6 +67,7 @@ private:
     DM_colourType       wantedColourSchema;
     wxFileName          wantedUserColourFileName;
     double              wantedCurrentWaterLevel;
+    double              wantedVertRefSystOffset;
 
     wantedChartState    stateOfWantedImage;
 };
