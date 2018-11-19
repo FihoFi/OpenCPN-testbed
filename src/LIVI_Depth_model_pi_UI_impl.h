@@ -67,6 +67,7 @@ public:
 
     int         GetSelectedChartOption();
     int         GetSelectedColourOption();
+
     void        SetUserColourConfigurationFileName(wxFileName &fileName);
     wxFileName  GetUserColourConfigurationFileName();
 
@@ -112,7 +113,7 @@ private:
 
  //     double lat1, lon1, lat2, lon2;
  //     bool error_found;
- //		wxString     m_gpx_path;		
+ //     wxString     m_gpx_path;
 };
 
 
