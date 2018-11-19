@@ -592,7 +592,7 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
         if (!success)
         {
             setErrorToUI("Could not load the file as a chart image.");
-            dmDrawer->logError("Depth model: Generating image. Failef to open the dataset.");
+            dmDrawer->logError("Depth model: Generating image. Failed to open the dataset.");
             return;
         }
 
