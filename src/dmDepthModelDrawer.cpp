@@ -343,12 +343,6 @@ bool dmDepthModelDrawer::cropImage(dmExtent wantedCropExtentLL,
             return false;
         }
 
-        if (!success)
-        {
-            wxLogMessage(_T("dmDepthModelDrawer::cropImage - Retrieving the image extents failed: ") +
-                drawingState.GetWantedChartFileName().GetName().ToStdString());
-            return false;
-        }
         WMtoLL(croppedImageWM, croppedImageLL);
 
     }
