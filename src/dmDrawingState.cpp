@@ -7,13 +7,13 @@ dmDrawingState::dmDrawingState()
     , currentChartType(VISUALIZATION_UNDEFINED)
     , currentColourSchema(COLOUR_UNDEFINED)
     , currentUserColourFileName("")
-    , currentDrawingAreaLL()
+    , currentCurrentWaterLevel(0)
 
     , wantedChartFileName("")
     , wantedChartType(VISUALIZATION_UNDEFINED)
     , wantedColourSchema(COLOUR_UNDEFINED)
     , wantedUserColourFileName("")
-    , wantedDrawingAreaLL()
+    , wantedCurrentWaterLevel(0)
 
     , stateOfWantedImage(CHART_FILE_UNDEFINED)
 {
@@ -25,7 +25,7 @@ void dmDrawingState::SetCurrentAsWanted()
     currentChartType          = wantedChartType;
     currentColourSchema       = wantedColourSchema;
     currentUserColourFileName = wantedUserColourFileName;
-    currentDrawingAreaLL      = wantedDrawingAreaLL;
+    currentCurrentWaterLevel  = wantedCurrentWaterLevel;
 }
 
 bool dmDrawingState::SetWantedChartFileName(wxFileName fname)
@@ -93,21 +93,12 @@ bool dmDrawingState::SetWantedUserColourFileName(wxFileName fname)
         stateOfWantedImage = std::min(stateOfWantedImage, COLOURING_UNDEFINED);
         return false;
     }
-
 }
 
-void dmDrawingState::SetWantedDrawingAreaLL(dmExtent extentLL)
+void dmDrawingState::SetWantedCurrentWaterLevel(double cwl)
 {
-    wantedDrawingAreaLL = extentLL;
-
-    if (extentLL == dmExtent())
-    {
-        stateOfWantedImage = std::min(stateOfWantedImage, CHART_EXTENTS_UNDEFINED);
-    }
-    else
-    {
-        stateOfWantedImage = std::min(stateOfWantedImage, CHART_EXTENTS_CHANGED);
-    }
+    wantedCurrentWaterLevel = cwl;
+    stateOfWantedImage = std::min(stateOfWantedImage, COLOURING_CHANGED);
 }
 
 dmDrawingState::wantedChartState dmDrawingState::wantedChanges()

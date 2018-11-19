@@ -25,11 +25,13 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmDepthModelFile_staticText->Wrap( -1 );
 	dmFileImport_bSizer->Add( dmDepthModelFile_staticText, 0, wxALL, 5 );
 	
-	dmPictureImport_filePicker = new wxFilePickerCtrl( dmFileImport_Panel, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("Tif/Tiff  image file(*.tif;*.tiff)|*.tif;*.tiff|BAG file (*.bag)|*.bag|Any file (*.*)|*.*"), wxDefaultPosition, wxSize( 380,-1 ), wxFLP_DEFAULT_STYLE );
+	dmPictureImport_filePicker = new wxFilePickerCtrl( dmFileImport_Panel, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("Tif/Tiff  image file(*.tif;*.tiff)|*.tif;*.tiff|BAG file (*.bag)|*.bag|PNG (*.png)|*.png|Any file (*.*)|*.*"), wxDefaultPosition, wxSize( 380,-1 ), wxFLP_DEFAULT_STYLE );
 	dmFileImport_bSizer->Add( dmPictureImport_filePicker, 0, wxALL, 5 );
 	
 	dmPictureImportError_staticText = new wxStaticText( dmFileImport_Panel, wxID_ANY, wxT("(everything ok)"), wxDefaultPosition, wxDefaultSize, 0 );
 	dmPictureImportError_staticText->Wrap( -1 );
+	dmPictureImportError_staticText->SetMinSize( wxSize( -1,50 ) );
+	
 	dmFileImport_bSizer->Add( dmPictureImportError_staticText, 0, wxALL, 5 );
 	
 	wxFlexGridSizer* dmPictureImport_fgSizer;
@@ -41,8 +43,20 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmPictureImport_staticText->Wrap( -1 );
 	dmPictureImport_fgSizer->Add( dmPictureImport_staticText, 0, wxALL, 5 );
 	
+	wxWrapSizer* dmPictureImport_buttons_wSizer;
+	dmPictureImport_buttons_wSizer = new wxWrapSizer( wxHORIZONTAL, wxWRAPSIZER_DEFAULT_FLAGS );
+	
+	dmPictureImport_buttons_wSizer->SetMinSize( wxSize( 215,-1 ) ); 
 	dmPictureImport_GenerateImage_button = new wxButton( dmFileImport_Panel, wxID_ANY, wxT("Generate image"), wxDefaultPosition, wxDefaultSize, 0 );
-	dmPictureImport_fgSizer->Add( dmPictureImport_GenerateImage_button, 0, wxALL, 5 );
+	dmPictureImport_buttons_wSizer->Add( dmPictureImport_GenerateImage_button, 0, wxALL, 5 );
+	
+	dmPictureImport_ClearImage_button = new wxButton( dmFileImport_Panel, wxID_ANY, wxT("Clear image"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmPictureImport_buttons_wSizer->Add( dmPictureImport_ClearImage_button, 0, wxALL, 5 );
+	
+	
+	dmPictureImport_fgSizer->Add( dmPictureImport_buttons_wSizer, 1, wxEXPAND, 5 );
+	
+	
 	dmFileImport_bSizer->Add( dmPictureImport_fgSizer, 1, wxEXPAND, 5 );
 	
 	
@@ -300,6 +314,9 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmChartOptions_ColorRelief_Sizer->Fit( dmChartOptions_ColorRelief_panel );
 	dmChartOptions_choicebook->AddPage( dmChartOptions_ColorRelief_panel, wxT("(default) Draw a Depth model  (\"Color relief\") chart"), true );
 	dmChartOptions_Hillshade_panel = new wxPanel( dmChartOptions_choicebook, DM_viz_HILLSHADE, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	dmChartOptions_Hillshade_panel->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_GRAYTEXT ) );
+	dmChartOptions_Hillshade_panel->Enable( false );
+	
 	wxFlexGridSizer* dmChartOptions_Hillshade_Sizer;
 	dmChartOptions_Hillshade_Sizer = new wxFlexGridSizer( 0, 2, 0, 0 );
 	dmChartOptions_Hillshade_Sizer->SetFlexibleDirection( wxBOTH );
@@ -375,6 +392,23 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmEmpty1->Wrap( -1 );
 	dmWaterLevel_Sizer->Add( dmEmpty1, 0, wxALL, 5 );
 	
+	dmWaterLevel_CurrentWaterLevel_Label = new wxStaticText( dmWaterLevel_Panel, wxID_ANY, wxT("Current water level"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmWaterLevel_CurrentWaterLevel_Label->Wrap( -1 );
+	dmWaterLevel_Sizer->Add( dmWaterLevel_CurrentWaterLevel_Label, 0, wxALL, 5 );
+	
+	dmWaterLevel_CurrentWaterLevel_spinCtrlDouble = new wxSpinCtrlDouble( dmWaterLevel_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -10, 10, 0.000000, 0.5 );
+	dmWaterLevel_CurrentWaterLevel_spinCtrlDouble->SetMaxSize( wxSize( 100,-1 ) );
+	
+	dmWaterLevel_Sizer->Add( dmWaterLevel_CurrentWaterLevel_spinCtrlDouble, 0, wxALL, 5 );
+	
+	dmEmpty2 = new wxStaticText( dmWaterLevel_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	dmEmpty2->Wrap( -1 );
+	dmWaterLevel_Sizer->Add( dmEmpty2, 0, wxALL, 5 );
+	
+	dmEmpty3 = new wxStaticText( dmWaterLevel_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	dmEmpty3->Wrap( -1 );
+	dmWaterLevel_Sizer->Add( dmEmpty3, 0, wxALL, 5 );
+	
 	dmWaterLevel_VerticalReferenceSystemOffset_Label = new wxStaticText( dmWaterLevel_Panel, wxID_ANY, wxT("Vertical reference system offset"), wxDefaultPosition, wxDefaultSize, 0 );
 	dmWaterLevel_VerticalReferenceSystemOffset_Label->Wrap( -1 );
 	dmWaterLevel_Sizer->Add( dmWaterLevel_VerticalReferenceSystemOffset_Label, 0, wxALL, 5 );
@@ -383,15 +417,6 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmWaterLevel_VerticalReferenceSystemOffset_spinCtrlDouble->SetMaxSize( wxSize( 100,-1 ) );
 	
 	dmWaterLevel_Sizer->Add( dmWaterLevel_VerticalReferenceSystemOffset_spinCtrlDouble, 0, wxALL, 5 );
-	
-	dmWaterLevel_CurrentWaterLevel_Label = new wxStaticText( dmWaterLevel_Panel, wxID_ANY, wxT("Current water level"), wxDefaultPosition, wxDefaultSize, 0 );
-	dmWaterLevel_CurrentWaterLevel_Label->Wrap( -1 );
-	dmWaterLevel_Sizer->Add( dmWaterLevel_CurrentWaterLevel_Label, 0, wxALL, 5 );
-	
-	dmWaterLevel_CurrentWaterLevel_spinCtrlDouble = new wxSpinCtrlDouble( dmWaterLevel_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -10, 10, 0, 0.5 );
-	dmWaterLevel_CurrentWaterLevel_spinCtrlDouble->SetMaxSize( wxSize( 100,-1 ) );
-	
-	dmWaterLevel_Sizer->Add( dmWaterLevel_CurrentWaterLevel_spinCtrlDouble, 0, wxALL, 5 );
 	
 	
 	dmWaterLevel_Panel->SetSizer( dmWaterLevel_Sizer );
@@ -468,9 +493,12 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	// Connect Events
 	dmPictureImport_filePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( LIVIDMUI_DLG::OnImageFileChange ), NULL, this );
 	dmPictureImport_GenerateImage_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnGenerateImage ), NULL, this );
+	dmPictureImport_ClearImage_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnClearImage ), NULL, this );
 	dmChartOptions_choicebook->Connect( wxEVT_COMMAND_CHOICEBOOK_PAGE_CHANGED, wxChoicebookEventHandler( LIVIDMUI_DLG::OnChartTypeChange ), NULL, this );
 	dmColourOptions_choisebook->Connect( wxEVT_COMMAND_CHOICEBOOK_PAGE_CHANGED, wxChoicebookEventHandler( LIVIDMUI_DLG::OnColourSchemaChange ), NULL, this );
 	dmColourOptionsUserFile_filePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( LIVIDMUI_DLG::OnUserColourFileChange ), NULL, this );
+	dmWaterLevel_CurrentWaterLevel_spinCtrlDouble->Connect( wxEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, wxSpinDoubleEventHandler( LIVIDMUI_DLG::OnCurrentWaterLevelChange ), NULL, this );
+	dmWaterLevel_VerticalReferenceSystemOffset_spinCtrlDouble->Connect( wxEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, wxSpinDoubleEventHandler( LIVIDMUI_DLG::OnVerticalReferenceSystemOffsetChange ), NULL, this );
 	dm_AboutWxWidgets_Button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnAboutWxWidgets ), NULL, this );
 }
 
@@ -479,9 +507,12 @@ LIVIDMUI_DLG::~LIVIDMUI_DLG()
 	// Disconnect Events
 	dmPictureImport_filePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( LIVIDMUI_DLG::OnImageFileChange ), NULL, this );
 	dmPictureImport_GenerateImage_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnGenerateImage ), NULL, this );
+	dmPictureImport_ClearImage_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnClearImage ), NULL, this );
 	dmChartOptions_choicebook->Disconnect( wxEVT_COMMAND_CHOICEBOOK_PAGE_CHANGED, wxChoicebookEventHandler( LIVIDMUI_DLG::OnChartTypeChange ), NULL, this );
 	dmColourOptions_choisebook->Disconnect( wxEVT_COMMAND_CHOICEBOOK_PAGE_CHANGED, wxChoicebookEventHandler( LIVIDMUI_DLG::OnColourSchemaChange ), NULL, this );
 	dmColourOptionsUserFile_filePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( LIVIDMUI_DLG::OnUserColourFileChange ), NULL, this );
+	dmWaterLevel_CurrentWaterLevel_spinCtrlDouble->Disconnect( wxEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, wxSpinDoubleEventHandler( LIVIDMUI_DLG::OnCurrentWaterLevelChange ), NULL, this );
+	dmWaterLevel_VerticalReferenceSystemOffset_spinCtrlDouble->Disconnect( wxEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, wxSpinDoubleEventHandler( LIVIDMUI_DLG::OnVerticalReferenceSystemOffsetChange ), NULL, this );
 	dm_AboutWxWidgets_Button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnAboutWxWidgets ), NULL, this );
 	
 }

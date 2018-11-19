@@ -28,6 +28,7 @@
  ***************************************************************************
  */
 
+#include "wx/stdpaths.h"
 #include "wx/wxprec.h"
 
 #ifndef  WX_PRECOMP
@@ -36,7 +37,6 @@
 
 #include "LIVI_Depth_model_pi.h"
 #include "LIVI_Depth_model_pi_UI_impl.h"
-#include "LIVI_Depth_model_pi_UI.h"
 
 #include "dmConfigHandler.h"    // For handling config options
 #include "dmColourfileHandler.h" // For handling colour file access operations
@@ -115,7 +115,7 @@ int LIVI_Depth_model_pi::Init(void)
     dialog->SetAboutInfo();
 
     m_pconf = new dmConfigHandler(pFileConf, dialog);
-    colourfileHandler = new dmColourfileHandler(m_pconf, *GetpSharedDataLocation());
+
 
     bool success = m_pconf->LoadConfig(); // config variables related to this plugin.
     this->PushConfigToUI();
@@ -126,6 +126,12 @@ int LIVI_Depth_model_pi::Init(void)
     dmDrawer->setChartDrawType(m_pconf->colour.getChartType());
     dmDrawer->setColourSchema(m_pconf->colour.getColouringType());
     dmDrawer->setColourConfigurationFile(m_pconf->colour.userColourConfPath);
+    if (createDMPluginDataPath())
+    {
+        dmDrawer->setTempFileFolder(pluginDataDir);
+    } // some error state on failure?
+
+    colourfileHandler = new dmColourfileHandler(m_pconf, pluginDataDir.GetPath());
 
     //    This PlugIn needs a toolbar icon, so request its insertion
     if (m_pconf->general.m_bLIVI_Depth_modelShowIcon)
@@ -136,10 +142,12 @@ int LIVI_Depth_model_pi::Init(void)
             LIVI_DEPTH_MODEL_TOOL_POSITION, 0, this);
     }
 
-    // Display size info is used to position the windoww
+    // Display size info is used to position the window
     int display_w, display_h;
     ::wxDisplaySize(&display_w, &display_h);
     m_pconf->general.SaveDispaySize(display_w, display_h);
+
+    dmDrawer->logInfo("Depth model: plugin initialized.");
 
     return (
         WANTS_OVERLAY_CALLBACK | // pluginManager calls this->RenderOverlay(wxDC ...).
@@ -169,14 +177,15 @@ int LIVI_Depth_model_pi::Init(void)
 
 bool LIVI_Depth_model_pi::DeInit(void)
 {
+    dmDrawer->logInfo("Depth model: UNinitializing plugin.");
+    SaveUiToConfig();   // TODO, do we want this here, or only at OnGenerateImage?
+
     bool success = m_pconf->closeNDestroyDialog();
     if (success) { dialog = NULL; }
 
     bool newPluginState = false;
     m_pconf->SetPluginToolState(newPluginState);
     SetToolbarItemState(pluginToolId, newPluginState);
-
-    m_pconf->SaveConfig();
 
     RequestRefresh(m_parent_window); // refresh main window, to hide the dataset pic
 
@@ -186,6 +195,8 @@ bool LIVI_Depth_model_pi::DeInit(void)
     if (m_pconf)  { delete m_pconf;  m_pconf  = NULL; }
     if (dialog)   { delete dialog;   dialog   = NULL; }
     if (m_icon)   { delete m_icon;   m_icon   = NULL; }
+
+    dmDrawer->logInfo("Depth model: plugin UNinitialized.");
     if (dmDrawer) { delete dmDrawer; dmDrawer = NULL; }
 
     return true;
@@ -315,12 +326,16 @@ void LIVI_Depth_model_pi::OnToolbarToolCallback(int id)
         dialog->plugin = this;
 
         m_pconf = new dmConfigHandler(confFile, dialog);
+
+        dmDrawer->logInfo("Depth model: Fallback: UI and config handler initialized.");
     }
     else if(m_pconf->getDialog()==NULL)
     {
         dialog = new Dlg(m_parent_window);
         dialog->plugin = this;
         m_pconf->setDialog(dialog);
+
+        dmDrawer->logInfo("Depth model: Fallback: UI initialized.");
     }
 
     // Toggle : update toggle state, and window show status
@@ -328,11 +343,16 @@ void LIVI_Depth_model_pi::OnToolbarToolCallback(int id)
     if(pluginShown)
     {
         dialog->Move(m_pconf->general.dialogXY);
-        dialog->Fit(); 
+        dialog->Fit();
         dialog->Show();
+        dmDrawer->logInfo("Depth model: UI visible.");
     }
     else
-    {   dialog->Hide();  }
+    {
+        dialog->Hide();
+        dmDrawer->logInfo("Depth model: UI hidden.");
+    }
+
 
     // Toggle is handled by the toolbar but we must keep plugin manager
     // b_toggle updated to ensure correct status upon toolbar rebuild
@@ -375,11 +395,30 @@ bool LIVI_Depth_model_pi::RenderOverlay(wxDC& dc, PlugIn_ViewPort* vp)
     {
         success = dmDrawer->drawDepthChart(dc, *vp);
     }
-    catch (std::string ex)
+    catch (const std::string& const ex)
     {
         setErrorToUI("Problem in drawing the picture.\n"
                      "Look for the details in the OCPN log.");
         success = false;
+        dmDrawer->logError("Depth model: caught string exception on drawDepthChart .");
+    }
+    catch (const std::exception& const ex) {
+        dmDrawer->logError("Depth model: caught exception on drawDepthChart ." + std::string(ex.what()));
+        throw std::string(ex.what());
+    }
+    catch (...)
+    {
+        std::exception_ptr currExc = std::current_exception();
+        try {
+            if (currExc) {
+                dmDrawer->logError("Depth model rethrowing exception pointer on drawDepthChart .");
+                std::rethrow_exception(currExc);
+            }
+        }
+        catch (const std::exception& e) {
+            dmDrawer->logError("Depth model: caught exception pointer on drawDepthChart ." + std::string(e.what()));
+            throw e.what();
+        }
     }
 
     return success;
@@ -471,6 +510,7 @@ wxString LIVI_Depth_model_pi::GetCopyright() {
 
 void LIVI_Depth_model_pi::OnDepthModelDialogClose()
 {
+    dmDrawer->logInfo("Depth model: closing dialog.");
     const bool state = false;
     m_pconf->SetPluginToolState(state);
     SetToolbarItemState(pluginToolId, state);
@@ -478,11 +518,14 @@ void LIVI_Depth_model_pi::OnDepthModelDialogClose()
 
     RequestRefresh(m_parent_window); // refresh main window
 
-    m_pconf->SaveConfig();
+    SaveUiToConfig();   // TODO, do we want this here, or only at OnGenerateImage?
+    dmDrawer->logInfo("Depth model: dialog closed.");
 }
 
 void LIVI_Depth_model_pi::OnImageFileChange(wxFileName fname)
 {
+    dmDrawer->logInfo("Depth model: image file changing to " + std::string(fname.GetFullPath().c_str()));
+
     bool success = dmDrawer->setDataset(fname);
     if(success)
     {
@@ -492,6 +535,7 @@ void LIVI_Depth_model_pi::OnImageFileChange(wxFileName fname)
     else
     {
         setErrorToUI("Could not open the given chart image file.");
+        dmDrawer->logError("Depth model: image file change failed");
     }
 }
 
@@ -499,6 +543,8 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
 {
     // Check existance of the file
     wxString path = fullFileName.GetFullPath();
+    dmDrawer->logInfo("Depth model: Generating image from file " + std::string(path.c_str()));
+
     wxFile file(path, wxFile::read); // also opens the file, if it exists!
     if (!file.Exists(path))
     {
@@ -510,6 +556,8 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
 
     setInfoToUI("Setting chart image type options");
 
+    SaveUiToConfig();
+
     bool success = true;
     try {
         if(dmDrawer->getChartDrawType() == COLOR_RELIEF)
@@ -519,7 +567,10 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
             DM_colourType colouringType = dmDrawer->getColourSchema();
             success = colourfileHandler->SaveConfFileOfUISelection(
                 colouringType); // Save, to get the current options in use
-
+            if (!success)
+            {
+                dmDrawer->logError("Depth model: Generating image. Failed to save colouring file of" + std::string(m_pconf->colour.colouringTypeToString(colouringType)));
+            }
             wxFileName colorFile = colourfileHandler->GetConfFileOfUISelection(colouringType);
             if (!colorFile.IsOk())
             {
@@ -541,17 +592,29 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
         if (!success)
         {
             setErrorToUI("Could not load the file as a chart image.");
+            dmDrawer->logError("Depth model: Generating image. Failed to open the dataset.");
             return;
         }
 
+        dmDrawer->setRenderingOn();
+
         setInfoToUI("Chart image successfully opened.");
+        dmDrawer->logInfo("Depth model: Image generated successfully.");
     }
     catch (std::string exStr)
     {
         setInfoToUI(exStr);
     }
 
+    dmDrawer->forceNewImage();
     RequestRefresh(m_parent_window); // request refresh of the main window -> call to RenderOverlay
+}
+
+void LIVI_Depth_model_pi::OnClearImage()
+{
+    dmDrawer->setRenderingOff();
+    RequestRefresh(m_parent_window); // request refresh of the main window -> call to RenderOverlay
+    dmDrawer->logInfo("Depth model: Refresh request for image clearance sent.");
 }
 
 void LIVI_Depth_model_pi::OnChartTypeChange(int selectionId)
@@ -563,10 +626,13 @@ void LIVI_Depth_model_pi::OnChartTypeChange(int selectionId)
         m_pconf->colour.setChartType(chartType);
         m_pconf->SaveConfig();
         this->setCurrentOptionsTextToUI();
+        dmDrawer->logInfo("Depth model: Image type changed to " + std::string(
+            m_pconf->colour.chartTypeToString(chartType)));
     }
     else
     {
         setErrorToUI("Undefined chart visualization type setting.");
+        dmDrawer->logError("Depth model: Undefined chart visualization type");
     }
 }
 
@@ -579,15 +645,20 @@ void LIVI_Depth_model_pi::OnColourSchemaChange(int selectionId)
         m_pconf->colour.setColouringType(colType);
         m_pconf->SaveConfig();
         this->setCurrentOptionsTextToUI();
+        dmDrawer->logInfo("Depth model: Colouring schema changed to " + std::string(
+            m_pconf->colour.colouringTypeToString(colType)));
     }
     else
     {
         setErrorToUI("Undefined colouring type setting.");
+        dmDrawer->logError("Depth model: Undefined colouring type");
     }
 }
 
 void LIVI_Depth_model_pi::OnUserColourFileChange(wxFileName fullFileName)
 {
+    dmDrawer->logInfo("Depth model: user set colouring file changing to " + std::string(fullFileName.GetFullPath().c_str()));
+
     bool success = dmDrawer->setColourConfigurationFile(fullFileName);
     if (success)
     {
@@ -597,11 +668,37 @@ void LIVI_Depth_model_pi::OnUserColourFileChange(wxFileName fullFileName)
     else
     {
         setErrorToUI("Could not find the given user's colour definition file.");
+        dmDrawer->logError("Depth model: user set colouring file change failed");
     }
 }
 
+void LIVI_Depth_model_pi::OnCurrentWaterLevelChange(double cwl)
+{
+    dmDrawer->logInfo("Depth model: Current water level changing to " + std::to_string(cwl));
+
+    dmDrawer->setCurrentWaterLevel(cwl);
+    m_pconf->waterLevel.setCurrentWaterLevel(cwl);
+    bool success = m_pconf->SaveConfig();
+    if (!success)
+    {
+        setErrorToUI("Setting current water level: Error in saving the congifuration.");
+        dmDrawer->logError("Depth model: current water level:  Error in saving the congifuration");
+    }
+    this->setCurrentOptionsTextToUI();
+}
 
 //// private ////
+
+
+void   LIVI_Depth_model_pi::SaveUiToConfig(void)
+{
+    dmDrawer->logInfo("Depth model: Saving UI to config.");
+    PullConfigFromUI();
+    bool success = m_pconf->SaveConfig();
+    if(!success)
+        dmDrawer->logError("Depth model: Errors in saving stuff to config.");
+    dmDrawer->logInfo("Depth model: Saved UI to config.");
+}
 
 /**
 * Sets the colouring information, as well as the limiting depths,
@@ -631,6 +728,12 @@ void LIVI_Depth_model_pi::PushConfigToUI(void)
 */
 void LIVI_Depth_model_pi::PullConfigFromUI(void)
 {
+    if (!dialog)
+    {
+        dmDrawer->logError("Depth model: cannot PullConfigFromUI: no dialog.");
+        return;
+    }
+
     m_pconf->fileImport.filePath = dialog->GetDepthChartFileName();
     m_pconf->colour.userColourConfPath = dialog->GetUserColourConfigurationFileName();
 
@@ -649,11 +752,31 @@ void LIVI_Depth_model_pi::PullConfigFromUI(void)
 
 void LIVI_Depth_model_pi::setCurrentOptionsTextToUI()
 {
+    double wl = m_pconf->waterLevel.getCurrentWaterLevel();
+
     std::string str =
         "Current drawing options:\n" +
         m_pconf->colour.chartTypeToString(m_pconf->colour.getChartType()) + "\n" +
-        m_pconf->colour.colouringTypeToString(m_pconf->colour.getColouringType());
+        m_pconf->colour.colouringTypeToString(m_pconf->colour.getColouringType()) + "\n" +
+        "Water level:" + (wl > 0 ? "+"+ std::to_string(wl) : std::to_string(wl));
     dialog->SetCurrentOptionsText(str);
+}
+
+bool LIVI_Depth_model_pi::createDMPluginDataPath()
+{
+    pluginDataDir.SetPath(wxStandardPaths::Get().GetUserDataDir());
+    pluginDataDir.AppendDir("plugins");
+    pluginDataDir.AppendDir("LIVI_Depth_model_pi");
+    pluginDataDir.AppendDir("data");
+
+    if (!pluginDataDir.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL))
+    {
+        setErrorToUI("FATAL! Could not create a directory for the dm plugin temporary files!");
+        dmDrawer->logFatalError("Could not create a directory for the dm plugin temporary files.");
+        return false;
+    }
+
+    return true;
 }
 
 void LIVI_Depth_model_pi::setInfoToUI(std::string str)

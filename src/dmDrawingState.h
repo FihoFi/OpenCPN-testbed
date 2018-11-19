@@ -22,8 +22,6 @@ public:
         CHART_TYPE_CHANGED,
         COLOURING_UNDEFINED,
         COLOURING_CHANGED,
-        CHART_EXTENTS_UNDEFINED,
-        CHART_EXTENTS_CHANGED,
         CHART_UP_TO_DATE,
 
         MAX_CHARTSTATE     // Not-to-be-used-in-code guardian value of the end of the enum range
@@ -34,20 +32,18 @@ public:
     // Current variables are to be set at the time of drawing
     void                SetCurrentAsWanted();
 
-    dmExtent            GetCurrentDrawingAreaLL() { return currentDrawingAreaLL; }
-
     // Wanted variables are to be set when the UI informs about changes
     bool                SetWantedChartFileName  (wxFileName fname);
     bool                SetWantedChartType      (DM_visualization imageType);
     bool                SetWantedColourSchema   (DM_colourType colourSchema);
     bool                SetWantedUserColourFileName(wxFileName fname);
-    void                SetWantedDrawingAreaLL  (dmExtent extentLL);
+    void                SetWantedCurrentWaterLevel              (double cwl);
 
     wxFileName          GetWantedChartFileName()        {   return wantedChartFileName;         }
     DM_visualization    GetWantedChartType()            {   return wantedChartType;             }
     DM_colourType       GetWantedColourSchema()         {   return wantedColourSchema;          }
     wxFileName          GetWantedUserColourFileName()   {   return wantedUserColourFileName;    }
-    dmExtent            GetWantedDrawingAreaLL()        {   return wantedDrawingAreaLL;         }
+    double              GetWantedCurrentWaterLevel()    {   return wantedCurrentWaterLevel;     }
 
     wantedChartState    wantedChanges();
 
@@ -59,14 +55,14 @@ private:
     DM_visualization    currentChartType;
     DM_colourType       currentColourSchema;
     wxFileName          currentUserColourFileName;
-    dmExtent            currentDrawingAreaLL;
+    double              currentCurrentWaterLevel;
 
     // Wanted variables are to be set when the UI informs about changes
     wxFileName          wantedChartFileName;
     DM_visualization    wantedChartType;
     DM_colourType       wantedColourSchema;
     wxFileName          wantedUserColourFileName;
-    dmExtent            wantedDrawingAreaLL;
+    double              wantedCurrentWaterLevel;
 
     wantedChartState    stateOfWantedImage;
 };

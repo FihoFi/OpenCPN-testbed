@@ -30,12 +30,20 @@ public:
     DM_colourType    getColourSchema();
     bool             setColourSchema(DM_colourType colourSchema);
     bool             setColourConfigurationFile(const wxFileName &fileNamePath);
+    void             setCurrentWaterLevel(double cvl);
+    void             setTempFileFolder(wxFileName &fileName);
     bool             setDataset(const wxFileName &fileName);
     bool             openDataset(const wxFileName &fileName);
     dmExtent         applyViewPortArea(/*const*/ PlugIn_ViewPort &vp);
+
+    void             setRenderingOn();
+    void             setRenderingOff();
+    void             forceNewImage();
     bool             drawDepthChart(/*const*/ wxDC &dc, /*const*/ PlugIn_ViewPort &vp);
 
 private:
+    bool            renderingDmChart;
+    bool            mustGetNewBmp;
     dmDrawingState  drawingState;
 
     dmDataset       dataset;
@@ -55,10 +63,6 @@ private:
 
     void WMtoLL(const dmExtent& WMin, dmExtent& LLout);
     void LLtoWM(const dmExtent& LLin, dmExtent& WMout);
-
-    bool gimmeLatLons(crdSystem crdSys, /*transformation tr,*/
-        double x1, double y1, double x2, double y2,
-        coord& Out1, coord& Out2);
 
     void readAFile();
 };

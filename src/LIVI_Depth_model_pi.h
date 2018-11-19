@@ -28,6 +28,7 @@
 #ifndef _LIVI_DEPTH_MODEL_PI_H_
 #define _LIVI_DEPTH_MODEL_PI_H_
 
+#include "wx/filename.h"
 #include "wx/wxprec.h"
 
 #ifndef  WX_PRECOMP
@@ -35,12 +36,10 @@
   #include <wx/glcanvas.h>
 #endif //precompiled headers
 
-//#include <wx/fileconf.h>    // wxFileName
 
 #include "dm_API.h" // DM_colourType
 
 #include "ocpn_plugin.h" //Required for OCPN plugin functions
-#include "LIVI_Depth_model_pi_UI_impl.h"
 
 #include "version.h"
 
@@ -117,11 +116,14 @@ public:
     // reactions to UI changes
     void OnImageFileChange(wxFileName fname);
     void OnGenerateImage(wxFileName fullFileName);
+    void OnClearImage();
 
     void OnChartTypeChange      (int selectionId);
     void OnColourSchemaChange   (int selectionId);
 
     void OnUserColourFileChange(wxFileName fullFileName);
+
+    void OnCurrentWaterLevelChange(double cwl);
 
 private:
 
@@ -140,14 +142,18 @@ private:
 
     dmDepthModelDrawer  *dmDrawer;
   //wxFileName          pluginConfigPath;
+    wxFileName          pluginDataDir;
 
     bool                LoadConfig(void);
-  //bool                SaveConfig(void);
+    void                SaveUiToConfig(void);
     void                PushConfigToUI(void);
     void                PullConfigFromUI(void);
     void                setCurrentOptionsTextToUI();
+
+    bool                createDMPluginDataPath();
     void                setInfoToUI(std::string str);
     void                setErrorToUI(std::string str);
+
     DM_visualization    to_dmVisualizationType(int chartTypeId);
     DM_colourType       to_dmColourType(int colouringChoiceId);
 

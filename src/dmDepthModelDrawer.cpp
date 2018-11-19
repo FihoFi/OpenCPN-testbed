@@ -20,6 +20,7 @@
 dmDepthModelDrawer::dmDepthModelDrawer()
     : drawingState()
     , dataset(this)
+    , renderingDmChart(false)
 {
     bmp = NULL;
 }
@@ -76,6 +77,16 @@ bool dmDepthModelDrawer::setColourConfigurationFile(const wxFileName &fileNamePa
     return success;
 }
 
+void dmDepthModelDrawer::setCurrentWaterLevel(double cvl)
+{
+    drawingState.SetWantedCurrentWaterLevel(cvl);
+}
+
+void dmDepthModelDrawer::setTempFileFolder(wxFileName &fileName)
+{
+    dataset.setTempFolderPath(fileName.GetPath().ToStdString());
+}
+
 /**
 * Asks dmDataset to open the dataset in the file <i>fileName</i>, and queries
 * the (World Mercator) extents of the dataset.
@@ -124,21 +135,37 @@ dmExtent dmDepthModelDrawer::applyViewPortArea(PlugIn_ViewPort &vp)
     coord botRightLL(vp.lat_min, vp.lon_max);
     dmExtent vpLL(topLeftLL, botRightLL);
 
-    dmExtent wantedDrawingArea = calculateIdealCroppingLL(vpLL);
-    drawingState.SetWantedDrawingAreaLL(wantedDrawingArea);
-
     return vpLL;
+}
+
+void dmDepthModelDrawer::setRenderingOn()
+{
+    renderingDmChart = true;
+}
+
+void dmDepthModelDrawer::setRenderingOff()
+{
+    renderingDmChart = false;
+}
+
+void dmDepthModelDrawer::forceNewImage()
+{
+    mustGetNewBmp = true;
 }
 
 bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
 {
+    if (!renderingDmChart)
+        return true;
+
     dmExtent vpExtentLL = applyViewPortArea(vp);
     bool success;
     dmRasterImgData* raster;
     int             w, h;
     raster = NULL;
 
-    if (bmp == NULL || needNewCropping(vpExtentLL))
+
+    if (bmp == NULL || needNewCropping(vpExtentLL) || mustGetNewBmp)
     {
         dmExtent idealCroppingLL = calculateIdealCroppingLL(vpExtentLL);
         success = cropImage(idealCroppingLL, &raster, croppedImageLL, w,h);
@@ -148,6 +175,10 @@ bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
                 drawingState.GetWantedChartFileName().GetName().ToStdString());
             return false;
         }
+        if (w < 1 || h < 1)
+        {
+            return true;    // the picture of Nothing drawn.
+        }
 
         if (bmp == NULL) { bmp = new wxBitmap(); }
         success = reCalculateBitmap(vp, raster, croppedImageLL,
@@ -156,16 +187,28 @@ bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
         {
             wxLogMessage(_T("dmDepthModelDrawer::drawDepthChart - Bitmap reCalculation failed: ") +
                 drawingState.GetWantedChartFileName().GetName().ToStdString());
-            bmp = NULL;
+            if (bmp)
+            {
+                delete bmp;
+                bmp = NULL;
+            }
+            
             return false;
+        }
+        else
+        {
+            mustGetNewBmp = false;  // new bmp retrieved; clear the flag
         }
     }
     else
     {
         bmpTopLeftLL = reCalculateTopLeftLocation(vp, croppedImageLL);
     }
-    //wxString  fname = "C:\\OPENCPN_DATA\\UkiImg_wm.png";
-    dc.DrawBitmap(*bmp, bmpTopLeftLL, true);
+
+    if (bmp)
+    {
+        dc.DrawBitmap(*bmp, bmpTopLeftLL, true);
+    }
 
     return true;
 }
@@ -181,9 +224,11 @@ bool dmDepthModelDrawer::reCalculateBitmap(/*const*/PlugIn_ViewPort &vp,
     const dmRasterImgData* raster, dmExtent croppedImageLL,
     wxBitmap& bmp, int& wBmp, int& hBmp, wxPoint& bmpTopLeftLL)
 {
-    if (wBmp < 1 && hBmp < 1)
+    if (wBmp < 1 || hBmp < 1)
+    {
         bmp = wxBitmap();
-
+        return true;    // here is nothing to calculate
+    }
     // Get min, and max coordinates where the bitmap is to be drawn
     wxPoint r1, r2;
     GetCanvasPixLL(&vp, &r1, croppedImageLL.topLeft.north,  croppedImageLL.topLeft.east);   // up-left
@@ -211,7 +256,7 @@ bool dmDepthModelDrawer::reCalculateBitmap(/*const*/PlugIn_ViewPort &vp,
 
         if (!(scaled).IsOk())
         {
-            wxLogMessage(_T("dmDepthModelDrawer::calculateDepthModelBitmap - Scale failed: ") +
+            wxLogMessage(_T("dmDepthModelDrawer::reCalculateBitmap - Scale failed: ") +
                 drawingState.GetWantedChartFileName().GetName().ToStdString());
             return false;
         }
@@ -246,7 +291,7 @@ bool dmDepthModelDrawer::needNewCropping(dmExtent viewPortLL)
         throw (std::string("dmDepthModelDrawer::needNewCropping does not know the canvas extent"));
     }
 
-    dmExtent lastDrawnLL = drawingState.GetCurrentDrawingAreaLL();
+    dmExtent lastDrawnLL = croppedImageLL;
     bool stillFits = viewPortLL.isWithin(lastDrawnLL);
 
     bool lastDrawnIsTooWide = false;
@@ -302,15 +347,7 @@ bool dmDepthModelDrawer::cropImage(dmExtent wantedCropExtentLL,
                 drawingState.GetWantedChartFileName().GetName().ToStdString());
             return false;
         }
-        drawingState.SetWantedDrawingAreaLL(wantedCropExtentLL);
 
-        success = dataset.getDatasetExtents(croppedImageWM.topLeft, croppedImageWM.botRight);
-        if (!success)
-        {
-            wxLogMessage(_T("dmDepthModelDrawer::cropImage - Retrieving the image extents failed: ") +
-                drawingState.GetWantedChartFileName().GetName().ToStdString());
-            return false;
-        }
         WMtoLL(croppedImageWM, croppedImageLL);
 
     }
@@ -350,68 +387,6 @@ void dmDepthModelDrawer::WMtoLL(const dmExtent& WMin, dmExtent& LLout)
 void dmDepthModelDrawer::LLtoWM(const dmExtent& LLin, dmExtent& WMout)
 {
     dataset.latLonToDstSrs(LLin, WMout);
-}
-
-/** 
-* Transforms the given two World Mercator coordinate pairs x1...y2 to 
-* two WGS84 latlon coordinate pairs with PROJ(4)
-* <!--openCPN transformstion functions from_XX_Plugin,-->
-* according to given tr.
-*/
-bool dmDepthModelDrawer::gimmeLatLons(crdSystem crdSys, /*transformation tr,*/
-    double x1, double y1, double x2, double y2,
-    coord& Out1, coord& Out2)
-{
-    //if (tr < 0 || tr > 3)
-    //    return false; // invalid transformation
-    //
-    //double x1_o = x1 - offsets[tr][0]; // lon
-    //double y1_o = y1 - offsets[tr][1]; // lat
-    //double x2_o = x2 - offsets[tr][0]; // 
-    //double y2_o = y2 - offsets[tr][1]; //
-
-    //if (tr == PROJ) {
-        static char *EPSG32635_UTMzone35N = "+proj=utm +zone=35 +datum=WGS84 +units=m +no_defs";
-        static char *EPSG3395_WorldMercator = "+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs";
-
-        projPJ source;
-        if(crdSys==UTM35N)
-            source = pj_init_plus(EPSG32635_UTMzone35N);
-        else //if (World Mercator)
-            source = pj_init_plus(EPSG3395_WorldMercator);
-
-        char *EPSG4326_WGS84 = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs";
-        projPJ target = pj_init_plus(EPSG4326_WGS84);
-
-        if (source == NULL || target == NULL)
-            return false;   // invalid transformation description
-        else
-        {
-            double  x[2] = { x1, x2 },
-                    y[2] = { y1, y2 };
-            bool success = pj_transform(source, target, 2, 1, x, y, NULL);
-            Out1.east  = x[0] * RAD_TO_DEG;
-            Out1.north = y[0] * RAD_TO_DEG;
-            Out2.east  = x[1] * RAD_TO_DEG;
-            Out2.north = y[1] * RAD_TO_DEG;
-
-            return true;
-            //cout << success << endl << x << endl << y << endl;
-        }
-    //}
-    //else if (tr == TM) {
-    //    fromTM_Plugin(x1_o, y1_o, offsets[tr][2], offsets[tr][3], &lat1Out, &lon1Out);
-    //    fromTM_Plugin(x2_o, y2_o, offsets[tr][2], offsets[tr][3], &lat2Out, &lon2Out);
-    //}
-    //else if (tr == SM) {
-    //    fromSM_Plugin(x1_o, y1_o, offsets[tr][2], offsets[tr][3], &lat1Out, &lon1Out);
-    //    fromSM_Plugin(x2_o, y2_o, offsets[tr][2], offsets[tr][3], &lat2Out, &lon2Out);
-    //}
-    //else if (tr == SM_ECC) {
-    //    fromSM_ECC_Plugin(x1_o, y1_o, offsets[tr][2], offsets[tr][3], &lat1Out, &lon1Out);
-    //    fromSM_ECC_Plugin(x2_o, y2_o, offsets[tr][2], offsets[tr][3], &lat2Out, &lon2Out);
-    //}
-
 }
 
 void dmDepthModelDrawer::readAFile()

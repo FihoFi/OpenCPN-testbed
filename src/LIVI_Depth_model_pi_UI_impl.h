@@ -33,7 +33,6 @@
 #endif
 
 #include "LIVI_Depth_model_pi_UI.h"
-#include "LIVI_Depth_model_pi.h"
 //#include "NavFunc.h"  // from original DR_pi plugin
 #include "tinyxml.h"
 
@@ -68,6 +67,7 @@ public:
 
     int         GetSelectedChartOption();
     int         GetSelectedColourOption();
+
     void        SetUserColourConfigurationFileName(wxFileName &fileName);
     wxFileName  GetUserColourConfigurationFileName();
 
@@ -80,6 +80,11 @@ public:
     wxColour    GetTwoColours(int num);
     void        SetDividingLevel(int level);
     double      GetDividingLevel();
+
+    void        SetCurrentWaterLevel(int level);
+    double      GetCurrentWaterLevel();
+    void        SetVerticalReferenceSystemOffsetLevel(int level);
+    double      GetVerticalReferenceSystemOffsetLevel();
 
     void        SetDepthChartFileName(wxFileName &fileName);
     wxFileName  GetDepthChartFileName();
@@ -99,13 +104,16 @@ private:
     virtual void OnFileImportFileChange  ( wxFileDirPickerEvent& WXUNUSED(event) );
     virtual void OnImageFileChange       ( wxFileDirPickerEvent& WXUNUSED(event) );
     virtual void OnGenerateImage               ( wxCommandEvent& WXUNUSED(event) );
+    virtual void OnClearImage                  ( wxCommandEvent& WXUNUSED(event) );
     virtual void OnChartTypeChange          ( wxChoicebookEvent& WXUNUSED(event) );
     virtual void OnColourSchemaChange       ( wxChoicebookEvent& WXUNUSED(event) );
     virtual void OnUserColourFileChange  ( wxFileDirPickerEvent& WXUNUSED(event) );
+    virtual void OnCurrentWaterLevelChange  ( wxSpinDoubleEvent& WXUNUSED(event) );
+    virtual void OnVerticalReferenceSystemOffsetChange( wxSpinDoubleEvent& WXUNUSED(event) );
 
  //     double lat1, lon1, lat2, lon2;
  //     bool error_found;
- //		wxString     m_gpx_path;		
+ //     wxString     m_gpx_path;
 };
 
 
