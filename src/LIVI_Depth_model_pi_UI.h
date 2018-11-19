@@ -145,6 +145,7 @@ class LIVIDMUI_DLG : public wxDialog
 		virtual void OnChartTypeChange( wxChoicebookEvent& event ) { event.Skip(); }
 		virtual void OnColourSchemaChange( wxChoicebookEvent& event ) { event.Skip(); }
 		virtual void OnUserColourFileChange( wxFileDirPickerEvent& event ) { event.Skip(); }
+		virtual void OnCurrentWaterLevelChange( wxSpinDoubleEvent& event ) { event.Skip(); }
 		virtual void OnAboutWxWidgets( wxCommandEvent& event ) { event.Skip(); }
 		
 	
