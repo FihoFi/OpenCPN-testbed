@@ -31,6 +31,7 @@ public:
     bool             setColourSchema(DM_colourType colourSchema);
     bool             setColourConfigurationFile(const wxFileName &fileNamePath);
     void             setCurrentWaterLevel(double cvl);
+    void             setVerticalReferenceSystemOffset(double vrso);
     void             setTempFileFolder(wxFileName &fileName);
     bool             setDataset(const wxFileName &fileName);
     bool             openDataset(const wxFileName &fileName);

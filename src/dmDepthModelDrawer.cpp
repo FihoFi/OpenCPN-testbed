@@ -82,6 +82,11 @@ void dmDepthModelDrawer::setCurrentWaterLevel(double cvl)
     drawingState.SetWantedCurrentWaterLevel(cvl);
 }
 
+void dmDepthModelDrawer::setVerticalReferenceSystemOffset(double vrso)
+{
+    drawingState.SetWantedVerticalReferenceSystemOffset(vrso);
+}
+
 void dmDepthModelDrawer::setTempFileFolder(wxFileName &fileName)
 {
     dataset.setTempFolderPath(fileName.GetPath().ToStdString());
