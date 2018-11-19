@@ -77,6 +77,11 @@ bool dmDepthModelDrawer::setColourConfigurationFile(const wxFileName &fileNamePa
     return success;
 }
 
+void dmDepthModelDrawer::setCurrentWaterLevel(double cvl)
+{
+    drawingState.SetWantedCurrentWaterLevel(cvl);
+}
+
 void dmDepthModelDrawer::setTempFileFolder(wxFileName &fileName)
 {
     dataset.setTempFolderPath(fileName.GetPath().ToStdString());

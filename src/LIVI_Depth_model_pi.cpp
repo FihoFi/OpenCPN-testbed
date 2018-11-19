@@ -676,6 +676,7 @@ void LIVI_Depth_model_pi::OnCurrentWaterLevelChange(double cwl)
 {
     dmDrawer->logInfo("Depth model: Current water level changing to " + std::to_string(cwl));
 
+    dmDrawer->setCurrentWaterLevel(cwl);
     m_pconf->waterLevel.setCurrentWaterLevel(cwl);
     bool success = m_pconf->SaveConfig();
     if (!success)
