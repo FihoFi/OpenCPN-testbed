@@ -790,8 +790,9 @@ void LIVI_Depth_model_pi::setCurrentlyDrawnOptionsTextToUI()
 {
     DM_visualization chartType;
     DM_colourType    colourSchema;
-    double wl, vrso;
+    double           wl, vrso;
     dmDrawer->getCurrents(chartType, colourSchema, wl, vrso);
+
     std::string str("Currenly drawn:\n  ");
 
     if (!dmDrawer->isRendering())
@@ -802,15 +803,16 @@ void LIVI_Depth_model_pi::setCurrentlyDrawnOptionsTextToUI()
     {
         str = str + getDrawingOptionsString(chartType, colourSchema, wl, vrso);
     }
+
     dialog->SetCurrentlyDrawnText(str);
 }
 
 void LIVI_Depth_model_pi::setImageToGenerateOptionsTextToUI()
 {
-    DM_visualization chartType= m_pconf->colour.getChartType();
+    DM_visualization chartType    = m_pconf->colour.getChartType();
     DM_colourType    colourSchema = m_pconf->colour.getColouringType();
-    double wl = m_pconf->waterLevel.getCurrentWaterLevel();
-    double vrso = m_pconf->waterLevel.getVerticalReferenceSystemOffset();
+    double           wl           = m_pconf->waterLevel.getCurrentWaterLevel();
+    double           vrso         = m_pconf->waterLevel.getVerticalReferenceSystemOffset();
 
     std::string str = "Drawing options for image to generate:\n  " +
                         getDrawingOptionsString(chartType, colourSchema, wl, vrso);

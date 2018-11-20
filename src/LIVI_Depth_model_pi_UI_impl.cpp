@@ -303,7 +303,7 @@ double Dlg::GetVerticalReferenceSystemOffsetLevel()
     return this->dmWaterLevel_VerticalReferenceSystemOffset_spinCtrlDouble->GetValue();
 }
 
-wxFileName    Dlg::GetDepthChartFileName()
+wxFileName Dlg::GetDepthChartFileName()
 {    return this->dmPictureImport_filePicker->GetFileName();    }
 
 void    Dlg::SetDepthChartFileName(wxFileName &fileName)
