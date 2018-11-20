@@ -729,6 +729,9 @@ void   LIVI_Depth_model_pi::SaveUiToConfig(void)
 void LIVI_Depth_model_pi::PushConfigToUI(void)
 {
     dialog->SetDepthChartFileName(m_pconf->fileImport.filePath);
+
+    dialog->SetSelectedChartOption(m_pconf->colour.chartType);
+    dialog->SetSelectedColourOption(m_pconf->colour.colouringType);
     dialog->SetUserColourConfigurationFileName(m_pconf->colour.userColourConfPath);
 
     for (int i = 0; i < DM_NUM_CUSTOM_COL; i++) {
@@ -761,6 +764,9 @@ void LIVI_Depth_model_pi::PullConfigFromUI(void)
     }
 
     m_pconf->fileImport.filePath = dialog->GetDepthChartFileName();
+
+    m_pconf->colour.chartType          = dialog->GetSelectedChartOption();
+    m_pconf->colour.colouringType      = dialog->GetSelectedColourOption();
     m_pconf->colour.userColourConfPath = dialog->GetUserColourConfigurationFileName();
 
     for (int i = 0; i < DM_NUM_CUSTOM_COL; i++) {
