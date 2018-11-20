@@ -863,28 +863,6 @@ void LIVI_Depth_model_pi::setErrorToUI(std::string str)
     dialog->SetPictureImportErrorText(str);
 }
 
-DM_visualization LIVI_Depth_model_pi::to_dmVisualizationType(int chartTypeId)
-{
-    switch (chartTypeId)
-    {
-    case DM_viz_HILLSHADE:      { return HILLSHADE;                 break; }
-    case DM_viz_NONE:           { return NONE;                      break; }
-    case DM_viz_COLOR_RELIEF:   { return COLOR_RELIEF;              break; }
-    default:                    { return VISUALIZATION_UNDEFINED;   break; }
-    }
-}
-
-DM_colourType LIVI_Depth_model_pi::to_dmColourType(int colouringChoiceId)
-{
-    switch (colouringChoiceId)
-    {
-    case DM_viz_USER_FILE:          { return COLOUR_USER_FILE;   break; }
-    case DM_viz_FIVE_DEPTH_RANGES:  { return COLOUR_FIVE_RANGES; break; }
-    case DM_viz_SLIDING_COLOUR:     { return COLOUR_SLIDING;     break; }
-    case DM_viz_TWO_DEPTH_RANGES:   { return COLOUR_TWO_RANGES;  break; }
-    default:                        { return COLOUR_UNDEFINED;   break; }
-    }
-}
 /*
 wxString &LIVI_Depth_model_pi::GetConfigFileName()
 {

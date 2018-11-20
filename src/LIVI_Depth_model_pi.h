@@ -156,9 +156,6 @@ private:
     void                setInfoToUI(std::string str);
     void                setErrorToUI(std::string str);
 
-    DM_visualization    to_dmVisualizationType(int chartTypeId);
-    DM_colourType       to_dmColourType(int colouringChoiceId);
-
     bool                m_ShowHelp,m_bCaptureCursor,m_bCaptureShip;
   //double              m_cursor_lon, m_cursor_lat;
 
