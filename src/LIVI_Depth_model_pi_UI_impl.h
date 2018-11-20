@@ -67,7 +67,9 @@ public:
 
     virtual void SetAboutInfo();
 
+    void             SetSelectedChartOption(DM_visualization choiceId);
     DM_visualization GetSelectedChartOption();
+    void             SetSelectedColourOption(DM_colourType choiceId);
     DM_colourType    GetSelectedColourOption();
 
     void        SetUserColourConfigurationFileName(wxFileName &fileName);

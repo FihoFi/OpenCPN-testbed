@@ -125,6 +125,22 @@ void Dlg::OnAboutWxWidgets(wxCommandEvent& WXUNUSED(event))
     wxInfoMessageBox(this);
 }
 
+void Dlg::SetSelectedChartOption(DM_visualization choiceId)
+{
+    int pageId = 0;  // color relief
+
+    switch (choiceId)
+    {
+    case COLOR_RELIEF:          pageId = 0; break;
+    case HILLSHADE:             pageId = 1; break;
+    case NONE:                  pageId = 2; break;
+
+    default:                    pageId = 0; break;  // color relief
+    }
+
+    this->dmChartOptions_choicebook->ChangeSelection(pageId);
+}
+
 DM_visualization Dlg::GetSelectedChartOption()
 {
     wxChoice* choice = this->dmChartOptions_choicebook->GetChoiceCtrl();
@@ -136,6 +152,23 @@ DM_visualization Dlg::GetSelectedChartOption()
     else if (chString.Contains("epth"))     { return COLOR_RELIEF;  }   // Depth model / color relief
     else if (chString.Contains("elief"))    { return COLOR_RELIEF;  }   // Depth model / color relief
     else                          { return VISUALIZATION_UNDEFINED; }   // No such option
+}
+
+void Dlg::SetSelectedColourOption(DM_colourType choiceId)
+{
+    int pageId = 1;  // Five ranges
+
+    switch (choiceId)
+    {
+    case COLOUR_USER_FILE:          pageId = 0; break;
+    case COLOUR_FIVE_RANGES:        pageId = 1; break;
+    case COLOUR_SLIDING:            pageId = 2; break;
+    case COLOUR_TWO_RANGES:         pageId = 3; break;
+
+    default:                        pageId = 1; break;  // Five ranges
+    }
+
+    this->dmColourOptions_choisebook->ChangeSelection(pageId);
 }
 
 DM_colourType Dlg::GetSelectedColourOption()
