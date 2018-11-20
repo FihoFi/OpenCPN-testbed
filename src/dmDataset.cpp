@@ -192,10 +192,26 @@ dmRasterImgData * dmDataset::getRasterData(
     return _imgData;
 }
 
+float dmDataset::getDepthAt(coord point)
+{
+    float depth;
+    std::pair<int, int> offsets = getRasterPixelOffsetAt(point);
+    
+    int x = offsets.first;
+    int y = offsets.second;
+
+    GDALDataset::Bands bands = _reprojectedDataset->GetBands();
+
+    if (bands.size() == 0)
+        return 0.;
+
+    bands[0]->RasterIO(GF_Read, x, y, 1, 1, &depth, 1, 1, GDT_Float32, 0, 0);
+
+    return depth;
+}
+
 bool dmDataset::openDataSet(const char * filename)
 {
-    GDALDataset *reprojectedDs;
-
     if (_srcDataset)
     {
         GDALClose(_srcDataset);
@@ -210,35 +226,34 @@ bool dmDataset::openDataSet(const char * filename)
 
     _srcDataset = (GDALDataset *)GDALOpen(filename, GA_ReadOnly);
 
-    if (_srcDataset)
-    {
-        _srcWkt = _srcDataset->GetProjectionRef();
+    if (!_srcDataset)
+        return false;
 
-        reprojectedDs = reprojectDataset(_srcDataset);
+    _srcWkt = _srcDataset->GetProjectionRef();
 
-        if (!reprojectedDs)
-            return false;
+    _reprojectedDataset = reprojectDataset(_srcDataset);
 
-        _dstDataset = visualizeDataset(reprojectedDs);
+    if (!_reprojectedDataset)
+        return false;
 
-        if (_visScheme != NONE && reprojectedDs)
-            GDALClose(reprojectedDs);
+    _dstDataset = visualizeDataset(_reprojectedDataset);
 
-        if (!_dstDataset)
-            return false;
+    if (!_dstDataset)
+        return false;
 
-        if (!allocateImgDataMemory())
-            return false;
+    if (!allocateImgDataMemory())
+        return false;
 
-        if (_dstDataset->GetGeoTransform(_geoTransform) != CE_None)
-            return false;
+    if (_dstDataset->GetGeoTransform(_geoTransform) != CE_None)
+        return false;
 
-        _dstWkt = _dstDataset->GetProjectionRef();
+    _dstWkt = _dstDataset->GetProjectionRef();
 
-        return true;
-    }
+    dmExtent extent = getRasterExtent();
 
-    return false;
+    float depth = getDepthAt(coord(8542708.82, 2311734.76));
+
+    return true;
 }
 
 

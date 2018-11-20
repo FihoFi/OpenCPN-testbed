@@ -30,6 +30,16 @@ public:
         const coord topLeftIn, const coord botRightIn,
         coord &topLeftOut, coord &botRightOut,
         int &imgWidth, int &imgHeight) override;
+
+    /** Gets the depth value in the reprojected dataset
+     * at the given location.
+     * 
+     * @param[in] point location coordinates in WM
+     *
+     * @return depth value at the given location
+     */
+    float getDepthAt(coord point);
+
     bool openDataSet(const char* filename) override;
     bool dstSrsToLatLon(coord dstSrsIn, coord &latLonOut) override;
     bool dstSrsToLatLon(dmExtent dstSrsIn, dmExtent &latLonOut) override;
@@ -62,6 +72,7 @@ private:
     std::string _colorConfFilename;
     std::string _tempFolderPath;
     GDALDataset * _srcDataset;
+    GDALDataset * _reprojectedDataset;
     GDALDataset * _dstDataset;
     double _geoTransform[6];
     dmRasterImgData * _imgData;
