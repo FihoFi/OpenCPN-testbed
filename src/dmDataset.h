@@ -30,6 +30,16 @@ public:
         const coord topLeftIn, const coord botRightIn,
         coord &topLeftOut, coord &botRightOut,
         int &imgWidth, int &imgHeight) override;
+
+    /** Gets the depth value in the reprojected dataset
+     * at the given location.
+     * 
+     * @param[in] point location coordinates in WM
+     *
+     * @return depth value at the given location
+     */
+    float getDepthAt(coord point);
+
     bool openDataSet(const char* filename) override;
     bool dstSrsToLatLon(coord dstSrsIn, coord &latLonOut) override;
     bool dstSrsToLatLon(dmExtent dstSrsIn, dmExtent &latLonOut) override;
@@ -62,17 +72,20 @@ private:
     std::string _colorConfFilename;
     std::string _tempFolderPath;
     GDALDataset * _srcDataset;
+    GDALDataset * _reprojectedDataset;
     GDALDataset * _dstDataset;
+    double _geoTransform[6];
     dmRasterImgData * _imgData;
 
     DM_visualization _visScheme;
 
     bool allocateImgDataMemory();
-    bool applyHillshadeAlphaMask(GDALDataset * ds);
     bool getCropExtents(coord topLeftIn, coord botRightIn,
         coord &topLeftOut, coord &botRightOut,
         int &pixOffsetX, int &pixOffsetY,
         int &imgWidth, int &imgHeight);
+    std::pair<int, int> dmDataset::getRasterPixelOffsetAt(coord point, bool roundDownPixelOffset = true);
+    dmExtent getRasterExtent(void);
     std::vector<std::string> getGdaldemOptionsVec();
     GDALDataset * reprojectDataset(GDALDataset *dsToReproject);
     GDALDataset * visualizeDataset(GDALDataset *dsToVisualize);
