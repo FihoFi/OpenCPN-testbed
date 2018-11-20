@@ -376,7 +376,6 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmChartOptions_Sizer->Fit( dmChartOptions_Panel );
 	dmTabChooser->AddPage( dmChartOptions_Panel, wxT("Chart drawing options"), true );
 	dmWaterLevel_Panel = new wxPanel( dmTabChooser, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	dmWaterLevel_Panel->Enable( false );
 	dmWaterLevel_Panel->Hide();
 	
 	wxFlexGridSizer* dmWaterLevel_Sizer;
