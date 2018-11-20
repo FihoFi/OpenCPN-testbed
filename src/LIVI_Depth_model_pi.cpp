@@ -800,20 +800,7 @@ void LIVI_Depth_model_pi::setCurrentlyDrawnOptionsTextToUI()
     }
     else
     {
-        str = str +
-            m_pconf->colour.chartTypeToString(chartType) + "\n  " +
-            m_pconf->colour.colouringTypeToString(colourSchema) + "\n  ";
-
-        if (chartType == COLOR_RELIEF &&
-            (colourSchema == COLOUR_FIVE_RANGES || colourSchema == COLOUR_TWO_RANGES))
-            str = str +
-            "Water level:   " + (wl > 0 ? "+" : "") + std::to_string(wl) + "\n  " +
-            "System offset: " + (vrso>0 ? "+" : "") + std::to_string(vrso);
-        else
-            str = str +
-            "Water level:   N/A\n  " +
-            "System offset: N/A";
-
+        str = str + getDrawingOptionsString(chartType, colourSchema, wl, vrso);
     }
     dialog->SetCurrentlyDrawnText(str);
 }
@@ -825,20 +812,9 @@ void LIVI_Depth_model_pi::setImageToGenerateOptionsTextToUI()
     double wl = m_pconf->waterLevel.getCurrentWaterLevel();
     double vrso = m_pconf->waterLevel.getVerticalReferenceSystemOffset();
 
-    std::string str =
-        "Drawing options for image to generate:\n  " +
-        m_pconf->colour.chartTypeToString(chartType)        + "\n  " +
-        m_pconf->colour.colouringTypeToString(colourSchema) + "\n  ";
+    std::string str = "Drawing options for image to generate:\n  " +
+                        getDrawingOptionsString(chartType, colourSchema, wl, vrso);
 
-    if (chartType == COLOR_RELIEF &&
-        (colourSchema == COLOUR_FIVE_RANGES || colourSchema == COLOUR_TWO_RANGES))
-        str = str +
-            "Water level: "   + (wl > 0 ? "+" : "") + std::to_string(wl)   + "\n  " +
-            "System offset: " + (vrso>0 ? "+" : "") + std::to_string(vrso);
-    else
-        str = str +
-        "Water level:   N/A\n  " +
-        "System offset: N/A";
     dialog->SetToGenerateText(str);
 }
 
