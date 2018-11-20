@@ -119,7 +119,7 @@ int LIVI_Depth_model_pi::Init(void)
 
     bool success = m_pconf->LoadConfig(); // config variables related to this plugin.
     this->PushConfigToUI();
-    this->setCurrentOptionsTextToUI();
+    this->setImageToGenerateOptionsTextToUI();
 
     dmDrawer = new dmDepthModelDrawer();
     dmDrawer->setDataset(m_pconf->fileImport.filePath);
@@ -625,7 +625,7 @@ void LIVI_Depth_model_pi::OnChartTypeChange(int selectionId)
     {
         m_pconf->colour.setChartType(chartType);
         m_pconf->SaveConfig();
-        this->setCurrentOptionsTextToUI();
+        this->setImageToGenerateOptionsTextToUI();
         dmDrawer->logInfo("Depth model: Image type changed to " + std::string(
             m_pconf->colour.chartTypeToString(chartType)));
     }
@@ -644,7 +644,7 @@ void LIVI_Depth_model_pi::OnColourSchemaChange(int selectionId)
     {
         m_pconf->colour.setColouringType(colType);
         m_pconf->SaveConfig();
-        this->setCurrentOptionsTextToUI();
+        this->setImageToGenerateOptionsTextToUI();
         dmDrawer->logInfo("Depth model: Colouring schema changed to " + std::string(
             m_pconf->colour.colouringTypeToString(colType)));
     }
@@ -684,7 +684,7 @@ void LIVI_Depth_model_pi::OnCurrentWaterLevelChange(double cwl)
         setErrorToUI("Setting current water level: Error in saving the congifuration.");
         dmDrawer->logError("Depth model: current water level:  Error in saving the congifuration");
     }
-    this->setCurrentOptionsTextToUI();
+    this->setImageToGenerateOptionsTextToUI();
 }
 
 void LIVI_Depth_model_pi::OnVerticalReferenceSystemOffsetChange(double vrso)
@@ -699,7 +699,7 @@ void LIVI_Depth_model_pi::OnVerticalReferenceSystemOffsetChange(double vrso)
         setErrorToUI("Setting ref. system offset: Error in saving the congifuration.");
         dmDrawer->logError("Depth model: ref. system offset:  Error in saving the congifuration");
     }
-    this->setCurrentOptionsTextToUI();
+    this->setImageToGenerateOptionsTextToUI();
 }
 
 //// private ////
@@ -765,7 +765,7 @@ void LIVI_Depth_model_pi::PullConfigFromUI(void)
     m_pconf->colour.setTwoColoursDepth(dialog->GetDividingLevel());
 }
 
-void LIVI_Depth_model_pi::setCurrentOptionsTextToUI()
+void LIVI_Depth_model_pi::setImageToGenerateOptionsTextToUI()
 {
     double wl = m_pconf->waterLevel.getCurrentWaterLevel();
     double vrso = m_pconf->waterLevel.getVerticalReferenceSystemOffset();

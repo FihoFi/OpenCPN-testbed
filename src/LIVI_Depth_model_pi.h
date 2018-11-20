@@ -149,7 +149,7 @@ private:
     void                SaveUiToConfig(void);
     void                PushConfigToUI(void);
     void                PullConfigFromUI(void);
-    void                setCurrentOptionsTextToUI();
+    void                setImageToGenerateOptionsTextToUI();
 
     bool                createDMPluginDataPath();
     void                setInfoToUI(std::string str);
