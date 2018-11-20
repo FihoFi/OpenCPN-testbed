@@ -220,7 +220,7 @@ void Dlg::SetUserColourConfigurationFileName(wxFileName &fileName)
 wxFileName Dlg::GetUserColourConfigurationFileName()
 {    return this->dmColourOptionsUserFile_filePicker->GetFileName();     }
 
-void Dlg::SetCustomLevel(int num, int level)
+void Dlg::SetCustomLevel(int num, double level)
 {
     switch (num) {
     case 0:    this->dmColorOptionsCustom_SpinCtrlDouble1->SetValue(level);    break;
@@ -271,7 +271,7 @@ wxColour Dlg::GetTwoColours(int num)
     return picker->GetColour();
 }
 
-void Dlg::SetDividingLevel(int level)
+void Dlg::SetDividingLevel(double level)
 {
     this->dmColourOptionsTwoColours_DividingDepth_spinCtrlDouble->SetValue(level);
 }
@@ -281,7 +281,7 @@ double Dlg::GetDividingLevel()
     return this->dmColourOptionsTwoColours_DividingDepth_spinCtrlDouble->GetValue();
 }
 
-void Dlg::SetCurrentWaterLevel(int level)
+void Dlg::SetCurrentWaterLevel(double level)
 {
     this->dmWaterLevel_CurrentWaterLevel_spinCtrlDouble->SetValue(level);
 }
@@ -293,7 +293,7 @@ double Dlg::GetCurrentWaterLevel()
     return spinCtrl->GetValue();
 }
 
-void Dlg::SetVerticalReferenceSystemOffsetLevel(int level)
+void Dlg::SetVerticalReferenceSystemOffsetLevel(double level)
 {
     this->dmWaterLevel_VerticalReferenceSystemOffset_spinCtrlDouble->SetValue(level);
 }

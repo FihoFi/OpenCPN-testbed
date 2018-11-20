@@ -77,17 +77,17 @@ public:
 
     void        SetCustomColor(int num, wxColour& col);
     wxColour    GetCustomColor(int num);
-    void        SetCustomLevel(int num, int level);
+    void        SetCustomLevel(int num, double level);
     double      GetCustomLevel(int num);
 
     void        SetTwoColours(int num, wxColour& col);
     wxColour    GetTwoColours(int num);
-    void        SetDividingLevel(int level);
+    void        SetDividingLevel(double level);
     double      GetDividingLevel();
 
-    void        SetCurrentWaterLevel(int level);
+    void        SetCurrentWaterLevel(double level);
     double      GetCurrentWaterLevel();
-    void        SetVerticalReferenceSystemOffsetLevel(int level);
+    void        SetVerticalReferenceSystemOffsetLevel(double level);
     double      GetVerticalReferenceSystemOffsetLevel();
 
     void        SetDepthChartFileName(wxFileName &fileName);
