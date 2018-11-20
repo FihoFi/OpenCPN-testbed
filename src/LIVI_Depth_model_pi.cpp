@@ -126,6 +126,11 @@ int LIVI_Depth_model_pi::Init(void)
     dmDrawer->setChartDrawType(m_pconf->colour.getChartType());
     dmDrawer->setColourSchema(m_pconf->colour.getColouringType());
     dmDrawer->setColourConfigurationFile(m_pconf->colour.userColourConfPath);
+    dmDrawer->setCurrentWaterLevel            (m_pconf->waterLevel.m_currentWaterLevel);
+    dmDrawer->setVerticalReferenceSystemOffset(m_pconf->waterLevel.m_verticalReferenceSystemOffset);
+    setCurrentlyDrawnOptionsTextToUI();
+    setImageToGenerateOptionsTextToUI();
+
     if (createDMPluginDataPath())
     {
         dmDrawer->setTempFileFolder(pluginDataDir);
