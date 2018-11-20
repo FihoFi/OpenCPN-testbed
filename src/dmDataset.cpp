@@ -146,7 +146,7 @@ dmRasterImgData * dmDataset::getRasterData(
     coord &topLeftOut, coord &botRightOut,
     int &imgWidth, int &imgHeight)
 {
-    int n;
+    unsigned int n;
     int imgOffsetX, imgOffsetY;
 
     if (!_dstDataset)
@@ -548,7 +548,7 @@ GDALDataset * dmDataset::visualizeDataset(GDALDataset *dsToVisualize)
     // put gdaldem processing flags into a c string array
     std::vector<std::string> optionsVec = getGdaldemOptionsVec();
     char** optionsArr = new char*[optionsVec.size() + 1];
-    for (int i = 0; i<optionsVec.size(); i++)
+    for (unsigned int i = 0; i<optionsVec.size(); i++)
     {
         optionsArr[i] = (char*)optionsVec[i].c_str();
     }
