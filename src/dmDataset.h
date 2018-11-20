@@ -84,7 +84,7 @@ private:
         coord &topLeftOut, coord &botRightOut,
         int &pixOffsetX, int &pixOffsetY,
         int &imgWidth, int &imgHeight);
-    std::pair<int, int> dmDataset::getRasterPixelOffsetAt(coord point, bool pixelTopLeftCorner = true);
+    std::pair<int, int> dmDataset::getRasterPixelOffsetAt(coord point, bool roundDownPixelOffset = true);
     dmExtent getRasterExtent(void);
     std::vector<std::string> getGdaldemOptionsVec();
     GDALDataset * reprojectDataset(GDALDataset *dsToReproject);

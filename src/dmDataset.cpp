@@ -249,10 +249,6 @@ bool dmDataset::openDataSet(const char * filename)
 
     _dstWkt = _dstDataset->GetProjectionRef();
 
-    dmExtent extent = getRasterExtent();
-
-    float depth = getDepthAt(coord(8542708.82, 2311734.76));
-
     return true;
 }
 
@@ -337,7 +333,7 @@ bool dmDataset::allocateImgDataMemory()
     return true;
 }
 
-std::pair<int, int> dmDataset::getRasterPixelOffsetAt(coord point, bool pixelTopLeftCorner)
+std::pair<int, int> dmDataset::getRasterPixelOffsetAt(coord point, bool roundDownPixelOffset)
 {
     double croppedEast, croppedNorth;
     dmExtent rasterExtent = getRasterExtent();
@@ -352,7 +348,7 @@ std::pair<int, int> dmDataset::getRasterPixelOffsetAt(coord point, bool pixelTop
     offsetX = std::abs((croppedEast - rasterExtent.topLeft.east) / _geoTransform[1]);
     offsetY = std::abs((croppedNorth - rasterExtent.topLeft.north) / _geoTransform[5]);
 
-    if (pixelTopLeftCorner)
+    if (roundDownPixelOffset)
     {
         pxOffsetX = std::floor(offsetX);
         pxOffsetY = std::floor(offsetY);
