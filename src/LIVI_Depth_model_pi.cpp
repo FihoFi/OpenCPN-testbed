@@ -831,7 +831,7 @@ void LIVI_Depth_model_pi::setImageToGenerateOptionsTextToUI()
         str = str +
         "Water level:   N/A\n  " +
         "System offset: N/A";
-    dialog->SetCurrentOptionsText(str);
+    dialog->SetToGenerateText(str);
 }
 
 bool LIVI_Depth_model_pi::createDMPluginDataPath()

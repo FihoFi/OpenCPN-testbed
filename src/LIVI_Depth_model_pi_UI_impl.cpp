@@ -281,7 +281,7 @@ void Dlg::SetCurrentlyDrawnText(std::string str)
     this->dmPictureImport_CurrentlyDrawn_staticText->SetLabel(str);
 }
 
-void Dlg::SetCurrentOptionsText(std::string str)
+void Dlg::SetToGenerateText(std::string str)
 {
     this->dmPictureImport_ToGenerate_staticText->SetLabel(str);
 }
