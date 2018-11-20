@@ -283,16 +283,16 @@ void Dlg::SetCurrentOptionsText(std::string str)
 
 void Dlg::SetPictureImportInfoText(std::string infoStr)
 {
-    this->dmPictureImportError_staticText->SetLabel(infoStr);
-    this->dmPictureImportError_staticText->SetForegroundColour(*wxBLACK);
-    this->dmPictureImportError_staticText->Refresh();
+    this->dmPictureImport_Status_staticText->SetLabel(infoStr);
+    this->dmPictureImport_Status_staticText->SetForegroundColour(*wxBLACK);
+    this->dmPictureImport_Status_staticText->Refresh();
 }
 
 void Dlg::SetPictureImportErrorText(std::string errStr)
 {
-    this->dmPictureImportError_staticText->SetLabel(errStr);
-    this->dmPictureImportError_staticText->SetForegroundColour(*wxRED);
-    this->dmPictureImportError_staticText->Refresh();
+    this->dmPictureImport_Status_staticText->SetLabel(errStr);
+    this->dmPictureImport_Status_staticText->SetForegroundColour(*wxRED);
+    this->dmPictureImport_Status_staticText->Refresh();
 }
 
 //void Dlg::Addpoint(TiXmlElement* Route, wxString ptlat, wxString ptlon, wxString ptname, wxString ptsym, wxString pttype){

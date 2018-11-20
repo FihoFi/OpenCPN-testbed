@@ -28,11 +28,12 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmPictureImport_filePicker = new wxFilePickerCtrl( dmFileImport_Panel, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("Tif/Tiff  image file(*.tif;*.tiff)|*.tif;*.tiff|BAG file (*.bag)|*.bag|PNG (*.png)|*.png|Any file (*.*)|*.*"), wxDefaultPosition, wxSize( 380,-1 ), wxFLP_DEFAULT_STYLE );
 	dmFileImport_bSizer->Add( dmPictureImport_filePicker, 0, wxALL, 5 );
 	
-	dmPictureImportError_staticText = new wxStaticText( dmFileImport_Panel, wxID_ANY, wxT("(everything ok)"), wxDefaultPosition, wxDefaultSize, 0 );
-	dmPictureImportError_staticText->Wrap( -1 );
-	dmPictureImportError_staticText->SetMinSize( wxSize( -1,50 ) );
 	
-	dmFileImport_bSizer->Add( dmPictureImportError_staticText, 0, wxALL, 5 );
+	dmPictureImport_Status_staticText = new wxStaticText( dmFileImport_Panel, wxID_ANY, wxT("Plugin initialized"), wxDefaultPosition, wxDefaultSize, 0|wxBORDER_THEME );
+	dmPictureImport_Status_staticText->Wrap( -1 );
+	dmPictureImport_Status_staticText->SetMinSize( wxSize( 350,50 ) );
+	
+	dmFileImport_bSizer->Add( dmPictureImport_Status_staticText, 0, wxALL, 5 );
 	
 	wxFlexGridSizer* dmPictureImport_fgSizer;
 	dmPictureImport_fgSizer = new wxFlexGridSizer( 0, 2, 0, 0 );
