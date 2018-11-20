@@ -765,6 +765,38 @@ void LIVI_Depth_model_pi::PullConfigFromUI(void)
     m_pconf->colour.setTwoColoursDepth(dialog->GetDividingLevel());
 }
 
+void LIVI_Depth_model_pi::setCurrentlyDrawnOptionsTextToUI()
+{
+    DM_visualization chartType;
+    DM_colourType    colourSchema;
+    double wl, vrso;
+    dmDrawer->getCurrents(chartType, colourSchema, wl, vrso);
+    std::string str("Currenly drawn:\n  ");
+
+    if (!dmDrawer->isRendering())
+    {
+        str = str + "Nothing";
+    }
+    else
+    {
+        str = str +
+            m_pconf->colour.chartTypeToString(chartType) + "\n  " +
+            m_pconf->colour.colouringTypeToString(colourSchema) + "\n  ";
+
+        if (chartType == COLOR_RELIEF &&
+            (colourSchema == COLOUR_FIVE_RANGES || colourSchema == COLOUR_TWO_RANGES))
+            str = str +
+            "Water level:   " + (wl > 0 ? "+" : "") + std::to_string(wl) + "\n  " +
+            "System offset: " + (vrso>0 ? "+" : "") + std::to_string(vrso);
+        else
+            str = str +
+            "Water level:   N/A\n  " +
+            "System offset: N/A";
+
+    }
+    dialog->SetCurrentlyDrawnText(str);
+}
+
 void LIVI_Depth_model_pi::setImageToGenerateOptionsTextToUI()
 {
     double wl = m_pconf->waterLevel.getCurrentWaterLevel();

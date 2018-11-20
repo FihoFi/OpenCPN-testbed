@@ -41,6 +41,7 @@ public:
     bool             openDataset(const wxFileName &fileName);
     dmExtent         applyViewPortArea(/*const*/ PlugIn_ViewPort &vp);
 
+    bool             isRendering();
     void             setRenderingOn();
     void             setRenderingOff();
     void             forceNewImage();

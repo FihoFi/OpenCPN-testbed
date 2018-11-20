@@ -149,6 +149,7 @@ private:
     void                SaveUiToConfig(void);
     void                PushConfigToUI(void);
     void                PullConfigFromUI(void);
+    void                setCurrentlyDrawnOptionsTextToUI();
     void                setImageToGenerateOptionsTextToUI();
 
     bool                createDMPluginDataPath();

@@ -152,6 +152,11 @@ dmExtent dmDepthModelDrawer::applyViewPortArea(PlugIn_ViewPort &vp)
     return vpLL;
 }
 
+bool dmDepthModelDrawer::isRendering()
+{
+    return renderingDmChart;
+}
+
 void dmDepthModelDrawer::setRenderingOn()
 {
     renderingDmChart = true;
