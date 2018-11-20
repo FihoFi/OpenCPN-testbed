@@ -37,6 +37,7 @@ public:
     void             setCurrentWaterLevel(double cvl);
     void             setVerticalReferenceSystemOffset(double vrso);
     void             setTempFileFolder(wxFileName &fileName);
+
     bool             setDataset(const wxFileName &fileName);
     bool             openDataset(const wxFileName &fileName);
     dmExtent         applyViewPortArea(/*const*/ PlugIn_ViewPort &vp);

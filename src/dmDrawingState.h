@@ -38,8 +38,8 @@ public:
     // Wanted variables are to be set when the UI informs about changes
     bool                SetWantedChartFileName  (wxFileName fname);
     bool                SetWantedChartType      (DM_visualization imageType);
-    bool                SetWantedColourSchema   (DM_colourType colourSchema);
-    bool                SetWantedUserColourFileName(wxFileName fname);
+    bool                SetWantedColourSchema       (DM_colourType colourSchema);
+    bool                SetWantedUserColourFileName (wxFileName fname);
     void                SetWantedCurrentWaterLevel              (double cwl);
     void                SetWantedVerticalReferenceSystemOffset  (double vrso);
 
