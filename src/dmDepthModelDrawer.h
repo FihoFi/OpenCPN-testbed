@@ -25,6 +25,10 @@ public:
     virtual void logMessage   (const std::string message) override;
     virtual void logInfo      (const std::string message) override;
 
+    void             getCurrents(DM_visualization& chartType,
+                                 DM_colourType& currentColourSchema,
+                                 double& currentWaterLevel,
+                                 double& vertRefSystOffset);
     DM_visualization getChartDrawType();
     bool             setChartDrawType(DM_visualization chartType);
     DM_colourType    getColourSchema();
@@ -33,10 +37,12 @@ public:
     void             setCurrentWaterLevel(double cvl);
     void             setVerticalReferenceSystemOffset(double vrso);
     void             setTempFileFolder(wxFileName &fileName);
+
     bool             setDataset(const wxFileName &fileName);
     bool             openDataset(const wxFileName &fileName);
     dmExtent         applyViewPortArea(/*const*/ PlugIn_ViewPort &vp);
 
+    bool             isRendering();
     void             setRenderingOn();
     void             setRenderingOff();
     void             forceNewImage();

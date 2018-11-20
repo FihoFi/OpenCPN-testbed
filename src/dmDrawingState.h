@@ -31,12 +31,15 @@ public:
 
     // Current variables are to be set at the time of drawing
     void                SetCurrentAsWanted();
+    void                GetCurrents(
+        DM_visualization& chartType, DM_colourType& colourSchema,
+        double& currentWaterLevel, double& vertRefSystOffset);
 
     // Wanted variables are to be set when the UI informs about changes
     bool                SetWantedChartFileName  (wxFileName fname);
     bool                SetWantedChartType      (DM_visualization imageType);
-    bool                SetWantedColourSchema   (DM_colourType colourSchema);
-    bool                SetWantedUserColourFileName(wxFileName fname);
+    bool                SetWantedColourSchema       (DM_colourType colourSchema);
+    bool                SetWantedUserColourFileName (wxFileName fname);
     void                SetWantedCurrentWaterLevel              (double cwl);
     void                SetWantedVerticalReferenceSystemOffset  (double vrso);
 

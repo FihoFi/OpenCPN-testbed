@@ -32,7 +32,7 @@
 #include <list>
 #include <cmath>
 #include "LIVI_Depth_model_pi.h"
-
+#include "dm_API.h"
 
 class Position;
 class LIVI_Depth_model_pi;
@@ -125,30 +125,63 @@ void Dlg::OnAboutWxWidgets(wxCommandEvent& WXUNUSED(event))
     wxInfoMessageBox(this);
 }
 
-int Dlg::GetSelectedChartOption()
+void Dlg::SetSelectedChartOption(DM_visualization choiceId)
+{
+    int pageId = 0;  // color relief
+
+    switch (choiceId)
+    {
+    case COLOR_RELIEF:          pageId = 0; break;
+    case HILLSHADE:             pageId = 1; break;
+    case NONE:                  pageId = 2; break;
+
+    default:                    pageId = 0; break;  // color relief
+    }
+
+    this->dmChartOptions_choicebook->ChangeSelection(pageId);
+}
+
+DM_visualization Dlg::GetSelectedChartOption()
 {
     wxChoice* choice = this->dmChartOptions_choicebook->GetChoiceCtrl();
     int acceptedSelection = choice->GetSelection();
     wxString chString = choice->GetString(acceptedSelection);
 
-    if      (chString.Contains("illshade")) { return DM_viz_HILLSHADE;     }   // Hillshade
-    else if (chString.Contains("lain"))     { return DM_viz_NONE;          }   // Plain image
-    else if (chString.Contains("epth"))     { return DM_viz_COLOR_RELIEF;  }   // Depth model / color relief
-    else if (chString.Contains("elief"))    { return DM_viz_COLOR_RELIEF;  }   // Depth model / color relief
-    else                                    { return ERROR;                }   // No such option
+    if      (chString.Contains("illshade")) { return HILLSHADE;     }   // Hillshade
+    else if (chString.Contains("lain"))     { return NONE;          }   // Plain image
+    else if (chString.Contains("epth"))     { return COLOR_RELIEF;  }   // Depth model / color relief
+    else if (chString.Contains("elief"))    { return COLOR_RELIEF;  }   // Depth model / color relief
+    else                          { return VISUALIZATION_UNDEFINED; }   // No such option
 }
 
-int Dlg::GetSelectedColourOption()
+void Dlg::SetSelectedColourOption(DM_colourType choiceId)
+{
+    int pageId = 1;  // Five ranges
+
+    switch (choiceId)
+    {
+    case COLOUR_USER_FILE:          pageId = 0; break;
+    case COLOUR_FIVE_RANGES:        pageId = 1; break;
+    case COLOUR_SLIDING:            pageId = 2; break;
+    case COLOUR_TWO_RANGES:         pageId = 3; break;
+
+    default:                        pageId = 1; break;  // Five ranges
+    }
+
+    this->dmColourOptions_choisebook->ChangeSelection(pageId);
+}
+
+DM_colourType Dlg::GetSelectedColourOption()
 {
     wxChoice* choice = this->dmColourOptions_choisebook->GetChoiceCtrl();
     int acceptedSelection = choice->GetSelection();
     wxString chString = choice->GetString(acceptedSelection);
 
-    if      (chString.Contains("file"))   { return DM_viz_USER_FILE;         }   // Use user given file
-    else if (chString.Contains("ive"))    { return DM_viz_FIVE_DEPTH_RANGES; }   // Five depth ranges
-    else if (chString.Contains("liding")) { return DM_viz_SLIDING_COLOUR;    }   // Sliding colouring
-    else if (chString.Contains("Two"))    { return DM_viz_TWO_DEPTH_RANGES;  }   // Two depth ranges
-    else                                  { return ERROR;                    }   // No such option
+    if      (chString.Contains("file"))     { return COLOUR_USER_FILE;   }   // Use user given file
+    else if (chString.Contains("ive"))      { return COLOUR_FIVE_RANGES; }   // Five depth ranges
+    else if (chString.Contains("liding"))   { return COLOUR_SLIDING;     }   // Sliding colouring
+    else if (chString.Contains("Two"))      { return COLOUR_TWO_RANGES;  }   // Two depth ranges
+    else                                    { return COLOUR_UNDEFINED;   }   // No such option
 }
 
 void Dlg::SetCustomColor(int num, wxColour &col) {
@@ -270,29 +303,34 @@ double Dlg::GetVerticalReferenceSystemOffsetLevel()
     return this->dmWaterLevel_VerticalReferenceSystemOffset_spinCtrlDouble->GetValue();
 }
 
-wxFileName    Dlg::GetDepthChartFileName()
+wxFileName Dlg::GetDepthChartFileName()
 {    return this->dmPictureImport_filePicker->GetFileName();    }
 
 void    Dlg::SetDepthChartFileName(wxFileName &fileName)
 {    this->dmPictureImport_filePicker->SetFileName(fileName);   }
 
-void Dlg::SetCurrentOptionsText(std::string str)
+void Dlg::SetCurrentlyDrawnText(std::string str)
 {
-    this->dmPictureImport_staticText->SetLabel(str);
+    this->dmPictureImport_CurrentlyDrawn_staticText->SetLabel(str);
+}
+
+void Dlg::SetToGenerateText(std::string str)
+{
+    this->dmPictureImport_ToGenerate_staticText->SetLabel(str);
 }
 
 void Dlg::SetPictureImportInfoText(std::string infoStr)
 {
-    this->dmPictureImportError_staticText->SetLabel(infoStr);
-    this->dmPictureImportError_staticText->SetForegroundColour(*wxBLACK);
-    this->dmPictureImportError_staticText->Refresh();
+    this->dmPictureImport_Status_staticText->SetLabel(infoStr);
+    this->dmPictureImport_Status_staticText->SetForegroundColour(*wxBLACK);
+    this->dmPictureImport_Status_staticText->Refresh();
 }
 
 void Dlg::SetPictureImportErrorText(std::string errStr)
 {
-    this->dmPictureImportError_staticText->SetLabel(errStr);
-    this->dmPictureImportError_staticText->SetForegroundColour(*wxRED);
-    this->dmPictureImportError_staticText->Refresh();
+    this->dmPictureImport_Status_staticText->SetLabel(errStr);
+    this->dmPictureImport_Status_staticText->SetForegroundColour(*wxRED);
+    this->dmPictureImport_Status_staticText->Refresh();
 }
 
 //void Dlg::Addpoint(TiXmlElement* Route, wxString ptlat, wxString ptlon, wxString ptname, wxString ptsym, wxString pttype){

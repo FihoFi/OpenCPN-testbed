@@ -53,8 +53,9 @@ class LIVIDMUI_DLG : public wxDialog
 		wxPanel* dmFileImport_Panel;
 		wxStaticText* dmDepthModelFile_staticText;
 		wxFilePickerCtrl* dmPictureImport_filePicker;
-		wxStaticText* dmPictureImportError_staticText;
-		wxStaticText* dmPictureImport_staticText;
+		wxStaticText* dmPictureImport_CurrentlyDrawn_staticText;
+		wxStaticText* dmPictureImport_Status_staticText;
+		wxStaticText* dmPictureImport_ToGenerate_staticText;
 		wxButton* dmPictureImport_GenerateImage_button;
 		wxButton* dmPictureImport_ClearImage_button;
 		wxPanel* dmChartOptions_Panel;

@@ -119,13 +119,18 @@ int LIVI_Depth_model_pi::Init(void)
 
     bool success = m_pconf->LoadConfig(); // config variables related to this plugin.
     this->PushConfigToUI();
-    this->setCurrentOptionsTextToUI();
+    this->setImageToGenerateOptionsTextToUI();
 
     dmDrawer = new dmDepthModelDrawer();
     dmDrawer->setDataset(m_pconf->fileImport.filePath);
-    dmDrawer->setChartDrawType(m_pconf->colour.getChartType());
-    dmDrawer->setColourSchema(m_pconf->colour.getColouringType());
+    dmDrawer->setChartDrawType          (m_pconf->colour.getChartType());
+    dmDrawer->setColourSchema           (m_pconf->colour.getColouringType());
     dmDrawer->setColourConfigurationFile(m_pconf->colour.userColourConfPath);
+    dmDrawer->setCurrentWaterLevel            (m_pconf->waterLevel.m_currentWaterLevel);
+    dmDrawer->setVerticalReferenceSystemOffset(m_pconf->waterLevel.m_verticalReferenceSystemOffset);
+    setCurrentlyDrawnOptionsTextToUI();
+    setImageToGenerateOptionsTextToUI();
+
     if (createDMPluginDataPath())
     {
         dmDrawer->setTempFileFolder(pluginDataDir);
@@ -420,7 +425,7 @@ bool LIVI_Depth_model_pi::RenderOverlay(wxDC& dc, PlugIn_ViewPort* vp)
             throw e.what();
         }
     }
-
+    setCurrentlyDrawnOptionsTextToUI();
     return success;
 }
 
@@ -595,16 +600,18 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
             dmDrawer->logError("Depth model: Generating image. Failed to open the dataset.");
             return;
         }
-
-        dmDrawer->setRenderingOn();
-
-        setInfoToUI("Chart image successfully opened.");
-        dmDrawer->logInfo("Depth model: Image generated successfully.");
     }
-    catch (std::string exStr)
+    catch (const std::string& const exStr)
     {
         setInfoToUI(exStr);
+        dmDrawer->logError("Depth model: Generating image. Failed to open the dataset: " + exStr);
+        return;
     }
+
+    dmDrawer->setRenderingOn();
+
+    setInfoToUI("Chart image successfully opened.");
+    dmDrawer->logInfo("Depth model: Image generated successfully.");
 
     dmDrawer->forceNewImage();
     RequestRefresh(m_parent_window); // request refresh of the main window -> call to RenderOverlay
@@ -617,15 +624,15 @@ void LIVI_Depth_model_pi::OnClearImage()
     dmDrawer->logInfo("Depth model: Refresh request for image clearance sent.");
 }
 
-void LIVI_Depth_model_pi::OnChartTypeChange(int selectionId)
+void LIVI_Depth_model_pi::OnChartTypeChange(DM_visualization toType)
 {
-    DM_visualization chartType = to_dmVisualizationType(selectionId);
+    DM_visualization chartType = toType;
     bool success = dmDrawer->setChartDrawType(chartType);
     if (success)
     {
         m_pconf->colour.setChartType(chartType);
         m_pconf->SaveConfig();
-        this->setCurrentOptionsTextToUI();
+        this->setImageToGenerateOptionsTextToUI();
         dmDrawer->logInfo("Depth model: Image type changed to " + std::string(
             m_pconf->colour.chartTypeToString(chartType)));
     }
@@ -636,15 +643,15 @@ void LIVI_Depth_model_pi::OnChartTypeChange(int selectionId)
     }
 }
 
-void LIVI_Depth_model_pi::OnColourSchemaChange(int selectionId)
+void LIVI_Depth_model_pi::OnColourSchemaChange(DM_colourType toType)
 {
-    DM_colourType colType = to_dmColourType(selectionId);
+    DM_colourType colType = toType;
     bool success = dmDrawer->setColourSchema(colType);
     if (success)
     {
         m_pconf->colour.setColouringType(colType);
         m_pconf->SaveConfig();
-        this->setCurrentOptionsTextToUI();
+        this->setImageToGenerateOptionsTextToUI();
         dmDrawer->logInfo("Depth model: Colouring schema changed to " + std::string(
             m_pconf->colour.colouringTypeToString(colType)));
     }
@@ -684,7 +691,7 @@ void LIVI_Depth_model_pi::OnCurrentWaterLevelChange(double cwl)
         setErrorToUI("Setting current water level: Error in saving the congifuration.");
         dmDrawer->logError("Depth model: current water level:  Error in saving the congifuration");
     }
-    this->setCurrentOptionsTextToUI();
+    this->setImageToGenerateOptionsTextToUI();
 }
 
 void LIVI_Depth_model_pi::OnVerticalReferenceSystemOffsetChange(double vrso)
@@ -699,7 +706,7 @@ void LIVI_Depth_model_pi::OnVerticalReferenceSystemOffsetChange(double vrso)
         setErrorToUI("Setting ref. system offset: Error in saving the congifuration.");
         dmDrawer->logError("Depth model: ref. system offset:  Error in saving the congifuration");
     }
-    this->setCurrentOptionsTextToUI();
+    this->setImageToGenerateOptionsTextToUI();
 }
 
 //// private ////
@@ -722,6 +729,9 @@ void   LIVI_Depth_model_pi::SaveUiToConfig(void)
 void LIVI_Depth_model_pi::PushConfigToUI(void)
 {
     dialog->SetDepthChartFileName(m_pconf->fileImport.filePath);
+
+    dialog->SetSelectedChartOption(m_pconf->colour.chartType);
+    dialog->SetSelectedColourOption(m_pconf->colour.colouringType);
     dialog->SetUserColourConfigurationFileName(m_pconf->colour.userColourConfPath);
 
     for (int i = 0; i < DM_NUM_CUSTOM_COL; i++) {
@@ -735,6 +745,10 @@ void LIVI_Depth_model_pi::PushConfigToUI(void)
         dialog->SetTwoColours(i, m_pconf->colour.getTwoColour(i));
     }
     dialog->SetDividingLevel(m_pconf->colour.getTwoColoursDepth());
+
+    dialog->SetCurrentWaterLevel(m_pconf->waterLevel.m_currentWaterLevel);
+    dialog->SetVerticalReferenceSystemOffsetLevel(
+        m_pconf->waterLevel.m_verticalReferenceSystemOffset);
 }
 
 /**
@@ -750,6 +764,9 @@ void LIVI_Depth_model_pi::PullConfigFromUI(void)
     }
 
     m_pconf->fileImport.filePath = dialog->GetDepthChartFileName();
+
+    m_pconf->colour.chartType          = dialog->GetSelectedChartOption();
+    m_pconf->colour.colouringType      = dialog->GetSelectedColourOption();
     m_pconf->colour.userColourConfPath = dialog->GetUserColourConfigurationFileName();
 
     for (int i = 0; i < DM_NUM_CUSTOM_COL; i++) {
@@ -763,20 +780,70 @@ void LIVI_Depth_model_pi::PullConfigFromUI(void)
         m_pconf->colour.setTwoColour(i, dialog->GetTwoColours(i));
     }
     m_pconf->colour.setTwoColoursDepth(dialog->GetDividingLevel());
+
+    m_pconf->waterLevel.m_currentWaterLevel = dialog->GetCurrentWaterLevel();
+    m_pconf->waterLevel.m_verticalReferenceSystemOffset 
+        = dialog->GetVerticalReferenceSystemOffsetLevel();
 }
 
-void LIVI_Depth_model_pi::setCurrentOptionsTextToUI()
+void LIVI_Depth_model_pi::setCurrentlyDrawnOptionsTextToUI()
 {
-    double wl = m_pconf->waterLevel.getCurrentWaterLevel();
-    double vrso = m_pconf->waterLevel.getVerticalReferenceSystemOffset();
+    DM_visualization chartType;
+    DM_colourType    colourSchema;
+    double           wl, vrso;
+    dmDrawer->getCurrents(chartType, colourSchema, wl, vrso);
 
-    std::string str =
-        "Current drawing options:\n" +
-        m_pconf->colour.chartTypeToString(m_pconf->colour.getChartType()) + "\n" +
-        m_pconf->colour.colouringTypeToString(m_pconf->colour.getColouringType()) + "\n" +
-        "Water level: " + (wl > 0 ? "+"+std::to_string(wl)   : std::to_string(wl)) + "\n" + 
-        "System offset: "+(vrso>0 ? "+"+std::to_string(vrso) : std::to_string(vrso));
-    dialog->SetCurrentOptionsText(str);
+    std::string str("Currenly drawn:\n  ");
+
+    if (!dmDrawer->isRendering())
+    {
+        str = str + "Nothing";
+    }
+    else
+    {
+        str = str + getDrawingOptionsString(chartType, colourSchema, wl, vrso);
+    }
+
+    dialog->SetCurrentlyDrawnText(str);
+}
+
+void LIVI_Depth_model_pi::setImageToGenerateOptionsTextToUI()
+{
+    DM_visualization chartType    = m_pconf->colour.getChartType();
+    DM_colourType    colourSchema = m_pconf->colour.getColouringType();
+    double           wl           = m_pconf->waterLevel.getCurrentWaterLevel();
+    double           vrso         = m_pconf->waterLevel.getVerticalReferenceSystemOffset();
+
+    std::string str = "Drawing options for image to generate:\n  " +
+                        getDrawingOptionsString(chartType, colourSchema, wl, vrso);
+
+    dialog->SetToGenerateText(str);
+}
+
+std::string LIVI_Depth_model_pi::getDrawingOptionsString(DM_visualization chartType,
+    DM_colourType colourSchema, double wl, double vrso)
+{
+    bool canApplyWaterLevels = false;
+    std::string str(m_pconf->colour.chartTypeToString(chartType));
+
+    if (chartType == COLOR_RELIEF)
+    {
+        str = str + " / " + m_pconf->colour.colouringTypeToString(colourSchema);
+
+        if (colourSchema == COLOUR_FIVE_RANGES || colourSchema == COLOUR_TWO_RANGES)
+        {
+            canApplyWaterLevels = true;
+        }
+    }
+
+    if (canApplyWaterLevels)
+        str = str + "\n  Water level:   " + (wl   > 0 ? "+" : "") + std::to_string(wl) +
+                    "\n  System offset: " + (vrso > 0 ? "+" : "") + std::to_string(vrso);
+    else
+        str = str + "\n  Water level:   (cannot apply)" +
+                    "\n  System offset: (cannot apply)";
+
+    return str;
 }
 
 bool LIVI_Depth_model_pi::createDMPluginDataPath()
@@ -806,28 +873,6 @@ void LIVI_Depth_model_pi::setErrorToUI(std::string str)
     dialog->SetPictureImportErrorText(str);
 }
 
-DM_visualization LIVI_Depth_model_pi::to_dmVisualizationType(int chartTypeId)
-{
-    switch (chartTypeId)
-    {
-    case DM_viz_HILLSHADE:      { return HILLSHADE;                 break; }
-    case DM_viz_NONE:           { return NONE;                      break; }
-    case DM_viz_COLOR_RELIEF:   { return COLOR_RELIEF;              break; }
-    default:                    { return VISUALIZATION_UNDEFINED;   break; }
-    }
-}
-
-DM_colourType LIVI_Depth_model_pi::to_dmColourType(int colouringChoiceId)
-{
-    switch (colouringChoiceId)
-    {
-    case DM_viz_USER_FILE:          { return COLOUR_USER_FILE;   break; }
-    case DM_viz_FIVE_DEPTH_RANGES:  { return COLOUR_FIVE_RANGES; break; }
-    case DM_viz_SLIDING_COLOUR:     { return COLOUR_SLIDING;     break; }
-    case DM_viz_TWO_DEPTH_RANGES:   { return COLOUR_TWO_RANGES;  break; }
-    default:                        { return COLOUR_UNDEFINED;   break; }
-    }
-}
 /*
 wxString &LIVI_Depth_model_pi::GetConfigFileName()
 {

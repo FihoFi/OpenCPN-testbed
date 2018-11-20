@@ -33,6 +33,8 @@
 #endif
 
 #include "LIVI_Depth_model_pi_UI.h"
+#include "dm_API.h"
+
 //#include "NavFunc.h"  // from original DR_pi plugin
 #include "tinyxml.h"
 
@@ -65,8 +67,10 @@ public:
 
     virtual void SetAboutInfo();
 
-    int         GetSelectedChartOption();
-    int         GetSelectedColourOption();
+    void             SetSelectedChartOption(DM_visualization choiceId);
+    DM_visualization GetSelectedChartOption();
+    void             SetSelectedColourOption(DM_colourType choiceId);
+    DM_colourType    GetSelectedColourOption();
 
     void        SetUserColourConfigurationFileName(wxFileName &fileName);
     wxFileName  GetUserColourConfigurationFileName();
@@ -89,7 +93,8 @@ public:
     void        SetDepthChartFileName(wxFileName &fileName);
     wxFileName  GetDepthChartFileName();
 
-    void        SetCurrentOptionsText(std::string errStr);
+    void        SetCurrentlyDrawnText(std::string errStr);
+    void        SetToGenerateText(std::string errStr);
     void        SetPictureImportInfoText(std::string errStr);
     void        SetPictureImportErrorText(std::string errStr);
 

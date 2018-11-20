@@ -28,25 +28,32 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmPictureImport_filePicker = new wxFilePickerCtrl( dmFileImport_Panel, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("Tif/Tiff  image file(*.tif;*.tiff)|*.tif;*.tiff|BAG file (*.bag)|*.bag|PNG (*.png)|*.png|Any file (*.*)|*.*"), wxDefaultPosition, wxSize( 380,-1 ), wxFLP_DEFAULT_STYLE );
 	dmFileImport_bSizer->Add( dmPictureImport_filePicker, 0, wxALL, 5 );
 	
-	dmPictureImportError_staticText = new wxStaticText( dmFileImport_Panel, wxID_ANY, wxT("(everything ok)"), wxDefaultPosition, wxDefaultSize, 0 );
-	dmPictureImportError_staticText->Wrap( -1 );
-	dmPictureImportError_staticText->SetMinSize( wxSize( -1,50 ) );
+	dmPictureImport_CurrentlyDrawn_staticText = new wxStaticText( dmFileImport_Panel, wxID_ANY, wxT("Currently drawn:\n  Nothing"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmPictureImport_CurrentlyDrawn_staticText->Wrap( -1 );
+	dmPictureImport_CurrentlyDrawn_staticText->SetMinSize( wxSize( -1,80 ) );
 	
-	dmFileImport_bSizer->Add( dmPictureImportError_staticText, 0, wxALL, 5 );
+	dmFileImport_bSizer->Add( dmPictureImport_CurrentlyDrawn_staticText, 0, wxALL, 5 );
+	
+	dmPictureImport_Status_staticText = new wxStaticText( dmFileImport_Panel, wxID_ANY, wxT("Plugin initialized"), wxDefaultPosition, wxDefaultSize, 0|wxBORDER_THEME );
+	dmPictureImport_Status_staticText->Wrap( -1 );
+	dmPictureImport_Status_staticText->SetMinSize( wxSize( 350,50 ) );
+	
+	dmFileImport_bSizer->Add( dmPictureImport_Status_staticText, 0, wxALL, 5 );
 	
 	wxFlexGridSizer* dmPictureImport_fgSizer;
 	dmPictureImport_fgSizer = new wxFlexGridSizer( 0, 2, 0, 0 );
 	dmPictureImport_fgSizer->SetFlexibleDirection( wxBOTH );
 	dmPictureImport_fgSizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	dmPictureImport_staticText = new wxStaticText( dmFileImport_Panel, wxID_ANY, wxT("Current drawing options:\n  Colour relief image\n  Five depth ranges"), wxDefaultPosition, wxDefaultSize, 0 );
-	dmPictureImport_staticText->Wrap( -1 );
-	dmPictureImport_fgSizer->Add( dmPictureImport_staticText, 0, wxALL, 5 );
+	dmPictureImport_ToGenerate_staticText = new wxStaticText( dmFileImport_Panel, wxID_ANY, wxT("Drawing options for image to generate:\n  Colour relief image\n  Five depth ranges\n  Water level: \n  System offset: "), wxDefaultPosition, wxDefaultSize, 0 );
+	dmPictureImport_ToGenerate_staticText->Wrap( -1 );
+	dmPictureImport_ToGenerate_staticText->SetMinSize( wxSize( -1,80 ) );
+	
+	dmPictureImport_fgSizer->Add( dmPictureImport_ToGenerate_staticText, 0, wxALL, 5 );
 	
 	wxWrapSizer* dmPictureImport_buttons_wSizer;
 	dmPictureImport_buttons_wSizer = new wxWrapSizer( wxHORIZONTAL, wxWRAPSIZER_DEFAULT_FLAGS );
 	
-	dmPictureImport_buttons_wSizer->SetMinSize( wxSize( 215,-1 ) ); 
 	dmPictureImport_GenerateImage_button = new wxButton( dmFileImport_Panel, wxID_ANY, wxT("Generate image"), wxDefaultPosition, wxDefaultSize, 0 );
 	dmPictureImport_buttons_wSizer->Add( dmPictureImport_GenerateImage_button, 0, wxALL, 5 );
 	
@@ -376,7 +383,6 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmChartOptions_Sizer->Fit( dmChartOptions_Panel );
 	dmTabChooser->AddPage( dmChartOptions_Panel, wxT("Chart drawing options"), true );
 	dmWaterLevel_Panel = new wxPanel( dmTabChooser, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	dmWaterLevel_Panel->Enable( false );
 	dmWaterLevel_Panel->Hide();
 	
 	wxFlexGridSizer* dmWaterLevel_Sizer;
