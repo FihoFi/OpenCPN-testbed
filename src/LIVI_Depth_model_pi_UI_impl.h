@@ -85,9 +85,9 @@ public:
     void        SetDividingLevel(int level);
     double      GetDividingLevel();
 
-    void        SetCurrentWaterLevel(int level);
+    void        SetCurrentWaterLevel(double level);
     double      GetCurrentWaterLevel();
-    void        SetVerticalReferenceSystemOffsetLevel(int level);
+    void        SetVerticalReferenceSystemOffsetLevel(double level);
     double      GetVerticalReferenceSystemOffsetLevel();
 
     void        SetDepthChartFileName(wxFileName &fileName);

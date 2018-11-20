@@ -281,7 +281,7 @@ double Dlg::GetDividingLevel()
     return this->dmColourOptionsTwoColours_DividingDepth_spinCtrlDouble->GetValue();
 }
 
-void Dlg::SetCurrentWaterLevel(int level)
+void Dlg::SetCurrentWaterLevel(double level)
 {
     this->dmWaterLevel_CurrentWaterLevel_spinCtrlDouble->SetValue(level);
 }
@@ -293,7 +293,7 @@ double Dlg::GetCurrentWaterLevel()
     return spinCtrl->GetValue();
 }
 
-void Dlg::SetVerticalReferenceSystemOffsetLevel(int level)
+void Dlg::SetVerticalReferenceSystemOffsetLevel(double level)
 {
     this->dmWaterLevel_VerticalReferenceSystemOffset_spinCtrlDouble->SetValue(level);
 }
