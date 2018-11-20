@@ -600,16 +600,18 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
             dmDrawer->logError("Depth model: Generating image. Failed to open the dataset.");
             return;
         }
-
-        dmDrawer->setRenderingOn();
-
-        setInfoToUI("Chart image successfully opened.");
-        dmDrawer->logInfo("Depth model: Image generated successfully.");
     }
-    catch (std::string exStr)
+    catch (const std::string& const exStr)
     {
         setInfoToUI(exStr);
+        dmDrawer->logError("Depth model: Generating image. Failed to open the dataset: " + exStr);
+        return;
     }
+
+    dmDrawer->setRenderingOn();
+
+    setInfoToUI("Chart image successfully opened.");
+    dmDrawer->logInfo("Depth model: Image generated successfully.");
 
     dmDrawer->forceNewImage();
     RequestRefresh(m_parent_window); // request refresh of the main window -> call to RenderOverlay
