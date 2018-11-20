@@ -54,7 +54,6 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	wxWrapSizer* dmPictureImport_buttons_wSizer;
 	dmPictureImport_buttons_wSizer = new wxWrapSizer( wxHORIZONTAL, wxWRAPSIZER_DEFAULT_FLAGS );
 	
-	dmPictureImport_buttons_wSizer->SetMinSize( wxSize( 215,-1 ) ); 
 	dmPictureImport_GenerateImage_button = new wxButton( dmFileImport_Panel, wxID_ANY, wxT("Generate image"), wxDefaultPosition, wxDefaultSize, 0 );
 	dmPictureImport_buttons_wSizer->Add( dmPictureImport_GenerateImage_button, 0, wxALL, 5 );
 	
