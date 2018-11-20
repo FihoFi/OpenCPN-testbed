@@ -842,6 +842,32 @@ void LIVI_Depth_model_pi::setImageToGenerateOptionsTextToUI()
     dialog->SetToGenerateText(str);
 }
 
+std::string LIVI_Depth_model_pi::getDrawingOptionsString(DM_visualization chartType,
+    DM_colourType colourSchema, double wl, double vrso)
+{
+    bool canApplyWaterLevels = false;
+    std::string str(m_pconf->colour.chartTypeToString(chartType));
+
+    if (chartType == COLOR_RELIEF)
+    {
+        str = str + " / " + m_pconf->colour.colouringTypeToString(colourSchema);
+
+        if (colourSchema == COLOUR_FIVE_RANGES || colourSchema == COLOUR_TWO_RANGES)
+        {
+            canApplyWaterLevels = true;
+        }
+    }
+
+    if (canApplyWaterLevels)
+        str = str + "\n  Water level:   " + (wl   > 0 ? "+" : "") + std::to_string(wl) +
+                    "\n  System offset: " + (vrso > 0 ? "+" : "") + std::to_string(vrso);
+    else
+        str = str + "\n  Water level:   (cannot apply)" +
+                    "\n  System offset: (cannot apply)";
+
+    return str;
+}
+
 bool LIVI_Depth_model_pi::createDMPluginDataPath()
 {
     pluginDataDir.SetPath(wxStandardPaths::Get().GetUserDataDir());
