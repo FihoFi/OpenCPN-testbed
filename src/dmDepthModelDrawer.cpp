@@ -370,10 +370,10 @@ bool dmDepthModelDrawer::cropImage(dmExtent wantedCropExtentLL,
         WMtoLL(croppedImageWM, croppedImageLL);
 
     }
-    catch (const std::exception& const ex) {
+    catch (const std::exception& ex) {
         throw std::string(ex.what());
     }
-    catch (const std::string& const ex) {
+    catch (const std::string& ex) {
         throw ex;
     }
     catch (...)

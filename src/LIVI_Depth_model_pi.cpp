@@ -400,15 +400,15 @@ bool LIVI_Depth_model_pi::RenderOverlay(wxDC& dc, PlugIn_ViewPort* vp)
     {
         success = dmDrawer->drawDepthChart(dc, *vp);
     }
-    catch (const std::string& const ex)
+    catch (const std::string& ex)
     {
         setErrorToUI("Problem in drawing the picture.\n"
                      "Look for the details in the OCPN log.");
         success = false;
         dmDrawer->logError("Depth model: caught string exception on drawDepthChart .");
     }
-    catch (const std::exception& const ex) {
         dmDrawer->logError("Depth model: caught exception on drawDepthChart ." + std::string(ex.what()));
+    catch (const std::exception& ex) {
         throw std::string(ex.what());
     }
     catch (...)
@@ -601,7 +601,7 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
             return;
         }
     }
-    catch (const std::string& const exStr)
+    catch (const std::string& exStr)
     {
         setInfoToUI(exStr);
         dmDrawer->logError("Depth model: Generating image. Failed to open the dataset: " + exStr);
