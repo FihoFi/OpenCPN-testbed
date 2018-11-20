@@ -735,6 +735,10 @@ void LIVI_Depth_model_pi::PushConfigToUI(void)
         dialog->SetTwoColours(i, m_pconf->colour.getTwoColour(i));
     }
     dialog->SetDividingLevel(m_pconf->colour.getTwoColoursDepth());
+
+    dialog->SetCurrentWaterLevel(m_pconf->waterLevel.m_currentWaterLevel);
+    dialog->SetVerticalReferenceSystemOffsetLevel(
+        m_pconf->waterLevel.m_verticalReferenceSystemOffset);
 }
 
 /**
@@ -763,6 +767,10 @@ void LIVI_Depth_model_pi::PullConfigFromUI(void)
         m_pconf->colour.setTwoColour(i, dialog->GetTwoColours(i));
     }
     m_pconf->colour.setTwoColoursDepth(dialog->GetDividingLevel());
+
+    m_pconf->waterLevel.m_currentWaterLevel = dialog->GetCurrentWaterLevel();
+    m_pconf->waterLevel.m_verticalReferenceSystemOffset 
+        = dialog->GetVerticalReferenceSystemOffsetLevel();
 }
 
 void LIVI_Depth_model_pi::setCurrentlyDrawnOptionsTextToUI()
