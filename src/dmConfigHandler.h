@@ -83,7 +83,7 @@ struct DMColorOptionConfig : dm_configAPI {
     virtual bool save() override;
 
     DM_visualization    getChartType()                          { return chartType;      }
-    void                setChartType(DM_visualization chartType){ chartType = chartType; }
+    void             setChartType(DM_visualization chartType){ this->chartType = chartType; }
 
     DM_colourType   getColouringType()                      { return colouringType;     }
     void            setColouringType(DM_colourType colType) { colouringType = colType;  }
