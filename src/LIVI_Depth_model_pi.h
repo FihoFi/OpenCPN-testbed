@@ -118,8 +118,8 @@ public:
     void OnGenerateImage(wxFileName fullFileName);
     void OnClearImage();
 
-    void OnChartTypeChange      (int selectionId);
-    void OnColourSchemaChange   (int selectionId);
+    void OnChartTypeChange      (DM_visualization toType);
+    void OnColourSchemaChange   (DM_colourType  toType);
 
     void OnUserColourFileChange(wxFileName fullFileName);
 

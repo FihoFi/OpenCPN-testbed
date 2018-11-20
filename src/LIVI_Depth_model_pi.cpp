@@ -624,9 +624,9 @@ void LIVI_Depth_model_pi::OnClearImage()
     dmDrawer->logInfo("Depth model: Refresh request for image clearance sent.");
 }
 
-void LIVI_Depth_model_pi::OnChartTypeChange(int selectionId)
+void LIVI_Depth_model_pi::OnChartTypeChange(DM_visualization toType)
 {
-    DM_visualization chartType = to_dmVisualizationType(selectionId);
+    DM_visualization chartType = toType;
     bool success = dmDrawer->setChartDrawType(chartType);
     if (success)
     {
@@ -643,9 +643,9 @@ void LIVI_Depth_model_pi::OnChartTypeChange(int selectionId)
     }
 }
 
-void LIVI_Depth_model_pi::OnColourSchemaChange(int selectionId)
+void LIVI_Depth_model_pi::OnColourSchemaChange(DM_colourType toType)
 {
-    DM_colourType colType = to_dmColourType(selectionId);
+    DM_colourType colType = toType;
     bool success = dmDrawer->setColourSchema(colType);
     if (success)
     {
