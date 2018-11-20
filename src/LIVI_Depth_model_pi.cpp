@@ -420,7 +420,7 @@ bool LIVI_Depth_model_pi::RenderOverlay(wxDC& dc, PlugIn_ViewPort* vp)
             throw e.what();
         }
     }
-
+    setCurrentlyDrawnOptionsTextToUI();
     return success;
 }
 
