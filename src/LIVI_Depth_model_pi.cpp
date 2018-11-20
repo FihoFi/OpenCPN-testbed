@@ -405,7 +405,7 @@ bool LIVI_Depth_model_pi::RenderOverlay(wxDC& dc, PlugIn_ViewPort* vp)
         setErrorToUI("Problem in drawing the picture.\n"
                      "Look for the details in the OCPN log.");
         success = false;
-        dmDrawer->logError("Depth model: caught string exception on drawDepthChart .");
+        dmDrawer->logError("Depth model: caught string exception on drawDepthChart: " + ex);
     }
         dmDrawer->logError("Depth model: caught exception on drawDepthChart ." + std::string(ex.what()));
     catch (const std::exception& ex) {
