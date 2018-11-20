@@ -82,23 +82,23 @@ struct DMColorOptionConfig : dm_configAPI {
     virtual bool load() override;
     virtual bool save() override;
 
-    DM_visualization    getChartType()                          { return chartType;      }
+    DM_visualization getChartType()                          { return chartType;            }
     void             setChartType(DM_visualization chartType){ this->chartType = chartType; }
 
-    DM_colourType   getColouringType()                      { return colouringType;     }
-    void            setColouringType(DM_colourType colType) { colouringType = colType;  }
+    DM_colourType   getColouringType()                      { return colouringType;          }
+    void            setColouringType(DM_colourType colType) { this->colouringType = colType; }
 
-    wxColor getColour(int i)             { return m_customColours[i]; }
-    void    setColour(int i, wxColor col){ m_customColours[i] = col;  }
+    wxColor getColour(int i)             { return m_customColours[i];       }
+    void    setColour(int i, wxColor col){ this->m_customColours[i] = col;  }
 
-    double  getDepth(int i)              { return m_customDepths[i];  }
-    void    setDepth(int i, double depth){ m_customDepths[i] = depth; }
+    double  getDepth(int i)              { return m_customDepths[i];        }
+    void    setDepth(int i, double depth){ this->m_customDepths[i] = depth; }
 
-    wxColor getTwoColour(int i)              { return m_twoColours[i]; }
-    void    setTwoColour(int i, wxColor col) { m_twoColours[i] = col; }
+    wxColor getTwoColour(int i)              { return m_twoColours[i];      }
+    void    setTwoColour(int i, wxColor col) { this->m_twoColours[i] = col; }
 
-    double  getTwoColoursDepth()             { return m_twoColoursDepth; }
-    void    setTwoColoursDepth(double depth) { m_twoColoursDepth = depth; }
+    double  getTwoColoursDepth()             { return m_twoColoursDepth;        }
+    void    setTwoColoursDepth(double depth) { this->m_twoColoursDepth = depth; }
 
 
     wxString            chartTypeToString(DM_visualization chartType);
@@ -137,8 +137,8 @@ struct DMWaterLevelConfig : dm_configAPI
     virtual bool load() override;
     virtual bool save() override;
 
-    double  getCurrentWaterLevel() { return m_currentWaterLevel; }
-    void    setCurrentWaterLevel(double levelInM) { m_currentWaterLevel = levelInM; }
+    double  getCurrentWaterLevel()               { return m_currentWaterLevel;     }
+    void    setCurrentWaterLevel(double levelInM){ m_currentWaterLevel = levelInM; }
 
     double  getVerticalReferenceSystemOffset()
     {   return m_verticalReferenceSystemOffset;             }
