@@ -31,6 +31,15 @@ void dmDrawingState::SetCurrentAsWanted()
     currentVertRefSystOffset  = wantedVertRefSystOffset;
 }
 
+void  dmDrawingState::GetCurrents(DM_visualization& chartType, DM_colourType& colourSchema,
+                                  double& currentWaterLevel, double& vertRefSystOffset)
+{
+    chartType         = currentChartType;
+    colourSchema      = currentColourSchema;
+    currentWaterLevel = currentCurrentWaterLevel;
+    vertRefSystOffset = currentVertRefSystOffset;
+}
+
 bool dmDrawingState::SetWantedChartFileName(wxFileName fname)
 {
     if (filePathAndReadIsOk(fname))

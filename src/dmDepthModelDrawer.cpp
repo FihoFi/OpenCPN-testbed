@@ -41,6 +41,15 @@ void dmDepthModelDrawer::logMessage(const std::string message)
 void dmDepthModelDrawer::logInfo(const std::string message)
 {    wxLogInfo(wxString(message));          DBOUT("Info: " + message + "\n");  }
 
+void dmDepthModelDrawer::getCurrents(DM_visualization& chartType,
+    DM_colourType& currentColourSchema,
+    double& currentWaterLevel,
+    double& vertRefSystOffset)
+{
+    drawingState.GetCurrents(chartType, currentColourSchema,
+        currentWaterLevel, vertRefSystOffset);
+}
+
 DM_visualization dmDepthModelDrawer::getChartDrawType()
 {
     return drawingState.GetWantedChartType();

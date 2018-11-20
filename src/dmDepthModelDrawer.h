@@ -25,6 +25,10 @@ public:
     virtual void logMessage   (const std::string message) override;
     virtual void logInfo      (const std::string message) override;
 
+    void             getCurrents(DM_visualization& chartType,
+                                 DM_colourType& currentColourSchema,
+                                 double& currentWaterLevel,
+                                 double& vertRefSystOffset);
     DM_visualization getChartDrawType();
     bool             setChartDrawType(DM_visualization chartType);
     DM_colourType    getColourSchema();
