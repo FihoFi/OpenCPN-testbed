@@ -276,9 +276,14 @@ wxFileName    Dlg::GetDepthChartFileName()
 void    Dlg::SetDepthChartFileName(wxFileName &fileName)
 {    this->dmPictureImport_filePicker->SetFileName(fileName);   }
 
+void Dlg::SetCurrentlyDrawnText(std::string str)
+{
+    this->dmPictureImport_CurrentlyDrawn_staticText->SetLabel(str);
+}
+
 void Dlg::SetCurrentOptionsText(std::string str)
 {
-    this->dmPictureImport_staticText->SetLabel(str);
+    this->dmPictureImport_ToGenerate_staticText->SetLabel(str);
 }
 
 void Dlg::SetPictureImportInfoText(std::string infoStr)

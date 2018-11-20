@@ -89,6 +89,7 @@ public:
     void        SetDepthChartFileName(wxFileName &fileName);
     wxFileName  GetDepthChartFileName();
 
+    void        SetCurrentlyDrawnText(std::string errStr);
     void        SetCurrentOptionsText(std::string errStr);
     void        SetPictureImportInfoText(std::string errStr);
     void        SetPictureImportErrorText(std::string errStr);
