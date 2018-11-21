@@ -129,6 +129,7 @@ bool dmDepthModelDrawer::openDataset()
     wxString    colourFileNameWxStr   = colourFileNamePath.GetFullPath();
     std::string colourFileNameStr     = colourFileNameWxStr.ToStdString();
     const char* colourFileNameCharPtr = colourFileNameStr.c_str();
+
     bool success = dataset.setColourConfigurationFile(colourFileNameCharPtr, false);
     if (!success)
     {
@@ -238,6 +239,7 @@ bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
         }
         else
         {
+            drawingState.SetCurrentAsWanted();
             mustGetNewBmp = false;  // new bmp retrieved; clear the flag
         }
     }
@@ -302,10 +304,7 @@ bool dmDepthModelDrawer::reCalculateBitmap(/*const*/PlugIn_ViewPort &vp,
             return false;
         }
 
-
         bmp = wxBitmap(scaled);
-
-        drawingState.SetCurrentAsWanted();
     }
     //else
     //{
