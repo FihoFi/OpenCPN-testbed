@@ -58,7 +58,6 @@ DM_visualization dmDepthModelDrawer::getChartDrawType()
 bool dmDepthModelDrawer::setChartDrawType(DM_visualization chartType)
 {
     bool success = drawingState.SetWantedChartType(chartType);
-    success &= dataset.setVisualizationScheme(chartType);
     return success;
 }
 
@@ -117,6 +116,13 @@ bool dmDepthModelDrawer::openDataset(const wxFileName &fileName)
     wxString    fileNameWxStr = fileName.GetFullPath();
     std::string fileNameStr = fileNameWxStr.ToStdString();
 
+    DM_visualization chartType = drawingState.GetWantedChartType();
+    bool success = dataset.setVisualizationScheme(chartType);
+    if (!success)
+    {
+        wxLogMessage(_T("dmDepthModelDrawer::openDataset setVisualizationScheme failed: ") + chartType);
+        return false;
+    }
     if (!fileName.SameAs(drawingState.GetWantedChartFileName()))
     {
         wxLogMessage(_T("dmDepthModelDrawer::openDataset failed, the chart file "
@@ -125,7 +131,7 @@ bool dmDepthModelDrawer::openDataset(const wxFileName &fileName)
     }
 
     const char* fileNameCharPtr = fileNameStr.c_str();
-    bool success = dataset.openDataSet(fileNameCharPtr);
+    success &= dataset.openDataSet(fileNameCharPtr);
     if (!success)
     {
         wxLogMessage(_T("dmDepthModelDrawer::openDataset openDataSet failed: ") + fileNameStr);
@@ -370,10 +376,10 @@ bool dmDepthModelDrawer::cropImage(dmExtent wantedCropExtentLL,
         WMtoLL(croppedImageWM, croppedImageLL);
 
     }
-    catch (const std::exception& const ex) {
+    catch (const std::exception& ex) {
         throw std::string(ex.what());
     }
-    catch (const std::string& const ex) {
+    catch (const std::string& ex) {
         throw ex;
     }
     catch (...)
