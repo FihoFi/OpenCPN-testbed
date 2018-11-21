@@ -83,14 +83,7 @@ bool dmDepthModelDrawer::setColourSchema(DM_colourType colourSchema)
 
 bool dmDepthModelDrawer::setColourConfigurationFile(const wxFileName &fileNamePath)
 {
-    bool success = drawingState.SetWantedUserColourFileName(fileNamePath);
-
-    wxString    fileNameWxStr = fileNamePath.GetFullPath();
-    std::string fileNameStr = fileNameWxStr.ToStdString();
-    const char* fileNameCharPtr = fileNameStr.c_str();
-
-    success &= dataset.setColourConfigurationFile(fileNameCharPtr, false);
-    return success;
+    return drawingState.SetWantedUserColourFileName(fileNamePath);
 }
 
 void dmDepthModelDrawer::setCurrentWaterLevel(double cvl)
@@ -120,6 +113,16 @@ bool dmDepthModelDrawer::setDataset(const wxFileName &fileName)
 
 bool dmDepthModelDrawer::openDataset()
 {
+    wxFileName  colourFileNamePath    = drawingState.GetWantedUserColourFileName();
+    wxString    colourFileNameWxStr   = colourFileNamePath.GetFullPath();
+    std::string colourFileNameStr     = colourFileNameWxStr.ToStdString();
+    const char* colourFileNameCharPtr = colourFileNameStr.c_str();
+    bool success = dataset.setColourConfigurationFile(colourFileNameCharPtr, false);
+    if (!success)
+    {
+        wxLogError(_T("dmDepthModelDrawer::openDataset setColourConfigurationFile failed: ") + colourFileNameWxStr);
+        return false;
+    }
 
     DM_visualization chartType = drawingState.GetWantedChartType();
     bool success = dataset.setVisualizationScheme(chartType);
