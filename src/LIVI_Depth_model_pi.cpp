@@ -593,7 +593,8 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
         }   // if
 
         setInfoToUI("Reading and projecting chart image to World Mercator");
-        success &= dmDrawer->openDataset(fullFileName);
+        wxFileName fullFileName = dmDrawer->getChartFileName();
+        success &= dmDrawer->openDataset();
         if (!success)
         {
             setErrorToUI("Could not load the file as a chart image.");

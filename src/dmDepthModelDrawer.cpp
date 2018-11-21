@@ -118,10 +118,8 @@ bool dmDepthModelDrawer::setDataset(const wxFileName &fileName)
     return success;
 }
 
-bool dmDepthModelDrawer::openDataset(const wxFileName &fileName)
+bool dmDepthModelDrawer::openDataset()
 {
-    wxString    fileNameWxStr = fileName.GetFullPath();
-    std::string fileNameStr = fileNameWxStr.ToStdString();
 
     DM_visualization chartType = drawingState.GetWantedChartType();
     bool success = dataset.setVisualizationScheme(chartType);
@@ -137,6 +135,8 @@ bool dmDepthModelDrawer::openDataset(const wxFileName &fileName)
         return false;
     }
 
+    wxFileName  fileName = drawingState.GetWantedChartFileName();
+    std::string fileNameStr = fileName.GetFullPath().ToStdString();
     const char* fileNameCharPtr = fileNameStr.c_str();
     success &= dataset.openDataSet(fileNameCharPtr);
     if (!success)

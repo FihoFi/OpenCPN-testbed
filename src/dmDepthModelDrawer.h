@@ -41,7 +41,7 @@ public:
     void             setTempFileFolder(wxFileName &fileName);
 
     bool             setDataset(const wxFileName &fileName);
-    bool             openDataset(const wxFileName &fileName);
+    bool             openDataset();
     dmExtent         applyViewPortArea(/*const*/ PlugIn_ViewPort &vp);
 
     bool             isRendering();
