@@ -28,20 +28,6 @@ dmColourfileHandler& dmColourfileHandler::operator=(const dmColourfileHandler& o
 //    //return dialog->GetUserColourConfigurationFileName();
 //}
 
-bool dmColourfileHandler::GenerateConfFileOfType(DM_colourType colourOption)
-{
-    bool success = true;
-    switch (colourOption)
-    {
-    case COLOUR_USER_FILE:      {                                            break; }
-    case COLOUR_FIVE_RANGES:    { success &= GenerateFiveColorConfFile();    break; }
-    case COLOUR_SLIDING:        { success &= GenerateSlidingColorConfFile(); break; }
-    case COLOUR_TWO_RANGES:     { success &= GenerateTwoColorConfFile();     break; }
-    default:                    { success = false;                           break; }
-    }
-    return success;
-}
-
 bool dmColourfileHandler::GetConfFileOfType(DM_colourType colourOption, wxFileName& colorFile)
 {
     bool success = GenerateConfFileOfType(colourOption); // Generate from current options in use
@@ -59,6 +45,20 @@ bool dmColourfileHandler::GetConfFileOfType(DM_colourType colourOption, wxFileNa
     case COLOUR_TWO_RANGES:  {   colorFile = twoColoursFileName;         break; }
     default:                 {   colorFile = wxFileName("");             break; }
     }
+}
+
+bool dmColourfileHandler::GenerateConfFileOfType(DM_colourType colourOption)
+{
+    bool success = true;
+    switch (colourOption)
+    {
+    case COLOUR_USER_FILE:      {                                            break; }
+    case COLOUR_FIVE_RANGES:    { success &= GenerateFiveColorConfFile();    break; }
+    case COLOUR_SLIDING:        { success &= GenerateSlidingColorConfFile(); break; }
+    case COLOUR_TWO_RANGES:     { success &= GenerateTwoColorConfFile();     break; }
+    default:                    { success = false;                           break; }
+    }
+    return success;
 }
 
 bool dmColourfileHandler::GenerateFiveColorConfFile()

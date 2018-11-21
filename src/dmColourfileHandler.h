@@ -15,12 +15,11 @@ public:
 
     dmColourfileHandler& operator= (const dmColourfileHandler& other);
 
-
-    bool            GenerateConfFileOfType(DM_colourType colourOption);
     bool            GetConfFileOfType(DM_colourType colourOption, wxFileName& colorFile);
 
 private:
   //wxFileName      GetUsersColorConfFile();
+    bool            GenerateConfFileOfType(DM_colourType colourOption);
     bool            GenerateFiveColorConfFile();
     bool            GenerateSlidingColorConfFile();
     bool            GenerateTwoColorConfFile();
@@ -31,7 +30,6 @@ private:
     wxString        GetFiveColourDepthColourWks();
     wxString        GetSlidingColourDepthColourWks();
     wxString        GetTwoColourDepthColourWks();
-
 
     wxFileName      fiveColoursFileName;
     wxFileName      slidingColoursFileName;
