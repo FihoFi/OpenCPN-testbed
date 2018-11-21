@@ -28,7 +28,7 @@ dmColourfileHandler& dmColourfileHandler::operator=(const dmColourfileHandler& o
 //    //return dialog->GetUserColourConfigurationFileName();
 //}
 
-bool dmColourfileHandler::SaveConfFileOfUISelection(DM_colourType colourOption)
+bool dmColourfileHandler::GenerateConfFileOfType(DM_colourType colourOption)
 {
     bool success = true;
     switch (colourOption)
@@ -42,16 +42,22 @@ bool dmColourfileHandler::SaveConfFileOfUISelection(DM_colourType colourOption)
     return success;
 }
 
-wxFileName dmColourfileHandler::GetConfFileOfUISelection(DM_colourType colourOption)
+bool dmColourfileHandler::GetConfFileOfType(DM_colourType colourOption, wxFileName& colorFile)
 {
+    bool success = GenerateConfFileOfType(colourOption); // Generate from current options in use
+    if (!success)
+    {
+        return false;
+    }
+
     switch (colourOption)
     {
-    case COLOUR_USER_FILE:      { return m_pconf->colour.userColourConfPath;
-                                /*return GetUsersColorConfFile();*/  break; }
-    case COLOUR_FIVE_RANGES:    { return fiveColoursFileName;      break; }
-    case COLOUR_SLIDING:        { return slidingColoursFileName;   break; }
-    case COLOUR_TWO_RANGES:     { return twoColoursFileName;       break; }
-    default:                    { return wxFileName("");           break; }
+    case COLOUR_USER_FILE:   {   colorFile = m_pconf->colour.userColourConfPath;
+                                 /*return GetUsersColorConfFile();*/     break; }
+    case COLOUR_FIVE_RANGES: {   colorFile = fiveColoursFileName;        break; }
+    case COLOUR_SLIDING:     {   colorFile = slidingColoursFileName;     break; }
+    case COLOUR_TWO_RANGES:  {   colorFile = twoColoursFileName;         break; }
+    default:                 {   colorFile = wxFileName("");             break; }
     }
 }
 

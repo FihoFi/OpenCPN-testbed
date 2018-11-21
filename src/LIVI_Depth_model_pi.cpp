@@ -559,13 +559,14 @@ void LIVI_Depth_model_pi::OnGenerateImage()
             setInfoToUI("Setting colouring options");
 
             DM_colourType colouringType = dmDrawer->getColourSchema();
-            success = colourfileHandler->SaveConfFileOfUISelection(
-                colouringType); // Save, to get the current options in use
+            wxFileName colorFile;
+            success = colourfileHandler->GetConfFileOfType(colouringType, colorFile);
             if (!success)
             {
-                dmDrawer->logError("Depth model: Generating image. Failed to save colouring file of" + std::string(m_pconf->colour.colouringTypeToString(colouringType)));
+                dmDrawer->logError(
+                    "Depth model: Generating image. Failed to save colouring file of" + std::string(
+                    m_pconf->colour.colouringTypeToString(colouringType)));
             }
-            wxFileName colorFile = colourfileHandler->GetConfFileOfUISelection(colouringType);
             if (!colorFile.IsOk())
             {
                 setErrorToUI("Could not retrieve the colour definitions.");
