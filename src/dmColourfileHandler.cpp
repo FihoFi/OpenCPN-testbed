@@ -33,11 +33,11 @@ bool dmColourfileHandler::SaveConfFileOfUISelection(DM_colourType colourOption)
     bool success = true;
     switch (colourOption)
     {
-    case COLOUR_USER_FILE:      { break;                                          }
-    case COLOUR_FIVE_RANGES:    { success &= SaveFiveColorConfToFile();    break; }
-    case COLOUR_SLIDING:        { success &= SaveSlidingColorConfToFile(); break; }
-    case COLOUR_TWO_RANGES:     { success &= SaveTwoColorConfToFile();     break; }
-    default:                    { success = false;                         break; }
+    case COLOUR_USER_FILE:      {                                            break; }
+    case COLOUR_FIVE_RANGES:    { success &= GenerateFiveColorConfFile();    break; }
+    case COLOUR_SLIDING:        { success &= GenerateSlidingColorConfFile(); break; }
+    case COLOUR_TWO_RANGES:     { success &= GenerateTwoColorConfFile();     break; }
+    default:                    { success = false;                           break; }
     }
     return success;
 }
@@ -55,26 +55,25 @@ wxFileName dmColourfileHandler::GetConfFileOfUISelection(DM_colourType colourOpt
     }
 }
 
-
-bool dmColourfileHandler::SaveFiveColorConfToFile()
+bool dmColourfileHandler::GenerateFiveColorConfFile()
 {
     wxString confText = GetFiveColourDepthColourWks();
-    return SaveColorConfToFile(fiveColoursFileName, _T("five_colour_set.txt"), confText);
+    return GenerateColorConfFile(fiveColoursFileName, _T("five_colour_set.txt"), confText);
 }
 
-bool dmColourfileHandler::SaveSlidingColorConfToFile()
+bool dmColourfileHandler::GenerateSlidingColorConfFile()
 {
     wxString confText = GetSlidingColourDepthColourWks();
-    return SaveColorConfToFile(slidingColoursFileName, _T("sliding_colour_set.txt"), confText);
+    return GenerateColorConfFile(slidingColoursFileName, _T("sliding_colour_set.txt"), confText);
 }
 
-bool dmColourfileHandler::SaveTwoColorConfToFile()
+bool dmColourfileHandler::GenerateTwoColorConfFile()
 {
     wxString confText = GetTwoColourDepthColourWks();
-    return SaveColorConfToFile(twoColoursFileName, _T("two_colour_set.txt"), confText);
+    return GenerateColorConfFile(twoColoursFileName, _T("two_colour_set.txt"), confText);
 }
 
-bool dmColourfileHandler::SaveColorConfToFile(
+bool dmColourfileHandler::GenerateColorConfFile(
     wxFileName &confFile, const wxString confFileName, const wxString confText)
 {
     // Normal case: we have a functioning path available. Just write there

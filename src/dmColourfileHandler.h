@@ -20,12 +20,12 @@ public:
     wxFileName      GetConfFileOfUISelection(DM_colourType colourOption);
 
   //wxFileName      GetUsersColorConfFile();
-    bool            SaveFiveColorConfToFile();
-    bool            SaveSlidingColorConfToFile();
-    bool            SaveTwoColorConfToFile();
+    bool            GenerateFiveColorConfFile();
+    bool            GenerateSlidingColorConfFile();
+    bool            GenerateTwoColorConfFile();
 
 private:
-    bool            SaveColorConfToFile(wxFileName &confPath,
+    bool            GenerateColorConfFile(wxFileName &confPath,
                         const wxString fileName, const wxString confText);
 
     wxString        GetFiveColourDepthColourWks();
