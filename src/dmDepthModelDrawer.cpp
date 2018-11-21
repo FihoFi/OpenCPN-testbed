@@ -137,16 +137,10 @@ bool dmDepthModelDrawer::openDataset()
     }
 
     DM_visualization chartType = drawingState.GetWantedChartType();
-    bool success = dataset.setVisualizationScheme(chartType);
+    success = dataset.setVisualizationScheme(chartType);
     if (!success)
     {
-        wxLogMessage(_T("dmDepthModelDrawer::openDataset setVisualizationScheme failed: ") + chartType);
-        return false;
-    }
-    if (!fileName.SameAs(drawingState.GetWantedChartFileName()))
-    {
-        wxLogMessage(_T("dmDepthModelDrawer::openDataset failed, the chart file "
-                        "is not set: ") + fileNameStr);
+        wxLogError(_T("dmDepthModelDrawer::openDataset setVisualizationScheme failed: ") + chartType);
         return false;
     }
 
@@ -156,7 +150,7 @@ bool dmDepthModelDrawer::openDataset()
     success &= dataset.openDataSet(fileNameCharPtr);
     if (!success)
     {
-        wxLogMessage(_T("dmDepthModelDrawer::openDataset openDataSet failed: ") + fileNameStr);
+        wxLogError(_T("dmDepthModelDrawer::openDataset openDataSet failed: ") + fileNameStr);
         return false;
     }
 
