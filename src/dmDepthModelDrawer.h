@@ -29,6 +29,8 @@ public:
                                  DM_colourType& currentColourSchema,
                                  double& currentWaterLevel,
                                  double& vertRefSystOffset);
+    wxFileName       getChartFileName();
+    bool             setChartFileName(const wxFileName &fileNamePath);
     DM_visualization getChartDrawType();
     bool             setChartDrawType(DM_visualization chartType);
     DM_colourType    getColourSchema();

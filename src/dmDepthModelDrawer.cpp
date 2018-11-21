@@ -50,6 +50,16 @@ void dmDepthModelDrawer::getCurrents(DM_visualization& chartType,
         currentWaterLevel, vertRefSystOffset);
 }
 
+wxFileName dmDepthModelDrawer::getChartFileName()
+{
+    return drawingState.GetWantedChartFileName();
+}
+
+bool dmDepthModelDrawer::setChartFileName(const wxFileName &fileNamePath)
+{
+    return drawingState.SetWantedChartFileName(fileNamePath);
+}
+
 DM_visualization dmDepthModelDrawer::getChartDrawType()
 {
     return drawingState.GetWantedChartType();
@@ -57,8 +67,7 @@ DM_visualization dmDepthModelDrawer::getChartDrawType()
 
 bool dmDepthModelDrawer::setChartDrawType(DM_visualization chartType)
 {
-    bool success = drawingState.SetWantedChartType(chartType);
-    return success;
+    return drawingState.SetWantedChartType(chartType);
 }
 
 DM_colourType dmDepthModelDrawer::getColourSchema()
@@ -69,7 +78,6 @@ DM_colourType dmDepthModelDrawer::getColourSchema()
 bool dmDepthModelDrawer::setColourSchema(DM_colourType colourSchema)
 {
     bool success = drawingState.SetWantedColourSchema(colourSchema);
-    // TODO set to dataset?
     return success;
 }
 
@@ -107,7 +115,6 @@ void dmDepthModelDrawer::setTempFileFolder(wxFileName &fileName)
 bool dmDepthModelDrawer::setDataset(const wxFileName &fileName)
 {
     bool success = drawingState.SetWantedChartFileName(fileName);
-    // TODO set to dataset?
     return success;
 }
 
