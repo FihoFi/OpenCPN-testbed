@@ -544,20 +544,9 @@ void LIVI_Depth_model_pi::OnImageFileChange(wxFileName fname)
     }
 }
 
-void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
+void LIVI_Depth_model_pi::OnGenerateImage()
 {
-    // Check existance of the file
-    wxString path = fullFileName.GetFullPath();
-    dmDrawer->logInfo("Depth model: Generating image from file " + std::string(path.c_str()));
-
-    wxFile file(path, wxFile::read); // also opens the file, if it exists!
-    if (!file.Exists(path))
-    {
-        setErrorToUI("The chart image file cannot be found");
-        return;
-    }
-    else if(file.IsOpened())
-    {   file.Close();    }
+    dmDrawer->logInfo("Depth model: Generating image");
 
     setInfoToUI("Setting chart image type options");
 

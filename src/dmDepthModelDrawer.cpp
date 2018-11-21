@@ -107,8 +107,20 @@ void dmDepthModelDrawer::setTempFileFolder(wxFileName &fileName)
 */
 bool dmDepthModelDrawer::setDataset(const wxFileName &fileName)
 {
-    bool success = drawingState.SetWantedChartFileName(fileName);
-    return success;
+    // Check existance of the file
+    wxString path = fileName.GetFullPath();
+
+    wxFile file(path, wxFile::read); // this opens the file, if it exists, remember to close!
+    if (!file.Exists(path))
+    {
+        return false;
+    }
+    else if (file.IsOpened())
+    {
+        file.Close();
+    }
+
+    return drawingState.SetWantedChartFileName(fileName);
 }
 
 bool dmDepthModelDrawer::openDataset()

@@ -115,7 +115,7 @@ public:
 
     // reactions to UI changes
     void OnImageFileChange(wxFileName fname);
-    void OnGenerateImage(wxFileName fullFileName);
+    void OnGenerateImage();
     void OnClearImage();
 
     void OnChartTypeChange      (DM_visualization toType);
