@@ -50,6 +50,16 @@ void dmDepthModelDrawer::getCurrents(DM_visualization& chartType,
         currentWaterLevel, vertRefSystOffset);
 }
 
+wxFileName dmDepthModelDrawer::getChartFileName()
+{
+    return drawingState.GetWantedChartFileName();
+}
+
+bool dmDepthModelDrawer::setChartFileName(const wxFileName &fileNamePath)
+{
+    return drawingState.SetWantedChartFileName(fileNamePath);
+}
+
 DM_visualization dmDepthModelDrawer::getChartDrawType()
 {
     return drawingState.GetWantedChartType();
@@ -57,8 +67,7 @@ DM_visualization dmDepthModelDrawer::getChartDrawType()
 
 bool dmDepthModelDrawer::setChartDrawType(DM_visualization chartType)
 {
-    bool success = drawingState.SetWantedChartType(chartType);
-    return success;
+    return drawingState.SetWantedChartType(chartType);
 }
 
 DM_colourType dmDepthModelDrawer::getColourSchema()
@@ -69,20 +78,12 @@ DM_colourType dmDepthModelDrawer::getColourSchema()
 bool dmDepthModelDrawer::setColourSchema(DM_colourType colourSchema)
 {
     bool success = drawingState.SetWantedColourSchema(colourSchema);
-    // TODO set to dataset?
     return success;
 }
 
 bool dmDepthModelDrawer::setColourConfigurationFile(const wxFileName &fileNamePath)
 {
-    bool success = drawingState.SetWantedUserColourFileName(fileNamePath);
-
-    wxString    fileNameWxStr = fileNamePath.GetFullPath();
-    std::string fileNameStr = fileNameWxStr.ToStdString();
-    const char* fileNameCharPtr = fileNameStr.c_str();
-
-    success &= dataset.setColourConfigurationFile(fileNameCharPtr, false);
-    return success;
+    return drawingState.SetWantedUserColourFileName(fileNamePath);
 }
 
 void dmDepthModelDrawer::setCurrentWaterLevel(double cvl)
@@ -106,35 +107,51 @@ void dmDepthModelDrawer::setTempFileFolder(wxFileName &fileName)
 */
 bool dmDepthModelDrawer::setDataset(const wxFileName &fileName)
 {
-    bool success = drawingState.SetWantedChartFileName(fileName);
-    // TODO set to dataset?
-    return success;
+    // Check existance of the file
+    wxString path = fileName.GetFullPath();
+
+    wxFile file(path, wxFile::read); // this opens the file, if it exists, remember to close!
+    if (!file.Exists(path))
+    {
+        return false;
+    }
+    else if (file.IsOpened())
+    {
+        file.Close();
+    }
+
+    return drawingState.SetWantedChartFileName(fileName);
 }
 
-bool dmDepthModelDrawer::openDataset(const wxFileName &fileName)
+bool dmDepthModelDrawer::openDataset()
 {
-    wxString    fileNameWxStr = fileName.GetFullPath();
-    std::string fileNameStr = fileNameWxStr.ToStdString();
+    wxFileName  colourFileNamePath    = drawingState.GetWantedUserColourFileName();
+    wxString    colourFileNameWxStr   = colourFileNamePath.GetFullPath();
+    std::string colourFileNameStr     = colourFileNameWxStr.ToStdString();
+    const char* colourFileNameCharPtr = colourFileNameStr.c_str();
 
-    DM_visualization chartType = drawingState.GetWantedChartType();
-    bool success = dataset.setVisualizationScheme(chartType);
+    bool success = dataset.setColourConfigurationFile(colourFileNameCharPtr, false);
     if (!success)
     {
-        wxLogMessage(_T("dmDepthModelDrawer::openDataset setVisualizationScheme failed: ") + chartType);
-        return false;
-    }
-    if (!fileName.SameAs(drawingState.GetWantedChartFileName()))
-    {
-        wxLogMessage(_T("dmDepthModelDrawer::openDataset failed, the chart file "
-                        "is not set: ") + fileNameStr);
+        wxLogError(_T("dmDepthModelDrawer::openDataset setColourConfigurationFile failed: ") + colourFileNameWxStr);
         return false;
     }
 
+    DM_visualization chartType = drawingState.GetWantedChartType();
+    success = dataset.setVisualizationScheme(chartType);
+    if (!success)
+    {
+        wxLogError(_T("dmDepthModelDrawer::openDataset setVisualizationScheme failed: ") + chartType);
+        return false;
+    }
+
+    wxFileName  fileName = drawingState.GetWantedChartFileName();
+    std::string fileNameStr = fileName.GetFullPath().ToStdString();
     const char* fileNameCharPtr = fileNameStr.c_str();
     success &= dataset.openDataSet(fileNameCharPtr);
     if (!success)
     {
-        wxLogMessage(_T("dmDepthModelDrawer::openDataset openDataSet failed: ") + fileNameStr);
+        wxLogError(_T("dmDepthModelDrawer::openDataset openDataSet failed: ") + fileNameStr);
         return false;
     }
 
@@ -222,6 +239,7 @@ bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
         }
         else
         {
+            drawingState.SetCurrentAsWanted();
             mustGetNewBmp = false;  // new bmp retrieved; clear the flag
         }
     }
@@ -286,10 +304,7 @@ bool dmDepthModelDrawer::reCalculateBitmap(/*const*/PlugIn_ViewPort &vp,
             return false;
         }
 
-
         bmp = wxBitmap(scaled);
-
-        drawingState.SetCurrentAsWanted();
     }
     //else
     //{

@@ -544,20 +544,9 @@ void LIVI_Depth_model_pi::OnImageFileChange(wxFileName fname)
     }
 }
 
-void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
+void LIVI_Depth_model_pi::OnGenerateImage()
 {
-    // Check existance of the file
-    wxString path = fullFileName.GetFullPath();
-    dmDrawer->logInfo("Depth model: Generating image from file " + std::string(path.c_str()));
-
-    wxFile file(path, wxFile::read); // also opens the file, if it exists!
-    if (!file.Exists(path))
-    {
-        setErrorToUI("The chart image file cannot be found");
-        return;
-    }
-    else if(file.IsOpened())
-    {   file.Close();    }
+    dmDrawer->logInfo("Depth model: Generating image");
 
     setInfoToUI("Setting chart image type options");
 
@@ -570,13 +559,14 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
             setInfoToUI("Setting colouring options");
 
             DM_colourType colouringType = dmDrawer->getColourSchema();
-            success = colourfileHandler->SaveConfFileOfUISelection(
-                colouringType); // Save, to get the current options in use
+            wxFileName colorFile;
+            success = colourfileHandler->GetConfFileOfType(colouringType, colorFile);
             if (!success)
             {
-                dmDrawer->logError("Depth model: Generating image. Failed to save colouring file of" + std::string(m_pconf->colour.colouringTypeToString(colouringType)));
+                dmDrawer->logError(
+                    "Depth model: Generating image. Failed to save colouring file of" + std::string(
+                    m_pconf->colour.colouringTypeToString(colouringType)));
             }
-            wxFileName colorFile = colourfileHandler->GetConfFileOfUISelection(colouringType);
             if (!colorFile.IsOk())
             {
                 setErrorToUI("Could not retrieve the colour definitions.");
@@ -593,10 +583,11 @@ void LIVI_Depth_model_pi::OnGenerateImage(wxFileName fullFileName)
         }   // if
 
         setInfoToUI("Reading and projecting chart image to World Mercator");
-        success &= dmDrawer->openDataset(fullFileName);
+        wxFileName fullFileName = dmDrawer->getChartFileName();
+        success &= dmDrawer->openDataset();
         if (!success)
         {
-            setErrorToUI("Could not load the file as a chart image.");
+            setErrorToUI("Error in opening the chart file with given options.");
             dmDrawer->logError("Depth model: Generating image. Failed to open the dataset.");
             return;
         }

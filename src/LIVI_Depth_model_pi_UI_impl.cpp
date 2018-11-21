@@ -62,8 +62,7 @@ void Dlg::OnImageFileChange(wxFileDirPickerEvent& WXUNUSED(event))
 
 void Dlg::OnGenerateImage(wxCommandEvent& WXUNUSED(event))
 {
-    wxFileName fname = this->dmPictureImport_filePicker->GetFileName();
-    plugin->OnGenerateImage(fname);
+    plugin->OnGenerateImage();
 }
 
 void Dlg::OnClearImage(wxCommandEvent& WXUNUSED(event))

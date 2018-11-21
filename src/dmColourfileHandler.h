@@ -15,23 +15,21 @@ public:
 
     dmColourfileHandler& operator= (const dmColourfileHandler& other);
 
-
-    bool            SaveConfFileOfUISelection(DM_colourType colourOption);
-    wxFileName      GetConfFileOfUISelection(DM_colourType colourOption);
-
-  //wxFileName      GetUsersColorConfFile();
-    bool            SaveFiveColorConfToFile();
-    bool            SaveSlidingColorConfToFile();
-    bool            SaveTwoColorConfToFile();
+    bool            GetConfFileOfType(DM_colourType colourOption, wxFileName& colorFile);
 
 private:
-    bool            SaveColorConfToFile(wxFileName &confPath,
+  //wxFileName      GetUsersColorConfFile();
+    bool            GenerateConfFileOfType(DM_colourType colourOption);
+    bool            GenerateFiveColorConfFile();
+    bool            GenerateSlidingColorConfFile();
+    bool            GenerateTwoColorConfFile();
+
+    bool            GenerateColorConfFile(wxFileName &confPath,
                         const wxString fileName, const wxString confText);
 
     wxString        GetFiveColourDepthColourWks();
     wxString        GetSlidingColourDepthColourWks();
     wxString        GetTwoColourDepthColourWks();
-
 
     wxFileName      fiveColoursFileName;
     wxFileName      slidingColoursFileName;

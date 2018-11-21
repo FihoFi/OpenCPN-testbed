@@ -29,6 +29,8 @@ public:
                                  DM_colourType& currentColourSchema,
                                  double& currentWaterLevel,
                                  double& vertRefSystOffset);
+    wxFileName       getChartFileName();
+    bool             setChartFileName(const wxFileName &fileNamePath);
     DM_visualization getChartDrawType();
     bool             setChartDrawType(DM_visualization chartType);
     DM_colourType    getColourSchema();
@@ -39,7 +41,7 @@ public:
     void             setTempFileFolder(wxFileName &fileName);
 
     bool             setDataset(const wxFileName &fileName);
-    bool             openDataset(const wxFileName &fileName);
+    bool             openDataset();
     dmExtent         applyViewPortArea(/*const*/ PlugIn_ViewPort &vp);
 
     bool             isRendering();
