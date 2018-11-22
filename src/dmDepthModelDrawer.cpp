@@ -21,6 +21,7 @@ dmDepthModelDrawer::dmDepthModelDrawer()
     : drawingState()
     , dataset(this)
     , renderingDmChart(false)
+    , showingDepthValue(true)
 {
     bmp = NULL;
 }

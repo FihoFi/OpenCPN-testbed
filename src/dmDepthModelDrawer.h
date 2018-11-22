@@ -50,12 +50,16 @@ public:
     void             forceNewImage();
     bool             drawDepthChart(/*const*/ wxDC &dc, /*const*/ PlugIn_ViewPort &vp);
 
+    bool             isShowingDepthValue()      { return showingDepthValue;  }
+    void             setShowingDepthValueOn()   { showingDepthValue = true;  }
+    void             setShowingDepthValueOff()  { showingDepthValue = false; }
 
     float _depth;
     double _lat, _lon;
     long _depthX, _depthY;
 
 private:
+    bool            showingDepthValue;
     bool            renderingDmChart;
     bool            mustGetNewBmp;
     dmDrawingState  drawingState;
