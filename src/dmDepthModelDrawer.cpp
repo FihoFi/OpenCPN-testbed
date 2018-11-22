@@ -175,11 +175,6 @@ dmExtent dmDepthModelDrawer::applyViewPortArea(PlugIn_ViewPort &vp)
     return vpLL;
 }
 
-bool dmDepthModelDrawer::isRendering()      {    return renderingDmChart;   }
-void dmDepthModelDrawer::setRenderingOn()   {    renderingDmChart = true;   }
-void dmDepthModelDrawer::setRenderingOff()  {    renderingDmChart = false;  }
-
-
 void dmDepthModelDrawer::forceNewImage()
 {
     mustGetNewBmp = true;

@@ -44,9 +44,9 @@ public:
     bool             openDataset();
     dmExtent         applyViewPortArea(/*const*/ PlugIn_ViewPort &vp);
 
-    bool             isRendering();
-    void             setRenderingOn();
-    void             setRenderingOff();
+    bool             isRendering()      { return renderingDmChart; }
+    void             setRenderingOn()   { renderingDmChart = true; }
+    void             setRenderingOff()  { renderingDmChart = false; }
     void             forceNewImage();
     bool             drawDepthChart(/*const*/ wxDC &dc, /*const*/ PlugIn_ViewPort &vp);
 
