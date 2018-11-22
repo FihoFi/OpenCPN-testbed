@@ -15,10 +15,20 @@ SET(TITLE_NAME Depth_model)
 SET(CPACK_PACKAGE_CONTACT "LIVI - Liikennevirasto")
 
 SET(VERSION_MAJOR "0")
-SET(VERSION_MINOR "8")
-SET(VERSION_PATCH "61151b5")
-SET(VERSION_DATE "2018-11-15")
+SET(VERSION_MINOR "9")
+SET(VERSION_PATCH "b0cad66")
+SET(VERSION_DATE "2018-11-21")
 # Version release notes:
+# 0.(0)9
+#   Added water level variables Current water level, and Vertical reference system offset.
+#       These are used with Colour relief chrats with five, of two depth ranges.
+#   File generation tab has now info for Current, and To-be-generated options
+#   Fixed bug, where five, and two colour range depths were loaded from config into the UI
+#        as integers instead of doubles, thus getting the decimals truncated off at plugin startup.
+#   Fixed "on the fly changing" of the chart type, where tweaking UI chartType field
+#       caused the chart type to change unwantedly.
+# Known problems
+#   Colouring option Colour relief / Sliding colours is not implemented
 # 0.(0)8
 #   Fixed requirement of running OpenCPN as administrator, in order to use Depth model.
 #       The changing files are now saved under wxStandardPaths::Get().GetUserDataDir(), 
@@ -30,7 +40,6 @@ SET(VERSION_DATE "2018-11-15")
 #   Fixed failure/crash at generating a chart with Plain visualization type.
 #   Second shot at fixing weird problem, where the plugin icon was randomly shown or not shown at OCPN toolbar.
 #   (Leading zero removed from the minor version number, as the number was interpreted as octal, and thus there could be no 08.)
-#   
 # 0.07
 #    Fixed weird problem, where the plugin icon was randomly shown or not shown at OCPN toolbar.
 #    Fixed colour config values not getting saved.
