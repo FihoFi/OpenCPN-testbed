@@ -156,7 +156,7 @@ int LIVI_Depth_model_pi::Init(void)
 
     return (
         WANTS_OVERLAY_CALLBACK | // pluginManager calls this->RenderOverlay(wxDC ...).
-//TODO  WANTS_CURSOR_LATLON    | // pM calls this->SetCursorLatLon. Implement when depths can be drawn, and want to get depth in single point?
+        //WANTS_CURSOR_LATLON    | // pM calls this->SetCursorLatLon. Implement when depths can be drawn, and want to get depth in single point?
         WANTS_TOOLBAR_CALLBACK | // pM/OpenCPN DOES NOT REACT. Returned by all the plugins I know..? Any plugin has at least a single icon in the toolbar, that wants to react to a click?
         INSTALLS_TOOLBAR_TOOL  | // pM/OpenCPN DOES NOT REACT. Returned by all the plugins I know..? Any plugin has at least a single icon in the toolbar?
         WANTS_CONFIG           | // pM/OpenCPN DOES NOT REACT. This plugin uses config file just used as in example DR_pi, getting gonf file by GetOCPNConfigObject.
@@ -172,9 +172,9 @@ int LIVI_Depth_model_pi::Init(void)
         WANTS_PLUGIN_MESSAGING         | // pM calls SetPluginMessage.
 // OGL  WANTS_OPENGL_OVERLAY_CALLBACK  | // pM calls RenderGLOverlay(wxGLContext ...). OpenGL is extra. Do not implement yet, if requires any effort.
 // OGL  WANTS_DYNAMIC_OPENGL_OVERLAY_CALLBACK | //pM>RenderGLOverlay(wxGLContext ...)., chart1 forces full canvas refresh at ~1hz
-        WANTS_LATE_INIT                 // pM calls LateInit. Implement e.g. for loading charts, to not to hang the main program.
+        WANTS_LATE_INIT                | // pM calls LateInit. Implement e.g. for loading charts, to not to hang the main program.
 // OGL  INSTALLS_PLUGIN_CHART_GL       | // pM calls GetDynamicChartClassNameArray.    OpenGL is extra. Do not implement yet, if requires any effort.
-//      WANTS_MOUSE_EVENTS             | // pM calls MouseEventHook.            Implement if need to listen to mouse clicks on chart, e.g. depth information on clicks
+        WANTS_MOUSE_EVENTS              // pM calls MouseEventHook.            Implement if need to listen to mouse clicks on chart, e.g. depth information on clicks
 //      WANTS_VECTOR_CHART_OBJECT_INFO | // pM calls SendVectorChartObjectInfo. Initiated by cm93, or s57chart objects.
 //      WANTS_KEYBOARD_EVENTS          | // pM calls KeyboardEventHook.         Implement if need to listen to keyboard input.
     );
@@ -495,6 +495,7 @@ void LIVI_Depth_model_pi::LateInit(void)
 */
 bool LIVI_Depth_model_pi::MouseEventHook(wxMouseEvent &event)
 {
+    event.GetPosition(&dmDrawer->_depthX, &dmDrawer->_depthY);
     // TODO
     return false; // not handled; event handling is continued after this function
 }

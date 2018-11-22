@@ -50,6 +50,11 @@ public:
     void             forceNewImage();
     bool             drawDepthChart(/*const*/ wxDC &dc, /*const*/ PlugIn_ViewPort &vp);
 
+
+    float _depth;
+    double _lat, _lon;
+    long _depthX, _depthY;
+
 private:
     bool            renderingDmChart;
     bool            mustGetNewBmp;
@@ -74,6 +79,7 @@ private:
     void LLtoWM(const dmExtent& LLin, dmExtent& WMout);
 
     void readAFile();
+
 };
 
 #endif _DM_DEPTH_MODEL_DRAWER_

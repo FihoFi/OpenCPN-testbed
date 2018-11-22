@@ -251,6 +251,10 @@ bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
     if (bmp)
     {
         dc.DrawBitmap(*bmp, bmpTopLeftLL, true);
+        GetCanvasLLPix(&vp, wxPoint(_depthX, _depthY), &_lat, &_lon);
+        dmExtent ext(coord(_lat, _lon), coord());
+        LLtoWM(ext, ext);
+        dc.DrawText(wxString(std::to_string(dataset.getDepthAt(ext.topLeft))), wxPoint(_depthX, _depthY-10));
     }
 
     return true;
