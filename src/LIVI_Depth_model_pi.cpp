@@ -156,7 +156,7 @@ int LIVI_Depth_model_pi::Init(void)
 
     return (
         WANTS_OVERLAY_CALLBACK | // pluginManager calls this->RenderOverlay(wxDC ...).
-        //WANTS_CURSOR_LATLON    | // pM calls this->SetCursorLatLon. Implement when depths can be drawn, and want to get depth in single point?
+        WANTS_CURSOR_LATLON    | // pM calls this->SetCursorLatLon. Implement when depths can be drawn, and want to get depth in single point?
         WANTS_TOOLBAR_CALLBACK | // pM/OpenCPN DOES NOT REACT. Returned by all the plugins I know..? Any plugin has at least a single icon in the toolbar, that wants to react to a click?
         INSTALLS_TOOLBAR_TOOL  | // pM/OpenCPN DOES NOT REACT. Returned by all the plugins I know..? Any plugin has at least a single icon in the toolbar?
         WANTS_CONFIG           | // pM/OpenCPN DOES NOT REACT. This plugin uses config file just used as in example DR_pi, getting gonf file by GetOCPNConfigObject.
@@ -262,14 +262,11 @@ void LIVI_Depth_model_pi::ShowPreferencesDialog(wxWindow* parent)
 //bool RenderOverlay(wxMemoryDC *pmdc, PlugIn_ViewPort *vp);
 
 /**
-* @TODO NOT IMPLEMENTED yet.
-* Usable, if WANTS_CURSOR_LATLON-able.
-* ?Implement this when depths can be drawn, and want e.g. to pass
-* the user the depth value in a single point at cursor.?
+* In use, when the plugin is WANTS_CURSOR_LATLON-able.
 */
 void LIVI_Depth_model_pi::SetCursorLatLon(double lat, double lon)
 {
-    //TODO
+    dmDrawer->SetCursorLatLon(lat, lon);
 }
 
 /**

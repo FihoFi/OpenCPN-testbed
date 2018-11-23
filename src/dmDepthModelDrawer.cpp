@@ -246,6 +246,13 @@ bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
     return true;
 }
 
+void dmDepthModelDrawer::SetCursorLatLon(double lat, double lon)
+{
+    _lat = lat;
+    _lon = lon;
+    _pix = wxPoint();
+}
+
 wxPoint dmDepthModelDrawer::reCalculateTopLeftLocation(/*const*/PlugIn_ViewPort &vp, dmExtent croppedImageLL)
 {
     wxPoint r1;
