@@ -267,6 +267,7 @@ void LIVI_Depth_model_pi::ShowPreferencesDialog(wxWindow* parent)
 void LIVI_Depth_model_pi::SetCursorLatLon(double lat, double lon)
 {
     dmDrawer->SetCursorLatLon(lat, lon);
+    RequestRefresh(m_parent_window);
 }
 
 /**
@@ -501,6 +502,7 @@ bool LIVI_Depth_model_pi::MouseEventHook(wxMouseEvent &event)
     long _depthX, _depthY;
     event.GetPosition(&_depthX, &_depthY);
     dmDrawer->SetCursorPix(wxPoint(_depthX, _depthY));
+    RequestRefresh(m_parent_window);
     return false; // not handled; event handling is continued after this function
 }
 

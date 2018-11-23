@@ -215,7 +215,8 @@ bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
     raster = NULL;
 
 
-    if (bmp == NULL || needNewCropping(vpExtentLL) || mustGetNewBmp)
+    if (!newDepthValueCalledOnly || bmp == NULL || 
+        needNewCropping(vpExtentLL) || mustGetNewBmp)
     {
         dmExtent idealCroppingLL = calculateIdealCroppingLL(vpExtentLL);
         success = cropImage(idealCroppingLL, &raster, croppedImageLL, w,h);
@@ -259,10 +260,6 @@ bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
     if (bmp)
     {
         dc.DrawBitmap(*bmp, bmpTopLeftLL, true);
-        GetCanvasLLPix(&vp, wxPoint(_depthX, _depthY), &_lat, &_lon);
-        dmExtent ext(coord(_lat, _lon), coord());
-        LLtoWM(ext, ext);
-        dc.DrawText(wxString(std::to_string(dataset.getDepthAt(ext.topLeft))), wxPoint(_depthX, _depthY-10));
     }
 
     return true;
