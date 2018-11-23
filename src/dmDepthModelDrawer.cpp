@@ -181,6 +181,28 @@ void dmDepthModelDrawer::forceNewImage()
     mustGetNewBmp = true;
 }
 
+bool dmDepthModelDrawer::drawDepthValue(wxDC &dc, PlugIn_ViewPort &vp)
+{
+    if (!newDepthValueCalledOnly || !showingDepthValue || bmp == NULL)
+        return true;
+
+    if (abs(_lat) < 0.00001 && abs(_lon) < 0.00001) {
+        GetCanvasLLPix(&vp, _pix, &_lat, &_lon);
+    }
+    else if (_pix == wxPoint()) {
+        GetCanvasPixLL(&vp, &_pix, _lat, _lon);
+    }
+    else
+        return false;
+
+    dmExtent extWM;
+    LLtoWM(dmExtent(coord(_lat, _lon), coord()), extWM);
+    std::string depthStr = std::to_string(dataset.getDepthAt(extWM.topLeft));
+    dc.DrawText(wxString(depthStr), _pix.x, _pix.y-10);
+
+    newDepthValueCalledOnly = false;
+}
+
 bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
 {
     if (!renderingDmChart)
@@ -251,6 +273,7 @@ void dmDepthModelDrawer::SetCursorLatLon(double lat, double lon)
     _lat = lat;
     _lon = lon;
     _pix = wxPoint();
+    newDepthValueCalledOnly = true;
 }
 
 void dmDepthModelDrawer::SetCursorPix(wxPoint position)
@@ -258,6 +281,7 @@ void dmDepthModelDrawer::SetCursorPix(wxPoint position)
     _lat = 0;
     _lon = 0;
     _pix = position;
+    newDepthValueCalledOnly = true;
 }
 
 wxPoint dmDepthModelDrawer::reCalculateTopLeftLocation(/*const*/PlugIn_ViewPort &vp, dmExtent croppedImageLL)

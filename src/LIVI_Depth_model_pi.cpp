@@ -423,6 +423,12 @@ bool LIVI_Depth_model_pi::RenderOverlay(wxDC& dc, PlugIn_ViewPort* vp)
         }
     }
     setCurrentlyDrawnOptionsTextToUI();
+
+    success = dmDrawer->drawDepthValue(dc, *vp);
+    if (!success) {
+        dmDrawer->logError("Depth model failed draw depth value on drawDepthValue .");
+    }
+
     return success;
 }
 

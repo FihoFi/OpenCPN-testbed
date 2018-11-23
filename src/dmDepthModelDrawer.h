@@ -55,6 +55,7 @@ public:
     void             setShowingDepthValueOff()  { showingDepthValue = false; }
     void             SetCursorLatLon(double lat, double lon);
     void             SetCursorPix(wxPoint position);
+    bool             drawDepthValue(wxDC &dc, PlugIn_ViewPort &vp);
 
     float _depth;
     double _lat, _lon;
@@ -64,6 +65,8 @@ private:
     bool            showingDepthValue;
     bool            renderingDmChart;
     bool            mustGetNewBmp;
+    bool            newDepthValueCalledOnly;
+
     dmDrawingState  drawingState;
 
     dmDataset       dataset;
