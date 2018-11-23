@@ -54,10 +54,10 @@ public:
     void             setShowingDepthValueOn()   { showingDepthValue = true;  }
     void             setShowingDepthValueOff()  { showingDepthValue = false; }
     void             SetCursorLatLon(double lat, double lon);
+    void             SetCursorPix(wxPoint position);
 
     float _depth;
     double _lat, _lon;
-    long _depthX, _depthY;
     wxPoint _pix;
 
 private:

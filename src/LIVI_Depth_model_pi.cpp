@@ -492,8 +492,9 @@ void LIVI_Depth_model_pi::LateInit(void)
 */
 bool LIVI_Depth_model_pi::MouseEventHook(wxMouseEvent &event)
 {
-    event.GetPosition(&dmDrawer->_depthX, &dmDrawer->_depthY);
-    // TODO
+    long _depthX, _depthY;
+    event.GetPosition(&_depthX, &_depthY);
+    dmDrawer->SetCursorPix(wxPoint(_depthX, _depthY));
     return false; // not handled; event handling is continued after this function
 }
 

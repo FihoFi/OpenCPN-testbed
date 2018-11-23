@@ -253,6 +253,13 @@ void dmDepthModelDrawer::SetCursorLatLon(double lat, double lon)
     _pix = wxPoint();
 }
 
+void dmDepthModelDrawer::SetCursorPix(wxPoint position)
+{
+    _lat = 0;
+    _lon = 0;
+    _pix = position;
+}
+
 wxPoint dmDepthModelDrawer::reCalculateTopLeftLocation(/*const*/PlugIn_ViewPort &vp, dmExtent croppedImageLL)
 {
     wxPoint r1;
