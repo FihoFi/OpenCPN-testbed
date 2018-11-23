@@ -183,7 +183,7 @@ void dmDepthModelDrawer::forceNewImage()
 
 bool dmDepthModelDrawer::drawDepthValue(wxDC &dc, PlugIn_ViewPort &vp)
 {
-    if (!newDepthValueCalledOnly || !showingDepthValue || bmp == NULL)
+    if (!showingDepthValue || bmp == NULL)
         return true;
 
     if (abs(_lat) < 0.00001 && abs(_lon) < 0.00001) {
@@ -192,8 +192,6 @@ bool dmDepthModelDrawer::drawDepthValue(wxDC &dc, PlugIn_ViewPort &vp)
     else if (_pix == wxPoint()) {
         GetCanvasPixLL(&vp, &_pix, _lat, _lon);
     }
-    else
-        return false;
 
     dmExtent extWM;
     LLtoWM(dmExtent(coord(_lat, _lon), coord()), extWM);
