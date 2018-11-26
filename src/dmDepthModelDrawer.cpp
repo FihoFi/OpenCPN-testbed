@@ -198,6 +198,7 @@ bool dmDepthModelDrawer::drawDepthValue(wxDC &dc, PlugIn_ViewPort &vp)
     else {
         // Neither wxPoint, nor lat/lon has default value, this is
         // a corner case, where the values are scrambled. 
+        return false;
     }
     dmExtent extWM;
     LLtoWM(dmExtent(coord(_lat, _lon), coord()), extWM);
@@ -205,6 +206,7 @@ bool dmDepthModelDrawer::drawDepthValue(wxDC &dc, PlugIn_ViewPort &vp)
     dc.DrawText(wxString(depthStr), _pix.x, _pix.y-10);
 
     newDepthValueCalledOnly = false;
+    return true;
 }
 
 bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
