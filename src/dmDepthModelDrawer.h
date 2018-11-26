@@ -57,10 +57,6 @@ public:
     void             SetCursorPix(wxPoint position);
     bool             drawDepthValue(wxDC &dc, PlugIn_ViewPort &vp);
 
-    float _depth;
-    double _lat, _lon;
-    wxPoint _pix;
-
 private:
     bool            showingDepthValue;
     bool            renderingDmChart;
@@ -75,6 +71,10 @@ private:
     dmExtent        croppedImageLL;
     wxBitmap*       bmp;
     wxPoint         bmpTopLeftLL;
+
+    float           _depth;
+    double          _lat, _lon;
+    wxPoint         _pix;
 
     bool        needNewCropping         (dmExtent viewPortLL);
     dmExtent    calculateIdealCroppingLL(dmExtent viewPortLL) const;
