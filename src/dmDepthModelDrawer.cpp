@@ -22,6 +22,7 @@ dmDepthModelDrawer::dmDepthModelDrawer()
     , dataset(this)
     , renderingDmChart(false)
     , showingDepthValue(true)
+    , _depth(0.0), _lat(0.0), _lon(0.0), _pix()
 {
     bmp = NULL;
 }
