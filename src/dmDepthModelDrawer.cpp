@@ -188,12 +188,17 @@ bool dmDepthModelDrawer::drawDepthValue(wxDC &dc, PlugIn_ViewPort &vp)
         return true;
 
     if (abs(_lat) < 0.00001 && abs(_lon) < 0.00001) {
+        // lat/lon are zeroes, transform pixel values to lat/lon
         GetCanvasLLPix(&vp, _pix, &_lat, &_lon);
     }
     else if (_pix == wxPoint()) {
+        // pix has default value, transform lat/lon value to pixel values
         GetCanvasPixLL(&vp, &_pix, _lat, _lon);
     }
-
+    else {
+        // Neither wxPoint, nor lat/lon has default value, this is
+        // a corner case, where the values are scrambled. 
+    }
     dmExtent extWM;
     LLtoWM(dmExtent(coord(_lat, _lon), coord()), extWM);
     std::string depthStr = std::to_string(dataset.getDepthAt(extWM.topLeft));
