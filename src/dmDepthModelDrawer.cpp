@@ -1,5 +1,8 @@
 //#include "gdal_priv.h"
 //#include "cpl_conv.h" // for CPLMalloc()
+#include <iomanip> // setprecision
+#include <sstream> // stringstream
+
 #include "dmDepthModelDrawer.h"
 
 #include <proj_api.h>
@@ -202,7 +205,24 @@ bool dmDepthModelDrawer::drawDepthValue(wxDC &dc, PlugIn_ViewPort &vp)
     }
     dmExtent extWM;
     LLtoWM(dmExtent(coord(_lat, _lon), coord()), extWM);
-    std::string depthStr = std::to_string(dataset.getDepthAt(extWM.topLeft));
+
+    double modelDepth = dataset.getDepthAt(extWM.topLeft);
+    if (modelDepth < -9998)
+        return true;
+
+    double currentWL, vertRefSyst;
+    drawingState.GetCurrentWaterLevels(currentWL, vertRefSyst);
+
+    // keep systemCorrected depth unchanged, if it has "out-of-model" value
+    float systemCorrectedDepth = modelDepth + (modelDepth < -9999 ? (float)vertRefSyst : 0.0);
+    float wholeDepth = systemCorrectedDepth + (float)currentWL;
+    std::string sign = currentWL > 0.0 ? " +" : " ";
+
+    std::stringstream stream;
+    stream  << std::fixed << std::setprecision(2)
+            << wholeDepth << " (" << systemCorrectedDepth << sign << currentWL << ")";
+
+    std::string depthStr = stream.str();
     dc.DrawText(wxString(depthStr), _pix.x, _pix.y-10);
 
     newDepthValueCalledOnly = false;

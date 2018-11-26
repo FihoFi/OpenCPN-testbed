@@ -31,6 +31,13 @@ void dmDrawingState::SetCurrentAsWanted()
     currentVertRefSystOffset  = wantedVertRefSystOffset;
 }
 
+void  dmDrawingState::GetCurrentWaterLevels(
+    double& currentWaterLevel, double& vertRefSystOffset)
+{
+    currentWaterLevel = currentCurrentWaterLevel;
+    vertRefSystOffset = currentVertRefSystOffset;
+}
+
 void  dmDrawingState::GetCurrents(DM_visualization& chartType, DM_colourType& colourSchema,
                                   double& currentWaterLevel, double& vertRefSystOffset)
 {

@@ -31,6 +31,8 @@ public:
 
     // Current variables are to be set at the time of drawing
     void                SetCurrentAsWanted();
+    void                GetCurrentWaterLevels(
+        double& currentWaterLevel, double& vertRefSystOffset);
     void                GetCurrents(
         DM_visualization& chartType, DM_colourType& colourSchema,
         double& currentWaterLevel, double& vertRefSystOffset);
