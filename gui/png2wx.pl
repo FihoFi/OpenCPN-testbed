@@ -51,6 +51,7 @@ sub main ()
 #endif
 
 extern void initialize_images(void);
+extern void deinitialize_images(void);
 
 --EOF
 
@@ -99,6 +100,12 @@ extern void initialize_images(void);
 		"void initialize_images(void)\n{\n",
 		$main,
 		"	return;\n",
+		"}\n",
+		"\n",
+		"void deinitialize_images(void)\n",
+		"{\n",
+		"	delete _img_LIVI_Depth_model_pi;\n",
+		"	delete _img_LIVI_Depth_model;\n",
 		"}\n";
 	close CPP;
 	return 0;
