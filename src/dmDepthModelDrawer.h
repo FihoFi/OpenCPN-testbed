@@ -44,15 +44,25 @@ public:
     bool             openDataset();
     dmExtent         applyViewPortArea(/*const*/ PlugIn_ViewPort &vp);
 
-    bool             isRendering();
-    void             setRenderingOn();
-    void             setRenderingOff();
+    bool             isRendering()      { return renderingDmChart; }
+    void             setRenderingOn()   { renderingDmChart = true; }
+    void             setRenderingOff()  { renderingDmChart = false; }
     void             forceNewImage();
     bool             drawDepthChart(/*const*/ wxDC &dc, /*const*/ PlugIn_ViewPort &vp);
 
+    bool             isShowingDepthValue()      { return showingDepthValue;  }
+    void             setShowingDepthValueOn()   { showingDepthValue = true;  }
+    void             setShowingDepthValueOff()  { showingDepthValue = false; }
+    void             SetCursorLatLon(double lat, double lon);
+    void             SetCursorPix(wxPoint position);
+    bool             drawDepthValue(wxDC &dc, PlugIn_ViewPort &vp);
+
 private:
+    bool            showingDepthValue;
     bool            renderingDmChart;
     bool            mustGetNewBmp;
+    bool            newDepthValueCalledOnly;
+
     dmDrawingState  drawingState;
 
     dmDataset       dataset;
@@ -61,6 +71,10 @@ private:
     dmExtent        croppedImageLL;
     wxBitmap*       bmp;
     wxPoint         bmpTopLeftLL;
+
+    float           _depth;
+    double          _lat, _lon;
+    wxPoint         _pix;
 
     bool        needNewCropping         (dmExtent viewPortLL);
     dmExtent    calculateIdealCroppingLL(dmExtent viewPortLL) const;
@@ -74,6 +88,7 @@ private:
     void LLtoWM(const dmExtent& LLin, dmExtent& WMout);
 
     void readAFile();
+
 };
 
 #endif _DM_DEPTH_MODEL_DRAWER_
