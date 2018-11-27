@@ -132,6 +132,8 @@ int LIVI_Depth_model_pi::Init(void)
                                  m_pconf->colour.hillshadeTransparency);
     dmDrawer->setCurrentWaterLevel            (m_pconf->waterLevel.m_currentWaterLevel);
     dmDrawer->setVerticalReferenceSystemOffset(m_pconf->waterLevel.m_verticalReferenceSystemOffset);
+
+    setHillshadeparamsTextToUI();
     setCurrentlyDrawnOptionsTextToUI();
     setImageToGenerateOptionsTextToUI();
 
@@ -787,6 +789,14 @@ void LIVI_Depth_model_pi::PullConfigFromUI(void)
     m_pconf->waterLevel.m_currentWaterLevel = dialog->GetCurrentWaterLevel();
     m_pconf->waterLevel.m_verticalReferenceSystemOffset 
         = dialog->GetVerticalReferenceSystemOffsetLevel();
+}
+
+void LIVI_Depth_model_pi::setHillshadeparamsTextToUI()
+{
+    DMColorOptionConfig cc = m_pconf->colour;
+
+    dialog->SetHillshadeparamsText( cc.hillshadeAzimuth, cc.hillshadeAltitude,
+                                    cc.hillshadeZfactor, cc.hillshadeTransparency);
 }
 
 void LIVI_Depth_model_pi::setCurrentlyDrawnOptionsTextToUI()

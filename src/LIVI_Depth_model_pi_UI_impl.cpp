@@ -31,6 +31,9 @@
 #include "wx/dir.h"
 #include <list>
 #include <cmath>
+#include <iomanip> // setprecision
+#include <sstream> // stringstream
+
 #include "LIVI_Depth_model_pi.h"
 #include "dm_API.h"
 
@@ -330,6 +333,25 @@ void Dlg::SetPictureImportErrorText(std::string errStr)
     this->dmPictureImport_Status_staticText->SetLabel(errStr);
     this->dmPictureImport_Status_staticText->SetForegroundColour(*wxRED);
     this->dmPictureImport_Status_staticText->Refresh();
+}
+
+void Dlg::SetHillshadeparamsText(double azimuth, double altitude,
+                                 double zFactor, unsigned int transparency)
+{
+    std::stringstream stream;
+    stream << std::fixed << std::setprecision(2)
+        << "\nCurrent hillshade parameters:"
+        << "\n  Azimuth of the light (0-360 degrees): " << azimuth
+        << "\n  Altitude of the light (0-90 degrees): " << altitude
+        << "\n  Elevation exaggeration (\"z factor\"): " << zFactor
+        << "\n  Image transparency (0(none)-255(full)): " << transparency
+        << "\n"
+        << "\n"
+        << "\nChange these parameters in the OpenCPN .ini file."
+        << "\n";
+
+    std::string hillshadeStr = stream.str();
+    this->dmChartOptions_Hillshade_paramInfoText->SetLabel(hillshadeStr);
 }
 
 //void Dlg::Addpoint(TiXmlElement* Route, wxString ptlat, wxString ptlon, wxString ptname, wxString ptsym, wxString pttype){

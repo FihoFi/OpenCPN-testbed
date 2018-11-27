@@ -97,6 +97,8 @@ public:
     void        SetToGenerateText(std::string errStr);
     void        SetPictureImportInfoText(std::string errStr);
     void        SetPictureImportErrorText(std::string errStr);
+    void        SetHillshadeparamsText( double azimuth, double altitude,
+                                        double zFactor, unsigned int transparency);
 
     LIVI_Depth_model_pi *plugin; // for callbacks at UI events
 
