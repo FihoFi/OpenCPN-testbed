@@ -305,30 +305,6 @@ bool DMFileImportConfig::load()
         {
             filePath = fname;
         }
-
-        std::string str = confFile->Read(wxT("LatMin"));
-        if (str.length() == 0)
-        {    /* todo Write an error message to the log file */
-        }
-        else { latMin = std::stoi(str); }
-
-        str = confFile->Read(wxT("LatMax"));
-        if (str.length() == 0)
-        {    /* todo Write an error message to the log file */
-        }
-        else { latMax = std::stoi(str); }
-
-        str = confFile->Read(wxT("LonMin"));
-        if (str.length() == 0)
-        {    /* todo Write an error message to the log file */
-        }
-        else { lonMin = std::stoi(str); }
-
-        str = confFile->Read(wxT("LonMax"));
-        if (str.length() == 0)
-        {    /* todo Write an error message to the log file */
-        }
-        else { lonMax = std::stoi(str); }
     }
     return success;
 }
@@ -341,11 +317,6 @@ bool DMFileImportConfig::save(void)
         confFile->SetPath(_T("/Settings/LIVI_Depth_model_pi/FileImport"));
 
         success &= confFile->Write(wxT("FileImport_fullpathname"), filePath.GetFullPath());
-
-        success &= confFile->Write(wxT("LatMin"), latMin);
-        success &= confFile->Write(wxT("LatMax"), latMax);
-        success &= confFile->Write(wxT("LonMin"), lonMin);
-        success &= confFile->Write(wxT("LonMax"), lonMax);
     }
     return success;
 }

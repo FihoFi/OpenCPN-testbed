@@ -137,17 +137,12 @@ struct DMFileImportConfig : dm_configAPI {
     // Filepath to the imported file
     wxFileName filePath;
 
-    // Min, and max coordinates where the picture in the filePath should be drawn
-    double latMin, lonMin;
-    double latMax, lonMax;
-
     virtual bool load() override;
     virtual bool save() override;
 };
 
 struct DMWaterLevelConfig : dm_configAPI
 {
-
     DMWaterLevelConfig(wxFileConfig* confFile)
     {    this->confFile = confFile;    }
 
