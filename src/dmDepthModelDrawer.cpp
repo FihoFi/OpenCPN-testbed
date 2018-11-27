@@ -213,9 +213,8 @@ bool dmDepthModelDrawer::drawDepthValue(wxDC &dc, PlugIn_ViewPort &vp)
     double currentWL, vertRefSyst;
     drawingState.GetCurrentWaterLevels(currentWL, vertRefSyst);
 
-    // keep systemCorrected depth unchanged, if it has "out-of-model" value
-    float systemCorrectedDepth = modelDepth + (modelDepth < -9999 ? (float)vertRefSyst : 0.0);
-    float wholeDepth = systemCorrectedDepth + (float)currentWL;
+    float systemCorrectedDepth = modelDepth + (float)vertRefSyst;
+    float wholeDepth = modelDepth + (float)vertRefSyst + (float)currentWL;
     std::string sign = currentWL > 0.0 ? " +" : " ";
 
     std::stringstream stream;
