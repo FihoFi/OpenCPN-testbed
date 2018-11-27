@@ -36,6 +36,8 @@ public:
     DM_colourType    getColourSchema();
     bool             setColourSchema(DM_colourType colourSchema);
     bool             setColourConfigurationFile(const wxFileName &fileNamePath);
+    void             setHillshadeParams(double azimuth, double altitude,
+                                        double zFactor, unsigned int transparency);
     void             setCurrentWaterLevel(double cvl);
     void             setVerticalReferenceSystemOffset(double vrso);
     void             setTempFileFolder(wxFileName &fileName);

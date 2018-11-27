@@ -91,6 +91,15 @@ bool dmDepthModelDrawer::setColourConfigurationFile(const wxFileName &fileNamePa
     return drawingState.SetWantedUserColourFileName(fileNamePath);
 }
 
+void dmDepthModelDrawer::setHillshadeParams(double azimuth, double altitude,
+    double zFactor, unsigned int transparency)
+{
+    dataset.setHillshadeAltitude(altitude);
+    dataset.setHillshadeAzimuth(azimuth);
+    dataset.setHillshadeZFactor(zFactor);
+  //dataset.setHillshadeAlpha(255-transparency);    // from transparency to opaqueness
+}
+
 void dmDepthModelDrawer::setCurrentWaterLevel(double cvl)
 {
     drawingState.SetWantedCurrentWaterLevel(cvl);
