@@ -47,12 +47,12 @@ public:
     bool latLonToDstSrs(dmExtent latLonIn, dmExtent &dstSrsOut) override;
 
     // setters for hillshade parameters
-    bool setHillshadeZFactor(double zFactor) override;
-    bool setHillshadeScale(double scale) override;
-    bool setHillshadeAzimuth(double azimuth) override;
-    bool setHillshadeAltitude(double altitude) override;
-    bool setHillshadeCombined(bool combined) override;
-    bool setHillshadeMultidirectional(bool multidirectional) override;
+    void setHillshadeZFactor(double zFactor) override;
+    void setHillshadeScale(double scale) override;
+    void setHillshadeAzimuth(double azimuth) override;
+    void setHillshadeAltitude(double altitude) override;
+    void setHillshadeCombined(bool combined) override;
+    void setHillshadeMultidirectional(bool multidirectional) override;
 
 private:
     static bool driversRegistered;
