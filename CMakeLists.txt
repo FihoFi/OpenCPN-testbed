@@ -15,10 +15,14 @@ SET(TITLE_NAME Depth_model)
 SET(CPACK_PACKAGE_CONTACT "LIVI - Liikennevirasto")
 
 SET(VERSION_MAJOR "0")
-SET(VERSION_MINOR "9")
-SET(VERSION_PATCH "b0cad66")
-SET(VERSION_DATE "2018-11-21")
+SET(VERSION_MINOR "10")
+SET(VERSION_PATCH "2d7ffb4")
+SET(VERSION_DATE "2018-11-27")
 # Version release notes:
+# 0.10
+#   Now shows depth values next to cursor on the map. Value is shown where the 
+#       model has sensible values. Format is"current (systemcorrected + water level)".
+#   Icon updated to comply more with the general OpenCPN icon style.
 # 0.(0)9
 #   Added water level variables Current water level, and Vertical reference system offset.
 #       These are used with Colour relief chrats with five, of two depth ranges.
