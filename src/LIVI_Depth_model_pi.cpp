@@ -618,6 +618,7 @@ void LIVI_Depth_model_pi::OnGenerateImage()
 void LIVI_Depth_model_pi::OnClearImage()
 {
     dmDrawer->setRenderingOff();
+    dmDrawer->setShowingDepthValueOff();
     RequestRefresh(m_parent_window); // request refresh of the main window -> call to RenderOverlay
     dmDrawer->logInfo("Depth model: Refresh request for image clearance sent.");
 }
