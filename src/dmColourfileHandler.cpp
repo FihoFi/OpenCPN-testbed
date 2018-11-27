@@ -45,6 +45,7 @@ bool dmColourfileHandler::GetConfFileOfType(DM_colourType colourOption, wxFileNa
     case COLOUR_TWO_RANGES:  {   colorFile = twoColoursFileName;         break; }
     default:                 {   colorFile = wxFileName("");             break; }
     }
+    return true;
 }
 
 bool dmColourfileHandler::GenerateConfFileOfType(DM_colourType colourOption)
