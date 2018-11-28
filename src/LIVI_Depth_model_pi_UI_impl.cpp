@@ -311,6 +311,13 @@ wxFileName Dlg::GetDepthChartFileName()
 void    Dlg::SetDepthChartFileName(wxFileName &fileName)
 {    this->dmPictureImport_filePicker->SetFileName(fileName);   }
 
+void Dlg::SetCurrentlyDrawnTextToNothing()
+{
+    std::stringstream stream;
+    stream << "Currenly drawn:\n  Nothing";
+
+    this->dmPictureImport_CurrentlyDrawn_staticText->SetLabel(stream.str());
+}
 
 void Dlg::SetCurrentlyDrawnText(DM_visualization chartType, DM_colourType colourSchema,
                                 double wl, double vrso)

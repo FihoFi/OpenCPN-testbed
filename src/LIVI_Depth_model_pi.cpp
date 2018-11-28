@@ -801,11 +801,9 @@ void LIVI_Depth_model_pi::setHillshadeparamsTextToUI()
 
 void LIVI_Depth_model_pi::setCurrentlyDrawnOptionsTextToUI()
 {
-    std::string str("Currenly drawn:\n  ");
-
     if (!dmDrawer->isRendering())
     {
-        str = str + "Nothing";
+        dialog->SetCurrentlyDrawnTextToNothing();
     }
     else
     {
