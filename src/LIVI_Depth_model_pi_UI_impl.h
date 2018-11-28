@@ -118,6 +118,9 @@ private:
     virtual void OnCurrentWaterLevelChange  ( wxSpinDoubleEvent& WXUNUSED(event) );
     virtual void OnVerticalReferenceSystemOffsetChange( wxSpinDoubleEvent& WXUNUSED(event) );
 
+    std::string  getDrawingOptionsString(DM_visualization chartType, DM_colourType colourSchema,
+                                         double wl, double vrso);
+
  //     double lat1, lon1, lat2, lon2;
  //     bool error_found;
  //     wxString     m_gpx_path;

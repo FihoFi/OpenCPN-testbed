@@ -321,6 +321,34 @@ void Dlg::SetToGenerateText(std::string str)
     this->dmPictureImport_ToGenerate_staticText->SetLabel(str);
 }
 
+std::string Dlg::getDrawingOptionsString(DM_visualization chartType,
+                                         DM_colourType colourSchema,
+                                         double wl, double vrso)
+{
+    std::stringstream stream;
+    std::string str;
+
+    stream  << std::fixed << std::setprecision(2) << chartType;
+
+    bool canApplyWaterLevels = false;
+    if (chartType == COLOR_RELIEF)
+    {
+        if (colourSchema == COLOUR_FIVE_RANGES || colourSchema == COLOUR_TWO_RANGES)
+        {   canApplyWaterLevels = true;     }
+
+        stream << " / " + colouringTypeToString(colourSchema);
+    }
+
+    if (canApplyWaterLevels)
+        stream  << "\n  Water level:   " << (wl   > 0 ? "+" : "") << wl
+                << "\n  System offset: " << (vrso > 0 ? "+" : "") << vrso;
+    else
+        stream  << "\n  Water level:   (cannot apply)"
+                << "\n  System offset: (cannot apply)";
+
+    return stream.str();
+}
+
 void Dlg::SetPictureImportInfoText(std::string infoStr)
 {
     this->dmPictureImport_Status_staticText->SetLabel(infoStr);
