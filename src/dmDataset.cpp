@@ -451,28 +451,63 @@ bool dmDataset::getCropExtents(coord topLeftIn, coord botRightIn,
 
 std::vector<std::string> dmDataset::getGdaldemOptionsVec()
 {
-    std::vector<std::string> optionsVec;
+    std::vector<std::string> options;
 
     switch (_visScheme)
     {
     case HILLSHADE:
-        optionsVec.push_back("-az");
-        optionsVec.push_back(std::to_string(_hillshadeParamAzimuth));
-        optionsVec.push_back("-alt");
-        optionsVec.push_back(std::to_string(_hillshadeParamAltitude));
+        options.push_back("-az");
+        options.push_back(std::to_string(_hillshadeParamAzimuth));
+        options.push_back("-alt");
+        options.push_back(std::to_string(_hillshadeParamAltitude));
         if (_hillshadeParamMultidirectional)
-            optionsVec.push_back("-multidirectional");
+            options.push_back("-multidirectional");
         break;
     case COLOR_RELIEF:
-        optionsVec.push_back("-alpha");
-        optionsVec.push_back("-nearest_color_entry");
+        options.push_back("-alpha");
+        options.push_back("-nearest_color_entry");
         break;
     case NONE:
     default:
         break;
     }
 
-    return optionsVec;
+    return options;
+}
+
+std::vector<std::string> dmDataset::getGdalwarpOptionsVec()
+{
+    std::vector<std::string> options;
+
+    options.push_back("-t_srs");
+    options.push_back(_dstWkt.c_str());
+    options.push_back("-nosrcalpha");
+
+    options.push_back("-r");
+    switch (_visScheme)
+    {
+    case HILLSHADE:
+    case COLOR_RELIEF:
+        options.push_back("max");
+        break;
+    case NONE:
+        options.push_back("cubic");
+        break;
+    }
+
+    return options;
+}
+
+
+gdalUtilOpts dmDataset::optionsVecToGdalUtilOpts(std::vector<std::string> &options)
+{
+    char** optionsArr = new char*[options.size() + 1];
+    for (unsigned int i = 0; i<options.size(); i++)
+    {
+        optionsArr[i] = (char*)options[i].c_str();
+    }
+    optionsArr[options.size()] = nullptr;
+    return gdalUtilOpts (optionsArr);
 }
 
 bool dmDataset::latLonToDstSrs(coord latLonIn, coord &dstSrsOut)
@@ -519,13 +554,11 @@ GDALDataset * dmDataset::reprojectDataset(GDALDataset *dsToReproject)
         int err = 0;
         GDALDataset *warpedDS;
 
-        char *warpOpts[] = { (char*)"-t_srs", (char *)_dstWkt.c_str(),
-                             (char*)"-r",     (char*)"max",
-                             (char*)"-nosrcalpha",
-                             NULL };
+        std::vector<std::string> optionsVec = getGdalwarpOptionsVec();
+        gdalUtilOpts options =  optionsVecToGdalUtilOpts(optionsVec);
 
         // coordinate system reprojection
-        GDALWarpAppOptions *psWarpOptions = GDALWarpAppOptionsNew(warpOpts, NULL);
+        GDALWarpAppOptions *psWarpOptions = GDALWarpAppOptionsNew(options.get(), NULL);
         warpedDS = (GDALDataset*)GDALWarp((_tempFolderPath + warpedFileName).c_str(), NULL, 1, (GDALDatasetH*)&dsToReproject, psWarpOptions, &err);
 
         // clean up
@@ -545,16 +578,11 @@ GDALDataset * dmDataset::visualizeDataset(GDALDataset *dsToVisualize)
     int err = 0;
     GDALDataset *resultDs;
 
-    // put gdaldem processing flags into a c string array
-    std::vector<std::string> optionsVec = getGdaldemOptionsVec();
-    char** optionsArr = new char*[optionsVec.size() + 1];
-    for (unsigned int i = 0; i<optionsVec.size(); i++)
-    {
-        optionsArr[i] = (char*)optionsVec[i].c_str();
-    }
-    optionsArr[optionsVec.size()] = nullptr;
+ 
+        std::vector<std::string> optionsVec = getGdaldemOptionsVec();
+        gdalUtilOpts options =  optionsVecToGdalUtilOpts(optionsVec);
 
-    GDALDEMProcessingOptions * gdaldemOptions = GDALDEMProcessingOptionsNew(optionsArr, nullptr);
+    GDALDEMProcessingOptions * gdaldemOptions = GDALDEMProcessingOptionsNew(options.get(), NULL);
 
     switch (_visScheme)
     {
