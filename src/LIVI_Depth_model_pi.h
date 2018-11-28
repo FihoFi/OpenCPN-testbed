@@ -152,8 +152,6 @@ private:
     void                setHillshadeparamsTextToUI();
     void                setCurrentlyDrawnOptionsTextToUI();
     void                setImageToGenerateOptionsTextToUI();
-    std::string         getDrawingOptionsString(DM_visualization chartType,
-                            DM_colourType colourSchema, double wl, double vrso);
 
     bool                createDMPluginDataPath();
     void                setInfoToUI(std::string str);
