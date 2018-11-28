@@ -801,11 +801,6 @@ void LIVI_Depth_model_pi::setHillshadeparamsTextToUI()
 
 void LIVI_Depth_model_pi::setCurrentlyDrawnOptionsTextToUI()
 {
-    DM_visualization chartType;
-    DM_colourType    colourSchema;
-    double           wl, vrso;
-    dmDrawer->getCurrents(chartType, colourSchema, wl, vrso);
-
     std::string str("Currenly drawn:\n  ");
 
     if (!dmDrawer->isRendering())
@@ -814,10 +809,13 @@ void LIVI_Depth_model_pi::setCurrentlyDrawnOptionsTextToUI()
     }
     else
     {
-        str = str + getDrawingOptionsString(chartType, colourSchema, wl, vrso);
+        DM_visualization chartType;
+        DM_colourType    colourSchema;
+        double           wl, vrso;
+        dmDrawer->getCurrents(chartType, colourSchema, wl, vrso);
+        dialog->SetCurrentlyDrawnText(chartType, colourSchema, wl, vrso);
     }
 
-    dialog->SetCurrentlyDrawnText(str);
 }
 
 void LIVI_Depth_model_pi::setImageToGenerateOptionsTextToUI()
@@ -827,10 +825,6 @@ void LIVI_Depth_model_pi::setImageToGenerateOptionsTextToUI()
     double           wl           = m_pconf->waterLevel.getCurrentWaterLevel();
     double           vrso         = m_pconf->waterLevel.getVerticalReferenceSystemOffset();
 
-    std::string str = "Drawing options for image to generate:\n  " +
-                        getDrawingOptionsString(chartType, colourSchema, wl, vrso);
-
-    dialog->SetToGenerateText(str);
 }
 
 std::string LIVI_Depth_model_pi::getDrawingOptionsString(DM_visualization chartType,
@@ -857,6 +851,7 @@ std::string LIVI_Depth_model_pi::getDrawingOptionsString(DM_visualization chartT
                     "\n  System offset: (cannot apply)";
 
     return str;
+    dialog->SetToGenerateText(chartType, colourSchema, wl, vrso);
 }
 
 bool LIVI_Depth_model_pi::createDMPluginDataPath()

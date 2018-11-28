@@ -92,9 +92,13 @@ public:
 
     void        SetDepthChartFileName(wxFileName &fileName);
     wxFileName  GetDepthChartFileName();
-
-    void        SetCurrentlyDrawnText(std::string errStr);
-    void        SetToGenerateText(std::string errStr);
+    void        SetCurrentlyDrawnTextToNothing();
+    void        SetCurrentlyDrawnText(  DM_visualization chartType,
+                                        DM_colourType colourSchema,
+                                        double wl, double vrso);
+    void        SetToGenerateText(  DM_visualization chartType,
+                                    DM_colourType colourSchema,
+                                    double wl, double vrso);
     void        SetPictureImportInfoText(std::string errStr);
     void        SetPictureImportErrorText(std::string errStr);
     void        SetHillshadeparamsText( double azimuth, double altitude,
