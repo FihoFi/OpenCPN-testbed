@@ -187,10 +187,10 @@ bool DMColorOptionConfig::save(void)
     {
         confFile->SetPath(_T("/Settings/LIVI_Depth_model_pi/Colour"));
 
-        success &= confFile->Write(_T("ChartType"),
-            chartTypeToString(chartType));
-        success &= confFile->Write(_T("ColouringType"),
-            colouringTypeToString(colouringType));
+        success &= confFile->Write( _T("ChartType"),
+                                wxString(chartTypeToString(chartType)));
+        success &= confFile->Write( _T("ColouringType"),
+                                wxString(colouringTypeToString(colouringType)));
 
         for (int i = 0; i < DM_NUM_CUSTOM_COL; i++) {
             success &= confFile->Write(_T("CustomColour") + std::to_string(i),
@@ -252,34 +252,12 @@ bool DMWaterLevelConfig::save(void)
         return false;
 }
 
-wxString DMColorOptionConfig::chartTypeToString(DM_visualization chartType)
-{
-    switch (chartType)
-    {
-    case NONE:          { return wxString("Plain");         break; }
-    case HILLSHADE:     { return wxString("Hillshade");     break; }
-    case COLOR_RELIEF:  { return wxString("Color_relief");  break; }
-    default:            { return wxString("Undefined");     break; }
-    }
-}
 
 DM_visualization DMColorOptionConfig::stringToChartType(wxString chartTypeString) {
     if      (chartTypeString.Contains("Plain")        ) { return NONE;                      }
     else if (chartTypeString.Contains("Hillshade")    ) { return HILLSHADE;                 }
     else if (chartTypeString.Contains("Color_relief") ) { return COLOR_RELIEF;              }
     else                                                { return VISUALIZATION_UNDEFINED;   }
-}
-
-wxString DMColorOptionConfig::colouringTypeToString(DM_colourType colType)
-{
-    switch (colType)
-    {
-    case COLOUR_USER_FILE:      { return wxString("User_file");     break; }
-    case COLOUR_FIVE_RANGES:    { return wxString("Five_ranges");   break; }
-    case COLOUR_SLIDING:        { return wxString("Sliding");       break; }
-    case COLOUR_TWO_RANGES:     { return wxString("Two_ranges");    break; }
-    default:                    { return wxString("Undefined");     break; }
-    }
 }
 
 DM_colourType DMColorOptionConfig::stringToColouringType(wxString colTypeString)

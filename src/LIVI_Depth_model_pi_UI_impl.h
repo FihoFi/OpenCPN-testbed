@@ -92,9 +92,13 @@ public:
 
     void        SetDepthChartFileName(wxFileName &fileName);
     wxFileName  GetDepthChartFileName();
-
-    void        SetCurrentlyDrawnText(std::string errStr);
-    void        SetToGenerateText(std::string errStr);
+    void        SetCurrentlyDrawnTextToNothing();
+    void        SetCurrentlyDrawnText(  DM_visualization chartType,
+                                        DM_colourType colourSchema,
+                                        double wl, double vrso);
+    void        SetToGenerateText(  DM_visualization chartType,
+                                    DM_colourType colourSchema,
+                                    double wl, double vrso);
     void        SetPictureImportInfoText(std::string errStr);
     void        SetPictureImportErrorText(std::string errStr);
     void        SetHillshadeparamsText( double azimuth, double altitude,
@@ -117,6 +121,9 @@ private:
     virtual void OnUserColourFileChange  ( wxFileDirPickerEvent& WXUNUSED(event) );
     virtual void OnCurrentWaterLevelChange  ( wxSpinDoubleEvent& WXUNUSED(event) );
     virtual void OnVerticalReferenceSystemOffsetChange( wxSpinDoubleEvent& WXUNUSED(event) );
+
+    std::string  getDrawingOptionsString(DM_visualization chartType, DM_colourType colourSchema,
+                                         double wl, double vrso);
 
  //     double lat1, lon1, lat2, lon2;
  //     bool error_found;

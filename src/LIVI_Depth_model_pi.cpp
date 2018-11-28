@@ -577,8 +577,8 @@ void LIVI_Depth_model_pi::OnGenerateImage()
             if (!success)
             {
                 dmDrawer->logError(
-                    "Depth model: Generating image. Failed to save colouring file of" + std::string(
-                    m_pconf->colour.colouringTypeToString(colouringType)));
+                    "Depth model: Generating image. Failed to save colouring file of" +
+                    colouringTypeToString(colouringType));
             }
             if (!colorFile.IsOk())
             {
@@ -638,8 +638,8 @@ void LIVI_Depth_model_pi::OnChartTypeChange(DM_visualization toType)
         m_pconf->colour.setChartType(chartType);
         m_pconf->SaveConfig();
         this->setImageToGenerateOptionsTextToUI();
-        dmDrawer->logInfo("Depth model: Image type changed to " + std::string(
-            m_pconf->colour.chartTypeToString(chartType)));
+        dmDrawer->logInfo(  "Depth model: Image type changed to " +
+                            chartTypeToString(chartType));
     }
     else
     {
@@ -657,8 +657,8 @@ void LIVI_Depth_model_pi::OnColourSchemaChange(DM_colourType toType)
         m_pconf->colour.setColouringType(colType);
         m_pconf->SaveConfig();
         this->setImageToGenerateOptionsTextToUI();
-        dmDrawer->logInfo("Depth model: Colouring schema changed to " + std::string(
-            m_pconf->colour.colouringTypeToString(colType)));
+        dmDrawer->logInfo(  "Depth model: Colouring schema changed to " +
+                            colouringTypeToString(colType));
     }
     else
     {
@@ -801,23 +801,19 @@ void LIVI_Depth_model_pi::setHillshadeparamsTextToUI()
 
 void LIVI_Depth_model_pi::setCurrentlyDrawnOptionsTextToUI()
 {
-    DM_visualization chartType;
-    DM_colourType    colourSchema;
-    double           wl, vrso;
-    dmDrawer->getCurrents(chartType, colourSchema, wl, vrso);
-
-    std::string str("Currenly drawn:\n  ");
-
     if (!dmDrawer->isRendering())
     {
-        str = str + "Nothing";
+        dialog->SetCurrentlyDrawnTextToNothing();
     }
     else
     {
-        str = str + getDrawingOptionsString(chartType, colourSchema, wl, vrso);
+        DM_visualization chartType;
+        DM_colourType    colourSchema;
+        double           wl, vrso;
+        dmDrawer->getCurrents(chartType, colourSchema, wl, vrso);
+        dialog->SetCurrentlyDrawnText(chartType, colourSchema, wl, vrso);
     }
 
-    dialog->SetCurrentlyDrawnText(str);
 }
 
 void LIVI_Depth_model_pi::setImageToGenerateOptionsTextToUI()
@@ -827,36 +823,7 @@ void LIVI_Depth_model_pi::setImageToGenerateOptionsTextToUI()
     double           wl           = m_pconf->waterLevel.getCurrentWaterLevel();
     double           vrso         = m_pconf->waterLevel.getVerticalReferenceSystemOffset();
 
-    std::string str = "Drawing options for image to generate:\n  " +
-                        getDrawingOptionsString(chartType, colourSchema, wl, vrso);
-
-    dialog->SetToGenerateText(str);
-}
-
-std::string LIVI_Depth_model_pi::getDrawingOptionsString(DM_visualization chartType,
-    DM_colourType colourSchema, double wl, double vrso)
-{
-    bool canApplyWaterLevels = false;
-    std::string str(m_pconf->colour.chartTypeToString(chartType));
-
-    if (chartType == COLOR_RELIEF)
-    {
-        str = str + " / " + m_pconf->colour.colouringTypeToString(colourSchema);
-
-        if (colourSchema == COLOUR_FIVE_RANGES || colourSchema == COLOUR_TWO_RANGES)
-        {
-            canApplyWaterLevels = true;
-        }
-    }
-
-    if (canApplyWaterLevels)
-        str = str + "\n  Water level:   " + (wl   > 0 ? "+" : "") + std::to_string(wl) +
-                    "\n  System offset: " + (vrso > 0 ? "+" : "") + std::to_string(vrso);
-    else
-        str = str + "\n  Water level:   (cannot apply)" +
-                    "\n  System offset: (cannot apply)";
-
-    return str;
+    dialog->SetToGenerateText(chartType, colourSchema, wl, vrso);
 }
 
 bool LIVI_Depth_model_pi::createDMPluginDataPath()

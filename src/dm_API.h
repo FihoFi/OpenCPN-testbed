@@ -19,8 +19,8 @@ typedef enum DM_colourType
 
     COLOUR_MAX     // Not-to-be-used-in-code guardian value of the end of the enum range
 } DM_colourType;
-bool dmColourTypeIsOk(DM_colourType col);
-
+bool        dmColourTypeIsOk(DM_colourType col);
+std::string colouringTypeToString(DM_colourType colType);
 
 struct dmRasterImgData
 {
@@ -57,8 +57,8 @@ enum DM_visualization
 
     VISUALIZATION_MAX     // Not-to-be-used-in-code guardian value of the end of the enum range
 };
-bool dmVisualizationIsOk(DM_visualization viz);
-
+bool        dmVisualizationIsOk(DM_visualization viz);
+std::string chartTypeToString(DM_visualization chartType);
 
 class /*DECL_EXP*/ dmLogWriter
 {

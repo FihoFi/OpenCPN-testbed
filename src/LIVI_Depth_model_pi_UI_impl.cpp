@@ -311,14 +311,61 @@ wxFileName Dlg::GetDepthChartFileName()
 void    Dlg::SetDepthChartFileName(wxFileName &fileName)
 {    this->dmPictureImport_filePicker->SetFileName(fileName);   }
 
-void Dlg::SetCurrentlyDrawnText(std::string str)
+void Dlg::SetCurrentlyDrawnTextToNothing()
 {
-    this->dmPictureImport_CurrentlyDrawn_staticText->SetLabel(str);
+    std::stringstream stream;
+    stream << "Currenly drawn:\n  Nothing";
+
+    this->dmPictureImport_CurrentlyDrawn_staticText->SetLabel(stream.str());
 }
 
-void Dlg::SetToGenerateText(std::string str)
+void Dlg::SetCurrentlyDrawnText(DM_visualization chartType, DM_colourType colourSchema,
+                                double wl, double vrso)
 {
-    this->dmPictureImport_ToGenerate_staticText->SetLabel(str);
+    std::stringstream stream;
+    stream  << "Currenly drawn:\n  "
+            << getDrawingOptionsString(chartType, colourSchema, wl, vrso);
+
+    this->dmPictureImport_CurrentlyDrawn_staticText->SetLabel(wxString(stream.str()));
+}
+
+void Dlg::SetToGenerateText(DM_visualization chartType, DM_colourType colourSchema,
+                            double wl, double vrso)
+{
+    std::stringstream stream;
+    stream  << "Drawing options for image to generate:\n  "
+            << getDrawingOptionsString(chartType, colourSchema, wl, vrso);
+
+    this->dmPictureImport_ToGenerate_staticText->SetLabel(wxString(stream.str()));
+}
+
+std::string Dlg::getDrawingOptionsString(DM_visualization chartType,
+                                         DM_colourType colourSchema,
+                                         double wl, double vrso)
+{
+    std::stringstream stream;
+    std::string str;
+
+    stream  << std::fixed << std::setprecision(2)
+            << chartTypeToString(chartType);
+
+    bool canApplyWaterLevels = false;
+    if (chartType == COLOR_RELIEF)
+    {
+        if (colourSchema == COLOUR_FIVE_RANGES || colourSchema == COLOUR_TWO_RANGES)
+        {   canApplyWaterLevels = true;     }
+
+        stream << " / " + colouringTypeToString(colourSchema);
+    }
+
+    if (canApplyWaterLevels)
+        stream  << "\n  Water level:   " << (wl   > 0 ? "+" : "") << wl
+                << "\n  System offset: " << (vrso > 0 ? "+" : "") << vrso;
+    else
+        stream  << "\n  Water level:   (cannot apply)"
+                << "\n  System offset: (cannot apply)";
+
+    return stream.str();
 }
 
 void Dlg::SetPictureImportInfoText(std::string infoStr)
