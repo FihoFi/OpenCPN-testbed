@@ -331,38 +331,6 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmChartOptions_Hillshade_paramInfoText->Wrap( -1 );
 	dmChartOptions_Hillshade_bSizer->Add( dmChartOptions_Hillshade_paramInfoText, 0, wxALL, 5 );
 	
-	wxFlexGridSizer* dmChartOptions_Hillshade_Sizer;
-	dmChartOptions_Hillshade_Sizer = new wxFlexGridSizer( 0, 2, 0, 0 );
-	dmChartOptions_Hillshade_Sizer->SetFlexibleDirection( wxBOTH );
-	dmChartOptions_Hillshade_Sizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	dm_Empty_staticText1 = new wxStaticText( dmChartOptions_Hillshade_panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	dm_Empty_staticText1->Wrap( -1 );
-	dmChartOptions_Hillshade_Sizer->Add( dm_Empty_staticText1, 0, wxALL, 5 );
-	
-	dm_Empty_staticText2 = new wxStaticText( dmChartOptions_Hillshade_panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	dm_Empty_staticText2->Wrap( -1 );
-	dmChartOptions_Hillshade_Sizer->Add( dm_Empty_staticText2, 0, wxALL, 5 );
-	
-	dmChartOptions_Hillshade_Azimuth_staticText = new wxStaticText( dmChartOptions_Hillshade_panel, wxID_ANY, wxT("Azimuth (default 315 degrees)"), wxDefaultPosition, wxDefaultSize, 0 );
-	dmChartOptions_Hillshade_Azimuth_staticText->SetLabelMarkup( wxT("Azimuth (default 315 degrees)") );
-	dmChartOptions_Hillshade_Azimuth_staticText->Wrap( -1 );
-	dmChartOptions_Hillshade_Sizer->Add( dmChartOptions_Hillshade_Azimuth_staticText, 0, wxALL, 5 );
-	
-	dmChartOptions_Hillshade_Azimuth_spinCtrl = new wxSpinCtrl( dmChartOptions_Hillshade_panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 360, 315 );
-	dmChartOptions_Hillshade_Sizer->Add( dmChartOptions_Hillshade_Azimuth_spinCtrl, 0, wxALL, 5 );
-	
-	dmChartOptions_Hillshade_Altitude_staticText = new wxStaticText( dmChartOptions_Hillshade_panel, wxID_ANY, wxT("Altitude (default 45 degrees)"), wxDefaultPosition, wxDefaultSize, 0 );
-	dmChartOptions_Hillshade_Altitude_staticText->SetLabelMarkup( wxT("Altitude (default 45 degrees)") );
-	dmChartOptions_Hillshade_Altitude_staticText->Wrap( -1 );
-	dmChartOptions_Hillshade_Sizer->Add( dmChartOptions_Hillshade_Altitude_staticText, 0, wxALL, 5 );
-	
-	dmChartOptions_Hillshade_Altitude_spinCtrl = new wxSpinCtrl( dmChartOptions_Hillshade_panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 90, 45 );
-	dmChartOptions_Hillshade_Sizer->Add( dmChartOptions_Hillshade_Altitude_spinCtrl, 0, wxALL, 5 );
-	
-	
-	dmChartOptions_Hillshade_bSizer->Add( dmChartOptions_Hillshade_Sizer, 1, wxEXPAND, 5 );
-	
 	
 	dmChartOptions_Hillshade_panel->SetSizer( dmChartOptions_Hillshade_bSizer );
 	dmChartOptions_Hillshade_panel->Layout();

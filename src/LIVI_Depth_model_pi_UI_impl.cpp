@@ -314,7 +314,7 @@ void    Dlg::SetDepthChartFileName(wxFileName &fileName)
 void Dlg::SetCurrentlyDrawnTextToNothing()
 {
     std::stringstream stream;
-    stream << "Currenly drawn:\n  Nothing";
+    stream << "Currently drawn:\n  Nothing";
 
     this->dmPictureImport_CurrentlyDrawn_staticText->SetLabel(stream.str());
 }
@@ -323,7 +323,7 @@ void Dlg::SetCurrentlyDrawnText(DM_visualization chartType, DM_colourType colour
                                 double wl, double vrso)
 {
     std::stringstream stream;
-    stream  << "Currenly drawn:\n  "
+    stream  << "Currently drawn:\n  "
             << getDrawingOptionsString(chartType, colourSchema, wl, vrso);
 
     this->dmPictureImport_CurrentlyDrawn_staticText->SetLabel(wxString(stream.str()));
@@ -394,7 +394,9 @@ void Dlg::SetHillshadeparamsText(double azimuth, double altitude,
         << "\n  Image transparency (0(none)-255(full)): " << transparency
         << "\n"
         << "\n"
-        << "\nChange these parameters in the OpenCPN .ini file."
+        << "\nChange these parameters in the opencpn.ini file"
+        << "\n(locate the opencpn.log, you'll find the .ini, too)."
+        << "\nNew values are taken into use at OpenCPN restart."
         << "\n";
 
     std::string hillshadeStr = stream.str();
