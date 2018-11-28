@@ -346,7 +346,8 @@ std::string Dlg::getDrawingOptionsString(DM_visualization chartType,
     std::stringstream stream;
     std::string str;
 
-    stream  << std::fixed << std::setprecision(2) << chartType;
+    stream  << std::fixed << std::setprecision(2)
+            << chartTypeToString(chartType);
 
     bool canApplyWaterLevels = false;
     if (chartType == COLOR_RELIEF)
