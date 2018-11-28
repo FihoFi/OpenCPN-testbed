@@ -121,9 +121,6 @@ struct DMColorOptionConfig : dm_configAPI {
     double  getHillshadeZfactor()               {   return hillshadeZfactor;            }
     void    setHillshadeZfactor(double zFactor) {   this->hillshadeZfactor = zFactor;   }
 
-    wxString            chartTypeToString(DM_visualization chartType);
-    wxString        colouringTypeToString(DM_colourType colType);
-
 private:
     DM_visualization    stringToChartType(wxString chartTypeString);
     DM_colourType   stringToColouringType(wxString colTypeString);

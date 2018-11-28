@@ -577,8 +577,8 @@ void LIVI_Depth_model_pi::OnGenerateImage()
             if (!success)
             {
                 dmDrawer->logError(
-                    "Depth model: Generating image. Failed to save colouring file of" + std::string(
-                    m_pconf->colour.colouringTypeToString(colouringType)));
+                    "Depth model: Generating image. Failed to save colouring file of" +
+                    colouringTypeToString(colouringType));
             }
             if (!colorFile.IsOk())
             {
@@ -638,8 +638,8 @@ void LIVI_Depth_model_pi::OnChartTypeChange(DM_visualization toType)
         m_pconf->colour.setChartType(chartType);
         m_pconf->SaveConfig();
         this->setImageToGenerateOptionsTextToUI();
-        dmDrawer->logInfo("Depth model: Image type changed to " + std::string(
-            m_pconf->colour.chartTypeToString(chartType)));
+        dmDrawer->logInfo(  "Depth model: Image type changed to " +
+                            chartTypeToString(chartType));
     }
     else
     {
@@ -657,8 +657,8 @@ void LIVI_Depth_model_pi::OnColourSchemaChange(DM_colourType toType)
         m_pconf->colour.setColouringType(colType);
         m_pconf->SaveConfig();
         this->setImageToGenerateOptionsTextToUI();
-        dmDrawer->logInfo("Depth model: Colouring schema changed to " + std::string(
-            m_pconf->colour.colouringTypeToString(colType)));
+        dmDrawer->logInfo(  "Depth model: Colouring schema changed to " +
+                            colouringTypeToString(colType));
     }
     else
     {
