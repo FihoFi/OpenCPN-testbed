@@ -79,6 +79,11 @@ struct DMColorOptionConfig : dm_configAPI {
     wxColor m_twoColours[2]; // 0: col. for too shallow, 1: col. for deep enough
     double  m_twoColoursDepth; // dividing depth
 
+    double          hillshadeAltitude;
+    double          hillshadeAzimuth;
+    unsigned int    hillshadeTransparency;
+    double          hillshadeZfactor;
+
     virtual bool load() override;
     virtual bool save() override;
 
@@ -88,18 +93,33 @@ struct DMColorOptionConfig : dm_configAPI {
     DM_colourType   getColouringType()                      { return colouringType;          }
     void            setColouringType(DM_colourType colType) { this->colouringType = colType; }
 
+    // five colour range settings
     wxColor getColour(int i)             { return m_customColours[i];       }
     void    setColour(int i, wxColor col){ this->m_customColours[i] = col;  }
 
     double  getDepth(int i)              { return m_customDepths[i];        }
     void    setDepth(int i, double depth){ this->m_customDepths[i] = depth; }
 
+    // two colour range settings
     wxColor getTwoColour(int i)              { return m_twoColours[i];      }
     void    setTwoColour(int i, wxColor col) { this->m_twoColours[i] = col; }
 
     double  getTwoColoursDepth()             { return m_twoColoursDepth;        }
     void    setTwoColoursDepth(double depth) { this->m_twoColoursDepth = depth; }
 
+    // hillshade settings
+    double  getHillshadeAltitude()                      {   return hillshadeAltitude;                   }
+    void    setHillshadeAltitude(double altitudeInInDeg){   this->hillshadeAltitude = altitudeInInDeg;  }
+
+    double  getHillshadeAzimuth()                   {   return hillshadeAzimuth;                }
+    void    setHillshadeAzimuth(double azimuthInDeg){   this->hillshadeAzimuth = azimuthInDeg;  }
+
+    unsigned int getHillshadeTransparency() {   return hillshadeTransparency;                   }
+    void         setHillshadeTransparency(unsigned int transparency)
+                                            {   this->hillshadeTransparency = transparency;     }
+
+    double  getHillshadeZfactor()               {   return hillshadeZfactor;            }
+    void    setHillshadeZfactor(double zFactor) {   this->hillshadeZfactor = zFactor;   }
 
     wxString            chartTypeToString(DM_visualization chartType);
     wxString        colouringTypeToString(DM_colourType colType);
@@ -117,17 +137,12 @@ struct DMFileImportConfig : dm_configAPI {
     // Filepath to the imported file
     wxFileName filePath;
 
-    // Min, and max coordinates where the picture in the filePath should be drawn
-    double latMin, lonMin;
-    double latMax, lonMax;
-
     virtual bool load() override;
     virtual bool save() override;
 };
 
 struct DMWaterLevelConfig : dm_configAPI
 {
-
     DMWaterLevelConfig(wxFileConfig* confFile)
     {    this->confFile = confFile;    }
 

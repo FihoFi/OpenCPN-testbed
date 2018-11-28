@@ -112,6 +112,7 @@ class LIVIDMUI_DLG : public wxDialog
 		wxStaticText* dmColourOptionsTwoColours_DeepEnough_Label;
 		wxColourPickerCtrl* dmColourOptionsTwoColours_DeepEnough_ColourPicker;
 		wxPanel* dmChartOptions_Hillshade_panel;
+		wxStaticText* dmChartOptions_Hillshade_paramInfoText;
 		wxStaticText* dm_Empty_staticText1;
 		wxStaticText* dm_Empty_staticText2;
 		wxStaticText* dmChartOptions_Hillshade_Azimuth_staticText;

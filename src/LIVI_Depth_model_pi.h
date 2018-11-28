@@ -149,6 +149,7 @@ private:
     void                SaveUiToConfig(void);
     void                PushConfigToUI(void);
     void                PullConfigFromUI(void);
+    void                setHillshadeparamsTextToUI();
     void                setCurrentlyDrawnOptionsTextToUI();
     void                setImageToGenerateOptionsTextToUI();
     std::string         getDrawingOptionsString(DM_visualization chartType,

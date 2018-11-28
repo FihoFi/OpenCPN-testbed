@@ -324,6 +324,13 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmChartOptions_Hillshade_panel->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_GRAYTEXT ) );
 	dmChartOptions_Hillshade_panel->Enable( false );
 	
+	wxBoxSizer* dmChartOptions_Hillshade_bSizer;
+	dmChartOptions_Hillshade_bSizer = new wxBoxSizer( wxVERTICAL );
+	
+	dmChartOptions_Hillshade_paramInfoText = new wxStaticText( dmChartOptions_Hillshade_panel, wxID_ANY, wxT("Current parameters:\nChange used values in OpenCPN ini file"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmChartOptions_Hillshade_paramInfoText->Wrap( -1 );
+	dmChartOptions_Hillshade_bSizer->Add( dmChartOptions_Hillshade_paramInfoText, 0, wxALL, 5 );
+	
 	wxFlexGridSizer* dmChartOptions_Hillshade_Sizer;
 	dmChartOptions_Hillshade_Sizer = new wxFlexGridSizer( 0, 2, 0, 0 );
 	dmChartOptions_Hillshade_Sizer->SetFlexibleDirection( wxBOTH );
@@ -354,9 +361,12 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmChartOptions_Hillshade_Sizer->Add( dmChartOptions_Hillshade_Altitude_spinCtrl, 0, wxALL, 5 );
 	
 	
-	dmChartOptions_Hillshade_panel->SetSizer( dmChartOptions_Hillshade_Sizer );
+	dmChartOptions_Hillshade_bSizer->Add( dmChartOptions_Hillshade_Sizer, 1, wxEXPAND, 5 );
+	
+	
+	dmChartOptions_Hillshade_panel->SetSizer( dmChartOptions_Hillshade_bSizer );
 	dmChartOptions_Hillshade_panel->Layout();
-	dmChartOptions_Hillshade_Sizer->Fit( dmChartOptions_Hillshade_panel );
+	dmChartOptions_Hillshade_bSizer->Fit( dmChartOptions_Hillshade_panel );
 	dmChartOptions_choicebook->AddPage( dmChartOptions_Hillshade_panel, wxT("Draw a Hillshade chart"), false );
 	dmChartOptions_PlainImage_panel = new wxPanel( dmChartOptions_choicebook, DM_viz_NONE, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* dmChartOptions_PlainImage_Sizer;

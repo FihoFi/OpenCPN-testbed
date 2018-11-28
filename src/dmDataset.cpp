@@ -253,46 +253,34 @@ bool dmDataset::openDataSet(const char * filename)
 }
 
 
-bool dmDataset::setHillshadeZFactor(double zFactor)
+void dmDataset::setHillshadeZFactor(double zFactor)
 {
     _hillshadeParamZFactor = zFactor;
-
-    return true;
 }
 
-bool dmDataset::setHillshadeScale(double scale)
+void dmDataset::setHillshadeScale(double scale)
 {
     _hillshadeParamScale = scale;
-
-    return true;
 }
 
-bool dmDataset::setHillshadeAzimuth(double azimuth)
+void dmDataset::setHillshadeAzimuth(double azimuth)
 {
     _hillshadeParamAzimuth = azimuth;
-
-    return true;
 }
 
-bool dmDataset::setHillshadeAltitude(double altitude)
+void dmDataset::setHillshadeAltitude(double altitude)
 {
     _hillshadeParamAltitude = altitude;
-
-    return true;
 }
 
-bool dmDataset::setHillshadeCombined(bool combined)
+void dmDataset::setHillshadeCombined(bool combined)
 {
     _hillshadeParamCombined = combined;
-
-    return true;
 }
 
-bool dmDataset::setHillshadeMultidirectional(bool multidirectional)
+void dmDataset::setHillshadeMultidirectional(bool multidirectional)
 {
     _hillshadeParamMultidirectional = multidirectional;
-
-    return true;
 }
 
 

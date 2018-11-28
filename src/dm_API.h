@@ -222,10 +222,8 @@ public:
     *
     * @param[in] zFactor vertical exaggeration used to pre-multiply the
     *                    elevations [GDAL documentation]
-    *
-    * @return false if an error occurred, true otherwise
     */
-    virtual bool setHillshadeZFactor(double zFactor) = 0;
+    virtual void setHillshadeZFactor(double zFactor) = 0;
 
     /**
     * Sets scale parameter for hillshade visualization type.
@@ -234,10 +232,8 @@ public:
     *                  unit of the source DEM is degrees (e.g Lat/Long WGS84
     *                  projection), you can use scale=111120 if the vertical units
     *                  are meters (or scale=370400 if they are in feet) [GDAL documentation]
-    *
-    * @return false if an error occurred, true otherwise
     */
-    virtual bool setHillshadeScale(double scale) = 0;
+    virtual void setHillshadeScale(double scale) = 0;
 
 
     /**
@@ -248,10 +244,8 @@ public:
     *                    the top of the raster, 90 from the east, ... The
     *                    default value, 315, should rarely be changed as it is
     *                    the value generally used to generate shaded maps. [GDAL documentation]
-    *
-    * @return false if an error occurred, true otherwise
     */
-    virtual bool setHillshadeAzimuth(double azimuth) = 0;
+    virtual void setHillshadeAzimuth(double azimuth) = 0;
 
 
     /**
@@ -260,10 +254,8 @@ public:
     *
     * @param[in] altitude altitude of the light, in degrees. 90 if the light
     *                     comes from above the DEM, 0 if it is raking light. [GDAL documentation]
-    *
-    * @return false if an error occurred, true otherwise
     */
-    virtual bool setHillshadeAltitude(double altitude) = 0;
+    virtual void setHillshadeAltitude(double altitude) = 0;
 
 
     /**
@@ -271,10 +263,8 @@ public:
     *
     * @param[in] combined combined shading, a combination of slope and oblique
                           shading [GDAL documentation]
-    *
-    * @return false if an error occurred, true otherwise
     */
-    virtual bool setHillshadeCombined(bool combined) = 0;
+    virtual void setHillshadeCombined(bool combined) = 0;
 
 
     /**
@@ -284,10 +274,8 @@ public:
     * @param[in] multidirectional multidirectional shading, a combination of
     *                             hillshading illuminated from 225 deg, 270 deg,
     *                             315 deg, and 360 deg azimuth. [GDAL documentation]
-    *
-    * @return false if an error occurred, true otherwise
     */
-    virtual bool setHillshadeMultidirectional(bool multidirectional) = 0;
+    virtual void setHillshadeMultidirectional(bool multidirectional) = 0;
 
     dmLogWriter* logWriter;
 };

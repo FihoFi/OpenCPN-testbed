@@ -162,6 +162,13 @@ bool DMColorOptionConfig::load(void)
             str = std::to_string(-20); // -20m if no depth found
         m_twoColoursDepth = std::stoi(str);
 
+        hillshadeAltitude   = confFile->ReadDouble(_T("HillshadeAltitude_0to90"),       45);
+        hillshadeAzimuth    = confFile->ReadDouble(_T("HillshadeAzimuth_0to360"),       315);
+        hillshadeTransparency   = 
+               (unsigned int)confFile->ReadLong(_T("HillshadeTransparency_0to255"),     128);
+        hillshadeZfactor    = confFile->ReadDouble(_T("HillshadeVerticalExaggeration"), 10);
+      //hillshadeZfactor    = confFile->ReadDouble(_T("HillshadeZfactor"),              10);    // alt name
+
         wxString colourConfPathStr;
         success &= confFile->Read(wxT("UserColourConfPath"), &colourConfPathStr);
         wxFileName colourConfFilePath(colourConfPathStr);
@@ -199,6 +206,12 @@ bool DMColorOptionConfig::save(void)
                 m_twoColours[i].GetAsString(wxC2S_HTML_SYNTAX));
         }
         success &= confFile->Write(_T("TwoColourDepth"), m_twoColoursDepth);
+
+        success &= confFile->Write(_T("HillshadeAltitude_0to90"),       hillshadeAltitude);
+        success &= confFile->Write(_T("HillshadeAzimuth_0to360"),       hillshadeAzimuth);
+        success &= confFile->Write(_T("HillshadeTransparency_0to255"), (long)hillshadeTransparency);
+        success &= confFile->Write(_T("HillshadeVerticalExaggeration"), hillshadeZfactor);
+      //success &= confFile->Write(_T("HillshadeZfactor"),              hillshadeZfactor);    // alt name
 
         success &= confFile->Write(_T("UserColourConfPath"), userColourConfPath.GetFullPath());
 
@@ -292,30 +305,6 @@ bool DMFileImportConfig::load()
         {
             filePath = fname;
         }
-
-        std::string str = confFile->Read(wxT("LatMin"));
-        if (str.length() == 0)
-        {    /* todo Write an error message to the log file */
-        }
-        else { latMin = std::stoi(str); }
-
-        str = confFile->Read(wxT("LatMax"));
-        if (str.length() == 0)
-        {    /* todo Write an error message to the log file */
-        }
-        else { latMax = std::stoi(str); }
-
-        str = confFile->Read(wxT("LonMin"));
-        if (str.length() == 0)
-        {    /* todo Write an error message to the log file */
-        }
-        else { lonMin = std::stoi(str); }
-
-        str = confFile->Read(wxT("LonMax"));
-        if (str.length() == 0)
-        {    /* todo Write an error message to the log file */
-        }
-        else { lonMax = std::stoi(str); }
     }
     return success;
 }
@@ -328,11 +317,6 @@ bool DMFileImportConfig::save(void)
         confFile->SetPath(_T("/Settings/LIVI_Depth_model_pi/FileImport"));
 
         success &= confFile->Write(wxT("FileImport_fullpathname"), filePath.GetFullPath());
-
-        success &= confFile->Write(wxT("LatMin"), latMin);
-        success &= confFile->Write(wxT("LatMax"), latMax);
-        success &= confFile->Write(wxT("LonMin"), lonMin);
-        success &= confFile->Write(wxT("LonMax"), lonMax);
     }
     return success;
 }
