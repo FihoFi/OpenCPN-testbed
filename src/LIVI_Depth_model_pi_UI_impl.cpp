@@ -314,7 +314,7 @@ void    Dlg::SetDepthChartFileName(wxFileName &fileName)
 void Dlg::SetCurrentlyDrawnTextToNothing()
 {
     std::stringstream stream;
-    stream << "Currenly drawn:\n  Nothing";
+    stream << "Currently drawn:\n  Nothing";
 
     this->dmPictureImport_CurrentlyDrawn_staticText->SetLabel(stream.str());
 }
@@ -323,7 +323,7 @@ void Dlg::SetCurrentlyDrawnText(DM_visualization chartType, DM_colourType colour
                                 double wl, double vrso)
 {
     std::stringstream stream;
-    stream  << "Currenly drawn:\n  "
+    stream  << "Currently drawn:\n  "
             << getDrawingOptionsString(chartType, colourSchema, wl, vrso);
 
     this->dmPictureImport_CurrentlyDrawn_staticText->SetLabel(wxString(stream.str()));
