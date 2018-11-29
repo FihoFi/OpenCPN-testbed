@@ -106,6 +106,9 @@ extern void deinitialize_images(void);
 		"{\n",
 		"	delete _img_LIVI_Depth_model_pi;\n",
 		"	delete _img_LIVI_Depth_model;\n",
+		"	delete _img_DepthViewer;\n",
+		"	delete _img_DepthViewerRollover;\n",
+		"	delete _img_DepthViewerToggled;\n",
 		"}\n";
 	close CPP;
 	return 0;
