@@ -133,7 +133,9 @@ private:
     void OnClose( wxCloseEvent& event );
 
     LIVI_Depth_model_pi *plugin;
+
     int                 pluginToolId;
+    int                 depthsViewerToolId;
 
     wxWindow            *m_parent_window;
 

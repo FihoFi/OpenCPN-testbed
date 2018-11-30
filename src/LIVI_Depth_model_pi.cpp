@@ -384,10 +384,27 @@ void LIVI_Depth_model_pi::OnToolbarToolCallback(int id)
         // b_toggle updated to ensure correct status upon toolbar rebuild
         SetToolbarItemState(pluginToolId, pluginShown);
     }
+    else if (id == depthsViewerToolId)
     {
-    }
+        // Toggle : update toggle state, and window show status
+        bool depthValuesShown = m_pconf->ToggleDepthsViewerToolState();
+        if (depthValuesShown)
+        {
+            depthsViewer->Move(m_pconf->general.depthViewerDialogXY);
+            depthsViewer->Fit();
+            depthsViewer->Show();
+            dmDrawer->logInfo("Depth model: depth values UI visible.");
+        }
+        else
+        {
+            depthsViewer->Hide();
+            dmDrawer->logInfo("Depth model: depth values UI hidden.");
+        }
 
-    //RequestRefresh(m_parent_window); // refresh main window
+        // Toggle is handled by the toolbar but we must keep plugin manager
+        // b_toggle updated to ensure correct status upon toolbar rebuild
+        SetToolbarItemState(depthsViewerToolId, depthValuesShown);
+    }
 }
 
 /**
