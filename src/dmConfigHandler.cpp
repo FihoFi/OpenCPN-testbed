@@ -93,6 +93,8 @@ bool DMGeneralConfig::load(void)
 
         dialogXY.x = confFile->ReadLong(_T("DialogPosX"), 20L);
         dialogXY.y = confFile->ReadLong(_T("DialogPosY"), 20L);
+        dialogSize.SetWidth(confFile->ReadLong(_T("DialogSizeW"), 20L));
+        dialogSize.SetHeight(confFile->ReadLong(_T("DialogSizeH"), 20L));
         depthViewerDialogXY.x = confFile->ReadLong(_T("depthViewerDialogPosX"), 20L);
         depthViewerDialogXY.y = confFile->ReadLong(_T("depthViewerDialogPosY"), 20L);
 
@@ -111,6 +113,8 @@ bool DMGeneralConfig::save(void)
 
         confFile->Write(_T("DialogPosX"), dialogXY.x);
         confFile->Write(_T("DialogPosY"), dialogXY.y);
+        confFile->Write(_T("DialogSizeW"), dialogSize.GetWidth());
+        confFile->Write(_T("DialogSizeH"), dialogSize.GetHeight());
         confFile->Write(_T("depthViewerDialogPosX"), depthViewerDialogXY.x);
         confFile->Write(_T("depthViewerDialogPosY"), depthViewerDialogXY.y);
 
