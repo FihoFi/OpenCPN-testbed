@@ -363,26 +363,29 @@ void LIVI_Depth_model_pi::OnToolbarToolCallback(int id)
 
         dmDrawer->logInfo("Depth model: Fallback: UI initialized.");
     }
-
-    // Toggle : update toggle state, and window show status
-    bool pluginShown = m_pconf->TogglePluginToolState();
-    if(pluginShown)
+    if(id == pluginToolId)
     {
-        dialog->Move(m_pconf->general.dialogXY);
-        dialog->Fit();
-        dialog->Show();
-        dmDrawer->logInfo("Depth model: UI visible.");
+        // Toggle : update toggle state, and window show status
+        bool pluginShown = m_pconf->TogglePluginToolState();
+        if(pluginShown)
+        {
+            dialog->Move(m_pconf->general.dialogXY);
+            dialog->Fit();
+            dialog->Show();
+            dmDrawer->logInfo("Depth model: UI visible.");
+        }
+        else
+        {
+            dialog->Hide();
+            dmDrawer->logInfo("Depth model: UI hidden.");
+        }
+
+        // Toggle is handled by the toolbar but we must keep plugin manager
+        // b_toggle updated to ensure correct status upon toolbar rebuild
+        SetToolbarItemState(pluginToolId, pluginShown);
     }
-    else
     {
-        dialog->Hide();
-        dmDrawer->logInfo("Depth model: UI hidden.");
     }
-
-
-    // Toggle is handled by the toolbar but we must keep plugin manager
-    // b_toggle updated to ensure correct status upon toolbar rebuild
-    SetToolbarItemState(pluginToolId, pluginShown);
 
     //RequestRefresh(m_parent_window); // refresh main window
 }
