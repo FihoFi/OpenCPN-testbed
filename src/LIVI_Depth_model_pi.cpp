@@ -142,6 +142,8 @@ int LIVI_Depth_model_pi::Init(void)
     setCurrentlyDrawnOptionsTextToUI();
     setImageToGenerateOptionsTextToUI();
 
+    depthsViewer->SetCoordinatesText();
+
     if (createDMPluginDataPath())
     {
         dmDrawer->setTempFileFolder(pluginDataDir);
@@ -294,6 +296,12 @@ void LIVI_Depth_model_pi::ShowPreferencesDialog(wxWindow* parent)
 void LIVI_Depth_model_pi::SetCursorLatLon(double lat, double lon)
 {
     dmDrawer->SetCursorLatLon(lat, lon);
+
+    float cursorDepthInCD, currentWL;
+    if(dmDrawer->getDepthValues(cursorDepthInCD, currentWL))
+        depthsViewer->SetCoordinatesText(currentWL, cursorDepthInCD);
+    else
+        depthsViewer->SetCoordinatesText(DepthsViewer::NotAvailableValue);
 }
 
 /**
