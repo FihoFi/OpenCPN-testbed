@@ -199,16 +199,19 @@ int LIVI_Depth_model_pi::Init(void)
 bool LIVI_Depth_model_pi::DeInit(void)
 {
     dmDrawer->logInfo("Depth model: UNinitializing plugin.");
-    SaveUiToConfig();   // TODO, do we want this here, or only at OnGenerateImage?
 
     bool success = m_pconf->closeNDestroyDialog();
     if (success) { dialog = NULL; }
 
     if(depthsViewer) {
+        wxPoint p = depthsViewer->GetPosition();
+        m_pconf->general.SetDepthsViewerDialogXY(p.x, p.y);
         depthsViewer->Close();
         delete depthsViewer;
         depthsViewer = NULL;
     }
+
+    SaveUiToConfig();
 
     bool newPluginState = false;
     m_pconf->SetPluginToolState(newPluginState);
@@ -370,12 +373,17 @@ void LIVI_Depth_model_pi::OnToolbarToolCallback(int id)
         if(pluginShown)
         {
             dialog->Move(m_pconf->general.dialogXY);
+            dialog->SetSize(m_pconf->general.dialogSize);
             dialog->Fit();
             dialog->Show();
             dmDrawer->logInfo("Depth model: UI visible.");
         }
         else
         {
+            wxPoint p = dialog->GetPosition();
+            m_pconf->general.SetDialogXY(p.x, p.y);
+            wxSize s = dialog->GetSize();
+            m_pconf->general.SetDialogSize(s.GetWidth(), s.GetHeight());
             dialog->Hide();
             dmDrawer->logInfo("Depth model: UI hidden.");
         }
@@ -397,6 +405,8 @@ void LIVI_Depth_model_pi::OnToolbarToolCallback(int id)
         }
         else
         {
+            wxPoint p = depthsViewer->GetPosition();
+            m_pconf->general.SetDepthsViewerDialogXY(p.x, p.y);
             depthsViewer->Hide();
             dmDrawer->logInfo("Depth model: depth values UI hidden.");
         }
