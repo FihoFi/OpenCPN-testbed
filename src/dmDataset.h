@@ -5,6 +5,7 @@
 
 #include "dm_API.h"
 
+#include <vector>
 #include "gdal_priv.h"
 #include "cpl_conv.h"
 
