@@ -115,6 +115,23 @@ bool DMGeneralConfig::save(void)
     return false;
 }
 
+void DMGeneralConfig::SaveDispaySize(int w, int h)
+{
+    displaySize.SetWidth(w); displaySize.SetHeight(h);
+}
+
+void DMGeneralConfig::SetDialogXY(int x, int y) {
+    dialogXY.x = x;
+    dialogXY.y = y;
+
+    if ((x < 0) || (x > displaySize.GetWidth())) { dialogXY.x = 5; }
+    if ((y < 0) || (y > displaySize.GetHeight())) { dialogXY.y = 5; }
+}
+
+void DMGeneralConfig::SetDialogSize(int w, int h)
+{   dialogSize.SetWidth(w); dialogSize.SetHeight(h);    }
+
+
 
 bool DMColorOptionConfig::load(void)
 {
@@ -297,6 +314,17 @@ bool DMFileImportConfig::save(void)
         success &= confFile->Write(wxT("FileImport_fullpathname"), filePath.GetFullPath());
     }
     return success;
+}
+
+
+bool dmConfigHandler::SetPluginToolState(bool state) {
+    showDepthModel = state;
+    return showDepthModel;
+}
+
+bool dmConfigHandler::TogglePluginToolState() {
+    showDepthModel = !showDepthModel;
+    return showDepthModel;
 }
 
 bool dmConfigHandler::SetDepthsViewerToolState(bool state) {

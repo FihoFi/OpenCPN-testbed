@@ -37,22 +37,9 @@ struct DMGeneralConfig : dm_configAPI {
     virtual bool load() override;
     virtual bool save() override;
 
-    void SetDialogXY(int x, int y) {
-        dialogXY.x = x;
-        dialogXY.y = y;
-
-        if ((dialogXY.x < 0) || (dialogXY.x > displaySize.GetWidth()))
-            dialogXY.x = 5;
-        if ((dialogXY.y < 0) || (dialogXY.y > displaySize.GetHeight()))
-            dialogXY.y = 5;
-    }
-
-    void SetLIVIDepthModelDialogSize(int w, int h)
-    { dialogSize.SetWidth(w); dialogSize.SetHeight(h); }
-
-    void SaveDispaySize(int w, int h)
-    {   displaySize.SetWidth(w); displaySize.SetHeight(h);    }
-
+    void SaveDispaySize(int w, int h);
+    void SetDialogXY(int x, int y);
+    void SetDialogSize(int w, int h);
 };
 
 #define DM_NUM_CUSTOM_COL 5 // Number of custom colors
@@ -179,14 +166,9 @@ public:
     bool setDialog(Dlg* pluginDialog);
     bool closeNDestroyDialog();
 
-    bool SetPluginToolState(bool state) {
-        showDepthModel = state;
-        return showDepthModel;
-    }
-    bool TogglePluginToolState() {
-        showDepthModel = !showDepthModel;
-        return showDepthModel;
-    }
+    bool SetPluginToolState(bool state);
+    bool TogglePluginToolState();
+
     bool SetDepthsViewerToolState(bool state);
     bool ToggleDepthsViewerToolState();
 
