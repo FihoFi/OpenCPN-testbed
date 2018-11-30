@@ -37,6 +37,7 @@
 
 #include "LIVI_Depth_model_pi.h"
 #include "LIVI_Depth_model_pi_UI_impl.h"
+#include "dmDepthsViewerUI_impl.h"
 
 #include "dmConfigHandler.h"    // For handling config options
 #include "dmColourfileHandler.h" // For handling colour file access operations
@@ -74,6 +75,7 @@ LIVI_Depth_model_pi::LIVI_Depth_model_pi(void *ppimgr)
     , m_parent_window(NULL)
     , m_pconf(NULL)
     , dialog(NULL)
+    , depthsViewer(NULL)
     , colourfileHandler(NULL)
     , m_icon(NULL)
     , dmDrawer(NULL)
@@ -114,6 +116,9 @@ int LIVI_Depth_model_pi::Init(void)
     dialog->plugin = this;
     dialog->SetAboutInfo();
 
+    depthsViewer = new DepthsViewer(m_parent_window);
+  //depthsViewer->plugin = this; // no need for callbacks yet
+
     m_pconf = new dmConfigHandler(pFileConf, dialog);
 
 
@@ -151,6 +156,11 @@ int LIVI_Depth_model_pi::Init(void)
             _img_LIVI_Depth_model, _img_LIVI_Depth_model, wxITEM_CHECK,
             _("Depth model"), _(""), NULL,
             LIVI_DEPTH_MODEL_TOOL_POSITION, 0, this);
+
+        depthsViewerToolId = InsertPlugInTool/*SVG*/(_T(""),
+            _img_DepthViewer, _img_DepthViewerRollover, /*_img_DepthViewerToggled,*/ wxITEM_CHECK,
+            _("Show depths console"), _T(""), NULL,
+            DM_SHOW_DEPTHS_TOOL_POSITION, 0, this);
     }
 
     // Display size info is used to position the window
@@ -194,9 +204,17 @@ bool LIVI_Depth_model_pi::DeInit(void)
     bool success = m_pconf->closeNDestroyDialog();
     if (success) { dialog = NULL; }
 
+    if(depthsViewer) {
+        depthsViewer->Close();
+        delete depthsViewer;
+        depthsViewer = NULL;
+    }
+
     bool newPluginState = false;
     m_pconf->SetPluginToolState(newPluginState);
+    m_pconf->SetDepthsViewerToolState(newPluginState);
     SetToolbarItemState(pluginToolId, newPluginState);
+    SetToolbarItemState(depthsViewerToolId, newPluginState);
 
     RequestRefresh(m_parent_window); // refresh main window, to hide the dataset pic
 

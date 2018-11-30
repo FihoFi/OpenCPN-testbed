@@ -52,12 +52,14 @@ class Dlg;
 class dmConfigHandler;
 class dmColourfileHandler;
 class dmDepthModelDrawer;
+class DepthsViewer;
 
 //----------------------------------------------------------------------------------------------------------
 //    The PlugIn Class Definition
 //----------------------------------------------------------------------------------------------------------
 
 #define LIVI_DEPTH_MODEL_TOOL_POSITION    -1          // Request default positioning of toolbar tool
+#define DM_SHOW_DEPTHS_TOOL_POSITION      -1          // Request default positioning of toolbar tool
 
 /**
 * Plugin for taking depth data into account for route planning
@@ -137,6 +139,8 @@ private:
 
     dmConfigHandler     *m_pconf;
     Dlg                 *dialog;
+    DepthsViewer        *depthsViewer;
+
     dmColourfileHandler *colourfileHandler;
     /** Icon bitmap of this plugin as icon.Needed by about dialog. */
     wxIcon              *m_icon;
