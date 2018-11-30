@@ -44,7 +44,7 @@ struct DMGeneralConfig : dm_configAPI {
     void SaveDispaySize(int w, int h);
     void SetDialogXY(int x, int y);
     void SetDialogSize(int w, int h);
-    void SetDepthsViewerDialogXY(int x, int y;
+    void SetDepthsViewerDialogXY(int x, int y);
 };
 
 #define DM_NUM_CUSTOM_COL 5 // Number of custom colors
