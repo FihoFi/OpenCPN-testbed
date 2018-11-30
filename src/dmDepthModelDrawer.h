@@ -90,9 +90,6 @@ private:
 
     void WMtoLL(const dmExtent& WMin, dmExtent& LLout);
     void LLtoWM(const dmExtent& LLin, dmExtent& WMout);
-
-    void readAFile();
-
 };
 
 #endif _DM_DEPTH_MODEL_DRAWER_

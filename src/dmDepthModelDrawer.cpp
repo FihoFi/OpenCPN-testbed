@@ -501,21 +501,3 @@ void dmDepthModelDrawer::LLtoWM(const dmExtent& LLin, dmExtent& WMout)
 {
     dataset.latLonToDstSrs(LLin, WMout);
 }
-
-void dmDepthModelDrawer::readAFile()
-{
-    /*   const char*     pszFilename = "";
-    GDALDataset*    poDataset;
-    poDataset = (GDALDataset *)GDALOpen(pszFilename, GA_ReadOnly);
-
-    GDALRasterBand  *poBand;
-    poBand = poDataset->GetRasterBand(1);
-
-    float *pafScanline;
-    int   nXSize = poBand->GetXSize();
-    pafScanline = (float *)CPLMalloc(sizeof(float)*nXSize);
-    poBand->RasterIO(GF_Read, 0, 0, nXSize, 1,
-    pafScanline, nXSize, 1, GDT_Float32,
-    0, 0);
-    */
-}
