@@ -6,6 +6,12 @@
 #define _DM_EXTENT_H_
 
 struct coord {
+    coord();
+    coord(double north, double east);
+
+    bool operator=(const coord& other);
+    bool operator==(const coord& other);
+
     coord()
         : north(0), east(0)
     {    }
