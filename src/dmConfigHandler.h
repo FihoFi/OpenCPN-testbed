@@ -26,13 +26,17 @@ protected:
 
 struct DMGeneralConfig : dm_configAPI {
     DMGeneralConfig(wxFileConfig* confFile)
-    :   dialogXY(0,0), dialogSize(0,0), displaySize(100,100)
+    : dialogXY(0,0), dialogSize(0,0), displaySize(100,100)
+    , depthViewerDialogXY(0, 0)
     {   this->confFile = confFile;    }
 
     wxPoint dialogXY;
+    wxPoint depthViewerDialogXY;
     wxSize  dialogSize;
+  //wxSize  depthViewerDialogSize;
     wxSize  displaySize;
     bool    m_bLIVI_Depth_modelShowIcon;
+    bool    m_bDepthsViewerShowIcon;
 
     virtual bool load() override;
     virtual bool save() override;
@@ -153,7 +157,7 @@ public:
         Dlg* pluginDialog=NULL)
       : m_pconfig(confFile), m_pDialog(pluginDialog),
         general(confFile),colour(confFile), fileImport(confFile), waterLevel(confFile),
-        showDepthModel(false)
+        showDepthModel(false), showDepthsViewer(false)
     { 
         /*if debug */assert(confFile);
         /* else */ // write error to log?

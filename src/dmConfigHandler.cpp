@@ -95,6 +95,10 @@ bool DMGeneralConfig::load(void)
        dialogXY.y = confFile->ReadLong(_T("DialogPosY"), 20L);
 
        m_bLIVI_Depth_modelShowIcon = confFile->ReadBool(_T("ShowLIVI_Depth_modelIcon"), false);
+        depthViewerDialogXY.x = confFile->ReadLong(_T("depthViewerDialogPosX"), 20L);
+        depthViewerDialogXY.y = confFile->ReadLong(_T("depthViewerDialogPosY"), 20L);
+
+        m_bDepthsViewerShowIcon      = confFile->ReadBool(_T("ShowDepthsViewerIcon"),     false);
         return true;
     }
     return false;
@@ -108,8 +112,11 @@ bool DMGeneralConfig::save(void)
 
         confFile->Write(_T("DialogPosX"), dialogXY.x);
         confFile->Write(_T("DialogPosY"), dialogXY.y);
+        confFile->Write(_T("depthViewerDialogPosX"), depthViewerDialogXY.x);
+        confFile->Write(_T("depthViewerDialogPosY"), depthViewerDialogXY.y);
 
         confFile->Write(_T("ShowLIVI_Depth_modelIcon"), m_bLIVI_Depth_modelShowIcon);
+        confFile->Write(_T("ShowDepthsViewerIcon"),     m_bDepthsViewerShowIcon);
         return true;
     }
     return false;
