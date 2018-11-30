@@ -139,6 +139,15 @@ void DMGeneralConfig::SetDialogSize(int w, int h)
 {   dialogSize.SetWidth(w); dialogSize.SetHeight(h);    }
 
 
+void DMGeneralConfig::SetDepthsViewerDialogXY(int x, int y) {
+    depthViewerDialogXY.x = x;
+    depthViewerDialogXY.y = y;
+
+    if ((depthViewerDialogXY.x < 0) || (depthViewerDialogXY.x > displaySize.GetWidth()))
+        depthViewerDialogXY.x = 5;
+    if ((depthViewerDialogXY.y < 0) || (depthViewerDialogXY.y > displaySize.GetHeight()))
+        depthViewerDialogXY.y = 5;
+}
 
 bool DMColorOptionConfig::load(void)
 {
