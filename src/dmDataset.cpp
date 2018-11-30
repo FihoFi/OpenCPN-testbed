@@ -350,13 +350,13 @@ std::pair<int, int> dmDataset::getRasterPixelOffsetAt(coord point, bool roundDow
 
     if (roundDownPixelOffset)
     {
-        pxOffsetX = (int)std::floor(offsetX);
-        pxOffsetY = (int)std::floor(offsetY);
+        pxOffsetX = std::max((int)std::floor(offsetX), 0);
+        pxOffsetY = std::max((int)std::floor(offsetY), 0);
     }
     else
     {
-        pxOffsetX = (int)std::ceil(offsetX);
-        pxOffsetY = (int)std::ceil(offsetY);
+        pxOffsetX = std::min((int)std::ceil(offsetX), _reprojectedDataset->GetRasterXSize());
+        pxOffsetY = std::min((int)std::ceil(offsetY), _reprojectedDataset->GetRasterYSize());
     }
 
     return std::pair<int, int>(pxOffsetX, pxOffsetY);
