@@ -57,6 +57,8 @@ public:
     void             setShowingDepthValueOff()  { showingDepthValue = false; }
     void             SetCursorLatLon(double lat, double lon);
     void             SetCursorPix(wxPoint position);
+
+    bool             getDepthValues(float& cursorDepthCD, float& currentWL);
     bool             drawDepthValue(wxDC &dc, PlugIn_ViewPort &vp);
 
 private:

@@ -194,6 +194,26 @@ void dmDepthModelDrawer::forceNewImage()
     mustGetNewBmp = true;
 }
 
+bool dmDepthModelDrawer::getDepthValues(float& cursorDepthCD, float& currentWL)
+{
+    if (!showingDepthValue || bmp == NULL)
+        return false;
+
+    dmExtent extWM;
+    LLtoWM(dmExtent(coord(_lat, _lon), coord()), extWM);
+
+    double modelDepth = dataset.getDepthAt(extWM.topLeft);
+    if (modelDepth < -9998)
+        return false;
+
+    double currentWLDbl, vertRefSyst;
+    drawingState.GetCurrentWaterLevels(currentWLDbl, vertRefSyst);
+
+    cursorDepthCD = modelDepth + (float)vertRefSyst;
+    currentWL     = currentWLDbl;
+    return true;
+}
+
 bool dmDepthModelDrawer::drawDepthValue(wxDC &dc, PlugIn_ViewPort &vp)
 {
     if (!showingDepthValue || bmp == NULL)
