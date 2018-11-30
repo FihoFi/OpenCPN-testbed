@@ -12,34 +12,6 @@ struct coord {
     bool operator=(const coord& other);
     bool operator==(const coord& other);
 
-    coord()
-        : north(0), east(0)
-    {    }
-
-    coord(double north, double east)
-    {
-        this->north = north;
-        this->east = east;
-    }
-
-    bool operator=(const coord& other)
-    {
-        if (this != &other)
-        {
-            this->north = other.north;
-            this->east = other.east;
-        }
-        return this;
-    }
-
-    bool operator==(const coord& other)
-    {
-        if (this->north == other.north && this->east == other.east)
-            return true;
-        else
-            return false;
-    }
-
     std::string to_string() const;
 
     /*float*/double east; // mathematical x, longitude etc.
