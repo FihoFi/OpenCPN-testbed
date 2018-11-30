@@ -232,18 +232,12 @@ bool dmDepthModelDrawer::drawDepthValue(wxDC &dc, PlugIn_ViewPort &vp)
         // a corner case, where the values are scrambled. 
         return false;
     }
-    dmExtent extWM;
-    LLtoWM(dmExtent(coord(_lat, _lon), coord()), extWM);
 
-    double modelDepth = dataset.getDepthAt(extWM.topLeft);
-    if (modelDepth < -9998)
-        return true;
+    float currentWL, systemCorrectedDepth;
+    if (!getDepthValues(currentWL, systemCorrectedDepth))
+        return false;
 
-    double currentWL, vertRefSyst;
-    drawingState.GetCurrentWaterLevels(currentWL, vertRefSyst);
-
-    float systemCorrectedDepth = modelDepth + (float)vertRefSyst;
-    float wholeDepth = modelDepth + (float)vertRefSyst + (float)currentWL;
+    float wholeDepth = systemCorrectedDepth + (float)currentWL;
     std::string sign = currentWL > 0.0 ? " +" : " ";
 
     std::stringstream stream;
