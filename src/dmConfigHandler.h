@@ -187,6 +187,9 @@ public:
         showDepthModel = !showDepthModel;
         return showDepthModel;
     }
+    bool SetDepthsViewerToolState(bool state);
+    bool ToggleDepthsViewerToolState();
+
     DMGeneralConfig     general;
     DMColorOptionConfig colour;
     DMFileImportConfig  fileImport;
@@ -198,6 +201,7 @@ private:
     wxFileConfig*       m_pconfig;
 
     bool                showDepthModel;
+    bool                showDepthsViewer;
 
     wxFileName          pluginConfigPath; // full config file path name
 };

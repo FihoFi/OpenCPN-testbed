@@ -298,3 +298,13 @@ bool DMFileImportConfig::save(void)
     }
     return success;
 }
+
+bool dmConfigHandler::SetDepthsViewerToolState(bool state) {
+    showDepthsViewer = state;
+    return showDepthsViewer;
+}
+
+bool dmConfigHandler::ToggleDepthsViewerToolState() {
+    showDepthsViewer = !showDepthsViewer;
+    return showDepthsViewer;
+}
