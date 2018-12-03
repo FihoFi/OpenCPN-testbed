@@ -34,7 +34,6 @@
 #include <iomanip> // setprecision
 #include <sstream> // stringstream
 
-#include "dmDepthsViewer.h"
 #include "dm_API.h"
 
 class dmDepthValues;
@@ -73,19 +72,21 @@ void DepthsViewer::SetDepthErrorText(std::string errStr)
 void DepthsViewer::SetCoordinatesText(  double waterLevel, double cursorDepthInCD,
                                         double shipDepthInCD)
 {
-    std::string sign = waterLevel > 0 ? "+" : "";
+    std::string signWL = waterLevel > 0 ? "+" : "";
+    std::string signCursorCD = cursorDepthInCD > 0 ? "+" : "";
+    std::string signShipCD = shipDepthInCD > 0 ? "+" : "";
 
     std::stringstream stream;
     stream << std::fixed << std::setprecision(2);
 
     if (waterLevel > NotAvailableValue)
-        stream << "\nCurrent water level: " << sign << waterLevel;
+        stream << "\nCurrent water level: " << signWL << waterLevel;
     else
         stream << "\nCurrent water level: N/A";
 
     stream << "\nCursor:";
     if (cursorDepthInCD > NotAvailableValue) {
-        stream  << "\n  Depth in chart datum: " << sign << cursorDepthInCD
+        stream  << "\n  Depth in chart datum: " << signCursorCD << cursorDepthInCD
                 << "\n  Current depth in CD: " << (cursorDepthInCD + waterLevel);
     }
     else {
@@ -95,7 +96,7 @@ void DepthsViewer::SetCoordinatesText(  double waterLevel, double cursorDepthInC
 
     stream << "\nShip:";
     if (shipDepthInCD > NotAvailableValue) {
-        stream  << "\n  Depth in chart datum: " << sign << shipDepthInCD
+        stream  << "\n  Depth in chart datum: " << signShipCD << shipDepthInCD
                 << "\n  Current depth in CD: " << (shipDepthInCD + waterLevel);
     }
     else {
