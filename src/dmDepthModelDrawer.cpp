@@ -266,8 +266,8 @@ bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
     if (!newDepthValueCalledOnly || bmp == NULL || 
         needNewCropping(vpExtentLL) || mustGetNewBmp)
     {
-        dmExtent idealCroppingLL = calculateIdealCroppingLL(vpExtentLL);
-        success = cropImage(idealCroppingLL, &raster, croppedImageLL, w,h);
+        croppingExtentLL = calculateIdealCroppingLL(vpExtentLL);
+        success = cropImage(croppingExtentLL, &raster, croppedImageLL, w,h);
         if(!success)
         {
             wxLogMessage(_T("dmDepthModelDrawer::drawDepthChart - Crop failed: ") +
@@ -404,12 +404,11 @@ bool dmDepthModelDrawer::needNewCropping(dmExtent viewPortLL)
         throw (std::string("dmDepthModelDrawer::needNewCropping does not know the canvas extent"));
     }
 
-    dmExtent lastDrawnLL = croppedImageLL;
-    bool stillFits = viewPortLL.isWithin(lastDrawnLL);
+    bool stillFits = viewPortLL.isWithin(croppingExtentLL);
 
     bool lastDrawnIsTooWide = false;
-    lastDrawnIsTooWide |= lastDrawnLL.height() / viewPortLL.height() > 2.0;
-    lastDrawnIsTooWide |= lastDrawnLL.width()  / viewPortLL.width()  > 2.0;
+    lastDrawnIsTooWide |= croppingExtentLL.height() / viewPortLL.height() > 2.0;
+    lastDrawnIsTooWide |= croppingExtentLL.width()  / viewPortLL.width()  > 2.0;
 
     if (stillFits && !lastDrawnIsTooWide)
     {   return false;   }

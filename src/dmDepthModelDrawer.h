@@ -73,6 +73,7 @@ private:
     dmExtent        wholeImageWM;   // extent (in WM) of the whole image available in the dataset
 
     dmExtent        croppedImageLL;
+    dmExtent        croppingExtentLL;
     wxBitmap*       bmp;
     wxPoint         bmpTopLeftLL;
 
