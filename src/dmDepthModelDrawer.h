@@ -57,6 +57,8 @@ public:
     void             setShowingDepthValueOff()  { showingDepthValue = false; }
     void             SetCursorLatLon(double lat, double lon);
     void             SetCursorPix(wxPoint position);
+
+    bool             getDepthValues(float& cursorDepthCD, float& currentWL);
     bool             drawDepthValue(wxDC &dc, PlugIn_ViewPort &vp);
 
 private:
@@ -88,9 +90,6 @@ private:
 
     void WMtoLL(const dmExtent& WMin, dmExtent& LLout);
     void LLtoWM(const dmExtent& LLin, dmExtent& WMout);
-
-    void readAFile();
-
 };
 
 #endif _DM_DEPTH_MODEL_DRAWER_

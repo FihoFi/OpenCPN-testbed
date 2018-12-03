@@ -37,6 +37,7 @@
 
 #include "LIVI_Depth_model_pi.h"
 #include "LIVI_Depth_model_pi_UI_impl.h"
+#include "dmDepthsViewerUI_impl.h"
 
 #include "dmConfigHandler.h"    // For handling config options
 #include "dmColourfileHandler.h" // For handling colour file access operations
@@ -74,6 +75,7 @@ LIVI_Depth_model_pi::LIVI_Depth_model_pi(void *ppimgr)
     , m_parent_window(NULL)
     , m_pconf(NULL)
     , dialog(NULL)
+    , depthsViewer(NULL)
     , colourfileHandler(NULL)
     , m_icon(NULL)
     , dmDrawer(NULL)
@@ -114,6 +116,9 @@ int LIVI_Depth_model_pi::Init(void)
     dialog->plugin = this;
     dialog->SetAboutInfo();
 
+    depthsViewer = new DepthsViewer(m_parent_window);
+  //depthsViewer->plugin = this; // no need for callbacks yet
+
     m_pconf = new dmConfigHandler(pFileConf, dialog);
 
 
@@ -137,6 +142,8 @@ int LIVI_Depth_model_pi::Init(void)
     setCurrentlyDrawnOptionsTextToUI();
     setImageToGenerateOptionsTextToUI();
 
+    depthsViewer->SetCoordinatesText();
+
     if (createDMPluginDataPath())
     {
         dmDrawer->setTempFileFolder(pluginDataDir);
@@ -151,6 +158,11 @@ int LIVI_Depth_model_pi::Init(void)
             _img_LIVI_Depth_model, _img_LIVI_Depth_model, wxITEM_CHECK,
             _("Depth model"), _(""), NULL,
             LIVI_DEPTH_MODEL_TOOL_POSITION, 0, this);
+
+        depthsViewerToolId = InsertPlugInTool/*SVG*/(_T(""),
+            _img_DepthViewer, _img_DepthViewerRollover, /*_img_DepthViewerToggled,*/ wxITEM_CHECK,
+            _("Show depths console"), _T(""), NULL,
+            DM_SHOW_DEPTHS_TOOL_POSITION, 0, this);
     }
 
     // Display size info is used to position the window
@@ -189,14 +201,25 @@ int LIVI_Depth_model_pi::Init(void)
 bool LIVI_Depth_model_pi::DeInit(void)
 {
     dmDrawer->logInfo("Depth model: UNinitializing plugin.");
-    SaveUiToConfig();   // TODO, do we want this here, or only at OnGenerateImage?
 
     bool success = m_pconf->closeNDestroyDialog();
     if (success) { dialog = NULL; }
 
+    if(depthsViewer) {
+        wxPoint p = depthsViewer->GetPosition();
+        m_pconf->general.SetDepthsViewerDialogXY(p.x, p.y);
+        depthsViewer->Close();
+        delete depthsViewer;
+        depthsViewer = NULL;
+    }
+
+    SaveUiToConfig();
+
     bool newPluginState = false;
     m_pconf->SetPluginToolState(newPluginState);
+    m_pconf->SetDepthsViewerToolState(newPluginState);
     SetToolbarItemState(pluginToolId, newPluginState);
+    SetToolbarItemState(depthsViewerToolId, newPluginState);
 
     RequestRefresh(m_parent_window); // refresh main window, to hide the dataset pic
 
@@ -273,6 +296,12 @@ void LIVI_Depth_model_pi::ShowPreferencesDialog(wxWindow* parent)
 void LIVI_Depth_model_pi::SetCursorLatLon(double lat, double lon)
 {
     dmDrawer->SetCursorLatLon(lat, lon);
+
+    float cursorDepthInCD, currentWL;
+    if(dmDrawer->getDepthValues(cursorDepthInCD, currentWL))
+        depthsViewer->SetCoordinatesText(currentWL, cursorDepthInCD);
+    else
+        depthsViewer->SetCoordinatesText(DepthsViewer::NotAvailableValue);
 }
 
 /**
@@ -345,28 +374,55 @@ void LIVI_Depth_model_pi::OnToolbarToolCallback(int id)
 
         dmDrawer->logInfo("Depth model: Fallback: UI initialized.");
     }
-
-    // Toggle : update toggle state, and window show status
-    bool pluginShown = m_pconf->TogglePluginToolState();
-    if(pluginShown)
+    if(id == pluginToolId)
     {
-        dialog->Move(m_pconf->general.dialogXY);
-        dialog->Fit();
-        dialog->Show();
-        dmDrawer->logInfo("Depth model: UI visible.");
+        // Toggle : update toggle state, and window show status
+        bool pluginShown = m_pconf->TogglePluginToolState();
+        if(pluginShown)
+        {
+            dialog->Move(m_pconf->general.dialogXY);
+            dialog->SetSize(m_pconf->general.dialogSize);
+            dialog->Fit();
+            dialog->Show();
+            dmDrawer->logInfo("Depth model: UI visible.");
+        }
+        else
+        {
+            wxPoint p = dialog->GetPosition();
+            m_pconf->general.SetDialogXY(p.x, p.y);
+            wxSize s = dialog->GetSize();
+            m_pconf->general.SetDialogSize(s.GetWidth(), s.GetHeight());
+            dialog->Hide();
+            dmDrawer->logInfo("Depth model: UI hidden.");
+        }
+
+        // Toggle is handled by the toolbar but we must keep plugin manager
+        // b_toggle updated to ensure correct status upon toolbar rebuild
+        SetToolbarItemState(pluginToolId, pluginShown);
     }
-    else
+    else if (id == depthsViewerToolId)
     {
-        dialog->Hide();
-        dmDrawer->logInfo("Depth model: UI hidden.");
+        // Toggle : update toggle state, and window show status
+        bool depthValuesShown = m_pconf->ToggleDepthsViewerToolState();
+        if (depthValuesShown)
+        {
+            depthsViewer->Move(m_pconf->general.depthViewerDialogXY);
+            depthsViewer->Fit();
+            depthsViewer->Show();
+            dmDrawer->logInfo("Depth model: depth values UI visible.");
+        }
+        else
+        {
+            wxPoint p = depthsViewer->GetPosition();
+            m_pconf->general.SetDepthsViewerDialogXY(p.x, p.y);
+            depthsViewer->Hide();
+            dmDrawer->logInfo("Depth model: depth values UI hidden.");
+        }
+
+        // Toggle is handled by the toolbar but we must keep plugin manager
+        // b_toggle updated to ensure correct status upon toolbar rebuild
+        SetToolbarItemState(depthsViewerToolId, depthValuesShown);
     }
-
-
-    // Toggle is handled by the toolbar but we must keep plugin manager
-    // b_toggle updated to ensure correct status upon toolbar rebuild
-    SetToolbarItemState(pluginToolId, pluginShown);
-
-    //RequestRefresh(m_parent_window); // refresh main window
 }
 
 /**
@@ -853,80 +909,4 @@ void LIVI_Depth_model_pi::setErrorToUI(std::string str)
     dialog->SetPictureImportErrorText(str);
 }
 
-/*
-wxString &LIVI_Depth_model_pi::GetConfigFileName()
-{
-    if (m_LIVI_depth_model_config_file_name.IsEmpty()) {
-        //      Establish the location of the config file
-        wxFileName& std_path = GetStdPaths();
-
-#ifdef __WXMSW__
-        m_LIVI_depth_model_config_file_name = wxT("LIVI_depth_model.ini");
-        m_LIVI_depth_model_config_file_name.Prepend(wxStandardPaths::GetHomeDir());
-
-#elif defined __WXOSX__
-        m_LIVI_depth_model_config_file_name = std_path.GetUserConfigDir(); // should be ~/Library/Preferences
-        appendOSDirSlash(&m_LIVI_depth_model_config_file_name);
-        m_LIVI_depth_model_config_file_name.Append(wxT("LIVI_depth_model"));
-        appendOSDirSlash(&m_LIVI_depth_model_config_file_name);
-        m_LIVI_depth_model_config_file_name.Append(wxT("LIVI_depth_model.ini"));
-#else
-        m_LIVI_depth_model_config_file_name = std_path.GetUserDataDir(); // should be ~/.opencpn
-        appendOSDirSlash(&m_LIVI_depth_model_config_file_name);
-        m_LIVI_depth_model_config_file_name.Append(wxT("LIVI_depth_model.conf"));
-#endif
-
-        if (g_bportable) {
-            m_LIVI_depth_model_config_file_name = GetHomeDir();
-#ifdef __WXMSW__
-            m_LIVI_depth_model_config_file_name += wxT("LIVI_depth_model.ini");
-#elif defined __WXOSX__
-            m_LIVI_depth_model_config_file_name += wxT("LIVI_depth_model.ini");
-#else
-            m_LIVI_depth_model_config_file_name += wxT("LIVI_depth_model.conf");
-#endif
-
-        }
-
-#ifdef __OCPN__ANDROID__
-        m_LIVI_depth_model_config_file_name = androidGetPrivateDir();
-        appendOSDirSlash(&m_LIVI_depth_model_config_file_name);
-        m_LIVI_depth_model_config_file_name += wxT("opencpn.conf");
-#endif
-
-    }
-
-    return m_LIVI_depth_model_config_file_name;
-}
-*/
-/*
-wxString &OCPNPlatform::GetPluginDir()
-{
-    if (m_PluginsDir.IsEmpty()) {
-
-        wxStandardPaths& std_path = GetStdPaths();
-
-        //  Get the PlugIns directory location
-        m_PluginsDir = std_path.GetPluginsDir();   // linux:   {prefix}/lib/opencpn
-                                                   // Mac:     appname.app/Contents/PlugIns
-#ifdef __WXMSW__
-        m_PluginsDir += wxT("\\plugins");             // Windows: {exe dir}/plugins
-#endif
-
-        if (g_bportable) {
-            m_PluginsDir = GetHomeDir();
-            m_PluginsDir += wxT("plugins");
-        }
-
-#ifdef __OCPN__ANDROID__
-        // something like: data/data/org.opencpn.opencpn
-        wxFileName fdir = wxFileName::DirName(std_path.GetUserConfigDir());
-        fdir.RemoveLastDir();
-        m_PluginsDir = fdir.GetPath();
-
-#endif
-    }
-
-    return m_PluginsDir;
-}
-*/ // end of LIVI additions
+// end of LIVI additions

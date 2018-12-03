@@ -91,10 +91,15 @@ bool DMGeneralConfig::load(void)
     {
         confFile->SetPath(wxT("/Settings/LIVI_Depth_model_pi"));
 
-       dialogXY.x = confFile->ReadLong(_T("DialogPosX"), 20L);
-       dialogXY.y = confFile->ReadLong(_T("DialogPosY"), 20L);
+        dialogXY.x = confFile->ReadLong(_T("DialogPosX"), 20L);
+        dialogXY.y = confFile->ReadLong(_T("DialogPosY"), 20L);
+        dialogSize.SetWidth(confFile->ReadLong(_T("DialogSizeW"), 20L));
+        dialogSize.SetHeight(confFile->ReadLong(_T("DialogSizeH"), 20L));
+        depthViewerDialogXY.x = confFile->ReadLong(_T("depthViewerDialogPosX"), 20L);
+        depthViewerDialogXY.y = confFile->ReadLong(_T("depthViewerDialogPosY"), 20L);
 
-       m_bLIVI_Depth_modelShowIcon = confFile->ReadBool(_T("ShowLIVI_Depth_modelIcon"), false);
+        m_bLIVI_Depth_modelShowIcon  = confFile->ReadBool(_T("ShowLIVI_Depth_modelIcon"), false);
+        m_bDepthsViewerShowIcon      = confFile->ReadBool(_T("ShowDepthsViewerIcon"),     false);
         return true;
     }
     return false;
@@ -108,13 +113,44 @@ bool DMGeneralConfig::save(void)
 
         confFile->Write(_T("DialogPosX"), dialogXY.x);
         confFile->Write(_T("DialogPosY"), dialogXY.y);
+        confFile->Write(_T("DialogSizeW"), dialogSize.GetWidth());
+        confFile->Write(_T("DialogSizeH"), dialogSize.GetHeight());
+        confFile->Write(_T("depthViewerDialogPosX"), depthViewerDialogXY.x);
+        confFile->Write(_T("depthViewerDialogPosY"), depthViewerDialogXY.y);
 
         confFile->Write(_T("ShowLIVI_Depth_modelIcon"), m_bLIVI_Depth_modelShowIcon);
+        confFile->Write(_T("ShowDepthsViewerIcon"),     m_bDepthsViewerShowIcon);
         return true;
     }
     return false;
 }
 
+void DMGeneralConfig::SaveDispaySize(int w, int h)
+{
+    displaySize.SetWidth(w); displaySize.SetHeight(h);
+}
+
+void DMGeneralConfig::SetDialogXY(int x, int y) {
+    dialogXY.x = x;
+    dialogXY.y = y;
+
+    if ((x < 0) || (x > displaySize.GetWidth())) { dialogXY.x = 5; }
+    if ((y < 0) || (y > displaySize.GetHeight())) { dialogXY.y = 5; }
+}
+
+void DMGeneralConfig::SetDialogSize(int w, int h)
+{   dialogSize.SetWidth(w); dialogSize.SetHeight(h);    }
+
+
+void DMGeneralConfig::SetDepthsViewerDialogXY(int x, int y) {
+    depthViewerDialogXY.x = x;
+    depthViewerDialogXY.y = y;
+
+    if ((depthViewerDialogXY.x < 0) || (depthViewerDialogXY.x > displaySize.GetWidth()))
+        depthViewerDialogXY.x = 5;
+    if ((depthViewerDialogXY.y < 0) || (depthViewerDialogXY.y > displaySize.GetHeight()))
+        depthViewerDialogXY.y = 5;
+}
 
 bool DMColorOptionConfig::load(void)
 {
@@ -297,4 +333,25 @@ bool DMFileImportConfig::save(void)
         success &= confFile->Write(wxT("FileImport_fullpathname"), filePath.GetFullPath());
     }
     return success;
+}
+
+
+bool dmConfigHandler::SetPluginToolState(bool state) {
+    showDepthModel = state;
+    return showDepthModel;
+}
+
+bool dmConfigHandler::TogglePluginToolState() {
+    showDepthModel = !showDepthModel;
+    return showDepthModel;
+}
+
+bool dmConfigHandler::SetDepthsViewerToolState(bool state) {
+    showDepthsViewer = state;
+    return showDepthsViewer;
+}
+
+bool dmConfigHandler::ToggleDepthsViewerToolState() {
+    showDepthsViewer = !showDepthsViewer;
+    return showDepthsViewer;
 }

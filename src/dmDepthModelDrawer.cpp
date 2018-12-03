@@ -194,6 +194,26 @@ void dmDepthModelDrawer::forceNewImage()
     mustGetNewBmp = true;
 }
 
+bool dmDepthModelDrawer::getDepthValues(float& cursorDepthCD, float& currentWL)
+{
+    if (!showingDepthValue || bmp == NULL)
+        return false;
+
+    dmExtent extWM;
+    LLtoWM(dmExtent(coord(_lat, _lon), coord()), extWM);
+
+    double modelDepth = dataset.getDepthAt(extWM.topLeft);
+    if (modelDepth < -9998)
+        return false;
+
+    double currentWLDbl, vertRefSyst;
+    drawingState.GetCurrentWaterLevels(currentWLDbl, vertRefSyst);
+
+    cursorDepthCD = modelDepth + (float)vertRefSyst;
+    currentWL     = currentWLDbl;
+    return true;
+}
+
 bool dmDepthModelDrawer::drawDepthValue(wxDC &dc, PlugIn_ViewPort &vp)
 {
     if (!showingDepthValue || bmp == NULL)
@@ -212,18 +232,12 @@ bool dmDepthModelDrawer::drawDepthValue(wxDC &dc, PlugIn_ViewPort &vp)
         // a corner case, where the values are scrambled. 
         return false;
     }
-    dmExtent extWM;
-    LLtoWM(dmExtent(coord(_lat, _lon), coord()), extWM);
 
-    double modelDepth = dataset.getDepthAt(extWM.topLeft);
-    if (modelDepth < -9998)
-        return true;
+    float currentWL, systemCorrectedDepth;
+    if (!getDepthValues(currentWL, systemCorrectedDepth))
+        return false;
 
-    double currentWL, vertRefSyst;
-    drawingState.GetCurrentWaterLevels(currentWL, vertRefSyst);
-
-    float systemCorrectedDepth = modelDepth + (float)vertRefSyst;
-    float wholeDepth = modelDepth + (float)vertRefSyst + (float)currentWL;
+    float wholeDepth = systemCorrectedDepth + (float)currentWL;
     std::string sign = currentWL > 0.0 ? " +" : " ";
 
     std::stringstream stream;
@@ -486,22 +500,4 @@ void dmDepthModelDrawer::WMtoLL(const dmExtent& WMin, dmExtent& LLout)
 void dmDepthModelDrawer::LLtoWM(const dmExtent& LLin, dmExtent& WMout)
 {
     dataset.latLonToDstSrs(LLin, WMout);
-}
-
-void dmDepthModelDrawer::readAFile()
-{
-    /*   const char*     pszFilename = "";
-    GDALDataset*    poDataset;
-    poDataset = (GDALDataset *)GDALOpen(pszFilename, GA_ReadOnly);
-
-    GDALRasterBand  *poBand;
-    poBand = poDataset->GetRasterBand(1);
-
-    float *pafScanline;
-    int   nXSize = poBand->GetXSize();
-    pafScanline = (float *)CPLMalloc(sizeof(float)*nXSize);
-    poBand->RasterIO(GF_Read, 0, 0, nXSize, 1,
-    pafScanline, nXSize, 1, GDT_Float32,
-    0, 0);
-    */
 }
