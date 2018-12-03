@@ -283,6 +283,10 @@ void dmDataset::setHillshadeMultidirectional(bool multidirectional)
     _hillshadeParamMultidirectional = multidirectional;
 }
 
+void dmDataset::setHillshadeAlpha(unsigned char alpha)
+{
+    _hillshadeAlpha = alpha;
+}
 
 /* private */
 

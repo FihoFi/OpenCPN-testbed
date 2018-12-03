@@ -57,6 +57,7 @@ public:
     void setHillshadeAltitude(double altitude) override;
     void setHillshadeCombined(bool combined) override;
     void setHillshadeMultidirectional(bool multidirectional) override;
+    void setHillshadeAlpha(unsigned char alpha) override;
 
 private:
     static bool driversRegistered;
