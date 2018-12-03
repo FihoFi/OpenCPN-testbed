@@ -2,10 +2,39 @@
 #include <algorithm>
 #include <string>
 
+coord::coord()
+    : north(0), east(0)
+{    }
+
+coord::coord(double north, double east)
+{
+    this->north = north;
+    this->east = east;
+}
+
+bool coord::operator=(const coord& other)
+{
+    if (this != &other)
+    {
+        this->north = other.north;
+        this->east = other.east;
+    }
+    return this;
+}
+
+bool coord::operator==(const coord& other)
+{
+    if (this->north == other.north && this->east == other.east)
+        return true;
+    else
+        return false;
+}
+
 std::string coord::to_string() const
 {
     return std::string("coord(n: " + std::to_string(north) + ",e:" + std::to_string(east) + ")");
 }
+
 
 dmExtent::dmExtent()
     : topLeft(), botRight()

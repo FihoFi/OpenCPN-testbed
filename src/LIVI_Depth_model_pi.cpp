@@ -619,7 +619,7 @@ void LIVI_Depth_model_pi::OnGenerateImage()
 
     setInfoToUI("Setting chart image type options");
 
-    SaveUiToConfig();
+    SaveUiToConfig();   // Make sure the latest colour changes have been saved for us to use
 
     bool success = true;
     try {

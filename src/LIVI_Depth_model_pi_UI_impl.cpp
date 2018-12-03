@@ -34,11 +34,10 @@
 #include <iomanip> // setprecision
 #include <sstream> // stringstream
 
-#include "LIVI_Depth_model_pi.h"
+#include "LIVI_Depth_model_pi.h"	// plugin
 #include "dm_API.h"
 
 class Position;
-class LIVI_Depth_model_pi;
 
 #define FAIL(X) do { error = X; goto failed; } while(0)
 
