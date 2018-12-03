@@ -5,8 +5,12 @@
 
 #include "dm_API.h"
 
+#include <vector>
 #include "gdal_priv.h"
 #include "cpl_conv.h"
+
+
+typedef std::unique_ptr<char*[]> gdalUtilOpts;
 
 class dmDataset : public dm_API
 {
@@ -87,6 +91,8 @@ private:
     std::pair<int, int> dmDataset::getRasterPixelOffsetAt(coord point, bool roundDownPixelOffset = true);
     dmExtent getRasterExtent(void);
     std::vector<std::string> getGdaldemOptionsVec();
+    std::vector<std::string> getGdalwarpOptionsVec();
+    gdalUtilOpts optionsVecToGdalUtilOpts(std::vector<std::string> &options);
     GDALDataset * reprojectDataset(GDALDataset *dsToReproject);
     GDALDataset * visualizeDataset(GDALDataset *dsToVisualize);
 

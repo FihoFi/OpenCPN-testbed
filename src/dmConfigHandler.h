@@ -26,33 +26,25 @@ protected:
 
 struct DMGeneralConfig : dm_configAPI {
     DMGeneralConfig(wxFileConfig* confFile)
-    :   dialogXY(0,0), dialogSize(0,0), displaySize(100,100)
+    : dialogXY(0,0), dialogSize(0,0), displaySize(100,100)
+    , depthViewerDialogXY(0, 0)
     {   this->confFile = confFile;    }
 
     wxPoint dialogXY;
+    wxPoint depthViewerDialogXY;
     wxSize  dialogSize;
+  //wxSize  depthViewerDialogSize;
     wxSize  displaySize;
     bool    m_bLIVI_Depth_modelShowIcon;
+    bool    m_bDepthsViewerShowIcon;
 
     virtual bool load() override;
     virtual bool save() override;
 
-    void SetDialogXY(int x, int y) {
-        dialogXY.x = x;
-        dialogXY.y = y;
-
-        if ((dialogXY.x < 0) || (dialogXY.x > displaySize.GetWidth()))
-            dialogXY.x = 5;
-        if ((dialogXY.y < 0) || (dialogXY.y > displaySize.GetHeight()))
-            dialogXY.y = 5;
-    }
-
-    void SetLIVIDepthModelDialogSize(int w, int h)
-    { dialogSize.SetWidth(w); dialogSize.SetHeight(h); }
-
-    void SaveDispaySize(int w, int h)
-    {   displaySize.SetWidth(w); displaySize.SetHeight(h);    }
-
+    void SaveDispaySize(int w, int h);
+    void SetDialogXY(int x, int y);
+    void SetDialogSize(int w, int h);
+    void SetDepthsViewerDialogXY(int x, int y);
 };
 
 #define DM_NUM_CUSTOM_COL 5 // Number of custom colors
@@ -166,7 +158,7 @@ public:
         Dlg* pluginDialog=NULL)
       : m_pconfig(confFile), m_pDialog(pluginDialog),
         general(confFile),colour(confFile), fileImport(confFile), waterLevel(confFile),
-        showDepthModel(false)
+        showDepthModel(false), showDepthsViewer(false)
     { 
         /*if debug */assert(confFile);
         /* else */ // write error to log?
@@ -179,14 +171,12 @@ public:
     bool setDialog(Dlg* pluginDialog);
     bool closeNDestroyDialog();
 
-    bool SetPluginToolState(bool state) {
-        showDepthModel = state;
-        return showDepthModel;
-    }
-    bool TogglePluginToolState() {
-        showDepthModel = !showDepthModel;
-        return showDepthModel;
-    }
+    bool SetPluginToolState(bool state);
+    bool TogglePluginToolState();
+
+    bool SetDepthsViewerToolState(bool state);
+    bool ToggleDepthsViewerToolState();
+
     DMGeneralConfig     general;
     DMColorOptionConfig colour;
     DMFileImportConfig  fileImport;
@@ -198,6 +188,7 @@ private:
     wxFileConfig*       m_pconfig;
 
     bool                showDepthModel;
+    bool                showDepthsViewer;
 
     wxFileName          pluginConfigPath; // full config file path name
 };
