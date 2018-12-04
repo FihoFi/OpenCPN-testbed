@@ -83,3 +83,15 @@ dmDepthProfile::getNyquistSteps(std::pair<double, double> gridSize)
     return std::pair<double, double>(
         gridSize.first / 2.0,  gridSize.second / 2.0);
 }
+
+std::ostream& operator<<(std::ostream& os, const dmDepthProfile& dp)
+{
+    std::for_each(dp.profileData.begin(), dp.profileData.end(),
+        [&](dmDepthData depthData)
+    {
+        os << depthData.position.east << ';' <<
+            depthData.position.north << ';' <<
+            depthData.depth << '\n';
+    });
+    return os;
+}

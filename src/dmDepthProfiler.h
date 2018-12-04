@@ -29,6 +29,10 @@ private:
     std::pair<double, double> getGridSize(dmDataset &dataset);
     std::pair<double, double> getNyquistSteps(std::pair<double, double> gridSize);
 
+    friend std::ostream& operator<<(std::ostream& os, const dmDepthProfile& dp);
+
 };
+
+std::ostream& operator<<(std::ostream& os, const dmDepthProfile& dp);
 
 #endif _DM_DEPTH_PROFILER_
