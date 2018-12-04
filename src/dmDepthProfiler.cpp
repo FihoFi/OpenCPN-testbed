@@ -1,30 +1,32 @@
 
 #include "dmDepthProfiler.h"
 
+#include <algorithm>
 #include <utility>  // std::pair
 #include <vector>
 
 #include "dmExtent.h"   // coord
 #include "dmDataset.h"
 
-dmDepthProfiler::dmDepthProfiler()
+dmDepthProfile::dmDepthProfile(dmDataset& ds, const dmRoute& route)
+{
+    profileData = getRouteProfile(ds, route);
+}
+
+dmDepthProfile::~dmDepthProfile()
 {
 }
 
-dmDepthProfiler::~dmDepthProfiler()
+dmDepthProfileData
+dmDepthProfile::getLegProfile(dmDataset& dataset, dmLeg legInWm)
 {
-}
+    std::pair<double, double> gridSize(getGridSize(dataset));       // N-S, E-W
+    std::pair<double, double> nyquist(getNyquistSteps(gridSize));   // N-S, E-W
 
-dmDepthProfiler::dmProfile
-dmDepthProfiler::getLegProfile(dmDataset& dataset, coord legBeginInWM, coord legEndInWM)
-{
-    dmSize gridSize(getGridSize(dataset));       // N-S, E-W
-    dmSize nyquist(getNyquistSteps(gridSize));   // N-S, E-W
+    coord routePoint = legInWm.start;
+    int steps = std::abs(legInWm.start.north - legInWm.end.north) / nyquist.first;
 
-    coord routePoint = legBeginInWM;
-    int steps = std::abs(legBeginInWM.north - legEndInWM.north) / nyquist.first;
-
-    dmProfile legProfile;
+    dmDepthProfileData legProfile;
 
     for (int step = 0; step<steps; step++)
     {
@@ -35,37 +37,35 @@ dmDepthProfiler::getLegProfile(dmDataset& dataset, coord legBeginInWM, coord leg
         routePoint.east += nyquist.second;
     }
 
-    dmDepthData depthValue(legEndInWM, dataset.getDepthAt(legEndInWM));
+    dmDepthData depthValue(legInWm.end, dataset.getDepthAt(legInWm.end));
     legProfile.push_back(depthValue);
 
     return legProfile;
 }
 
-dmDepthProfiler::dmProfile
-dmDepthProfiler::getRouteProfile(dmDataset& dataset, std::vector<coord> route)
+dmDepthProfileData
+dmDepthProfile::getRouteProfile(dmDataset& dataset, dmRoute route)
 {
-    dmProfile routeProfile;
+    dmDepthProfileData routeProfile;
     if (route.empty() || route.size() < 2)
-        return dmProfile();
+        return dmDepthProfileData();
+    
+    std::for_each(route.begin(), route.end(),
+        [&](auto leg)
+        {
+            dmDepthProfileData legProfile = getLegProfile(dataset, leg);
+            routeProfile.insert(routeProfile.end(), legProfile.begin(), legProfile.end()-1);
+        });
 
-    dmDepthData dummy;
-    routeProfile.push_back(dummy);
-
-    for (int legNr = 0; legNr<(route.size()-1); legNr++)
-    {
-        coord legBegin  = route.at(legNr);
-        coord legEnd    = route.at(legNr+1);
-
-        dmProfile legProfile = getLegProfile(dataset, legBegin, legEnd);
-        routeProfile.erase(routeProfile.end());    // remove duplicate point; last point of prev. leg
-        routeProfile.insert(routeProfile.end(), legProfile.begin(), legProfile.end());
-    };
+    dmLeg lastLeg = *(route.end() - 1);
+    dmDepthData lastDepthData(lastLeg.end, dataset.getDepthAt(lastLeg.end));
+    routeProfile.push_back(lastDepthData);
 
     return routeProfile;
 }
 
-dmDepthProfiler::dmSize
-dmDepthProfiler::getGridSize(dmDataset &dataset)
+std::pair<double, double>
+dmDepthProfile::getGridSize(dmDataset &dataset)
 {
     coord topLeft, botRight;
     int h, w;
@@ -77,8 +77,8 @@ dmDepthProfiler::getGridSize(dmDataset &dataset)
         (botRight.east - topLeft.east)   / w);  // E-W [WM-lon/modelPixel]
 }
 
-dmDepthProfiler::dmSize
-dmDepthProfiler::getNyquistSteps(std::pair<double, double> gridSize)
+std::pair<double, double>
+dmDepthProfile::getNyquistSteps(std::pair<double, double> gridSize)
 {
     return std::pair<double, double>(
         gridSize.first / 2.0,  gridSize.second / 2.0);

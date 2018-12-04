@@ -3,31 +3,32 @@
 #ifndef _DM_DEPTH_PROFILER_
 #define _DM_DEPTH_PROFILER_
 
+#include <iostream>
 #include <utility>  // std::pair
 #include <vector>
 #include "dm_API.h" // coord
+#include "dm_types.h"
 
 class  dmDataset;
 class  dmDrawingState;
 
-class dmDepthProfiler
+class dmDepthProfile
 {
 public:
-    typedef std::vector<std::pair<coord, float>> dmProfile;
 
-    dmDepthProfiler();
-    ~dmDepthProfiler();
-
-    dmProfile getLegProfile(dmDataset& dataset, coord legBeginInWM, coord legEndInWM);
-    dmProfile getRouteProfile(dmDataset& dataset, std::vector<coord> route);
+    dmDepthProfile(dmDataset& ds, const dmRoute& route);
+    ~dmDepthProfile();
 
 private:
-    typedef std::pair<coord, coord>              dmLeg;
-    typedef std::pair<coord, float>              dmDepthData;
-    typedef std::pair<double, double>            dmSize;
 
-    dmSize getGridSize(dmDataset &dataset);
-    dmSize getNyquistSteps(std::pair<double, double> gridSize);
+    dmDepthProfileData getLegProfile(dmDataset& dataset, dmLeg legInWm);
+    dmDepthProfileData getRouteProfile(dmDataset& dataset, dmRoute route);
+
+    dmDepthProfileData profileData;
+
+    std::pair<double, double> getGridSize(dmDataset &dataset);
+    std::pair<double, double> getNyquistSteps(std::pair<double, double> gridSize);
+
 };
 
 #endif _DM_DEPTH_PROFILER_
