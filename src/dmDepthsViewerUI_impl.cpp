@@ -73,36 +73,34 @@ void DepthsViewer::SetCoordinatesText(  double waterLevel, double cursorDepthInC
                                         double shipDepthInCD)
 {
     std::string signWL = waterLevel > 0 ? "+" : "";
-    std::string signCursorCD = cursorDepthInCD > 0 ? "+" : "";
-    std::string signShipCD = shipDepthInCD > 0 ? "+" : "";
 
     std::stringstream stream;
     stream << std::fixed << std::setprecision(2);
 
     if (waterLevel > NotAvailableValue)
-        stream << "\nCurrent water level: " << signWL << waterLevel;
+        stream << "\nWater level: " << signWL << waterLevel;
     else
-        stream << "\nCurrent water level: N/A";
+        stream << "\nWater level: N/A";
 
-    stream << "\nCursor:";
+    //stream << "\nCursor:";
     if (cursorDepthInCD > NotAvailableValue) {
-        stream  << "\n  Depth in chart datum: " << signCursorCD << cursorDepthInCD
-                << "\n  Current depth in CD: " << (cursorDepthInCD + waterLevel);
+        stream  << "\nModel depth: "   <<  -cursorDepthInCD
+                << "\nCurrent depth: " << -(cursorDepthInCD + waterLevel);
     }
     else {
-        stream  << "\n  Depth in chart datum: N/A"
-                << "\n  Current depth in CD: N/A";
+        stream  << "\nModel depth: N/A"
+                << "\nCurrent depth: N/A";
     }
 
-    stream << "\nShip:";
-    if (shipDepthInCD > NotAvailableValue) {
-        stream  << "\n  Depth in chart datum: " << signShipCD << shipDepthInCD
-                << "\n  Current depth in CD: " << (shipDepthInCD + waterLevel);
-    }
-    else {
-        stream  << "\n  Depth in chart datum: N/A"
-                << "\n  Current depth in CD: N/A";
-    }
+    //stream << "\nShip:";
+    //if (shipDepthInCD > NotAvailableValue) {
+    //    stream  << "\n  Model depth: " << -shipDepthInCD
+    //            << "\n  Current depth: " << -(shipDepthInCD + waterLevel);
+    //}
+    //else {
+    //    stream  << "\n  Model depth: N/A"
+    //            << "\n  Current depth: N/A";
+    //}
 
     std::string depthsStr = stream.str();
     this->dm_coordinates_staticText->SetLabel(depthsStr);
