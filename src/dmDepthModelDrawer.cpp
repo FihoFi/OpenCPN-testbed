@@ -214,6 +214,11 @@ bool dmDepthModelDrawer::getDepthValues(float& cursorDepthCD, float& currentWL)
     return true;
 }
 
+/**
+* Function drawing depth values nex to cursor on the chart canvas / viewport.
+* Usage removed at version 0.11, as Depth Console implemented.
+*/
+/*
 bool dmDepthModelDrawer::drawDepthValue(wxDC &dc, PlugIn_ViewPort &vp)
 {
     if (!showingDepthValue || bmp == NULL)
@@ -250,6 +255,7 @@ bool dmDepthModelDrawer::drawDepthValue(wxDC &dc, PlugIn_ViewPort &vp)
     newDepthValueCalledOnly = false;
     return true;
 }
+*/
 
 bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
 {
