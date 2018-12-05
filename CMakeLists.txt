@@ -27,10 +27,11 @@ SET(VERSION_DATE "2018-12-05")
 # 0.10
 #   Now shows depth values next to cursor on the map. Value is shown where the 
 #       model has sensible values. Format is"current (systemcorrected + water level)".
+#       (DM-65, DM-66)
 #   Icon updated to comply more with the general OpenCPN icon style.
 # 0.(0)9
 #   Added water level variables Current water level, and Vertical reference system offset.
-#       These are used with Colour relief chrats with five, of two depth ranges.
+#       These are used with Colour relief chrats with five, of two depth ranges. (DM-60-63)
 #   File generation tab has now info for Current, and To-be-generated options
 #   Fixed bug, where five, and two colour range depths were loaded from config into the UI
 #        as integers instead of doubles, thus getting the decimals truncated off at plugin startup.
@@ -39,7 +40,7 @@ SET(VERSION_DATE "2018-12-05")
 # Known problems
 #   Colouring option Colour relief / Sliding colours is not implemented
 # 0.(0)8
-#   Fixed requirement of running OpenCPN as administrator, in order to use Depth model.
+#   Fixed requirement of running OpenCPN as administrator, in order to use Depth model. (DM-64)
 #       The changing files are now saved under wxStandardPaths::Get().GetUserDataDir(), 
 #       which is platform-independent. In Win10 we end up with 
 #       C:\Users\YOURUSERNAME\AppData\Roaming\opencpn\plugins\LIVI_Depth_model_pi\data
@@ -62,7 +63,7 @@ SET(VERSION_DATE "2018-12-05")
 #    Added some logging.
 #    Disabled Hillshade tab fields, as they currently are not taken to the backend.
 # 0.06
-#    Cropping, and stabilizing.
+#    Cropping, and stabilizing. (DM-54, DM-55, DM-59)
 #    The drawn chart is now cropped nicely.
 #    No more memory related crashings on zoom in, or crash on zoom out of the chart.
 # 0.05
