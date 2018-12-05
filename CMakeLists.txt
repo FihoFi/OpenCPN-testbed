@@ -15,10 +15,15 @@ SET(TITLE_NAME Depth_model)
 SET(CPACK_PACKAGE_CONTACT "LIVI - Liikennevirasto")
 
 SET(VERSION_MAJOR "0")
-SET(VERSION_MINOR "10")
-SET(VERSION_PATCH "2d7ffb4")
-SET(VERSION_DATE "2018-11-27")
+SET(VERSION_MINOR "11")
+SET(VERSION_PATCH "6ad39b1")
+SET(VERSION_DATE "2018-12-05")
 # Version release notes:
+# 0.11
+#   Plain image generation uses cubic resampling algorithm instead of max, to keep The
+#       picture from changing too much. (DM-68)
+#   Hillshade chart type parameters can now be changed from config (.ini) file. (DM-70)
+#   Water level parameters are now shown in a small window. (DM-67)
 # 0.10
 #   Now shows depth values next to cursor on the map. Value is shown where the 
 #       model has sensible values. Format is"current (systemcorrected + water level)".
