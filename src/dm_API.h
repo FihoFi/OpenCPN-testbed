@@ -277,6 +277,14 @@ public:
     */
     virtual void setHillshadeMultidirectional(bool multidirectional) = 0;
 
+    /**
+    * Sets alpha value for hillshade visualization type. Default value on
+    * initialization is 128.
+    *
+    * @param[in] alpha overall alpha value for hillshade visualization type
+    */
+    virtual void setHillshadeAlpha(unsigned char alpha) = 0;
+
     dmLogWriter* logWriter;
 };
 

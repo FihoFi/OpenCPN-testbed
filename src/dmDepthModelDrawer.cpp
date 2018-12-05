@@ -97,7 +97,7 @@ void dmDepthModelDrawer::setHillshadeParams(double azimuth, double altitude,
     dataset.setHillshadeAltitude(altitude);
     dataset.setHillshadeAzimuth(azimuth);
     dataset.setHillshadeZFactor(zFactor);
-  //dataset.setHillshadeAlpha(255-transparency);    // from transparency to opaqueness
+    dataset.setHillshadeAlpha(255-transparency);    // from transparency to opaqueness
 }
 
 void dmDepthModelDrawer::setCurrentWaterLevel(double cvl)
