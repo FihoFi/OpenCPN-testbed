@@ -161,7 +161,7 @@ int LIVI_Depth_model_pi::Init(void)
 
         depthsViewerToolId = InsertPlugInTool/*SVG*/(_T(""),
             _img_DepthViewer, _img_DepthViewerRollover, /*_img_DepthViewerToggled,*/ wxITEM_CHECK,
-            _("Show depths console"), _T(""), NULL,
+            _("Depth console"), _T(""), NULL,
             DM_SHOW_DEPTHS_TOOL_POSITION, 0, this);
     }
 
