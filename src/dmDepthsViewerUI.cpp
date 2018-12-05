@@ -20,14 +20,6 @@ dmDepthsViewerFrame::dmDepthsViewerFrame( wxWindow* parent, wxWindowID id, const
 	dm_coordinates_staticText->Wrap( -1 );
 	bSizer1->Add( dm_coordinates_staticText, 0, wxALL, 5 );
 	
-	dm_north_staticText = new wxStaticText( this, wxID_ANY, wxT("North"), wxDefaultPosition, wxDefaultSize, 0 );
-	dm_north_staticText->Wrap( -1 );
-	bSizer1->Add( dm_north_staticText, 0, wxALL, 5 );
-	
-	dm_east_staticText = new wxStaticText( this, wxID_ANY, wxT("East"), wxDefaultPosition, wxDefaultSize, 0 );
-	dm_east_staticText->Wrap( -1 );
-	bSizer1->Add( dm_east_staticText, 0, wxALL, 5 );
-	
 	
 	this->SetSizer( bSizer1 );
 	this->Layout();
@@ -47,14 +39,6 @@ dmDepthsViewerPanel::dmDepthsViewerPanel( wxWindow* parent, wxWindowID id, const
 	dm_coordinates_staticText = new wxStaticText( this, wxID_ANY, wxT("Depth (model+waterLevel)"), wxDefaultPosition, wxDefaultSize, 0 );
 	dm_coordinates_staticText->Wrap( -1 );
 	bSizer1->Add( dm_coordinates_staticText, 0, wxALL, 5 );
-	
-	dm_north_staticText = new wxStaticText( this, wxID_ANY, wxT("North"), wxDefaultPosition, wxDefaultSize, 0 );
-	dm_north_staticText->Wrap( -1 );
-	bSizer1->Add( dm_north_staticText, 0, wxALL, 5 );
-	
-	dm_east_staticText = new wxStaticText( this, wxID_ANY, wxT("East"), wxDefaultPosition, wxDefaultSize, 0 );
-	dm_east_staticText->Wrap( -1 );
-	bSizer1->Add( dm_east_staticText, 0, wxALL, 5 );
 	
 	
 	this->SetSizer( bSizer1 );
@@ -76,14 +60,6 @@ dmDepthsViewerDialog::dmDepthsViewerDialog( wxWindow* parent, wxWindowID id, con
 	dm_coordinates_staticText->Wrap( -1 );
 	bSizer1->Add( dm_coordinates_staticText, 0, wxALL, 5 );
 	
-	dm_north_staticText = new wxStaticText( this, wxID_ANY, wxT("North"), wxDefaultPosition, wxDefaultSize, 0 );
-	dm_north_staticText->Wrap( -1 );
-	bSizer1->Add( dm_north_staticText, 0, wxALL, 5 );
-	
-	dm_east_staticText = new wxStaticText( this, wxID_ANY, wxT("East"), wxDefaultPosition, wxDefaultSize, 0 );
-	dm_east_staticText->Wrap( -1 );
-	bSizer1->Add( dm_east_staticText, 0, wxALL, 5 );
-	
 	
 	this->SetSizer( bSizer1 );
 	this->Layout();
@@ -103,12 +79,6 @@ dmDepthsViewerToolBar::dmDepthsViewerToolBar( wxWindow* parent, wxWindowID id, c
 	dm_coordinates_staticText = new wxStaticText( this, wxID_ANY, wxT("Depth (model+waterLevel)"), wxDefaultPosition, wxDefaultSize, 0 );
 	dm_coordinates_staticText->Wrap( -1 );
 	AddControl( dm_coordinates_staticText ); 
-	dm_north_staticText = new wxStaticText( this, wxID_ANY, wxT("North"), wxDefaultPosition, wxDefaultSize, 0 );
-	dm_north_staticText->Wrap( -1 );
-	AddControl( dm_north_staticText ); 
-	dm_east_staticText = new wxStaticText( this, wxID_ANY, wxT("East"), wxDefaultPosition, wxDefaultSize, 0 );
-	dm_east_staticText->Wrap( -1 );
-	AddControl( dm_east_staticText ); 
 	
 	Realize();
 }
