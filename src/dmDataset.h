@@ -21,6 +21,7 @@ public:
 
 
     bool getDatasetPixelDimensions(int &width, int &height) override;
+    bool getDatasetExtremeValues(double& min, double& max) override;
     bool getDatasetExtents(coord &topLeft, coord &botRight) override;
     void setSrcWkt(const char * wkt);
     void setDstWkt(const char * wkt);

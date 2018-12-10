@@ -102,6 +102,16 @@ public:
     virtual bool getDatasetPixelDimensions(int &width, int &height) = 0;
 
     /**
+    * Returns min and max (depth) values of the (reprojected) dataset.
+    *
+    * @param[out] min Minimum of the depths of the (reprojected) dataset
+    * @param[out] max Maximum of the depths of the (reprojected) dataset
+    *
+    * @return true, if the extremes were retrieved successfully, false otherwise
+    */
+    virtual bool getDatasetExtremeValues(double& min, double& max) = 0;
+
+    /**
     * Returns the extents of the World Mercator projected dataset as spanning
     * top-left, and bottom-right corners, in World Mercator coordinates.
     *

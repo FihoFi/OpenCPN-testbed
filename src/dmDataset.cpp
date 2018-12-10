@@ -55,6 +55,21 @@ bool dmDataset::getDatasetPixelDimensions(int &width, int &height)
     return false;
 }
 
+bool dmDataset::getDatasetExtremeValues(double& min, double& max)
+{
+    if (_reprojectedDataset)
+    {
+        GDALDataset::Bands bands = _reprojectedDataset->GetBands();
+        if (bands.size() < 1)
+             return false;
+
+        bands[0]->GetStatistics(false, true, &min, &max, NULL, NULL);
+        return true;
+    }
+
+    return false;
+}
+
 bool dmDataset::getDatasetExtents(coord &topLeft, coord &botRight)
 {
     double geoTransform[6];
