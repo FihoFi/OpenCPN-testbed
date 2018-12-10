@@ -380,6 +380,9 @@ std::pair<int, int> dmDataset::getRasterPixelOffsetAt(coord point, bool roundDow
 
 dmExtent dmDataset::getRasterExtent(void)
 {
+    if (!_dstDataset)
+        return dmExtent();
+
     int xSize = _dstDataset->GetRasterXSize();
     int ySize = _dstDataset->GetRasterYSize();
 
