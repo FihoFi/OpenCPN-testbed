@@ -46,6 +46,7 @@ public:
     float getDepthAt(coord point);
 
     bool openDataSet(const char* filename) override;
+    bool visualizeDataSet() override;
     bool dstSrsToLatLon(coord dstSrsIn, coord &latLonOut) override;
     bool dstSrsToLatLon(dmExtent dstSrsIn, dmExtent &latLonOut) override;
     bool latLonToDstSrs(coord latLonIn, coord &dstSrsOut) override;

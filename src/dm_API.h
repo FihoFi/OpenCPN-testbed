@@ -92,6 +92,13 @@ public:
     //MRJ: is the same as bool setFileName(const char* filename);
 
     /**
+    * Visualizes the dataset, opened in openDataSet.
+    *
+    * @return true, if visualization had no problems, false else.
+    */
+    virtual bool visualizeDataSet() = 0;
+
+    /**
     * Returns width and height of the dataset in pixels.
     *
     * @param[out] width Width of the dataset in pixels

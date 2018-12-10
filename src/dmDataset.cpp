@@ -252,6 +252,14 @@ bool dmDataset::openDataSet(const char * filename)
     if (!_reprojectedDataset)
         return false;
 
+    return true;
+}
+
+bool dmDataset::visualizeDataSet()
+{
+    if (!_reprojectedDataset)
+        return false;
+
     _dstDataset = visualizeDataset(_reprojectedDataset);
 
     if (!_dstDataset)
