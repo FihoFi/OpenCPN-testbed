@@ -27,6 +27,7 @@ private:
     bool            GenerateColorConfFile(wxFileName &confPath,
                         const wxString fileName, const wxString confText);
 
+    wxString        GetUserColourDepthColourWks();
     wxString        AppendWaterLevelsToConfLine(wxString line, int lineNr);
     wxString        GetFiveColourDepthColourWks();
     wxString        GetSlidingColourDepthColourWks();

@@ -119,6 +119,47 @@ bool dmColourfileHandler::GenerateColorConfFile(
 }
 
 
+/**
+* Generates a well known string (wks) about user given colour settings, where
+* water level settings have taken into account, both for "normal" colour/depth values,
+* as well as for the percentage values.
+* Wks format is assumed to be, for every row, like this:
+* <depth-value-to-be-altered> <list-of-colour-values-passed-as-is>
+* Every line is written out as "normal" depth value. That is, percentage values are
+* changed to depth values according to dataset min/max, adjusted by water level data,
+* and then written out. "Normal" depth value lines are only adjusted by water level
+* data, and then written out.
+* @return watel level data adjusted contents of user's colour definition file
+* @throw throws an std::string in error.
+*/
+wxString dmColourfileHandler::GetUserColourDepthColourWks()
+{
+    wxString errorString = "";
+    bool ok = CheckUserColourFile(m_pconf->colour.userColourConfPath, errorString);
+    if(!ok)
+        throw errorString.ToStdString();
+
+    wxString path = m_pconf->colour.userColourConfPath.GetFullPath();
+   // Try opening the file in the path
+    wxTextFile userColourFile;
+    userColourFile.Open(path);
+
+    wxString wks_ColourSettings;
+    wxString str;
+
+    int lineNr = 1;
+    for (wxString str = userColourFile.GetFirstLine();
+        !userColourFile.Eof();
+        str = userColourFile.GetNextLine(), lineNr++)
+    {
+        wks_ColourSettings.append(AppendWaterLevelsToConfLine(str, lineNr));
+    }
+
+    userColourFile.Close();
+
+    return wks_ColourSettings;
+}
+
 wxString dmColourfileHandler::AppendWaterLevelsToConfLine(wxString line, int lineNr)
 {
     wxString waterLevelsAppendedString;
