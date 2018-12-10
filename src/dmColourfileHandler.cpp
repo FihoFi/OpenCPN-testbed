@@ -22,11 +22,6 @@ dmColourfileHandler& dmColourfileHandler::operator=(const dmColourfileHandler& o
     return *this;
 }
 
-//wxFileName dmColourfileHandler::GetUsersColorConfFile()
-//{
-//    return m_pconf->colour.userColourConfPath;
-//    //return dialog->GetUserColourConfigurationFileName();
-//}
 
 void dmColourfileHandler::setChartExtremeValues(double min, double max)
 {

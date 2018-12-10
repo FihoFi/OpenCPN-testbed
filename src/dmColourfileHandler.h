@@ -19,7 +19,6 @@ public:
     bool            GetConfFileOfType(DM_colourType colourOption, wxFileName& colorFile);
 
 private:
-  //wxFileName      GetUsersColorConfFile();
     bool            GenerateConfFileOfType(DM_colourType colourOption);
     bool            GenerateFiveColorConfFile();
     bool            GenerateSlidingColorConfFile();
