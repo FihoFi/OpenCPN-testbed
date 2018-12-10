@@ -351,7 +351,9 @@ std::string Dlg::getDrawingOptionsString(DM_visualization chartType,
     bool canApplyWaterLevels = false;
     if (chartType == COLOR_RELIEF)
     {
-        if (colourSchema == COLOUR_FIVE_RANGES || colourSchema == COLOUR_TWO_RANGES)
+        if (colourSchema == COLOUR_FIVE_RANGES ||
+            colourSchema == COLOUR_TWO_RANGES ||
+            colourSchema == COLOUR_USER_FILE)
         {   canApplyWaterLevels = true;     }
 
         stream << " / " + colouringTypeToString(colourSchema);
