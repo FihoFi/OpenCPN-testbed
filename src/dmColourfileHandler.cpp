@@ -1,6 +1,7 @@
 #include "dmColourfileHandler.h"
 #include "dmConfigHandler.h"    // some #defines
 #include "dm_API.h" // enum DM_colourType
+#include <wx/tokenzr.h> // for parsing user colour config file
 
 class dmConfigHandler;
 
