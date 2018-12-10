@@ -139,20 +139,8 @@ bool dmDepthModelDrawer::setDataset(const wxFileName &fileName)
 
 bool dmDepthModelDrawer::openDataset()
 {
-    wxFileName  colourFileNamePath    = drawingState.GetWantedUserColourFileName();
-    wxString    colourFileNameWxStr   = colourFileNamePath.GetFullPath();
-    std::string colourFileNameStr     = colourFileNameWxStr.ToStdString();
-    const char* colourFileNameCharPtr = colourFileNameStr.c_str();
-
-    bool success = dataset.setColourConfigurationFile(colourFileNameCharPtr, false);
-    if (!success)
-    {
-        wxLogError(_T("dmDepthModelDrawer::openDataset setColourConfigurationFile failed: ") + colourFileNameWxStr);
-        return false;
-    }
-
     DM_visualization chartType = drawingState.GetWantedChartType();
-    success = dataset.setVisualizationScheme(chartType);
+    bool success = dataset.setVisualizationScheme(chartType);
     if (!success)
     {
         wxLogError(_T("dmDepthModelDrawer::openDataset setVisualizationScheme failed: ") + chartType);
@@ -166,6 +154,22 @@ bool dmDepthModelDrawer::openDataset()
     if (!success)
     {
         wxLogError(_T("dmDepthModelDrawer::openDataset openDataSet failed: ") + fileNameStr);
+        return false;
+    }
+    return true;
+}
+
+bool dmDepthModelDrawer::visualizeDataset()
+{
+    wxFileName  colourFileNamePath = drawingState.GetWantedUserColourFileName();
+    wxString    colourFileNameWxStr = colourFileNamePath.GetFullPath();
+    std::string colourFileNameStr = colourFileNameWxStr.ToStdString();
+    const char* colourFileNameCharPtr = colourFileNameStr.c_str();
+
+    bool success = dataset.setColourConfigurationFile(colourFileNameCharPtr, false);
+    if (!success)
+    {
+        wxLogError(_T("dmDepthModelDrawer::openDataset setColourConfigurationFile failed: ") + colourFileNameWxStr);
         return false;
     }
 
