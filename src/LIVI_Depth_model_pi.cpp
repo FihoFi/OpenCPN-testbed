@@ -624,6 +624,15 @@ void LIVI_Depth_model_pi::OnGenerateImage()
 
     bool success = true;
     try {
+        setInfoToUI("Reading and projecting chart image to World Mercator");
+        wxFileName fullFileName = dmDrawer->getChartFileName();
+        success = dmDrawer->openDataset();
+        if (!success)
+        {
+            setErrorToUI("Error in opening the chart file with given options.");
+            dmDrawer->logError("Depth model: Generating image. Failed to open the dataset.");
+            return;
+        }
         if(dmDrawer->getChartDrawType() == COLOR_RELIEF)
         {
             setInfoToUI("Setting colouring options");
@@ -651,14 +660,8 @@ void LIVI_Depth_model_pi::OnGenerateImage()
             }
 
         }   // if
-
-        setInfoToUI("Reading and projecting chart image to World Mercator");
-        wxFileName fullFileName = dmDrawer->getChartFileName();
-        success &= dmDrawer->openDataset();
         if (!success)
         {
-            setErrorToUI("Error in opening the chart file with given options.");
-            dmDrawer->logError("Depth model: Generating image. Failed to open the dataset.");
             return;
         }
     }
