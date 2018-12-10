@@ -119,6 +119,55 @@ bool dmColourfileHandler::GenerateColorConfFile(
 }
 
 
+wxString dmColourfileHandler::AppendWaterLevelsToConfLine(wxString line, int lineNr)
+{
+    wxString waterLevelsAppendedString;
+
+    wxStringTokenizer tokenizer(line, /*wxDEFAULT_DELIMITERS*/wxT(":, \t\r\n"));
+    size_t nTokens = tokenizer.CountTokens();
+    if (nTokens == 0)
+        return wxString("\r\n");
+
+    wxString depthToken = tokenizer.GetNextToken();
+
+    if (depthToken.StartsWith("nv"))
+        return line + "\r\n";        // Not changing the "no value" line
+
+
+    double depthValue;
+
+    if (depthToken.EndsWith("%"))
+    {
+        wxStringTokenizer percentValueTokenizer(depthToken, _T("%"));
+        depthToken = percentValueTokenizer.GetNextToken();
+        double percentValue;
+        depthToken.ToDouble(&percentValue);
+        depthValue = chartMin + (chartMax-chartMin) * percentValue/100.0;
+    }
+    else if (depthToken.ToDouble(&depthValue))
+    {
+        depthValue += m_pconf->waterLevel.m_currentWaterLevel +
+                      m_pconf->waterLevel.m_verticalReferenceSystemOffset;
+    }
+    else
+    {
+        std::string thrownString(
+            "Colour definition file:\n"
+            "Cannot read assumed depth value at start of the line %i", lineNr);
+        throw thrownString;
+    }
+    waterLevelsAppendedString = wxString::Format(wxT("%f"), depthValue);
+
+    while (tokenizer.HasMoreTokens())
+    {
+        wxString token = tokenizer.GetNextToken();
+        waterLevelsAppendedString.append(" ");
+        waterLevelsAppendedString.append(token);
+    }
+    waterLevelsAppendedString.append("\r\n");
+    return waterLevelsAppendedString;
+}
+
 /**
 * Generates a well known string (wks) about colour settings, telling
 * the colouring options for GDAL colour_relief.
