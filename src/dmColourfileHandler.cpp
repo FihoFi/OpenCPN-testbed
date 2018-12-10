@@ -136,15 +136,16 @@ bool dmColourfileHandler::GenerateColorConfFile(
 wxString dmColourfileHandler::GetUserColourDepthColourWks()
 {
     wxString errorString = "";
-    bool ok = CheckUserColourFile(m_pconf->colour.userColourConfPath, errorString);
-    if(!ok)
-        throw errorString.ToStdString();
 
     wxString path = m_pconf->colour.userColourConfPath.GetFullPath();
    // Try opening the file in the path
     wxTextFile userColourFile;
     userColourFile.Open(path);
-
+    if (!userColourFile.IsOpened())
+    {
+        errorString = wxString(std::string("User defined colour file (" + path.ToStdString() + ") cannot be opened"));
+        throw errorString.ToStdString();
+    }
     wxString wks_ColourSettings;
     wxString str;
 
