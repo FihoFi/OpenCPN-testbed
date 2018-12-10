@@ -633,6 +633,10 @@ void LIVI_Depth_model_pi::OnGenerateImage()
             dmDrawer->logError("Depth model: Generating image. Failed to open the dataset.");
             return;
         }
+        double min, max;
+        dmDrawer->getDatasetExtremeValues(min, max);
+        colourfileHandler->setChartExtremeValues(min, max);
+
         if(dmDrawer->getChartDrawType() == COLOR_RELIEF)
         {
             setInfoToUI("Setting colouring options");

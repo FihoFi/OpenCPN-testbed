@@ -174,6 +174,13 @@ bool dmDepthModelDrawer::openDataset()
     return success;
 }
 
+bool dmDepthModelDrawer::getDatasetExtremeValues(double& min, double& max)
+{
+    min = -9999;
+    max = -9999;
+    return dataset.getDatasetExtremeValues(min, max);
+}
+
 /**
 * Applies the extent of the vp area we want to draw to,
 * causing an update to the wanted drawn area.

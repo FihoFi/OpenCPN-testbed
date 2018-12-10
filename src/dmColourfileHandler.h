@@ -15,6 +15,7 @@ public:
 
     dmColourfileHandler& operator= (const dmColourfileHandler& other);
 
+    void            setChartExtremeValues(double min, double max);
     bool            GetConfFileOfType(DM_colourType colourOption, wxFileName& colorFile);
 
 private:
@@ -37,6 +38,7 @@ private:
 
     dmConfigHandler* m_pconf;
     wxString        tempDataDirectoryPath;
+    double          chartMin, chartMax;
 };
 
 #endif _DM_COLOURFILE_HANDLER_H_

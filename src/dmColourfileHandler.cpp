@@ -28,6 +28,12 @@ dmColourfileHandler& dmColourfileHandler::operator=(const dmColourfileHandler& o
 //    //return dialog->GetUserColourConfigurationFileName();
 //}
 
+void dmColourfileHandler::setChartExtremeValues(double min, double max)
+{
+    chartMin = min;
+    chartMax = max;
+}
+
 bool dmColourfileHandler::GetConfFileOfType(DM_colourType colourOption, wxFileName& colorFile)
 {
     bool success = GenerateConfFileOfType(colourOption); // Generate from current options in use
