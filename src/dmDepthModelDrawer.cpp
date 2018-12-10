@@ -213,7 +213,7 @@ void dmDepthModelDrawer::forceNewImage()
 
 bool dmDepthModelDrawer::getDepthValues(float& cursorDepthCD, float& currentWL)
 {
-    if (!showingDepthValue || bmp == NULL)
+    if (!showingDepthValue || drawingState.GetCurrentChartType()!=NONE || bmp == NULL)
         return false;
 
     dmExtent extWM;
