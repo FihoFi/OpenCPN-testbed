@@ -173,6 +173,12 @@ bool dmDepthModelDrawer::visualizeDataset()
         return false;
     }
 
+    success = dataset.visualizeDataSet();
+    if (!success)
+    {
+        wxLogError(_T("dmDepthModelDrawer::visualizeDataset visualizeDataSet failed."));
+        return false;
+    }
     success = dataset.getDatasetExtents(wholeImageWM.topLeft, wholeImageWM.botRight);
 
     return success;
