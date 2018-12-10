@@ -393,8 +393,10 @@ void Dlg::SetHillshadeparamsText(double azimuth, double altitude,
         << "\n  Image transparency (0(none)-255(full)): " << transparency
         << "\n"
         << "\n"
-        << "\nChange these parameters in the opencpn.ini file"
+        << "\nYou may change these parameters in the opencpn.ini file"
         << "\n(locate the opencpn.log, you'll find the .ini, too)."
+        << "\nMake your changes when OpenCPN is closed, to avoid "
+        << "\nprogrammatical overwrites of your changes."
         << "\nNew values are taken into use at OpenCPN restart."
         << "\n";
 

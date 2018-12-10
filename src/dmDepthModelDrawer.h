@@ -59,7 +59,7 @@ public:
     void             SetCursorPix(wxPoint position);
 
     bool             getDepthValues(float& cursorDepthCD, float& currentWL);
-    bool             drawDepthValue(wxDC &dc, PlugIn_ViewPort &vp);
+  //bool             drawDepthValue(wxDC &dc, PlugIn_ViewPort &vp); // commented out in version 0.11
 
 private:
     bool            showingDepthValue;

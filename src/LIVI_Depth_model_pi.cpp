@@ -161,7 +161,7 @@ int LIVI_Depth_model_pi::Init(void)
 
         depthsViewerToolId = InsertPlugInTool/*SVG*/(_T(""),
             _img_DepthViewer, _img_DepthViewerRollover, /*_img_DepthViewerToggled,*/ wxITEM_CHECK,
-            _("Show depths console"), _T(""), NULL,
+            _("Depth console"), _T(""), NULL,
             DM_SHOW_DEPTHS_TOOL_POSITION, 0, this);
     }
 
@@ -486,10 +486,11 @@ bool LIVI_Depth_model_pi::RenderOverlay(wxDC& dc, PlugIn_ViewPort* vp)
     }
     setCurrentlyDrawnOptionsTextToUI();
 
-    success = dmDrawer->drawDepthValue(dc, *vp);
-    if (!success) {
-        dmDrawer->logError("Depth model failed draw depth value on drawDepthValue .");
-    }
+    // Commented out at version 0.11, at depth console implementation
+    //success = dmDrawer->drawDepthValue(dc, *vp);
+    //if (!success) {
+    //    dmDrawer->logError("Depth model failed draw depth value on drawDepthValue .");
+    //}
 
     return success;
 }

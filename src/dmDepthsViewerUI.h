@@ -34,8 +34,6 @@ class dmDepthsViewerFrame : public wxFrame
 	
 	protected:
 		wxStaticText* dm_coordinates_staticText;
-		wxStaticText* dm_north_staticText;
-		wxStaticText* dm_east_staticText;
 	
 	public:
 		
@@ -54,8 +52,6 @@ class dmDepthsViewerPanel : public wxPanel
 	
 	protected:
 		wxStaticText* dm_coordinates_staticText;
-		wxStaticText* dm_north_staticText;
-		wxStaticText* dm_east_staticText;
 	
 	public:
 		
@@ -73,8 +69,6 @@ class dmDepthsViewerDialog : public wxDialog
 	
 	protected:
 		wxStaticText* dm_coordinates_staticText;
-		wxStaticText* dm_north_staticText;
-		wxStaticText* dm_east_staticText;
 	
 	public:
 		
@@ -92,8 +86,6 @@ class dmDepthsViewerToolBar : public wxToolBar
 	
 	protected:
 		wxStaticText* dm_coordinates_staticText;
-		wxStaticText* dm_north_staticText;
-		wxStaticText* dm_east_staticText;
 	
 	public:
 		
