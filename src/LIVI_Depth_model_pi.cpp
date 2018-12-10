@@ -643,6 +643,7 @@ void LIVI_Depth_model_pi::OnGenerateImage()
 
             DM_colourType colouringType = dmDrawer->getColourSchema();
             wxFileName colorFile;
+
             success = colourfileHandler->GetConfFileOfType(colouringType, colorFile);
             if (!success)
             {
@@ -662,7 +663,6 @@ void LIVI_Depth_model_pi::OnGenerateImage()
                 setErrorToUI("Failure at instantiating the colour configuration.");
                 return;
             }
-
         }   // if
 
         success = dmDrawer->visualizeDataset();

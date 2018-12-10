@@ -150,7 +150,7 @@ bool dmDepthModelDrawer::openDataset()
     wxFileName  fileName = drawingState.GetWantedChartFileName();
     std::string fileNameStr = fileName.GetFullPath().ToStdString();
     const char* fileNameCharPtr = fileNameStr.c_str();
-    success &= dataset.openDataSet(fileNameCharPtr);
+    success = dataset.openDataSet(fileNameCharPtr);
     if (!success)
     {
         wxLogError(_T("dmDepthModelDrawer::openDataset openDataSet failed: ") + fileNameStr);

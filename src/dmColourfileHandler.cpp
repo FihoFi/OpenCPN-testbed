@@ -23,7 +23,6 @@ dmColourfileHandler& dmColourfileHandler::operator=(const dmColourfileHandler& o
     return *this;
 }
 
-
 void dmColourfileHandler::setChartExtremeValues(double min, double max)
 {
     chartMin = min;
@@ -123,7 +122,6 @@ bool dmColourfileHandler::GenerateColorConfFile(
 
     return false;
 }
-
 
 /**
 * Generates a well known string (wks) about user given colour settings, where
