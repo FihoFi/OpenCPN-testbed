@@ -40,8 +40,7 @@ bool dmColourfileHandler::GetConfFileOfType(DM_colourType colourOption, wxFileNa
 
     switch (colourOption)
     {
-    case COLOUR_USER_FILE:   {   colorFile = m_pconf->colour.userColourConfPath;
-                                 /*return GetUsersColorConfFile();*/     break; }
+    case COLOUR_USER_FILE:   {   colorFile = userColoursFileName;        break; }
     case COLOUR_FIVE_RANGES: {   colorFile = fiveColoursFileName;        break; }
     case COLOUR_SLIDING:     {   colorFile = slidingColoursFileName;     break; }
     case COLOUR_TWO_RANGES:  {   colorFile = twoColoursFileName;         break; }
@@ -55,13 +54,19 @@ bool dmColourfileHandler::GenerateConfFileOfType(DM_colourType colourOption)
     bool success = true;
     switch (colourOption)
     {
-    case COLOUR_USER_FILE:      {                                            break; }
+    case COLOUR_USER_FILE:      { success &= GenerateUserColorConfFile();    break; }
     case COLOUR_FIVE_RANGES:    { success &= GenerateFiveColorConfFile();    break; }
     case COLOUR_SLIDING:        { success &= GenerateSlidingColorConfFile(); break; }
     case COLOUR_TWO_RANGES:     { success &= GenerateTwoColorConfFile();     break; }
     default:                    { success = false;                           break; }
     }
     return success;
+}
+
+bool dmColourfileHandler::GenerateUserColorConfFile()
+{
+    wxString confText = GetUserColourDepthColourWks();
+    return GenerateColorConfFile(userColoursFileName, _T("userColourFile_waterLevelAdjusted.txt"), confText);
 }
 
 bool dmColourfileHandler::GenerateFiveColorConfFile()

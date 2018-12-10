@@ -20,6 +20,7 @@ public:
 
 private:
     bool            GenerateConfFileOfType(DM_colourType colourOption);
+    bool            GenerateUserColorConfFile();
     bool            GenerateFiveColorConfFile();
     bool            GenerateSlidingColorConfFile();
     bool            GenerateTwoColorConfFile();
@@ -33,6 +34,7 @@ private:
     wxString        GetSlidingColourDepthColourWks();
     wxString        GetTwoColourDepthColourWks();
 
+    wxFileName      userColoursFileName;
     wxFileName      fiveColoursFileName;
     wxFileName      slidingColoursFileName;
     wxFileName      twoColoursFileName;
