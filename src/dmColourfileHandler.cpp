@@ -190,18 +190,15 @@ wxString dmColourfileHandler::AppendWaterLevelsToConfLine(wxString line, int lin
         depthToken.ToDouble(&percentValue);
         depthValue = chartMin + (chartMax-chartMin) * percentValue/100.0;
     }
-    else if (depthToken.ToDouble(&depthValue))
-    {
-        depthValue += m_pconf->waterLevel.m_currentWaterLevel +
-                      m_pconf->waterLevel.m_verticalReferenceSystemOffset;
-    }
-    else
+    else if (!depthToken.ToDouble(&depthValue))
     {
         std::string thrownString(
             "Colour definition file:\n"
             "Cannot read assumed depth value at start of the line %i", lineNr);
         throw thrownString;
     }
+    depthValue += m_pconf->waterLevel.m_currentWaterLevel +
+                  m_pconf->waterLevel.m_verticalReferenceSystemOffset;
     waterLevelsAppendedString = wxString::Format(wxT("%f"), depthValue);
 
     while (tokenizer.HasMoreTokens())
