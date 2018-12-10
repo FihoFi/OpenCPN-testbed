@@ -664,8 +664,12 @@ void LIVI_Depth_model_pi::OnGenerateImage()
             }
 
         }   // if
+
+        success = dmDrawer->visualizeDataset();
         if (!success)
         {
+            setErrorToUI("Error in visualizing chart file with given options.");
+            dmDrawer->logError("Depth model: Generating image. Failed to visualize the dataset.");
             return;
         }
     }
