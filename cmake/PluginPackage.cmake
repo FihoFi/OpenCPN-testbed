@@ -181,3 +181,17 @@ configure_file(${PROJECT_SOURCE_DIR}/buildosx/InstallOSX/pkg_background.jpg
 
 
 ENDIF(APPLE)
+
+# copy gdal'sdll file to plugins directory
+INSTALL(FILES "C:/gdal-2.3.1/gdal203.dll" DESTINATION ./plugins)
+MESSAGE(STATUS "Installed: C:/gdal-2.3.1/gdal203.dll to package main folder /plugins")
+
+# copy gdal's gdal-data (a.k.a. data) folder to plugins/gdal-data
+file(GLOB MY_GDAL_DATA_FILES C:/gdal-2.3.1/data/*)
+INSTALL(FILES ${MY_GDAL_DATA_FILES} DESTINATION ./plugins/gdal-data/)
+MESSAGE(STATUS "Installed files of gdal/data folder (files: ${MY_GDAL_DATA_FILES}) with the package, to the package main folder  /plugins/gdal_data")
+
+ # try setting env variable GDAL_DATA for usage. (relative path is fine)
+ # Probably this is install-time-only, that is, does not do what intended.
+set(ENV{GDAL_DATA} "./plugins/gdal-data")
+message("Environment variable GDAL_DATA set: $ENV{GDAL_DATA}")
