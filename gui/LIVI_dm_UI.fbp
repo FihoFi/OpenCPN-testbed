@@ -603,7 +603,7 @@
                                             <property name="maximum_size"></property>
                                             <property name="min_size"></property>
                                             <property name="minimize_button">0</property>
-                                            <property name="minimum_size">350,50</property>
+                                            <property name="minimum_size">350,110</property>
                                             <property name="moveable">1</property>
                                             <property name="name">dmPictureImport_Status_staticText</property>
                                             <property name="pane_border">1</property>

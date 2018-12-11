@@ -653,9 +653,6 @@ void LIVI_Depth_model_pi::OnGenerateImage()
                 "one of the most common ones, try setting environment variable \n"
                 "'GDAL_DATA = plugins\\gdal-data' (relative path should suffice).");
             dmDrawer->logError("Depth model: Generating image. Failed to open the dataset.");
-            dialog->Hide();
-            dialog->Fit();
-            dialog->Show();
             return;
         }
         double min, max;
