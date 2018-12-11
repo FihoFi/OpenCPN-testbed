@@ -26,7 +26,7 @@ INCLUDE_DIRECTORIES(
 		${PROJECT_SOURCE_DIR}/src							# plugin source .h files
 		${PROJECT_SOURCE_DIR}/include/proj_510_include		# proj include dir (symlink)
 		${PROJECT_SOURCE_DIR}/include/gdal_ogr_directory	# gdal ogr directory (symlink)
-		${PROJECT_SOURCE_DIR}/include/gdal_port_directory	# gdal ogr directory (symlink)
+		${PROJECT_SOURCE_DIR}/include/gdal_port_directory	# gdal port directory (symlink)
 		)
 
 # SET(PROFILING 1)
