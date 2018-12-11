@@ -1,6 +1,9 @@
 #include <algorithm> 
 #include <cctype>
 #include <locale>
+
+#include <stdlib.h> // for putenv, getenv, to create local GDAL_DATA environment variable
+
 /******************************************************************************
  *
  * Project:  OpenCPN
@@ -137,6 +140,20 @@ int LIVI_Depth_model_pi::Init(void)
                                  m_pconf->colour.hillshadeTransparency);
     dmDrawer->setCurrentWaterLevel            (m_pconf->waterLevel.m_currentWaterLevel);
     dmDrawer->setVerticalReferenceSystemOffset(m_pconf->waterLevel.m_verticalReferenceSystemOffset);
+
+#ifdef __WIN32__
+    // Trying to set GDAL_DATA environment variable. This seems to be vain, not detected by GDAL,
+    // so must set by the user via control panel
+    //std::string envVar_GDALData = "GDAL_DATA = \"" + GetpPlugInLocation()->ToStdString() + "\\gdal-data\"\n\r";
+    std::string envVar_GDALData = "GDAL_DATA = plugins\\gdal-data";
+    dmDrawer->logInfo("Setting env variable GDAL_DATA.");
+    dmDrawer->logInfo(envVar_GDALData.c_str());
+    int result = _putenv(envVar_GDALData.c_str());
+    dmDrawer->logInfo("GDAL_DATA setting returned " + std::to_string(result));
+    char* envGDAL_DATA = getenv("GDAL_DATA");
+#else
+    dmDrawer->logInfo("GDAL_DATA setting not implemented for this platform ");
+#endif // __WIN32__
 
     setHillshadeparamsTextToUI();
     setCurrentlyDrawnOptionsTextToUI();
@@ -626,12 +643,19 @@ void LIVI_Depth_model_pi::OnGenerateImage()
     try {
         setInfoToUI("Reading and projecting chart image to World Mercator");
         wxFileName fullFileName = dmDrawer->getChartFileName();
+        //char* envGDAL_DATA = getenv("GDAL_DATA"); // Test, whether the putenv had any effect.
         success = dmDrawer->openDataset();
         if (!success)
         {
             setErrorToUI("Error in opening the given file with given options.\n"
-                "Check it is a valid chart file with location information.");
+                "Check it is a valid chart file with location information.\n\n"
+                "If the coordinate system of your chart file is other than\n"
+                "one of the most common ones, try setting environment variable \n"
+                "'GDAL_DATA = plugins\\gdal-data' (relative path should suffice).");
             dmDrawer->logError("Depth model: Generating image. Failed to open the dataset.");
+            dialog->Hide();
+            dialog->Fit();
+            dialog->Show();
             return;
         }
         double min, max;
