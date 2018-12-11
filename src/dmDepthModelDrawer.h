@@ -44,6 +44,8 @@ public:
 
     bool             setDataset(const wxFileName &fileName);
     bool             openDataset();
+    bool             visualizeDataset();
+    bool             getDatasetExtremeValues(double& min, double& max);
     dmExtent         applyViewPortArea(/*const*/ PlugIn_ViewPort &vp);
 
     bool             isRendering()      { return renderingDmChart; }

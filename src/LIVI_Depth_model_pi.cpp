@@ -624,12 +624,26 @@ void LIVI_Depth_model_pi::OnGenerateImage()
 
     bool success = true;
     try {
+        setInfoToUI("Reading and projecting chart image to World Mercator");
+        wxFileName fullFileName = dmDrawer->getChartFileName();
+        success = dmDrawer->openDataset();
+        if (!success)
+        {
+            setErrorToUI("Error in opening the chart file with given options.");
+            dmDrawer->logError("Depth model: Generating image. Failed to open the dataset.");
+            return;
+        }
+        double min, max;
+        dmDrawer->getDatasetExtremeValues(min, max);
+        colourfileHandler->setChartExtremeValues(min, max);
+
         if(dmDrawer->getChartDrawType() == COLOR_RELIEF)
         {
             setInfoToUI("Setting colouring options");
 
             DM_colourType colouringType = dmDrawer->getColourSchema();
             wxFileName colorFile;
+
             success = colourfileHandler->GetConfFileOfType(colouringType, colorFile);
             if (!success)
             {
@@ -649,16 +663,13 @@ void LIVI_Depth_model_pi::OnGenerateImage()
                 setErrorToUI("Failure at instantiating the colour configuration.");
                 return;
             }
-
         }   // if
 
-        setInfoToUI("Reading and projecting chart image to World Mercator");
-        wxFileName fullFileName = dmDrawer->getChartFileName();
-        success &= dmDrawer->openDataset();
+        success = dmDrawer->visualizeDataset();
         if (!success)
         {
-            setErrorToUI("Error in opening the chart file with given options.");
-            dmDrawer->logError("Depth model: Generating image. Failed to open the dataset.");
+            setErrorToUI("Error in visualizing chart file with given options.");
+            dmDrawer->logError("Depth model: Generating image. Failed to visualize the dataset.");
             return;
         }
     }

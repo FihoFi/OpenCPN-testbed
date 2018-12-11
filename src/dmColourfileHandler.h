@@ -15,11 +15,12 @@ public:
 
     dmColourfileHandler& operator= (const dmColourfileHandler& other);
 
+    void            setChartExtremeValues(double min, double max);
     bool            GetConfFileOfType(DM_colourType colourOption, wxFileName& colorFile);
 
 private:
-  //wxFileName      GetUsersColorConfFile();
     bool            GenerateConfFileOfType(DM_colourType colourOption);
+    bool            GenerateUserColorConfFile();
     bool            GenerateFiveColorConfFile();
     bool            GenerateSlidingColorConfFile();
     bool            GenerateTwoColorConfFile();
@@ -27,16 +28,20 @@ private:
     bool            GenerateColorConfFile(wxFileName &confPath,
                         const wxString fileName, const wxString confText);
 
+    wxString        GetUserColourDepthColourWks();
+    wxString        AppendWaterLevelsToConfLine(wxString line, int lineNr);
     wxString        GetFiveColourDepthColourWks();
     wxString        GetSlidingColourDepthColourWks();
     wxString        GetTwoColourDepthColourWks();
 
+    wxFileName      userColoursFileName;
     wxFileName      fiveColoursFileName;
     wxFileName      slidingColoursFileName;
     wxFileName      twoColoursFileName;
 
     dmConfigHandler* m_pconf;
     wxString        tempDataDirectoryPath;
+    double          chartMin, chartMax;
 };
 
 #endif _DM_COLOURFILE_HANDLER_H_
