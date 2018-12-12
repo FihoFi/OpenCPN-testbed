@@ -30,11 +30,12 @@ dmDepthProfile::getLegProfile(dmDataset& dataset, dmLeg legInWm)
 
     for (int step = 0; step<steps; step++)
     {
+        double a = ((double)step) / steps;
         dmDepthData depthValue(routePoint, dataset.getDepthAt(routePoint));
         legProfile.push_back(depthValue);
 
-        routePoint.north += nyquist.first;
-        routePoint.east += nyquist.second;
+        routePoint.north = legInWm.start.north * (1 - a) + legInWm.end.north * a;
+        routePoint.east = legInWm.start.east * (1 - a) + legInWm.end.east * a;
     }
 
     dmDepthData depthValue(legInWm.end, dataset.getDepthAt(legInWm.end));
