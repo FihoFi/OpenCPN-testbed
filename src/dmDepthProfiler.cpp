@@ -57,8 +57,8 @@ dmDepthProfile::getRouteProfile(dmDataset& dataset, dmRoute route)
             routeProfile.insert(routeProfile.end(), legProfile.begin(), legProfile.end()-1);
         });
 
-    dmLeg lastLeg = *(route.end() - 1);
-    dmDepthData lastDepthData(lastLeg.end, dataset.getDepthAt(lastLeg.end));
+    auto lastLeg = route.end() - 1;
+    dmDepthData lastDepthData(lastLeg->end, dataset.getDepthAt(lastLeg->end));
     routeProfile.push_back(lastDepthData);
 
     return routeProfile;
