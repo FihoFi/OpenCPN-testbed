@@ -47,7 +47,7 @@ dmDepthProfileData
 dmDepthProfile::getRouteProfile(dmDataset& dataset, dmRoute route)
 {
     dmDepthProfileData routeProfile;
-    if (route.empty() || route.size() < 2)
+    if (route.empty())
         return dmDepthProfileData();
     
     std::for_each(route.begin(), route.end(),
