@@ -91,7 +91,8 @@ std::ostream& operator<<(std::ostream& os, const dmDepthProfile& dp)
     {
         os << depthData.position.east << ';' <<
             depthData.position.north << ';' <<
-            depthData.depth << '\n';
+            depthData.depth << "\r\n";
     });
+
     return os;
 }
