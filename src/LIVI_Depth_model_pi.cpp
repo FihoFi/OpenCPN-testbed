@@ -2,7 +2,7 @@
 #include <cctype>
 #include <locale>
 
-#include <stdlib.h> // for putenv, getenv, to create local GDAL_DATA environment variable
+#include <stdlib.h> // for _putenv_s (and getenv), to create local, run-time GDAL_DATA environment variable
 
 /******************************************************************************
  *
@@ -142,13 +142,15 @@ int LIVI_Depth_model_pi::Init(void)
     dmDrawer->setVerticalReferenceSystemOffset(m_pconf->waterLevel.m_verticalReferenceSystemOffset);
 
 #ifdef __WIN32__
-    // Trying to set GDAL_DATA environment variable. This seems to be vain, not detected by GDAL,
-    // so must set by the user via control panel
+    // Setting GDAL_DATA environment variable.
     //std::string envVar_GDALData = "GDAL_DATA = \"" + GetpPlugInLocation()->ToStdString() + "\\gdal-data\"\n\r";
-    std::string envVar_GDALData = "GDAL_DATA = plugins\\gdal-data";
-    dmDrawer->logInfo("Setting env variable GDAL_DATA.");
+    std::string envVar_GDALData = "GDAL_DATA = plugins\\gdal-data"; // relative path suffices
+    dmDrawer->logInfo(std::string("Setting env variable GDAL_DATA = %s", envVar_GDALData.c_str()));
+
+    std::string envVar_key   = "GDAL_DATA";
+    std::string envVar_value = "plugins\\gdal-data";
     dmDrawer->logInfo(envVar_GDALData.c_str());
-    int result = _putenv(envVar_GDALData.c_str());
+    int result = _putenv_s(envVar_key.c_str(), envVar_value.c_str());
     dmDrawer->logInfo("GDAL_DATA setting returned " + std::to_string(result));
     char* envGDAL_DATA = getenv("GDAL_DATA");
 #else
