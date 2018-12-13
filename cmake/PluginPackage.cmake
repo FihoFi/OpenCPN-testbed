@@ -187,6 +187,10 @@ ENDIF(APPLE)
 INSTALL(FILES "${MY_GDAL_HOME}/bin/gdal203.dll" DESTINATION .)
 MESSAGE(STATUS "Installed: gdal203.dll to OpenCPN main folder")
 
+# copy projs's dll file to opencpn main directory
+INSTALL(FILES "${MY_PROJ_HOME}/bin/proj.dll" DESTINATION .)
+MESSAGE(STATUS "Installed: proj.dll to OpenCPN main folder")
+
 # copy gdal's gdal-data (a.k.a. data) folder to plugins/gdal-data under opencpn main directory
 FILE(GLOB MY_GDAL_DATA_FILES ${MY_GDAL_HOME}/gdal-data/*)
 INSTALL(FILES ${MY_GDAL_DATA_FILES} DESTINATION ./plugins/gdal-data/)

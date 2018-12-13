@@ -22,9 +22,9 @@ SET(PACKAGE_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}" )
 #SET(CMAKE_VERBOSE_MAKEFILE ON)
 
 INCLUDE_DIRECTORIES(
-		${PROJECT_SOURCE_DIR}/include/proj_510_include		# proj include dir (symlink)
 		${PROJECT_SOURCE_DIR}/include   # symlinks to gdal root dir include files
 		${PROJECT_SOURCE_DIR}/src       # plugin source .h files
+		${MY_PROJ_HOME}/src             # PROJ's include files
 		${MY_GDAL_HOME}/include         # GDAL's include files
 		)
 
@@ -82,6 +82,17 @@ ENDIF(OPENGL_GLU_FOUND)
 SET(BUILD_SHARED_LIBS TRUE)
 
 FIND_PACKAGE(Gettext REQUIRED)
+
+find_package(PROJ4 REQUIRED)
+IF(PROJ4_FOUND)
+    INCLUDE_DIRECTORIES(${GDAL_INCLUDE_DIR})
+
+    MESSAGE (STATUS "Found PROJ4...")
+    MESSAGE (STATUS "    Lib: " ${PROJ4_LIBRARIES})
+    MESSAGE (STATUS "    Include: " ${PROJ4_INCLUDE_DIR})
+ELSE(PROJ4_FOUND)
+    MESSAGE (FATAL_ERROR "PROJ4 not found")
+ENDIF(PROJ4_FOUND)
 
 FIND_PACKAGE(GDAL REQUIRED)
 IF(GDAL_FOUND)
