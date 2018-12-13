@@ -2,6 +2,7 @@
 #include "dmDepthProfile.h"
 
 #include <algorithm>
+#include <iomanip>
 #include <utility>  // std::pair
 #include <vector>
 
@@ -90,7 +91,7 @@ std::ostream& operator<<(std::ostream& os, const dmDepthProfile& dp)
     std::for_each(dp.profileData.begin(), dp.profileData.end(),
         [&](dmDepthData depthData)
     {
-        os << depthData.position.east << ';' <<
+        os << std::setprecision(10) << depthData.position.east << ';' <<
             depthData.position.north << ';' <<
             depthData.depth << "\r\n";
     });
