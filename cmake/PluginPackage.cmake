@@ -181,3 +181,22 @@ configure_file(${PROJECT_SOURCE_DIR}/buildosx/InstallOSX/pkg_background.jpg
 
 
 ENDIF(APPLE)
+
+
+# copy gdal's dll file to opencpn main directory
+INSTALL(FILES "${MY_GDAL_HOME}/bin/gdal203.dll" DESTINATION .)
+MESSAGE(STATUS "Installed: gdal203.dll to OpenCPN main folder")
+
+# copy projs's dll file to opencpn main directory
+INSTALL(FILES "${MY_PROJ_HOME}/bin/proj.dll" DESTINATION .)
+MESSAGE(STATUS "Installed: proj.dll to OpenCPN main folder")
+
+# copy gdal's gdal-data (a.k.a. data) folder to plugins/gdal-data under opencpn main directory
+FILE(GLOB MY_GDAL_DATA_FILES ${MY_GDAL_HOME}/gdal-data/*)
+INSTALL(FILES ${MY_GDAL_DATA_FILES} DESTINATION ./plugins/gdal-data/)
+MESSAGE(STATUS "Installed files of gdal's data folder to /plugins/gdal_data, under OpenCPN main folder ")
+
+ # try setting env variable GDAL_DATA for usage. (relative path is fine)
+ # Probably this is install-time-only, that is, does not do what intended.
+SET(ENV{GDAL_DATA} "./plugins/gdal-data")
+MESSAGE("Environment variable GDAL_DATA set: $ENV{GDAL_DATA}")

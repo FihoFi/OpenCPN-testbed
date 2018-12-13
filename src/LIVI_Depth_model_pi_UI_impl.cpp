@@ -358,6 +358,8 @@ std::string Dlg::getDrawingOptionsString(DM_visualization chartType,
 
         stream << " / " + colouringTypeToString(colourSchema);
     }
+    if (chartType == HILLSHADE)
+    {   canApplyWaterLevels = true;    }
 
     if (canApplyWaterLevels)
         stream  << "\n  Water level:   " << (wl   > 0 ? "+" : "") << wl

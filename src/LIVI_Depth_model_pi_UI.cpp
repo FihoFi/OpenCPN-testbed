@@ -36,7 +36,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	
 	dmPictureImport_Status_staticText = new wxStaticText( dmFileImport_Panel, wxID_ANY, wxT("Plugin initialized"), wxDefaultPosition, wxDefaultSize, 0|wxBORDER_THEME );
 	dmPictureImport_Status_staticText->Wrap( -1 );
-	dmPictureImport_Status_staticText->SetMinSize( wxSize( 350,50 ) );
+	dmPictureImport_Status_staticText->SetMinSize( wxSize( 350,110 ) );
 	
 	dmFileImport_bSizer->Add( dmPictureImport_Status_staticText, 0, wxALL, 5 );
 	

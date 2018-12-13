@@ -70,8 +70,11 @@ SET(VERSION_DATE "2018-12-05")
 #
 #
 SET(GDAL_VERSION "2.3.1") # Just telling aloud the used GDAL version. No package-retrieval system here for now.
-SET(PROJ_VERSION "5.1.0") # Just telling aloud the used PROJ version. No package-retrieval system here for now.
+SET(PROJ_VERSION "5.2.0") # Just telling aloud the used PROJ version. No package-retrieval system here for now.
 SET(HDF5_VERSION "1.10.3") # Just telling aloud the used HDF5 version. No package-retrieval system here for now.
+
+SET(MY_GDAL_HOME "C:/gdal-2.3.1/build") # C:/warmerda/---
+SET(MY_PROJ_HOME "C:/OSGeo4W")          # C:/proj-5.2.0
 
 #SET(CMAKE_BUILD_TYPE Debug)
 SET( wxWidgets_USE_DEBUG OFF)
@@ -117,15 +120,17 @@ SET(SRC_LIVI_Depth_model
         src/tinyxml.h
     )
 
-
 ADD_LIBRARY(${PACKAGE_NAME} SHARED ${SRC_LIVI_Depth_model})
 
-# GDAL related headers and libraries
-target_include_directories(${PACKAGE_NAME} PRIVATE C:/warmerda/bld/include/)
-target_link_libraries(${PACKAGE_NAME} 
-        debug       C:/proj-5.1.0/build/lib/Debug/proj_5_0_d.lib
-        optimized   C:/proj-5.1.0/build/lib/Release/proj_5_0.lib)
-target_link_libraries(${PACKAGE_NAME} C:/gdal-2.3.1/gdal_i.lib)
+# GDAL, and PROJ related headers, and libraries
+target_link_libraries(${PACKAGE_NAME} ${PROJ4_LIBRARIES}) # proj_X_X[_d].lib
+target_link_libraries(${PACKAGE_NAME} ${GDAL_LIBRARIES})
+
+#target_link_libraries(${PACKAGE_NAME}
+#    debug       ${MY_PROJ_HOME}/local/lib/proj_5_2_d.lib
+#    optimized   ${MY_PROJ_HOME}/local/lib/proj_5_2.lib)
+
+
 ADD_DEFINITIONS(-DTIXML_USE_STL)
 
 INCLUDE("cmake/PluginInstall.cmake")
