@@ -1,5 +1,5 @@
 
-#include "dmDepthProfiler.h"
+#include "dmDepthProfile.h"
 
 #include <algorithm>
 #include <utility>  // std::pair

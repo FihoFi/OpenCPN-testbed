@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef _DM_DEPTH_PROFILER_
-#define _DM_DEPTH_PROFILER_
+#ifndef _DM_DEPTH_PROFILE_
+#define _DM_DEPTH_PROFILE_
 
 #include <iostream>
 #include <utility>  // std::pair
@@ -35,4 +35,4 @@ private:
 
 std::ostream& operator<<(std::ostream& os, const dmDepthProfile& dp);
 
-#endif _DM_DEPTH_PROFILER_
+#endif _DM_DEPTH_PROFILE_
