@@ -73,6 +73,8 @@ SET(GDAL_VERSION "2.3.1") # Just telling aloud the used GDAL version. No package
 SET(PROJ_VERSION "5.1.0") # Just telling aloud the used PROJ version. No package-retrieval system here for now.
 SET(HDF5_VERSION "1.10.3") # Just telling aloud the used HDF5 version. No package-retrieval system here for now.
 
+SET(MY_GDAL_HOME "C:/gdal-2.3.1/build") # C:/warmerda/---
+
 #SET(CMAKE_BUILD_TYPE Debug)
 SET( wxWidgets_USE_DEBUG OFF)
 SET( wxWidgets_USE_UNICODE ON)
@@ -117,15 +119,14 @@ SET(SRC_LIVI_Depth_model
         src/tinyxml.h
     )
 
-
 ADD_LIBRARY(${PACKAGE_NAME} SHARED ${SRC_LIVI_Depth_model})
 
 # GDAL related headers and libraries
-target_include_directories(${PACKAGE_NAME} PRIVATE C:/warmerda/bld/include/)
 target_link_libraries(${PACKAGE_NAME} 
         debug       C:/proj-5.1.0/build/lib/Debug/proj_5_0_d.lib
         optimized   C:/proj-5.1.0/build/lib/Release/proj_5_0.lib)
-target_link_libraries(${PACKAGE_NAME} C:/gdal-2.3.1/gdal_i.lib)
+target_link_libraries(${PACKAGE_NAME} ${GDAL_LIBRARIES})
+
 ADD_DEFINITIONS(-DTIXML_USE_STL)
 
 INCLUDE("cmake/PluginInstall.cmake")
