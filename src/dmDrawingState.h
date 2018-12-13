@@ -36,6 +36,7 @@ public:
     void                GetCurrents(
         DM_visualization& chartType, DM_colourType& colourSchema,
         double& currentWaterLevel, double& vertRefSystOffset);
+    DM_visualization    GetCurrentChartType() { return currentChartType;    }
 
     // Wanted variables are to be set when the UI informs about changes
     bool                SetWantedChartFileName  (wxFileName fname);

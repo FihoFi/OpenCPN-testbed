@@ -97,7 +97,7 @@ void dmDepthModelDrawer::setHillshadeParams(double azimuth, double altitude,
     dataset.setHillshadeAltitude(altitude);
     dataset.setHillshadeAzimuth(azimuth);
     dataset.setHillshadeZFactor(zFactor);
-  //dataset.setHillshadeAlpha(255-transparency);    // from transparency to opaqueness
+    dataset.setHillshadeAlpha(255-transparency);    // from transparency to opaqueness
 }
 
 void dmDepthModelDrawer::setCurrentWaterLevel(double cvl)
@@ -139,20 +139,8 @@ bool dmDepthModelDrawer::setDataset(const wxFileName &fileName)
 
 bool dmDepthModelDrawer::openDataset()
 {
-    wxFileName  colourFileNamePath    = drawingState.GetWantedUserColourFileName();
-    wxString    colourFileNameWxStr   = colourFileNamePath.GetFullPath();
-    std::string colourFileNameStr     = colourFileNameWxStr.ToStdString();
-    const char* colourFileNameCharPtr = colourFileNameStr.c_str();
-
-    bool success = dataset.setColourConfigurationFile(colourFileNameCharPtr, false);
-    if (!success)
-    {
-        wxLogError(_T("dmDepthModelDrawer::openDataset setColourConfigurationFile failed: ") + colourFileNameWxStr);
-        return false;
-    }
-
     DM_visualization chartType = drawingState.GetWantedChartType();
-    success = dataset.setVisualizationScheme(chartType);
+    bool success = dataset.setVisualizationScheme(chartType);
     if (!success)
     {
         wxLogError(_T("dmDepthModelDrawer::openDataset setVisualizationScheme failed: ") + chartType);
@@ -162,16 +150,45 @@ bool dmDepthModelDrawer::openDataset()
     wxFileName  fileName = drawingState.GetWantedChartFileName();
     std::string fileNameStr = fileName.GetFullPath().ToStdString();
     const char* fileNameCharPtr = fileNameStr.c_str();
-    success &= dataset.openDataSet(fileNameCharPtr);
+    success = dataset.openDataSet(fileNameCharPtr);
     if (!success)
     {
         wxLogError(_T("dmDepthModelDrawer::openDataset openDataSet failed: ") + fileNameStr);
         return false;
     }
+    return true;
+}
 
+bool dmDepthModelDrawer::visualizeDataset()
+{
+    wxFileName  colourFileNamePath = drawingState.GetWantedUserColourFileName();
+    wxString    colourFileNameWxStr = colourFileNamePath.GetFullPath();
+    std::string colourFileNameStr = colourFileNameWxStr.ToStdString();
+    const char* colourFileNameCharPtr = colourFileNameStr.c_str();
+
+    bool success = dataset.setColourConfigurationFile(colourFileNameCharPtr, false);
+    if (!success)
+    {
+        wxLogError(_T("dmDepthModelDrawer::openDataset setColourConfigurationFile failed: ") + colourFileNameWxStr);
+        return false;
+    }
+
+    success = dataset.visualizeDataSet();
+    if (!success)
+    {
+        wxLogError(_T("dmDepthModelDrawer::visualizeDataset visualizeDataSet failed."));
+        return false;
+    }
     success = dataset.getDatasetExtents(wholeImageWM.topLeft, wholeImageWM.botRight);
 
     return success;
+}
+
+bool dmDepthModelDrawer::getDatasetExtremeValues(double& min, double& max)
+{
+    min = -9999;
+    max = -9999;
+    return dataset.getDatasetExtremeValues(min, max);
 }
 
 /**
@@ -196,7 +213,7 @@ void dmDepthModelDrawer::forceNewImage()
 
 bool dmDepthModelDrawer::getDepthValues(float& cursorDepthCD, float& currentWL)
 {
-    if (!showingDepthValue || bmp == NULL)
+    if (!showingDepthValue || drawingState.GetCurrentChartType()==NONE || bmp == NULL)
         return false;
 
     dmExtent extWM;
@@ -214,6 +231,11 @@ bool dmDepthModelDrawer::getDepthValues(float& cursorDepthCD, float& currentWL)
     return true;
 }
 
+/**
+* Function drawing depth values nex to cursor on the chart canvas / viewport.
+* Usage removed at version 0.11, as Depth Console implemented.
+*/
+/*
 bool dmDepthModelDrawer::drawDepthValue(wxDC &dc, PlugIn_ViewPort &vp)
 {
     if (!showingDepthValue || bmp == NULL)
@@ -250,6 +272,7 @@ bool dmDepthModelDrawer::drawDepthValue(wxDC &dc, PlugIn_ViewPort &vp)
     newDepthValueCalledOnly = false;
     return true;
 }
+*/
 
 bool dmDepthModelDrawer::drawDepthChart(wxDC &dc, PlugIn_ViewPort &vp)
 {

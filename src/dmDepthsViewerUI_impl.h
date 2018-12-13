@@ -52,13 +52,13 @@ public:
 
     DepthsViewer(wxWindow* parent, 
                  wxWindowID id = wxID_ANY,
-                 const wxString& title = _("Depth model: depths viewer"),
+                 const wxString& title = _("Depth console"),
                  const wxPoint& pos = wxDefaultPosition,
                  const wxSize& size = wxDefaultSize /*wxSize(-1, -1)*/,
                  long style = wxTRANSPARENT_WINDOW | wxSTAY_ON_TOP
                             | wxTAB_TRAVERSAL
-                            | wxRESIZE_BORDER | wxRESIZE_BORDER
-                            | wxTB_HORIZONTAL);
+                            | wxRESIZE_BORDER | wxCAPTION
+                            | wxCLIP_CHILDREN );
 
     void    SetDepthInfoText(std::string infoStr);
     void    SetDepthErrorText(std::string errStr);

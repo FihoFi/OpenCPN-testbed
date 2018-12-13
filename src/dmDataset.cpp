@@ -20,6 +20,7 @@ dmDataset::dmDataset(dmLogWriter* logWriter) :
     _dstWkt("PROJCS[\"WGS 84 / World Mercator\",GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\",SPHEROID[\"WGS 84\",6378137,298.257223563,AUTHORITY[\"EPSG\",\"7030\"]],AUTHORITY[\"EPSG\",\"6326\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.01745329251994328,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"4326\"]],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],PROJECTION[\"Mercator_1SP\"],PARAMETER[\"central_meridian\",0],PARAMETER[\"scale_factor\",1],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],AUTHORITY[\"EPSG\",\"3395\"],AXIS[\"Easting\",EAST],AXIS[\"Northing\",NORTH]]"),
     _tempFolderPath(".\\"),
     _imgData(nullptr),
+    _hillshadeParamZFactor(10.0),
     _hillshadeParamAzimuth(315.),
     _hillshadeParamAltitude(45.),
     _hillshadeParamMultidirectional(false),
@@ -48,6 +49,21 @@ bool dmDataset::getDatasetPixelDimensions(int &width, int &height)
         width = _dstDataset->GetRasterXSize();
         height = _dstDataset->GetRasterYSize();
 
+        return true;
+    }
+
+    return false;
+}
+
+bool dmDataset::getDatasetExtremeValues(double& min, double& max)
+{
+    if (_reprojectedDataset)
+    {
+        GDALDataset::Bands bands = _reprojectedDataset->GetBands();
+        if (bands.size() < 1)
+             return false;
+
+        bands[0]->GetStatistics(false, true, &min, &max, NULL, NULL);
         return true;
     }
 
@@ -236,6 +252,14 @@ bool dmDataset::openDataSet(const char * filename)
     if (!_reprojectedDataset)
         return false;
 
+    return true;
+}
+
+bool dmDataset::visualizeDataSet()
+{
+    if (!_reprojectedDataset)
+        return false;
+
     _dstDataset = visualizeDataset(_reprojectedDataset);
 
     if (!_dstDataset)
@@ -283,6 +307,10 @@ void dmDataset::setHillshadeMultidirectional(bool multidirectional)
     _hillshadeParamMultidirectional = multidirectional;
 }
 
+void dmDataset::setHillshadeAlpha(unsigned char alpha)
+{
+    _hillshadeAlpha = alpha;
+}
 
 /* private */
 
@@ -352,6 +380,9 @@ std::pair<int, int> dmDataset::getRasterPixelOffsetAt(coord point, bool roundDow
 
 dmExtent dmDataset::getRasterExtent(void)
 {
+    if (!_dstDataset)
+        return dmExtent();
+
     int xSize = _dstDataset->GetRasterXSize();
     int ySize = _dstDataset->GetRasterYSize();
 
@@ -444,6 +475,8 @@ std::vector<std::string> dmDataset::getGdaldemOptionsVec()
     switch (_visScheme)
     {
     case HILLSHADE:
+        options.push_back("-z");
+        options.push_back(std::to_string(_hillshadeParamZFactor));
         options.push_back("-az");
         options.push_back(std::to_string(_hillshadeParamAzimuth));
         options.push_back("-alt");

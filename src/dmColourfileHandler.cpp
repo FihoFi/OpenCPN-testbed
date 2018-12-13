@@ -1,6 +1,7 @@
 #include "dmColourfileHandler.h"
 #include "dmConfigHandler.h"    // some #defines
 #include "dm_API.h" // enum DM_colourType
+#include <wx/tokenzr.h> // for parsing user colour config file
 
 class dmConfigHandler;
 
@@ -22,11 +23,11 @@ dmColourfileHandler& dmColourfileHandler::operator=(const dmColourfileHandler& o
     return *this;
 }
 
-//wxFileName dmColourfileHandler::GetUsersColorConfFile()
-//{
-//    return m_pconf->colour.userColourConfPath;
-//    //return dialog->GetUserColourConfigurationFileName();
-//}
+void dmColourfileHandler::setChartExtremeValues(double min, double max)
+{
+    chartMin = min;
+    chartMax = max;
+}
 
 bool dmColourfileHandler::GetConfFileOfType(DM_colourType colourOption, wxFileName& colorFile)
 {
@@ -38,8 +39,7 @@ bool dmColourfileHandler::GetConfFileOfType(DM_colourType colourOption, wxFileNa
 
     switch (colourOption)
     {
-    case COLOUR_USER_FILE:   {   colorFile = m_pconf->colour.userColourConfPath;
-                                 /*return GetUsersColorConfFile();*/     break; }
+    case COLOUR_USER_FILE:   {   colorFile = userColoursFileName;        break; }
     case COLOUR_FIVE_RANGES: {   colorFile = fiveColoursFileName;        break; }
     case COLOUR_SLIDING:     {   colorFile = slidingColoursFileName;     break; }
     case COLOUR_TWO_RANGES:  {   colorFile = twoColoursFileName;         break; }
@@ -53,13 +53,19 @@ bool dmColourfileHandler::GenerateConfFileOfType(DM_colourType colourOption)
     bool success = true;
     switch (colourOption)
     {
-    case COLOUR_USER_FILE:      {                                            break; }
+    case COLOUR_USER_FILE:      { success &= GenerateUserColorConfFile();    break; }
     case COLOUR_FIVE_RANGES:    { success &= GenerateFiveColorConfFile();    break; }
     case COLOUR_SLIDING:        { success &= GenerateSlidingColorConfFile(); break; }
     case COLOUR_TWO_RANGES:     { success &= GenerateTwoColorConfFile();     break; }
     default:                    { success = false;                           break; }
     }
     return success;
+}
+
+bool dmColourfileHandler::GenerateUserColorConfFile()
+{
+    wxString confText = GetUserColourDepthColourWks();
+    return GenerateColorConfFile(userColoursFileName, _T("userColourFile_waterLevelAdjusted.txt"), confText);
 }
 
 bool dmColourfileHandler::GenerateFiveColorConfFile()
@@ -117,6 +123,93 @@ bool dmColourfileHandler::GenerateColorConfFile(
     return false;
 }
 
+/**
+* Generates a well known string (wks) about user given colour settings, where
+* water level settings have taken into account, both for "normal" colour/depth values,
+* as well as for the percentage values.
+* Wks format is assumed to be, for every row, like this:
+* <depth-value-to-be-altered> <list-of-colour-values-passed-as-is>
+* Every line is written out as "normal" depth value. That is, percentage values are
+* changed to depth values according to dataset min/max, adjusted by water level data,
+* and then written out. "Normal" depth value lines are only adjusted by water level
+* data, and then written out.
+* @return watel level data adjusted contents of user's colour definition file
+* @throw throws an std::string in error.
+*/
+wxString dmColourfileHandler::GetUserColourDepthColourWks()
+{
+    wxString errorString = "";
+
+    wxString path = m_pconf->colour.userColourConfPath.GetFullPath();
+   // Try opening the file in the path
+    wxTextFile userColourFile;
+    userColourFile.Open(path);
+    if (!userColourFile.IsOpened())
+    {
+        errorString = wxString(std::string("User defined colour file (" + path.ToStdString() + ") cannot be opened"));
+        throw errorString.ToStdString();
+    }
+    wxString wks_ColourSettings;
+    wxString str;
+
+    int lineNr = 1;
+    for (wxString str = userColourFile.GetFirstLine();
+        !userColourFile.Eof();
+        str = userColourFile.GetNextLine(), lineNr++)
+    {
+        wks_ColourSettings.append(AppendWaterLevelsToConfLine(str, lineNr));
+    }
+
+    userColourFile.Close();
+
+    return wks_ColourSettings;
+}
+
+wxString dmColourfileHandler::AppendWaterLevelsToConfLine(wxString line, int lineNr)
+{
+    wxString waterLevelsAppendedString;
+
+    wxStringTokenizer tokenizer(line, /*wxDEFAULT_DELIMITERS*/wxT(":, \t\r\n"));
+    size_t nTokens = tokenizer.CountTokens();
+    if (nTokens == 0)
+        return wxString("\r\n");
+
+    wxString depthToken = tokenizer.GetNextToken();
+
+    if (depthToken.StartsWith("nv"))
+        return line + "\r\n";        // Not changing the "no value" line
+
+
+    double depthValue;
+
+    if (depthToken.EndsWith("%"))
+    {
+        wxStringTokenizer percentValueTokenizer(depthToken, _T("%"));
+        depthToken = percentValueTokenizer.GetNextToken();
+        double percentValue;
+        depthToken.ToDouble(&percentValue);
+        depthValue = chartMin + (chartMax-chartMin) * percentValue/100.0;
+    }
+    else if (!depthToken.ToDouble(&depthValue))
+    {
+        std::string thrownString(
+            "Colour definition file:\n"
+            "Cannot read assumed depth value at start of the line %i", lineNr);
+        throw thrownString;
+    }
+    depthValue += m_pconf->waterLevel.m_currentWaterLevel +
+                  m_pconf->waterLevel.m_verticalReferenceSystemOffset;
+    waterLevelsAppendedString = wxString::Format(wxT("%f"), depthValue);
+
+    while (tokenizer.HasMoreTokens())
+    {
+        wxString token = tokenizer.GetNextToken();
+        waterLevelsAppendedString.append(" ");
+        waterLevelsAppendedString.append(token);
+    }
+    waterLevelsAppendedString.append("\r\n");
+    return waterLevelsAppendedString;
+}
 
 /**
 * Generates a well known string (wks) about colour settings, telling

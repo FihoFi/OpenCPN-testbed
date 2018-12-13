@@ -92,6 +92,13 @@ public:
     //MRJ: is the same as bool setFileName(const char* filename);
 
     /**
+    * Visualizes the dataset, opened in openDataSet.
+    *
+    * @return true, if visualization had no problems, false else.
+    */
+    virtual bool visualizeDataSet() = 0;
+
+    /**
     * Returns width and height of the dataset in pixels.
     *
     * @param[out] width Width of the dataset in pixels
@@ -100,6 +107,16 @@ public:
     * @return true, if the dimensions were retrieved successfully, false otherwise
     */
     virtual bool getDatasetPixelDimensions(int &width, int &height) = 0;
+
+    /**
+    * Returns min and max (depth) values of the (reprojected) dataset.
+    *
+    * @param[out] min Minimum of the depths of the (reprojected) dataset
+    * @param[out] max Maximum of the depths of the (reprojected) dataset
+    *
+    * @return true, if the extremes were retrieved successfully, false otherwise
+    */
+    virtual bool getDatasetExtremeValues(double& min, double& max) = 0;
 
     /**
     * Returns the extents of the World Mercator projected dataset as spanning
@@ -276,6 +293,14 @@ public:
     *                             315 deg, and 360 deg azimuth. [GDAL documentation]
     */
     virtual void setHillshadeMultidirectional(bool multidirectional) = 0;
+
+    /**
+    * Sets alpha value for hillshade visualization type. Default value on
+    * initialization is 128.
+    *
+    * @param[in] alpha overall alpha value for hillshade visualization type
+    */
+    virtual void setHillshadeAlpha(unsigned char alpha) = 0;
 
     dmLogWriter* logWriter;
 };

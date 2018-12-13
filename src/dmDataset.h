@@ -21,6 +21,7 @@ public:
 
 
     bool getDatasetPixelDimensions(int &width, int &height) override;
+    bool getDatasetExtremeValues(double& min, double& max) override;
     bool getDatasetExtents(coord &topLeft, coord &botRight) override;
     void setSrcWkt(const char * wkt);
     void setDstWkt(const char * wkt);
@@ -45,6 +46,7 @@ public:
     float getDepthAt(coord point);
 
     bool openDataSet(const char* filename) override;
+    bool visualizeDataSet() override;
     bool dstSrsToLatLon(coord dstSrsIn, coord &latLonOut) override;
     bool dstSrsToLatLon(dmExtent dstSrsIn, dmExtent &latLonOut) override;
     bool latLonToDstSrs(coord latLonIn, coord &dstSrsOut) override;
@@ -57,6 +59,7 @@ public:
     void setHillshadeAltitude(double altitude) override;
     void setHillshadeCombined(bool combined) override;
     void setHillshadeMultidirectional(bool multidirectional) override;
+    void setHillshadeAlpha(unsigned char alpha) override;
 
 private:
     static bool driversRegistered;

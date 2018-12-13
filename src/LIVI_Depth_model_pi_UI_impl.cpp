@@ -351,11 +351,15 @@ std::string Dlg::getDrawingOptionsString(DM_visualization chartType,
     bool canApplyWaterLevels = false;
     if (chartType == COLOR_RELIEF)
     {
-        if (colourSchema == COLOUR_FIVE_RANGES || colourSchema == COLOUR_TWO_RANGES)
+        if (colourSchema == COLOUR_FIVE_RANGES ||
+            colourSchema == COLOUR_TWO_RANGES ||
+            colourSchema == COLOUR_USER_FILE)
         {   canApplyWaterLevels = true;     }
 
         stream << " / " + colouringTypeToString(colourSchema);
     }
+    if (chartType == HILLSHADE)
+    {   canApplyWaterLevels = true;    }
 
     if (canApplyWaterLevels)
         stream  << "\n  Water level:   " << (wl   > 0 ? "+" : "") << wl
@@ -393,8 +397,10 @@ void Dlg::SetHillshadeparamsText(double azimuth, double altitude,
         << "\n  Image transparency (0(none)-255(full)): " << transparency
         << "\n"
         << "\n"
-        << "\nChange these parameters in the opencpn.ini file"
+        << "\nYou may change these parameters in the opencpn.ini file"
         << "\n(locate the opencpn.log, you'll find the .ini, too)."
+        << "\nMake your changes when OpenCPN is closed, to avoid "
+        << "\nprogrammatical overwrites of your changes."
         << "\nNew values are taken into use at OpenCPN restart."
         << "\n";
 
