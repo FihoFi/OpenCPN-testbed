@@ -169,11 +169,11 @@ bool DMColorOptionConfig::load(void)
         if (colouringType == COLOUR_UNDEFINED)
             colouringType = COLOUR_FIVE_RANGES;
 
+        static std::string defaults_for_five[5] = { "#ff0000", "#ffc4e4", "#ffffff", "#80c4ff", "#0000ff" };
         for (int i = 0; i < DM_NUM_CUSTOM_COL; i++) {
             std::string colour = confFile->Read(_T("CustomColour") + std::to_string(i));
-            if (sizeof(colour) == 0)
-                colour = "#f0f0f0"; // grey as default, if no color found
-                                    // #ff0000, #ffc4e4, #ffffff, #80c4ff, #0000ff
+            if (colour.length() == 0)
+                colour = defaults_for_five[i]; // default, if no color found
 
             unsigned char* valChar = (unsigned char*)colour.c_str();
             m_customColours[i] = wxColour(valChar);
@@ -185,11 +185,12 @@ bool DMColorOptionConfig::load(void)
             m_customDepths[i] = std::stoi(str);
         }
 
+        static std::string defaults_for_two[2] = { "#ff0000", "#0000ff" };
         for (int i = 0; i < 2; i++) {
             std::string colour = confFile->Read(_T("TwoColour") + std::to_string(i));
-            if (sizeof(colour) == 0)
-                colour = "#f0f0f0"; // grey as default, if no color found
-                                    // #ff0000, #ffc4e4, #ffffff, #80c4ff, #0000ff
+            if (colour.length() == 0)
+                colour = defaults_for_two[i]; // default, if no color found
+
             unsigned char* valChar = (unsigned char*)colour.c_str();
             m_twoColours[i] = wxColour(valChar);
         }
