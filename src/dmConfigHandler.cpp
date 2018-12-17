@@ -178,10 +178,11 @@ bool DMColorOptionConfig::load(void)
             unsigned char* valChar = (unsigned char*)colour.c_str();
             m_customColours[i] = wxColour(valChar);
         }
+        static int defDepths_for_five[4] = { 0, -5, -15, -25 };
         for (int i = 0; i < DM_NUM_CUSTOM_DEP; i++) {
             std::string str = confFile->Read(_T("CustomDepth" + std::to_string(i)));
             if (str.length() == 0)
-                str = std::to_string(-20); // -20m if no depth found
+                str = std::to_string(defDepths_for_five[i]); // default, if no depth found
             m_customDepths[i] = std::stoi(str);
         }
 
@@ -196,7 +197,7 @@ bool DMColorOptionConfig::load(void)
         }
         std::string str = confFile->Read(_T("TwoColourDepth"));
         if (str.length() == 0)
-            str = std::to_string(-20); // -20m if no depth found
+            str = std::to_string(-15); // -15m if no depth found
         m_twoColoursDepth = std::stoi(str);
 
         hillshadeAltitude   = confFile->ReadDouble(_T("HillshadeAltitude_0to90"),       45);
