@@ -238,6 +238,9 @@ bool LIVI_Depth_model_pi::DeInit(void)
     SetToolbarItemState(pluginToolId, newPluginState);
     SetToolbarItemState(depthsViewerToolId, newPluginState);
 
+    RemovePlugInTool(depthsViewerToolId);
+    RemovePlugInTool(pluginToolId);
+
     RequestRefresh(m_parent_window); // refresh main window, to hide the dataset pic
 
     if (colourfileHandler) {
