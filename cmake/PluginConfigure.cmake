@@ -57,8 +57,10 @@ ENDIF(MSVC)
 # Finding wxWidgets, see https://cmake.org/cmake/help/v3.11/module/FindwxWidgets.html
 FIND_PACKAGE(wxWidgets REQUIRED)
 SET(wxWidgets_USE_LIBS base core net xml html adv)
+#FIND_PACKAGE(wxWidgets REQUIRED base core net xml html adv)
 SET(BUILD_SHARED_LIBS TRUE)
 IF(wxWidgets_FOUND)
+    INCLUDE_DIRECTORIES(${wxWidgets_INCLUDE_DIRS})
     IF(MSYS)
         # this is just a hack. I think the bug is in FindwxWidgets.cmake
         STRING( REGEX REPLACE "/usr/local" "\\\\;C:/MinGW/msys/1.0/usr/local" wxWidgets_INCLUDE_DIRS ${wxWidgets_INCLUDE_DIRS} )

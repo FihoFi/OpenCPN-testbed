@@ -73,6 +73,14 @@ SET(GDAL_VERSION "2.3.1") # Just telling aloud the used GDAL version. No package
 SET(PROJ_VERSION "5.2.0") # Just telling aloud the used PROJ version. No package-retrieval system here for now.
 SET(HDF5_VERSION "1.10.3") # Just telling aloud the used HDF5 version. No package-retrieval system here for now.
 
+# You may set these environment variables to your corresponding locations, to find wxWidgets.
+#SET(wxWidgets_ROOT_DIR "C:/wxWidgets/wxWidgets-3.1.1")
+#SET(wxWidgets_LIB_DIR "C:/wxWidgets-3.1.1/lib/vc_lib")
+#IF(CMAKE_BUILD_TYPE MATCHES "Debug")
+#  SET(wxWidgets_CONFIGURATION mswd)
+#ELSEIF(CMAKE_BUILD_TYPE MATCHES "Release")
+#  SET(wxWidgets_CONFIGURATION msw)
+#ENDIF()#(CMAKE_BUILD_TYPE)
 
 # Set Directories for proj, and gdal.
 #These could be set as environment variables instead.
@@ -127,6 +135,7 @@ SET(SRC_LIVI_Depth_model
 ADD_LIBRARY(${PACKAGE_NAME} SHARED ${SRC_LIVI_Depth_model})
 
 # Linking external libraries. For finding the libraries, see PluginConfigure.cmake.
+target_link_libraries(${PACKAGE_NAME} ${wxWidgets_LIBRARIES})
 target_link_libraries(${PACKAGE_NAME} ${PROJ4_LIBRARIES}) # proj_X_X[_d].lib
 target_link_libraries(${PACKAGE_NAME} ${GDAL_LIBRARIES})
 
