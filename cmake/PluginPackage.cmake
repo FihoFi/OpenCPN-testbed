@@ -188,7 +188,8 @@ INSTALL(FILES "${GDAL_ROOT}/bin/gdal203.dll" DESTINATION .)
 MESSAGE(STATUS "Installed: gdal203.dll to OpenCPN main folder" . )
 
 # copy projs's dll file to opencpn main directory
-INSTALL(FILES "${PROJ4_DIR}/bin/proj.dll" DESTINATION .)
+#INSTALL(FILES "${PROJ4_DIR}/bin/proj.dll" DESTINATION .)   # Resolves to incorrect path, thus ...
+INSTALL(FILES "${MY_PROJ4_DIR}/bin/proj.dll" DESTINATION .) # ... using this instead. >:(
 MESSAGE(STATUS "Installed: proj.dll to OpenCPN main folder")
 
 # copy gdal's gdal-data (a.k.a. data) folder to plugins/gdal-data under opencpn main directory

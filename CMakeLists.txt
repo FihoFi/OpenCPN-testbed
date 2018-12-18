@@ -78,6 +78,7 @@ SET(HDF5_VERSION "1.10.3") # Just telling aloud the used HDF5 version. No packag
 #These could be set as environment variables instead.
 SET(PROJ4_DIR "C:/OSGeo4W")          # C:/proj-5.2.0
 SET(GDAL_ROOT "C:/gdal-2.3.1/build") # C:/warmerda/---
+SET(MY_PROJ4_DIR "C:/OSGeo4W")       # Ugh. Required for package installer, as PROJ4_DIR resolves to something under CMAKE_PREFIX_PATH, which is incorrect.
 
 #SET(CMAKE_BUILD_TYPE Debug)
 SET( wxWidgets_USE_DEBUG OFF)
