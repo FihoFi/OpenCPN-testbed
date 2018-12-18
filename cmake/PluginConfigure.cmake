@@ -53,6 +53,7 @@ IF(MSVC)
     ADD_DEFINITIONS(-D_CRT_NONSTDC_NO_DEPRECATE -D_CRT_SECURE_NO_DEPRECATE)
 ENDIF(MSVC)
 
+# Finding wxWidgets, see https://cmake.org/cmake/help/v3.11/module/FindwxWidgets.html
 FIND_PACKAGE(wxWidgets REQUIRED)
 SET(wxWidgets_USE_LIBS base core net xml html adv)
 SET(BUILD_SHARED_LIBS TRUE)
@@ -83,9 +84,10 @@ SET(BUILD_SHARED_LIBS TRUE)
 
 FIND_PACKAGE(Gettext REQUIRED)
 
-find_package(PROJ4 REQUIRED)
+# Finding PROJ4, see https://cmake.org/cmake/help/v3.11/module/FindGDAL.html
+FIND_PACKAGE(PROJ4 REQUIRED)
 IF(PROJ4_FOUND)
-    INCLUDE_DIRECTORIES(${PROJ4_INCLUDE_DIR})
+    INCLUDE_DIRECTORIES(${PROJ4_INCLUDE_DIR})   # for older cmake versions
 
     MESSAGE (STATUS "Found PROJ4...")
     MESSAGE (STATUS "    Lib: " ${PROJ4_LIBRARIES})
@@ -94,9 +96,10 @@ ELSE(PROJ4_FOUND)
     MESSAGE (FATAL_ERROR "PROJ4 not found")
 ENDIF(PROJ4_FOUND)
 
+# Finding GDAL, see https://cmake.org/cmake/help/v3.11/module/FindGDAL.html
 FIND_PACKAGE(GDAL REQUIRED)
 IF(GDAL_FOUND)
-    INCLUDE_DIRECTORIES(${GDAL_INCLUDE_DIR})
+    INCLUDE_DIRECTORIES(${GDAL_INCLUDE_DIR})   # for older cmake versions
 
     MESSAGE (STATUS "Found GDAL...")
     MESSAGE (STATUS "    Lib: " ${GDAL_LIBRARIES})
