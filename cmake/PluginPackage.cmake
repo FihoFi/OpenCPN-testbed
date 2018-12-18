@@ -184,17 +184,17 @@ ENDIF(APPLE)
 
 
 # copy gdal's dll file to opencpn main directory
-INSTALL(FILES "${MY_GDAL_HOME}/bin/gdal203.dll" DESTINATION .)
-MESSAGE(STATUS "Installed: gdal203.dll to OpenCPN main folder")
+INSTALL(FILES "${GDAL_ROOT}/bin/gdal203.dll" DESTINATION .)
+MESSAGE(STATUS "Installed: gdal203.dll to OpenCPN main folder" . )
 
 # copy projs's dll file to opencpn main directory
-INSTALL(FILES "${MY_PROJ_HOME}/bin/proj.dll" DESTINATION .)
+INSTALL(FILES "${PROJ4_DIR}/bin/proj.dll" DESTINATION .)
 MESSAGE(STATUS "Installed: proj.dll to OpenCPN main folder")
 
 # copy gdal's gdal-data (a.k.a. data) folder to plugins/gdal-data under opencpn main directory
-FILE(GLOB MY_GDAL_DATA_FILES ${MY_GDAL_HOME}/gdal-data/*)
-INSTALL(FILES ${MY_GDAL_DATA_FILES} DESTINATION ./plugins/gdal-data/)
-MESSAGE(STATUS "Installed files of gdal's data folder to /plugins/gdal_data, under OpenCPN main folder ")
+FILE(GLOB MY_GDAL_DATA_FILES ${GDAL_ROOT}/gdal-data/*)
+INSTALL(FILES ${MY_GDAL_DATA_FILES} DESTINATION ./plugins/${PACKAGE_NAME}/gdal-data/)
+MESSAGE(STATUS "Installed files of gdal's data folder to /plugins/${PACKAGE_NAME}/gdal_data, under OpenCPN main folder ")
 
  # try setting env variable GDAL_DATA for usage. (relative path is fine)
  # Probably this is install-time-only, that is, does not do what intended.

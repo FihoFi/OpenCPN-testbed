@@ -24,8 +24,8 @@ SET(PACKAGE_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}" )
 INCLUDE_DIRECTORIES(
 		${PROJECT_SOURCE_DIR}/include   # symlinks to gdal root dir include files
 		${PROJECT_SOURCE_DIR}/src       # plugin source .h files
-		${MY_PROJ_HOME}/src             # PROJ's include files
-		${MY_GDAL_HOME}/include         # GDAL's include files
+		${PROJ4_DIR}/src             # PROJ's include files
+		${GDAL_ROOT}/include         # GDAL's include files
 		)
 
 # SET(PROFILING 1)

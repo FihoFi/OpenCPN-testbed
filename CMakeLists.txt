@@ -73,15 +73,17 @@ SET(GDAL_VERSION "2.3.1") # Just telling aloud the used GDAL version. No package
 SET(PROJ_VERSION "5.2.0") # Just telling aloud the used PROJ version. No package-retrieval system here for now.
 SET(HDF5_VERSION "1.10.3") # Just telling aloud the used HDF5 version. No package-retrieval system here for now.
 
-SET(MY_GDAL_HOME "C:/gdal-2.3.1/build") # C:/warmerda/---
-SET(MY_PROJ_HOME "C:/OSGeo4W")          # C:/proj-5.2.0
+
+# Set Directories for proj, and gdal.
+#These could be set as environment variables instead.
+SET(PROJ4_DIR "C:/OSGeo4W")          # C:/proj-5.2.0
+SET(GDAL_ROOT "C:/gdal-2.3.1/build") # C:/warmerda/---
 
 #SET(CMAKE_BUILD_TYPE Debug)
 SET( wxWidgets_USE_DEBUG OFF)
 SET( wxWidgets_USE_UNICODE ON)
 SET( wxWidgets_USE_UNIVERSAL OFF)
 SET( wxWidgets_USE_STATIC OFF)
-
 INCLUDE("cmake/PluginConfigure.cmake")
 
 SET(SRC_LIVI_Depth_model
