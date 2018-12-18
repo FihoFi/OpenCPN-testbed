@@ -276,7 +276,7 @@ wxString LIVI_Depth_model_pi::GetLongDescription()
 {
       return _( "Allows Depth model data to be taken into account\n"
                 "when planning routes.\n"
-                "Project administered by LIVI (Liikennevirasto -"
+                "Project administered by LIVI (Liikennevirasto -\n"
                 "Finnish transport agency)");
 }
 
