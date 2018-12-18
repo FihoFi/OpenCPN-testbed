@@ -58,13 +58,16 @@ FIND_PACKAGE(wxWidgets REQUIRED)
 SET(wxWidgets_USE_LIBS base core net xml html adv)
 SET(BUILD_SHARED_LIBS TRUE)
 
+IF(wxWidgets_FOUND)
+    IF(MSYS)
+        # this is just a hack. I think the bug is in FindwxWidgets.cmake
+        STRING( REGEX REPLACE "/usr/local" "\\\\;C:/MinGW/msys/1.0/usr/local" wxWidgets_INCLUDE_DIRS ${wxWidgets_INCLUDE_DIRS} )
+    ENDIF(MSYS)
 
-IF(MSYS)
-# this is just a hack. I think the bug is in FindwxWidgets.cmake
-STRING( REGEX REPLACE "/usr/local" "\\\\;C:/MinGW/msys/1.0/usr/local" wxWidgets_INCLUDE_DIRS ${wxWidgets_INCLUDE_DIRS} )
-ENDIF(MSYS)
-
-INCLUDE(${wxWidgets_USE_FILE})
+    INCLUDE(${wxWidgets_USE_FILE})   # for older cmake versions
+ELSE(wxWidgets_FOUND)
+    MESSAGE (STATUS "wxWidgets not found..." )
+ENDIF(wxWidgets_FOUND)
 
 FIND_PACKAGE(OpenGL)
 IF(OPENGL_GLU_FOUND)
