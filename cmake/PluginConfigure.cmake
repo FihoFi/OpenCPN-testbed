@@ -65,6 +65,9 @@ IF(wxWidgets_FOUND)
     ENDIF(MSYS)
 
     INCLUDE(${wxWidgets_USE_FILE})   # for older cmake versions
+    MESSAGE (STATUS "Found wxWidgets..." )
+    MESSAGE (STATUS "    Lib: " ${wxWidgets_LIB_DIR})
+   #MESSAGE (STATUS "    Use libs: " ${wxWidgets_USE_LIBS})
 ELSE(wxWidgets_FOUND)
     MESSAGE (STATUS "wxWidgets not found..." )
 ENDIF(wxWidgets_FOUND)
@@ -72,7 +75,8 @@ ENDIF(wxWidgets_FOUND)
 FIND_PACKAGE(OpenGL)
 IF(OPENGL_GLU_FOUND)
 
-    SET(wxWidgets_USE_LIBS ${wxWidgets_USE_LIBS} gl)
+    SET(wxWidgets_USE_LIBS ${wxWidgets_USE_LIBS} gl) # use gl in wxWidgets, too
+   #MESSAGE (STATUS " wxWidgets use libs: " ${wxWidgets_USE_LIBS})
     INCLUDE_DIRECTORIES(${OPENGL_INCLUDE_DIR})
 
     MESSAGE (STATUS "Found OpenGL..." )
