@@ -57,7 +57,6 @@ ENDIF(MSVC)
 FIND_PACKAGE(wxWidgets REQUIRED)
 SET(wxWidgets_USE_LIBS base core net xml html adv)
 SET(BUILD_SHARED_LIBS TRUE)
-
 IF(wxWidgets_FOUND)
     IF(MSYS)
         # this is just a hack. I think the bug is in FindwxWidgets.cmake
@@ -65,6 +64,7 @@ IF(wxWidgets_FOUND)
     ENDIF(MSYS)
 
     INCLUDE(${wxWidgets_USE_FILE})   # for older cmake versions
+    #target_link_libraries(${PACKAGE_NAME} ${wxWidgets_LIBRARIES})  # Cannot set here, must set in CMakeFile.txt
     MESSAGE (STATUS "Found wxWidgets..." )
     MESSAGE (STATUS "    Lib: " ${wxWidgets_LIB_DIR})
    #MESSAGE (STATUS "    Use libs: " ${wxWidgets_USE_LIBS})
@@ -107,9 +107,10 @@ ENDIF(PROJ4_FOUND)
 FIND_PACKAGE(GDAL REQUIRED)
 IF(GDAL_FOUND)
     INCLUDE_DIRECTORIES(${GDAL_INCLUDE_DIR})   # for older cmake versions
+    #target_link_libraries(${PACKAGE_NAME} ${GDAL_LIBRARY})  # Cannot set here, must set in CMakeFile.txt
 
     MESSAGE (STATUS "Found GDAL...")
-    MESSAGE (STATUS "    Lib: " ${GDAL_LIBRARIES})
+    MESSAGE (STATUS "    Lib: " ${GDAL_LIBRARIES})    # or ${GDAL_LIBRARY}
     MESSAGE (STATUS "    Include: " ${GDAL_INCLUDE_DIR})
 ELSE(GDAL_FOUND)
     MESSAGE (FATAL_ERROR "GDAL not found")

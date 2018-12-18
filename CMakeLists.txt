@@ -78,6 +78,7 @@ SET(HDF5_VERSION "1.10.3") # Just telling aloud the used HDF5 version. No packag
 #These could be set as environment variables instead.
 SET(PROJ4_DIR "C:/OSGeo4W")          # C:/proj-5.2.0
 SET(GDAL_ROOT "C:/gdal-2.3.1/build") # C:/warmerda/---
+# NOTE! set environment variable CMAKE_PREFIX_PATH  to point where ever your proj4 cmake configuration file is
 SET(MY_PROJ4_DIR "C:/OSGeo4W")       # Ugh. Required for package installer, as PROJ4_DIR resolves to something under CMAKE_PREFIX_PATH, which is incorrect.
 
 #SET(CMAKE_BUILD_TYPE Debug)
@@ -125,14 +126,13 @@ SET(SRC_LIVI_Depth_model
 
 ADD_LIBRARY(${PACKAGE_NAME} SHARED ${SRC_LIVI_Depth_model})
 
-# GDAL, and PROJ related headers, and libraries
+# Linking external libraries. For finding the libraries, see PluginConfigure.cmake.
 target_link_libraries(${PACKAGE_NAME} ${PROJ4_LIBRARIES}) # proj_X_X[_d].lib
 target_link_libraries(${PACKAGE_NAME} ${GDAL_LIBRARIES})
 
 #target_link_libraries(${PACKAGE_NAME}
-#    debug       ${MY_PROJ_HOME}/local/lib/proj_5_2_d.lib
-#    optimized   ${MY_PROJ_HOME}/local/lib/proj_5_2.lib)
-
+#    debug       ${PROJ4_DIR}/local/lib/proj_5_2_d.lib
+#    optimized   ${PROJ4_DIR}/local/lib/proj_5_2.lib)
 
 ADD_DEFINITIONS(-DTIXML_USE_STL)
 
