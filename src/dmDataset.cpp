@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <algorithm>
 #include "gdal_utils.h"
+#include "gdal_priv.h"
 #include "proj.h"
 
 #include "dmExtent.h"
