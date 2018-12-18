@@ -1,17 +1,18 @@
 ##---------------------------------------------------------------------------
-## Author:      Pavel Kalian (Based on the work of Sean D'Epagnier)
-## Copyright:   2014
+## Author:      Marjukka Kokkonen, Sitowise (Based on the work of Pavel Kalian (and Sean D'Epagnier before that)
+## Copyright:   2018
 ## License:     GPLv3+
 ##---------------------------------------------------------------------------
 
 SET(PLUGIN_SOURCE_DIR .)
 
-# This should be 2.8.0 to have FindGTK2 module
-IF (COMMAND cmake_policy)
-  CMAKE_POLICY(SET CMP0003 OLD)
-  CMAKE_POLICY(SET CMP0005 OLD)
-  CMAKE_POLICY(SET CMP0011 OLD)
-ENDIF (COMMAND cmake_policy)
+# Commenting out for LIVI_depth_model, we should not require these here.
+## This should be 2.8.0 to have FindGTK2 module
+#IF (COMMAND cmake_policy)
+#  CMAKE_POLICY(SET CMP0003 OLD)
+#  CMAKE_POLICY(SET CMP0005 OLD)
+#  CMAKE_POLICY(SET CMP0011 OLD)
+#ENDIF (COMMAND cmake_policy)
 
 MESSAGE (STATUS "*** Staging to build ${PACKAGE_NAME} ***")
 
