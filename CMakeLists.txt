@@ -14,11 +14,24 @@ SET(VERBOSE_NAME LIVI_Depth_model)
 SET(TITLE_NAME Depth_model)
 SET(CPACK_PACKAGE_CONTACT "LIVI - Liikennevirasto")
 
-SET(VERSION_MAJOR "0")
-SET(VERSION_MINOR "11")
-SET(VERSION_PATCH "6ad39b1")
-SET(VERSION_DATE "2018-12-05")
+SET(VERSION_MAJOR "1")
+SET(VERSION_MINOR "0")
+SET(VERSION_PATCH "beta-3a0fe4a")
+SET(VERSION_DATE "2018-12-18")
 # Version release notes:
+# 1.00 beta ("0.12")
+#   Addition of required external libraries, and files added to PACKACE project (DM-74)
+#   Water level adjustments available with user's colour configuration files. Both "normal"
+#       depth values, and percentage values are supported. (DM-71)
+#   Simplification of water level console window. (DM-67)
+#   Bugfix: Corrected ini values that made the newly fresh-installed plugin not shown at all.
+#       Also corrected Depth console leaving into toolbar after disabling Depth model plugin.
+#   Bugfix: Corrected Current depth value of depth console, that got summed up with
+#       wrong direction  water level values wrong direction.
+#   Bugfix: Plugin UI dialog max size grown so that all five-colour-option fields do shown.
+#   Bugfix: initial values: black colour values changed to other colours (black is drawn as fully
+#       transparent). Initial restricting depth values also got smarter starting levels (other
+#       than all "-20"s.)
 # 0.11
 #   Plain image generation uses cubic resampling algorithm instead of max, to keep The
 #       picture from changing too much. (DM-68)
