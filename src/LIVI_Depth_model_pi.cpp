@@ -145,8 +145,7 @@ int LIVI_Depth_model_pi::Init(void)
     // Setting GDAL_DATA environment variable.
 
     std::string envVar_key   = "GDAL_DATA";
-  //std::string envVar_value =  GetpPlugInLocation()->ToStdString() + "\\gdal-data\"\n\r";
-    std::string envVar_value = "plugins\\gdal-data"; // relative path suffices
+    std::string envVar_value = "plugins\\LIVI_Depth_model_pi\\gdal-data"; // relative path suffices
     dmDrawer->logInfo(std::string("Depth model: Setting env variable GDAL_DATA = " + envVar_value));
     int result = _putenv_s(envVar_key.c_str(), envVar_value.c_str());
     dmDrawer->logInfo("Depth model: Setting GDAL_DATA returned " + std::to_string(result) + " (0 for success)");

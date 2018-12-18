@@ -199,5 +199,5 @@ MESSAGE(STATUS "Installed files of gdal's data folder to /plugins/${PACKAGE_NAME
 
  # try setting env variable GDAL_DATA for usage. (relative path is fine)
  # Probably this is install-time-only, that is, does not do what intended.
-SET(ENV{GDAL_DATA} "./plugins/gdal-data")
+SET(ENV{GDAL_DATA} "./plugins/${PACKAGE_NAME}/gdal-data")
 MESSAGE("Environment variable GDAL_DATA set: $ENV{GDAL_DATA}")
