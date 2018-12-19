@@ -116,6 +116,8 @@ SET(SRC_LIVI_Depth_model
         src/dmDrawingState.cpp
         src/dmExtent.h
         src/dmExtent.cpp
+        src/dmRouteReader.h
+        src/dmRouteReader.cpp
         src/ocpn_plugin.h
         src/tinyxml.cpp
         src/tinyxmlerror.cpp
