@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <algorithm>
 #include "gdal_utils.h"
+#include "gdal_priv.h"
 #include "proj.h"
 
 #include "dmExtent.h"
@@ -477,8 +478,11 @@ std::vector<std::string> dmDataset::getGdaldemOptionsVec()
     case HILLSHADE:
         options.push_back("-z");
         options.push_back(std::to_string(_hillshadeParamZFactor));
-        options.push_back("-az");
-        options.push_back(std::to_string(_hillshadeParamAzimuth));
+        if (!_hillshadeParamMultidirectional)
+        {
+            options.push_back("-az");
+            options.push_back(std::to_string(_hillshadeParamAzimuth));
+        }
         options.push_back("-alt");
         options.push_back(std::to_string(_hillshadeParamAltitude));
         if (_hillshadeParamMultidirectional)

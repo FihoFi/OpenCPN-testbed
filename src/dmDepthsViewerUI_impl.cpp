@@ -85,7 +85,7 @@ void DepthsViewer::SetCoordinatesText(  double waterLevel, double cursorDepthInC
     //stream << "\nCursor:";
     if (cursorDepthInCD > NotAvailableValue) {
         stream  << "\nModel depth: "   <<  -cursorDepthInCD
-                << "\nCurrent depth: " << -(cursorDepthInCD + waterLevel);
+                << "\nCurrent depth: " << -(cursorDepthInCD - waterLevel);
     }
     else {
         stream  << "\nModel depth: N/A"

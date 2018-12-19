@@ -1,31 +1,32 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Oct 26 2018)
+// C++ code generated with wxFormBuilder (version Jul 11 2018)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO *NOT* EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#pragma once
+#ifndef __LIVI_DEPTH_MODEL_PI_UI_H__
+#define __LIVI_DEPTH_MODEL_PI_UI_H__
 
 #include <wx/artprov.h>
 #include <wx/xrc/xmlres.h>
-#include <wx/string.h>
+#include <wx/panel.h>
 #include <wx/stattext.h>
 #include <wx/gdicmn.h>
 #include <wx/font.h>
 #include <wx/colour.h>
 #include <wx/settings.h>
+#include <wx/string.h>
 #include <wx/filepicker.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
-#include <wx/button.h>
 #include <wx/wrapsizer.h>
-#include <wx/sizer.h>
-#include <wx/panel.h>
 #include <wx/clrpicker.h>
 #include <wx/spinctrl.h>
+#include <wx/sizer.h>
 #include <wx/choicebk.h>
+#include <wx/button.h>
 #include <wx/statbmp.h>
 #include <wx/notebook.h>
 #include <wx/dialog.h>
@@ -43,10 +44,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 /// Class LIVIDMUI_DLG
 ///////////////////////////////////////////////////////////////////////////////
-class LIVIDMUI_DLG : public wxDialog
+class LIVIDMUI_DLG : public wxDialog 
 {
 	private:
-
+	
 	protected:
 		wxNotebook* dmTabChooser;
 		wxPanel* dmFileImport_Panel;
@@ -134,7 +135,7 @@ class LIVIDMUI_DLG : public wxDialog
 		wxStaticText* dmAbout_copyright_staticText;
 		wxStaticText* dmAbout_development_team_staticText;
 		wxButton* dm_AboutWxWidgets_Button;
-
+		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnImageFileChange( wxFileDirPickerEvent& event ) { event.Skip(); }
 		virtual void OnGenerateImage( wxCommandEvent& event ) { event.Skip(); }
@@ -145,12 +146,13 @@ class LIVIDMUI_DLG : public wxDialog
 		virtual void OnCurrentWaterLevelChange( wxSpinDoubleEvent& event ) { event.Skip(); }
 		virtual void OnVerticalReferenceSystemOffsetChange( wxSpinDoubleEvent& event ) { event.Skip(); }
 		virtual void OnAboutWxWidgets( wxCommandEvent& event ) { event.Skip(); }
-
-
+		
+	
 	public:
-
-		LIVIDMUI_DLG( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 403,569 ), long style = wxDEFAULT_DIALOG_STYLE );
+		
+		LIVIDMUI_DLG( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE ); 
 		~LIVIDMUI_DLG();
-
+	
 };
 
+#endif //__LIVI_DEPTH_MODEL_PI_UI_H__

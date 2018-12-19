@@ -11,7 +11,7 @@
 
 LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
 {
-	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	this->SetSizeHints( wxDefaultSize, wxSize( 400,600 ) );
 
 	wxBoxSizer* LIVIDMUISizer;
 	LIVIDMUISizer = new wxBoxSizer( wxVERTICAL );

@@ -14,11 +14,24 @@ SET(VERBOSE_NAME LIVI_Depth_model)
 SET(TITLE_NAME Depth_model)
 SET(CPACK_PACKAGE_CONTACT "LIVI - Liikennevirasto")
 
-SET(VERSION_MAJOR "0")
-SET(VERSION_MINOR "11")
-SET(VERSION_PATCH "6ad39b1")
-SET(VERSION_DATE "2018-12-05")
+SET(VERSION_MAJOR "1")
+SET(VERSION_MINOR "0")
+SET(VERSION_PATCH "beta-3a0fe4a")
+SET(VERSION_DATE "2018-12-18")
 # Version release notes:
+# 1.00 beta ("0.12")
+#   Addition of required external libraries, and files added to PACKACE project (DM-74)
+#   Water level adjustments available with user's colour configuration files. Both "normal"
+#       depth values, and percentage values are supported. (DM-71)
+#   Simplification of water level console window. (DM-67)
+#   Bugfix: Corrected ini values that made the newly fresh-installed plugin not shown at all.
+#       Also corrected Depth console leaving into toolbar after disabling Depth model plugin.
+#   Bugfix: Corrected Current depth value of depth console, that got summed up with
+#       wrong direction  water level values wrong direction.
+#   Bugfix: Plugin UI dialog max size grown so that all five-colour-option fields do shown.
+#   Bugfix: initial values: black colour values changed to other colours (black is drawn as fully
+#       transparent). Initial restricting depth values also got smarter starting levels (other
+#       than all "-20"s.)
 # 0.11
 #   Plain image generation uses cubic resampling algorithm instead of max, to keep The
 #       picture from changing too much. (DM-68)
@@ -73,15 +86,27 @@ SET(GDAL_VERSION "2.3.1") # Just telling aloud the used GDAL version. No package
 SET(PROJ_VERSION "5.2.0") # Just telling aloud the used PROJ version. No package-retrieval system here for now.
 SET(HDF5_VERSION "1.10.3") # Just telling aloud the used HDF5 version. No package-retrieval system here for now.
 
-SET(MY_GDAL_HOME "C:/gdal-2.3.1/build") # C:/warmerda/---
-SET(MY_PROJ_HOME "C:/OSGeo4W")          # C:/proj-5.2.0
+# You may set these environment variables to your corresponding locations, to find wxWidgets.
+#SET(wxWidgets_ROOT_DIR "C:/wxWidgets/wxWidgets-3.1.1")
+#SET(wxWidgets_LIB_DIR "C:/wxWidgets-3.1.1/lib/vc_lib")
+#IF(CMAKE_BUILD_TYPE MATCHES "Debug")
+#  SET(wxWidgets_CONFIGURATION mswd)
+#ELSEIF(CMAKE_BUILD_TYPE MATCHES "Release")
+#  SET(wxWidgets_CONFIGURATION msw)
+#ENDIF()#(CMAKE_BUILD_TYPE)
+
+# Set Directories for proj, and gdal.
+#These could be set as environment variables instead.
+SET(PROJ4_DIR "C:/OSGeo4W")          # C:/proj-5.2.0
+SET(GDAL_ROOT "C:/gdal-2.3.1/build") # C:/warmerda/---
+# NOTE! set environment variable CMAKE_PREFIX_PATH  to point where ever your proj4 cmake configuration file is
+SET(MY_PROJ4_DIR "C:/OSGeo4W")       # Ugh. Required for package installer, as PROJ4_DIR resolves to something under CMAKE_PREFIX_PATH, which is incorrect.
 
 #SET(CMAKE_BUILD_TYPE Debug)
 SET( wxWidgets_USE_DEBUG OFF)
 SET( wxWidgets_USE_UNICODE ON)
 SET( wxWidgets_USE_UNIVERSAL OFF)
 SET( wxWidgets_USE_STATIC OFF)
-
 INCLUDE("cmake/PluginConfigure.cmake")
 
 SET(SRC_LIVI_Depth_model
@@ -122,14 +147,14 @@ SET(SRC_LIVI_Depth_model
 
 ADD_LIBRARY(${PACKAGE_NAME} SHARED ${SRC_LIVI_Depth_model})
 
-# GDAL, and PROJ related headers, and libraries
+# Linking external libraries. For finding the libraries, see PluginConfigure.cmake.
+target_link_libraries(${PACKAGE_NAME} ${wxWidgets_LIBRARIES})
 target_link_libraries(${PACKAGE_NAME} ${PROJ4_LIBRARIES}) # proj_X_X[_d].lib
 target_link_libraries(${PACKAGE_NAME} ${GDAL_LIBRARIES})
 
 #target_link_libraries(${PACKAGE_NAME}
-#    debug       ${MY_PROJ_HOME}/local/lib/proj_5_2_d.lib
-#    optimized   ${MY_PROJ_HOME}/local/lib/proj_5_2.lib)
-
+#    debug       ${PROJ4_DIR}/local/lib/proj_5_2_d.lib
+#    optimized   ${PROJ4_DIR}/local/lib/proj_5_2.lib)
 
 ADD_DEFINITIONS(-DTIXML_USE_STL)
 
