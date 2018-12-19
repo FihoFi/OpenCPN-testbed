@@ -211,6 +211,7 @@ void dmDepthModelDrawer::forceNewImage()
     mustGetNewBmp = true;
 }
 
+// CD = Current Datum
 bool dmDepthModelDrawer::getDepthValues(float& cursorDepthCD, float& currentWL)
 {
     if (!showingDepthValue || drawingState.GetCurrentChartType()==NONE || bmp == NULL)
