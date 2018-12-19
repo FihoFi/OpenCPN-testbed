@@ -20,6 +20,18 @@ struct dmDepthData
 
 struct dmLeg
 {
+    dmLeg() :
+        start(coord()),
+        end(coord())
+    {
+    }
+
+    dmLeg(coord start, coord end) :
+        start(start),
+        end(end)
+    {
+    }
+
     coord start;
     coord end;
 };
