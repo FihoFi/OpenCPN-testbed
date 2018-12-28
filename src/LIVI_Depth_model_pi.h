@@ -120,6 +120,8 @@ public:
     void OnGenerateImage();
     void OnClearImage();
 
+    void OnGenerateDepthProfile(wxFileName &routeFile, wxFileName &depthProfileFile);
+
     void OnChartTypeChange      (DM_visualization toType);
     void OnColourSchemaChange   (DM_colourType  toType);
 

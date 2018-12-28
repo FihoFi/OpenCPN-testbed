@@ -100,6 +100,12 @@ void Dlg::OnVerticalReferenceSystemOffsetChange(wxSpinDoubleEvent& WXUNUSED(even
     plugin->OnVerticalReferenceSystemOffsetChange(vrso);
 }
 
+void Dlg::OnGenerateDepthProfile(wxCommandEvent & event)
+{
+    plugin->OnGenerateDepthProfile(this->dmDepthProfile_RouteFile_filePicker->GetFileName(),
+        this->dmDepthProfile_DpFile_filePicker->GetFileName());
+}
+
 void Dlg::SetAboutInfo()
 {
     this->dmAbout_icon_bitmap->SetIcon(plugin->GetIcon());
@@ -302,6 +308,26 @@ void Dlg::SetVerticalReferenceSystemOffsetLevel(double level)
 double Dlg::GetVerticalReferenceSystemOffsetLevel()
 {
     return this->dmWaterLevel_VerticalReferenceSystemOffset_spinCtrlDouble->GetValue();
+}
+
+void Dlg::SetRouteFileName(wxFileName & fileName)
+{
+    this->dmDepthProfile_RouteFile_filePicker->SetFileName(fileName);
+}
+
+wxFileName Dlg::GetRouteFileName()
+{
+    return this->dmDepthProfile_RouteFile_filePicker->GetFileName();
+}
+
+void Dlg::SetDepthProfileFileName(wxFileName & fileName)
+{
+    this->dmDepthProfile_DpFile_filePicker->SetFileName(fileName);
+}
+
+wxFileName Dlg::GetDepthProfileFileName()
+{
+    return this->dmDepthProfile_DpFile_filePicker->GetFileName();
 }
 
 wxFileName Dlg::GetDepthChartFileName()

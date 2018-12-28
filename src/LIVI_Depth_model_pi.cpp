@@ -721,6 +721,11 @@ void LIVI_Depth_model_pi::OnClearImage()
     dmDrawer->logInfo("Depth model: Refresh request for image clearance sent.");
 }
 
+void LIVI_Depth_model_pi::OnGenerateDepthProfile(wxFileName &routeFile, wxFileName &depthProfileFile)
+{
+    dmDrawer->generateDepthProfile(routeFile, depthProfileFile);
+}
+
 void LIVI_Depth_model_pi::OnChartTypeChange(DM_visualization toType)
 {
     DM_visualization chartType = toType;

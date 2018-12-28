@@ -90,6 +90,11 @@ public:
     void        SetVerticalReferenceSystemOffsetLevel(double level);
     double      GetVerticalReferenceSystemOffsetLevel();
 
+    void        SetRouteFileName(wxFileName &fileName);
+    wxFileName  GetRouteFileName();
+    void        SetDepthProfileFileName(wxFileName &fileName);
+    wxFileName  GetDepthProfileFileName();
+
     void        SetDepthChartFileName(wxFileName &fileName);
     wxFileName  GetDepthChartFileName();
     void        SetCurrentlyDrawnTextToNothing();
@@ -121,6 +126,7 @@ private:
     virtual void OnUserColourFileChange  ( wxFileDirPickerEvent& WXUNUSED(event) );
     virtual void OnCurrentWaterLevelChange  ( wxSpinDoubleEvent& WXUNUSED(event) );
     virtual void OnVerticalReferenceSystemOffsetChange( wxSpinDoubleEvent& WXUNUSED(event) );
+    virtual void OnGenerateDepthProfile(wxCommandEvent& event);
 
     std::string  getDrawingOptionsString(DM_visualization chartType, DM_colourType colourSchema,
                                          double wl, double vrso);
