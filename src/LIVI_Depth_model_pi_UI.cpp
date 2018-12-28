@@ -416,6 +416,32 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmWaterLevel_Panel->Layout();
 	dmWaterLevel_Sizer->Fit( dmWaterLevel_Panel );
 	dmTabChooser->AddPage( dmWaterLevel_Panel, wxT("Water level"), false );
+	dmDepthProfile_Panel = new wxPanel( dmTabChooser, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer12;
+	bSizer12 = new wxBoxSizer( wxVERTICAL );
+
+	dmChooseRoute_Label = new wxStaticText( dmDepthProfile_Panel, wxID_ANY, wxT("Route file (GPX)"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmChooseRoute_Label->Wrap( -1 );
+	bSizer12->Add( dmChooseRoute_Label, 0, wxALL, 5 );
+
+	dmDepthProfile_RouteFile_filePicker = new wxFilePickerCtrl( dmDepthProfile_Panel, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE );
+	bSizer12->Add( dmDepthProfile_RouteFile_filePicker, 0, wxALL, 5 );
+
+	dmDepthProfileCSV_Label = new wxStaticText( dmDepthProfile_Panel, wxID_ANY, wxT("Depth profile file (CSV)"), wxDefaultPosition, wxDefaultSize, 0 );
+	dmDepthProfileCSV_Label->Wrap( -1 );
+	bSizer12->Add( dmDepthProfileCSV_Label, 0, wxALL, 5 );
+
+	dmDepthProfile_DpFile_filePicker = new wxFilePickerCtrl( dmDepthProfile_Panel, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE );
+	bSizer12->Add( dmDepthProfile_DpFile_filePicker, 0, wxALL, 5 );
+
+	dmGenerateDepthProfile_Button = new wxButton( dmDepthProfile_Panel, wxID_ANY, wxT("Generate"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer12->Add( dmGenerateDepthProfile_Button, 0, wxALL, 5 );
+
+
+	dmDepthProfile_Panel->SetSizer( bSizer12 );
+	dmDepthProfile_Panel->Layout();
+	bSizer12->Fit( dmDepthProfile_Panel );
+	dmTabChooser->AddPage( dmDepthProfile_Panel, wxT("Depth profile"), false );
 	dmAbout_Panel = new wxPanel( dmTabChooser, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* dmAbout_Sizer;
 	dmAbout_Sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -491,6 +517,7 @@ LIVIDMUI_DLG::LIVIDMUI_DLG( wxWindow* parent, wxWindowID id, const wxString& tit
 	dmColourOptionsUserFile_filePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( LIVIDMUI_DLG::OnUserColourFileChange ), NULL, this );
 	dmWaterLevel_CurrentWaterLevel_spinCtrlDouble->Connect( wxEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, wxSpinDoubleEventHandler( LIVIDMUI_DLG::OnCurrentWaterLevelChange ), NULL, this );
 	dmWaterLevel_VerticalReferenceSystemOffset_spinCtrlDouble->Connect( wxEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, wxSpinDoubleEventHandler( LIVIDMUI_DLG::OnVerticalReferenceSystemOffsetChange ), NULL, this );
+	dmGenerateDepthProfile_Button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnGenerateDepthProfile ), NULL, this );
 	dm_AboutWxWidgets_Button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnAboutWxWidgets ), NULL, this );
 }
 
@@ -505,6 +532,7 @@ LIVIDMUI_DLG::~LIVIDMUI_DLG()
 	dmColourOptionsUserFile_filePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( LIVIDMUI_DLG::OnUserColourFileChange ), NULL, this );
 	dmWaterLevel_CurrentWaterLevel_spinCtrlDouble->Disconnect( wxEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, wxSpinDoubleEventHandler( LIVIDMUI_DLG::OnCurrentWaterLevelChange ), NULL, this );
 	dmWaterLevel_VerticalReferenceSystemOffset_spinCtrlDouble->Disconnect( wxEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, wxSpinDoubleEventHandler( LIVIDMUI_DLG::OnVerticalReferenceSystemOffsetChange ), NULL, this );
+	dmGenerateDepthProfile_Button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnGenerateDepthProfile ), NULL, this );
 	dm_AboutWxWidgets_Button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LIVIDMUI_DLG::OnAboutWxWidgets ), NULL, this );
 
 }
