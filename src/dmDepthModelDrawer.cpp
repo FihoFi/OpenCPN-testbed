@@ -5,6 +5,11 @@
 
 #include "dmDepthModelDrawer.h"
 
+#include "dmDepthProfile.h"
+#include "dmRouteReader.h"
+
+
+
 #include <proj_api.h>
 #include "dmExtent.h"
 #include "dmDataset.h"
@@ -351,6 +356,40 @@ void dmDepthModelDrawer::SetCursorPix(wxPoint position)
     _lon = 0;
     _pix = position;
     newDepthValueCalledOnly = true;
+}
+
+void dmDepthModelDrawer::generateDepthProfile(wxFileName & routeFile, wxFileName & depthProfileFile)
+{
+    dmRouteReader routeReader;
+    std::string routeFilename = routeFile.GetFullPath().ToStdString();
+    std::string dpFilename = depthProfileFile.GetFullPath().ToStdString();
+    dmRoute routeLL = routeReader.readRouteFromGpxFile(routeFilename.c_str());
+    dmRoute routeWM;
+
+    std::for_each(routeLL.begin(), routeLL.end(),
+        [&](dmLeg legLL)
+    {
+        dmExtent extLL(legLL.start, legLL.end);
+        dmExtent extWM;
+        LLtoWM(extLL, extWM);
+
+        dmLeg legWM(extWM.topLeft, extWM.botRight);
+        routeWM.push_back(legWM);
+    });
+
+    // depth profile set up
+    dmDepthProfile dp(dataset, routeWM);
+
+    // profile to string stream
+    std::stringstream ss;
+    ss << dp;
+
+    // write to file
+    wxFile file;
+    file.Open(dpFilename.c_str(), wxFile::write);
+    wxString profileStr = ss.str();
+    file.Write(profileStr);
+    file.Close();
 }
 
 wxPoint dmDepthModelDrawer::reCalculateTopLeftLocation(/*const*/PlugIn_ViewPort &vp, dmExtent croppedImageLL)

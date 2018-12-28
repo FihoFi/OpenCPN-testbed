@@ -60,6 +60,8 @@ public:
     void             SetCursorLatLon(double lat, double lon);
     void             SetCursorPix(wxPoint position);
 
+    void             generateDepthProfile(wxFileName &routeFile, wxFileName &depthProfileFile);
+
     bool             getDepthValues(float& cursorDepthCD, float& currentWL);
   //bool             drawDepthValue(wxDC &dc, PlugIn_ViewPort &vp); // commented out in version 0.11
 
