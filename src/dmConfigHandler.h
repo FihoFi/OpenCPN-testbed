@@ -176,14 +176,28 @@ struct DMWaterLevelConfig : dm_configAPI
     {   m_verticalReferenceSystemOffset = vrsOffsetInM;     }
 };
 
+struct DMDepthProfileConfig : dm_configAPI
+{
+    DMDepthProfileConfig(wxFileConfig* confFile)
+    {
+        this->confFile = confFile;
+    }
+
+    virtual bool load() override;
+    virtual bool save() override;
+
+    wxFileName m_routeFile;
+    wxFileName m_depthProfileFile;
+};
+
 class dmConfigHandler
 {
 public:
     dmConfigHandler(
         wxFileConfig* confFile, // change this to reference, to avoid accidentally deleting, 
-        Dlg* pluginDialog=NULL)
-      : m_pconfig(confFile), m_pDialog(pluginDialog),
-        general(confFile),colour(confFile), fileImport(confFile), waterLevel(confFile),
+        Dlg* pluginDialog = NULL)
+        : m_pconfig(confFile), m_pDialog(pluginDialog),
+        general(confFile), colour(confFile), fileImport(confFile), waterLevel(confFile), depthProfile(confFile),
         showDepthModel(false), showDepthsViewer(false)
     { 
         /*if debug */assert(confFile);
@@ -203,10 +217,11 @@ public:
     bool SetDepthsViewerToolState(bool state);
     bool ToggleDepthsViewerToolState();
 
-    DMGeneralConfig     general;
-    DMColorOptionConfig colour;
-    DMFileImportConfig  fileImport;
-    DMWaterLevelConfig  waterLevel;
+    DMGeneralConfig      general;
+    DMColorOptionConfig  colour;
+    DMFileImportConfig   fileImport;
+    DMWaterLevelConfig   waterLevel;
+    DMDepthProfileConfig depthProfile;
     Dlg*                m_pDialog;
 
 private:

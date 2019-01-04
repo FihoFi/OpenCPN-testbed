@@ -724,6 +724,9 @@ void LIVI_Depth_model_pi::OnClearImage()
 void LIVI_Depth_model_pi::OnGenerateDepthProfile(wxFileName &routeFile, wxFileName &depthProfileFile)
 {
     dmDrawer->generateDepthProfile(routeFile, depthProfileFile);
+    m_pconf->depthProfile.m_routeFile = routeFile;
+    m_pconf->depthProfile.m_depthProfileFile = depthProfileFile;
+    m_pconf->SaveConfig();
 }
 
 void LIVI_Depth_model_pi::OnChartTypeChange(DM_visualization toType)
@@ -851,6 +854,9 @@ void LIVI_Depth_model_pi::PushConfigToUI(void)
     dialog->SetCurrentWaterLevel(m_pconf->waterLevel.m_currentWaterLevel);
     dialog->SetVerticalReferenceSystemOffsetLevel(
         m_pconf->waterLevel.m_verticalReferenceSystemOffset);
+
+    dialog->SetRouteFileName(m_pconf->depthProfile.m_routeFile);
+    dialog->SetDepthProfileFileName(m_pconf->depthProfile.m_depthProfileFile);
 }
 
 /**
@@ -886,6 +892,9 @@ void LIVI_Depth_model_pi::PullConfigFromUI(void)
     m_pconf->waterLevel.m_currentWaterLevel = dialog->GetCurrentWaterLevel();
     m_pconf->waterLevel.m_verticalReferenceSystemOffset 
         = dialog->GetVerticalReferenceSystemOffsetLevel();
+
+    m_pconf->depthProfile.m_routeFile = dialog->GetRouteFileName();
+    m_pconf->depthProfile.m_depthProfileFile = dialog->GetDepthProfileFileName();
 }
 
 void LIVI_Depth_model_pi::setHillshadeparamsTextToUI()

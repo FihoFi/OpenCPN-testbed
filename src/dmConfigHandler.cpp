@@ -47,6 +47,7 @@ bool dmConfigHandler::LoadConfig(void)
     success &= colour.load();
     success &= fileImport.load();
     success &= waterLevel.load();
+    success &= depthProfile.load();
 
     return success;
 }
@@ -64,6 +65,7 @@ bool dmConfigHandler::SaveConfig(void)
     success &= colour.save();
     success &= fileImport.save();
     success &= waterLevel.save();
+    success &= depthProfile.save();
 
     m_pconfig->Flush();
 
@@ -314,6 +316,46 @@ bool DMWaterLevelConfig::save(void)
     }
     else
         return false;
+}
+
+bool DMDepthProfileConfig::load(void)
+{
+    bool success = true;
+    if (confFile)
+    {
+        confFile->SetPath(_T("/Settings/LIVI_Depth_model_pi/DepthProfile"));
+
+        wxString routeFilePath;
+        success &= confFile->Read(_T("RouteFilePath"), &routeFilePath);
+        wxFileName routeFile(routeFilePath);
+        if (routeFile.DirExists())
+        {
+            m_routeFile = routeFile;
+        }
+
+        wxString depthProfileFilePath;
+        success &= confFile->Read(_T("DepthProfileFilePath"), &depthProfileFilePath);
+        wxFileName depthProfileFile(depthProfileFilePath);
+        if (depthProfileFile.DirExists())
+        {
+            m_depthProfileFile = depthProfileFile;
+        }
+    }
+
+    return success;
+}
+
+bool DMDepthProfileConfig::save(void)
+{
+    bool success = true;
+    if (confFile)
+    {
+        confFile->SetPath(_T("/Settings/LIVI_Depth_model_pi/DepthProfile"));
+
+        success &= confFile->Write(_T("RouteFilePath"), m_routeFile.GetFullPath());
+        success &= confFile->Write(_T("DepthProfileFilePath"), m_depthProfileFile.GetFullPath());
+    }
+    return success;
 }
 
 
